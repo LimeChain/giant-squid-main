@@ -1,9 +1,9 @@
 import assert from 'assert'
-import {StoreWithCache} from '@belopash/squid-tools'
 import {DataHandlerContext, SubstrateBlock, SubstrateExtrinsic} from '@subsquid/substrate-processor'
 import {withErrorContext} from '@subsquid/util-internal'
+import { Store } from '@subsquid/typeorm-store'
 
-export type ActionContext = DataHandlerContext<StoreWithCache, unknown>
+export type ActionContext = DataHandlerContext<Store, unknown>
 
 export abstract class Action<T = unknown> {
     static async process(ctx: ActionContext, actions: Action[]) {
@@ -51,7 +51,7 @@ export class LazyAction extends Action {
         super(block, extrinsic, {})
     }
 
-    protected async _perform(ctx: DataHandlerContext<StoreWithCache, {}>): Promise<void> {
+    protected async _perform(ctx: DataHandlerContext<Store, {}>): Promise<void> {
         const actions = await this.cb(ctx)
         await Action.process(ctx, actions)
     }
