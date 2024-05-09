@@ -1,5 +1,5 @@
-import {Account, StakingReward} from '../model'
-import {Action, ActionContext} from './base'
+import { Account, StakingReward } from '../model'
+import { Action, ActionContext } from './base'
 
 export interface RewardData {
     id: string
@@ -11,7 +11,7 @@ export interface RewardData {
 
 export class RewardAction extends Action<RewardData> {
     protected async _perform(ctx: ActionContext): Promise<void> {
-        let account = await ctx.store.getOrFail(Account, this.data.accountId)
+        let account = await ctx.store.findOneByOrFail(Account, { id: this.data.accountId })
 
         let reward = new StakingReward({
             id: this.data.id,

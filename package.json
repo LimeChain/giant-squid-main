@@ -8,13 +8,12 @@
     "build": "rm -rf lib && tsc"
   },
   "dependencies": {
-    "@belopash/squid-tools": "^0.4.0",
-    "@subsquid/archive-registry": "3.3.0",
-    "@subsquid/graphql-server": "4.3.1",
-    "@subsquid/ss58": "2.0.1",
-    "@subsquid/substrate-processor": "^7.0.0",
-    "@subsquid/typeorm-migration": "1.2.2",
-    "@subsquid/typeorm-store": "1.2.4",
+    "@subsquid/archive-registry": "3.1.0",
+    "@subsquid/graphql-server": "4.2.0",
+    "@subsquid/ss58": "1.2.0",
+    "@subsquid/substrate-processor": "^3.3.0",
+    "@subsquid/typeorm-migration": "1.2.0",
+    "@subsquid/typeorm-store": "1.2.1",
     "dotenv": "^16.0.0",
     "pg": "8.11.3",
     "typeorm": "0.3.16"
