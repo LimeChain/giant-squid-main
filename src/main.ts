@@ -115,13 +115,9 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 if (origin == null) break
 
                 const identityId = encodeAddress(origin)
-                // const identity = ctx.store.defer(Identity, identityId)
 
                 for (const subData of setSubsData.subs) {
                     const subId = encodeAddress(subData[0])
-                    // const sub = ctx.store.defer(IdentitySub, subId)
-
-                    // const account = ctx.store.defer(Account, subId)
 
                     actions.push(
                         new EnsureAccount(block, item.extrinsic, {
@@ -155,7 +151,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const judgementGivenData = chain.api.calls.identity.provide_judgement.decode(ctx, item.call)
 
                 const identityId = encodeAddress(judgementGivenData.target)
-                // const identity = ctx.store.defer(Identity, identityId)
 
                 const getJudgment = () => {
                     const kind = judgementGivenData.judgement.__kind
@@ -180,7 +175,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                         if (block.specId.startsWith('kusama') || block.specId.startsWith('polkadot')) {
                             //[2018825, 3409356, 5926842, 5965153].includes(block.height) &&
-                            // const account = ctx.store.defer(Account, identityId)
 
                             a.push(
                                 new EnsureAccount(block, item.extrinsic, {
@@ -217,9 +211,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 if (origin == null) break
 
                 const identityId = encodeAddress(origin)
-                // const identity = ctx.store.defer(Identity, identityId)
-
-                // const account = ctx.store.defer(Account, identityId)
 
                 actions.push(
                     new EnsureAccount(block, item.extrinsic, {
@@ -266,12 +257,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 if (origin == null) break
 
                 const identityId = encodeAddress(origin)
-                // const identity = ctx.store.defer(Identity, identityId)
-
                 const subId = encodeAddress(subAddedCallData.sub)
-                // const sub = ctx.store.defer(IdentitySub, subId)
-
-                // const account = ctx.store.defer(Account, subId)
 
                 actions.push(
                     new EnsureAccount(block, item.extrinsic, {
@@ -305,7 +291,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 if (origin == null) break
 
                 const identityId = encodeAddress(origin)
-                // const identity = ctx.store.defer(Identity, identityId, { subs: true })
 
                 actions.push(
                     new ClearIdentityAction(block, item.extrinsic, {
@@ -345,7 +330,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 if (origin == null) break
 
                 const identityId = encodeAddress(origin)
-                // const identity = ctx.store.defer(Identity, identityId, { subs: true })
 
                 actions.push(
                     new ClearIdentityAction(block, item.extrinsic, {
@@ -385,17 +369,10 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const subRemovedData = chain.api.events.identity.IdentitySubRemoved.decode(ctx, item.event)
 
                 const subId = encodeAddress(subRemovedData.sub)
-                // const sub = ctx.store.defer(IdentitySub, subId)
 
                 actions.push(
                     new RemoveIdentitySubAction(block, item.event.extrinsic, {
-                        sub: async () => {
-                            const idSub = await ctx.store.get(IdentitySub, subId)
-                            if (!idSub) {
-                                throw new Error(`IdentitySub not found: ${subId}`)
-                            }
-                            return idSub
-                        },
+                        sub: async () => ctx.store.findOneByOrFail(IdentitySub, { id: subId }),
                     })
                 )
 
@@ -408,7 +385,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const subRevokedData = chain.api.events.identity.IdentitySubRevoked.decode(ctx, item.event)
 
                 const subId = encodeAddress(subRevokedData.sub)
-                // const sub = ctx.store.defer(IdentitySub, subId)
 
                 actions.push(
                     new RemoveIdentitySubAction(block, item.event.extrinsic, {
@@ -422,7 +398,6 @@ processor.run(new TypeormDatabase(), async (ctx) => {
     })
 
     await Action.process(ctx, actions)
-    // await ctx.store.flush()
 })
 
 function unwrapData(data: { __kind: string; value?: Uint8Array }) {
