@@ -25,6 +25,7 @@ export interface EnsureIdentityData {
 export class EnsureIdentityAction extends Action<EnsureIdentityData> {
     protected async _perform(ctx: ActionContext): Promise<void> {
         let identity = await this.data.identity()
+
         if (identity != null) return
 
         const account = await this.data.account()

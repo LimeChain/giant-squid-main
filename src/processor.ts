@@ -1,150 +1,73 @@
-import {DataHandlerContext, BatchProcessorItem, SubstrateBatchProcessor} from '@subsquid/substrate-processor'
-import {chain} from './chain'
+import {
+    Event as _Event,
+    Call as _Call,
+    Extrinsic as _Extrinsic,
+    Block as _Block,
+    BlockHeader as _BlockHeader,
+    DataHandlerContext,
+    SubstrateBatchProcessor,
+    SubstrateBatchProcessorFields,
+} from '@subsquid/substrate-processor'
+import { chain } from './chain'
 
 export const processor = new SubstrateBatchProcessor()
-    .setDataSource(chain.config.dataSource)
-    .addEvent('Balances.Transfer', {
-        data: {
-            event: {
-                args: true,
-                extrinsic: {
-                    hash: true,
-                },
-            },
+    .setGateway(chain.config.gateway)
+    .setRpcEndpoint(chain.config.endpoint)
+    .setFields({
+        block: {
+            timestamp: true,
         },
-    } as const)
-    .addEvent('Staking.Reward', {
-        data: {
-            event: {
-                args: true,
-                extrinsic: {
-                    hash: true,
-                },
-                call: {
-                    args: true,
-                },
-            },
+        call: {
+            name: true,
+            args: true,
+            origin: true,
+            success: true,
         },
-    } as const)
-    .addEvent('Staking.Rewarded', {
-        data: {
-            event: {
-                args: true,
-                extrinsic: {
-                    hash: true,
-                },
-                call: {
-                    args: true,
-                },
-            },
+        event: {
+            name: true,
+            args: true,
         },
-    } as const)
-    .addEvent('Identity.IdentitySubRemoved', {
-        data: {
-            event: {
-                args: true,
-                extrinsic: {
-                    hash: true,
-                },
-                call: {
-                    args: true,
-                },
-            },
-        },
-    } as const)
-    .addEvent('Identity.IdentitySubRevoked', {
-        data: {
-            event: {
-                args: true,
-                extrinsic: {
-                    hash: true,
-                },
-                call: {
-                    args: true,
-                },
-            },
-        },
-    } as const)
-    .addCall('Identity.set_identity', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
+        extrinsic: {
+            hash: true,
+            success: true,
         },
     })
-    .addCall('Identity.provide_judgement', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
+    .addEvent({
+        name: [
+            'Balances.Transfer',
+            'Staking.Reward',
+            'Staking.Rewarded',
+            'Identity.SubIdentityRemoved',
+            'Identity.SubIdentityRevoked'
+        ],
+        call: true,
+        extrinsic: true,
     })
-    .addCall('Identity.set_subs', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
+    .addCall({
+        name: [
+            'Identity.set_identity',
+            'Identity.provide_judgement',
+            'Identity.set_subs',
+            'Identity.rename_sub',
+            'Identity.add_sub',
+            'Identity.clear_identity',
+            'Identity.kill_identity'
+        ],
+        extrinsic: true,
+
     })
-    .addCall('Identity.rename_sub', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
-    })
-    .addCall('Identity.add_sub', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
-    })
-    .addCall('Identity.clear_identity', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
-    })
-    .addCall('Identity.kill_identity', {
-        data: {
-            call: {
-                args: true,
-                origin: true,
-            },
-            extrinsic: {
-                hash: true,
-            },
-        },
-    })
+    // .setBlockRange({
+    //     from: 0,
+    //     to: 1715699
+    // })
 
 if (chain.config.blockRange) processor.setBlockRange(chain.config.blockRange)
 if (chain.config.typesBundle) processor.setTypesBundle(chain.config.typesBundle)
 
-export type Item = BatchProcessorItem<typeof processor>
-export type ProcessorContext<Store> = DataHandlerContext<Store, Item>
+export type Fields = SubstrateBatchProcessorFields<typeof processor>
+export type Block = _Block<Fields>
+export type BlockHeader = _BlockHeader<Fields>
+export type Event = _Event<Fields>
+export type Call = _Call<Fields>
+export type Extrinsic = _Extrinsic<Fields>
+export type ProcessorContext<Store> = DataHandlerContext<Store, Fields>

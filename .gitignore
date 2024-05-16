@@ -7,3 +7,6 @@
 
 # IDE files
 /.idea
+
+
+.env

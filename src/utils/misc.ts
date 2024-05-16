@@ -1,11 +1,8 @@
-import {
-  BlockData,
-  decodeHex,
-  SubstrateBlock,
-  toHex,
-} from '@subsquid/substrate-processor'
-import { encode, decode, registry } from '@subsquid/ss58'
+import { decodeHex, toHex } from '@subsquid/substrate-processor'
+import { encode, decode } from '@subsquid/ss58'
 import { chain } from '../chain'
+import { Item, orderItems } from './orderItems'
+import { Block } from '../processor'
 
 export function encodeAddress(address: Uint8Array) {
   if (chain.config.prefix) {
@@ -27,13 +24,13 @@ export function decodeAddress(address: string) {
   }
 }
 
-export function processItem<I>(
-  blocks: BlockData<I>[],
-  fn: (block: SubstrateBlock, item: I) => void
+export function processItem(
+  blocks: Block[],
+  fn: (block: Block, item: Item) => void
 ) {
   for (let block of blocks) {
-    for (let item of block.items) {
-      fn(block.header, item)
+    for (let item of orderItems(block)) {
+      fn(block, item)
     }
   }
 }

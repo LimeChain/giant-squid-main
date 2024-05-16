@@ -1,30 +1,31 @@
-import {UnknownVersionError} from '../../../../utils'
-import {StakingRewardedEvent, StakingRewardEvent} from '../../types/events'
-import {ChainContext, Event} from '../../types/support'
+import { Event } from '@subsquid/substrate-processor';
+import { UnknownVersionError } from '../../../../utils'
+import { events } from "../../types"
 
 const Rewarded = {
-    decode(ctx: ChainContext, event: Event) {
-        if (event.name === 'Staking.Reward') {
-            let e = new StakingRewardEvent(ctx, event)
-            if (e.isV1020) {
-                return undefined
-            } else if (e.isV1050) {
-                let [stash, amount] = e.asV1050
-                return {stash, amount}
+    decode(event: Event) {
+        const reward = events.staking.reward;
+        const rewarded = events.staking.rewarded;
+
+        if (event.name === reward.name) {
+            if (reward.v1020.is(event)) {
+                return undefined;
+            } else if (reward.v1050.is(event)) {
+                let [stash, amount] = reward.v1050.decode(event)
+                return { stash, amount }
             } else {
-                throw new UnknownVersionError(e)
+                throw new UnknownVersionError(event)
             }
-        } else {
-            let e = new StakingRewardedEvent(ctx, event)
-            if (e.isV9090) {
-                return undefined
-            } else if (e.isV9090) {
-                let [stash, amount] = e.asV9090
-                return {stash, amount}
-            } else if (e.isV9300) {
-                return e.asV9300
+        }
+
+        if (event.name === rewarded.name) {
+            if (rewarded.v9090.is(event)) {
+                let [stash, amount] = rewarded.v9090.decode(event)
+                return { stash, amount }
+            } else if (rewarded.v9300.is(event)) {
+                return rewarded.v9300.decode(event)
             } else {
-                throw new UnknownVersionError(e)
+                throw new UnknownVersionError(event)
             }
         }
     },

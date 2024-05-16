@@ -42,7 +42,7 @@
       },
       "typegen": {
         "description": "Generate data access classes for an substrate metadata",
-        "cmd": ["squid-substrate-typegen", {"glob": "./typegen/*.json"}]
+        "cmd": ["squid-substrate-typegen", {"glob": "./typegen/kusama.json"}]
       },
       "process": {
         "description": "Load .env and start the squid processor",
