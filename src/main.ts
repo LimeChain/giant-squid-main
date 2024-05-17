@@ -132,29 +132,29 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                     const subId = ss58.codec(chain.config.name).encode(subData[0]);
 
                     actions.push(
-                        new EnsureAccount(block.header, item.value.extrinsic, {
+                        new EnsureAccount(block.header, call.extrinsic, {
                             account: () => ctx.store.findOneBy(Account, { id: subId }),
                             id: subId,
                         }),
-                        new EnsureAccount(block.header, item.value.extrinsic, {
+                        new EnsureAccount(block.header, call.extrinsic, {
                             account: () => ctx.store.findOneBy(Account, { id: identityId }),
                             id: identityId,
                         }),
-                        new EnsureIdentityAction(block.header, item.value.extrinsic, {
+                        new EnsureIdentityAction(block.header, call.extrinsic, {
                             identity: () => ctx.store.findOneBy(Identity, { id: identityId }),
                             account: () => ctx.store.findOneByOrFail(Account, { id: identityId }),
                             id: identityId,
                         }),
-                        new EnsureIdentitySubAction(block.header, item.value.extrinsic, {
+                        new EnsureIdentitySubAction(block.header, call.extrinsic, {
                             sub: () => ctx.store.findOneBy(IdentitySub, { id: subId }),
                             account: () => ctx.store.findOneByOrFail(Account, { id: subId }),
                             id: subId,
                         }),
-                        new AddIdentitySubAction(block.header, item.value.extrinsic, {
+                        new AddIdentitySubAction(block.header, call.extrinsic, {
                             identity: () => ctx.store.findOneByOrFail(Identity, { id: identityId }),
                             sub: () => ctx.store.findOneByOrFail(IdentitySub, { id: subId }),
                         }),
-                        new RenameSubAction(block.header, item.value.extrinsic, {
+                        new RenameSubAction(block.header, call.extrinsic, {
                             sub: () => ctx.store.findOneByOrFail(IdentitySub, { id: subId }),
                             name: unwrapData(subData[1]),
                         })
@@ -193,18 +193,18 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const judgement = getJudgment()
 
                 actions.push(
-                    new LazyAction(block.header, item.value.extrinsic, async (ctx) => {
+                    new LazyAction(block.header, call.extrinsic, async (ctx) => {
                         const a: Action[] = []
 
                         if (block.header.specName.startsWith('kusama') || block.header.specName.startsWith('polkadot')) {
                             //[2018825, 3409356, 5926842, 5965153].includes(block.height) &&
 
                             a.push(
-                                new EnsureAccount(block.header, item.value.extrinsic, {
+                                new EnsureAccount(block.header, call.extrinsic, {
                                     account: () => ctx.store.findOneBy(Account, { id: identityId }),
                                     id: identityId,
                                 }),
-                                new EnsureIdentityAction(block.header, item.value.extrinsic, {
+                                new EnsureIdentityAction(block.header, call.extrinsic, {
                                     identity: () => ctx.store.findOneBy(Identity, { id: identityId }),
                                     account: () => ctx.store.findOneByOrFail(Account, { id: identityId }),
                                     id: identityId,
@@ -214,7 +214,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                         return a
                     }),
-                    new GiveJudgementAction(block.header, item.value.extrinsic, {
+                    new GiveJudgementAction(block.header, call.extrinsic, {
                         identity: () => ctx.store.findOneByOrFail(Identity, { id: identityId }),
                         judgement,
                     })
@@ -238,20 +238,20 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const identityId = ss58.codec(chain.config.name).encode(origin);
 
                 actions.push(
-                    new EnsureAccount(block.header, item.value.extrinsic, {
+                    new EnsureAccount(block.header, call.extrinsic, {
                         account: () => ctx.store.findOneBy(Account, { id: identityId }),
                         id: identityId,
                     }),
-                    new EnsureIdentityAction(block.header, item.value.extrinsic, {
+                    new EnsureIdentityAction(block.header, call.extrinsic, {
                         identity: () => ctx.store.findOneBy(Identity, { id: identityId }),
                         account: () => ctx.store.findOneByOrFail(Account, { id: identityId }),
                         id: identityId,
                     }),
-                    new GiveJudgementAction(block.header, item.value.extrinsic, {
+                    new GiveJudgementAction(block.header, call.extrinsic, {
                         identity: () => ctx.store.findOneByOrFail(Identity, { id: identityId }),
                         judgement: Judgement.Unknown,
                     }),
-                    new SetIdentityAction(block.header, item.value.extrinsic, {
+                    new SetIdentityAction(block.header, call.extrinsic, {
                         identity: () => ctx.store.findOneByOrFail(Identity, { id: identityId }),
                         web: unwrapData(identitySetData.web),
                         display: unwrapData(identitySetData.display),
@@ -289,20 +289,20 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const subId = ss58.codec(chain.config.name).encode(subAddedCallData.sub);
 
                 actions.push(
-                    new EnsureAccount(block.header, item.value.extrinsic, {
+                    new EnsureAccount(block.header, call.extrinsic, {
                         account: () => ctx.store.findOneBy(Account, { id: subId }),
                         id: subId,
                     }),
-                    new EnsureIdentitySubAction(block.header, item.value.extrinsic, {
+                    new EnsureIdentitySubAction(block.header, call.extrinsic, {
                         sub: () => ctx.store.findOneBy(IdentitySub, { id: subId }),
                         account: () => ctx.store.findOneByOrFail(Account, { id: subId }),
                         id: subId,
                     }),
-                    new AddIdentitySubAction(block.header, item.value.extrinsic, {
+                    new AddIdentitySubAction(block.header, call.extrinsic, {
                         identity: () => ctx.store.findOneByOrFail(Identity, { id: identityId }),
                         sub: () => ctx.store.findOneByOrFail(IdentitySub, { id: subId }),
                     }),
-                    new RenameSubAction(block.header, item.value.extrinsic, {
+                    new RenameSubAction(block.header, call.extrinsic, {
                         sub: () => ctx.store.findOneByOrFail(IdentitySub, { id: subId }),
                         name: unwrapData(subAddedCallData.data),
                     })
@@ -408,11 +408,11 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const subId = ss58.codec(chain.config.name).encode(subRemovedData.sub);
 
                 actions.push(
-                    new EnsureAccount(block.header, item.value.extrinsic, {
+                    new EnsureAccount(block.header, event.extrinsic, {
                         account: () => ctx.store.findOneBy(Account, { id: subId }),
                         id: subId,
                     }),
-                    new EnsureIdentitySubAction(block.header, item.value.extrinsic, {
+                    new EnsureIdentitySubAction(block.header, event.extrinsic, {
                         sub: () => ctx.store.findOneBy(IdentitySub, { id: subId }),
                         account: () => ctx.store.findOneByOrFail(Account, { id: subId }),
                         id: subId,
@@ -435,11 +435,11 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const subId = ss58.codec(chain.config.name).encode(subRevokedData.sub);
 
                 actions.push(
-                    new EnsureAccount(block.header, item.value.extrinsic, {
+                    new EnsureAccount(block.header, event.extrinsic, {
                         account: () => ctx.store.findOneBy(Account, { id: subId }),
                         id: subId,
                     }),
-                    new EnsureIdentitySubAction(block.header, item.value.extrinsic, {
+                    new EnsureIdentitySubAction(block.header, event.extrinsic, {
                         sub: () => ctx.store.findOneBy(IdentitySub, { id: subId }),
                         account: () => ctx.store.findOneByOrFail(Account, { id: subId }),
                         id: subId,
