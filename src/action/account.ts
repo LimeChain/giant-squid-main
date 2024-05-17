@@ -1,6 +1,7 @@
 import * as ss58 from '@subsquid/ss58'
 import { Account } from '../model'
 import { Action, ActionContext } from './base'
+import { chain } from '../chain'
 
 export interface AccountData {
     account: () => Promise<Account | undefined>
@@ -14,7 +15,7 @@ export class EnsureAccount extends Action<AccountData> {
 
         account = new Account({
             id: this.data.id,
-            publicKey: ss58.codec('kusama').decode(this.data.id),
+            publicKey: ss58.codec(chain.config.name).decode(this.data.id),
         })
 
         await ctx.store.insert(account)
