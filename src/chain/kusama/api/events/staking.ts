@@ -14,7 +14,7 @@ const Rewarded = {
                 let [stash, amount] = reward.v1050.decode(event)
                 return { stash, amount }
             } else {
-                throw new UnknownVersionError(event)
+                throw new UnknownVersionError(reward)
             }
         }
 
@@ -25,7 +25,7 @@ const Rewarded = {
             } else if (rewarded.v9300.is(event)) {
                 return rewarded.v9300.decode(event)
             } else {
-                throw new UnknownVersionError(event)
+                throw new UnknownVersionError(rewarded)
             }
         }
     },

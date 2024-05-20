@@ -1,27 +1,15 @@
 import { decodeHex, toHex } from '@subsquid/substrate-processor'
-import { encode, decode } from '@subsquid/ss58'
+import * as ss58 from '@subsquid/ss58'
 import { chain } from '../chain'
 import { Item, orderItems } from './orderItems'
 import { Block } from '../processor'
 
-export function encodeAddress(address: Uint8Array) {
-  if (chain.config.prefix) {
-    return encode({
-      bytes: address,
-      prefix: chain.config.prefix,
-    })
-  } else {
-    return toHex(address)
-  }
+export function encodeAddress(address: string | Uint8Array) {
+  return ss58.codec(chain.config.name).encode(address);
 }
 
 export function decodeAddress(address: string) {
-  if (chain.config.prefix) {
-    return decode(address).bytes
-  }
-  else {
-    return Uint8Array.from(decodeHex(address))
-  }
+  return ss58.codec(chain.config.name).decode(address);
 }
 
 export function processItem(

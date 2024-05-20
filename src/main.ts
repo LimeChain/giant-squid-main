@@ -1,5 +1,4 @@
 import assert from 'assert'
-import * as ss58 from '@subsquid/ss58'
 import { isHex } from '@subsquid/util-internal-hex'
 import { TypeormDatabase } from '@subsquid/typeorm-store'
 import { decodeHex } from '@subsquid/substrate-processor'
@@ -16,7 +15,7 @@ import {
 } from './action/identity'
 import { chain } from './chain'
 import { Call, Event, processor } from './processor'
-import { getOriginAccountId, processItem } from './utils'
+import { encodeAddress, getOriginAccountId, processItem } from './utils'
 import { Account, Identity, Judgement, IdentitySub } from './model'
 import { Action, LazyAction } from './action/base'
 import { EnsureAccount, TransferAction, RewardAction } from './action'
@@ -30,8 +29,8 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const event = item.value as Event;
                 const data = chain.api.events.balances.Transfer.decode(event)
 
-                const fromId = ss58.codec(chain.config.name).encode(data.from);
-                const toId = ss58.codec(chain.config.name).encode(data.to);
+                const fromId = encodeAddress(data.from);
+                const toId = encodeAddress(data.to);
 
                 actions.push(
                     new EnsureAccount(block.header, event.extrinsic, {
@@ -64,13 +63,13 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                 if (data == null) return // skip some old format rewards
 
-                let accountId = ss58.codec(chain.config.name).encode(data.stash);
+                let accountId = encodeAddress(data.stash);
 
                 let validatorId: string | undefined
                 let era: number | undefined
                 if (event.call?.name === 'Staking.payout_stakers') {
                     const c = chain.api.calls.staking.payout_stakers.decode(event.call)
-                    validatorId = ss58.codec(chain.config.name).encode(c.validatorStash);
+                    validatorId = encodeAddress(c.validatorStash);
                     era = c.era
                 }
 
@@ -101,7 +100,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                 const renameSubData = chain.api.calls.identity.rename_sub.decode(call)
 
-                const subId = ss58.codec(chain.config.name).encode(renameSubData.sub);
+                const subId = encodeAddress(renameSubData.sub);
 
                 actions.push(
                     new RenameSubAction(block.header, call.extrinsic, {
@@ -126,10 +125,10 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const origin = getOriginAccountId(call.origin)
 
                 if (origin == null) break
-                const identityId = ss58.codec(chain.config.name).encode(origin);
+                const identityId = encodeAddress(origin);
 
                 for (const subData of setSubsData.subs) {
-                    const subId = ss58.codec(chain.config.name).encode(subData[0]);
+                    const subId = encodeAddress(subData[0]);
 
                     actions.push(
                         new EnsureAccount(block.header, call.extrinsic, {
@@ -173,7 +172,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                 const judgementGivenData = chain.api.calls.identity.provide_judgement.decode(call)
 
-                const identityId = ss58.codec(chain.config.name).encode(judgementGivenData.target);
+                const identityId = encodeAddress(judgementGivenData.target);
 
                 const getJudgment = () => {
                     const kind = judgementGivenData.judgement.__kind
@@ -235,7 +234,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
 
                 if (origin == null) break
 
-                const identityId = ss58.codec(chain.config.name).encode(origin);
+                const identityId = encodeAddress(origin);
 
                 actions.push(
                     new EnsureAccount(block.header, call.extrinsic, {
@@ -284,9 +283,9 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const origin = getOriginAccountId(call.origin)
                 if (origin == null) break
 
-                const identityId = ss58.codec(chain.config.name).encode(origin);
+                const identityId = encodeAddress(origin);
 
-                const subId = ss58.codec(chain.config.name).encode(subAddedCallData.sub);
+                const subId = encodeAddress(subAddedCallData.sub);
 
                 actions.push(
                     new EnsureAccount(block.header, call.extrinsic, {
@@ -322,7 +321,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const origin = getOriginAccountId(call.origin)
                 if (origin == null) break
 
-                const identityId = ss58.codec(chain.config.name).encode(origin);
+                const identityId = encodeAddress(origin);
 
                 actions.push(
                     new ClearIdentityAction(block.header, call.extrinsic, {
@@ -364,7 +363,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const origin = getOriginAccountId(call.origin)
                 if (origin == null) break
 
-                const identityId = ss58.codec(chain.config.name).encode(origin);
+                const identityId = encodeAddress(origin);
 
                 actions.push(
                     new ClearIdentityAction(block.header, call.extrinsic, {
@@ -405,7 +404,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const event = item.value as Event;
                 const subRemovedData = chain.api.events.identity.IdentitySubRemoved.decode(event)
 
-                const subId = ss58.codec(chain.config.name).encode(subRemovedData.sub);
+                const subId = encodeAddress(subRemovedData.sub);
 
                 actions.push(
                     new EnsureAccount(block.header, event.extrinsic, {
@@ -432,7 +431,7 @@ processor.run(new TypeormDatabase(), async (ctx) => {
                 const event = item.value as Event;
                 const subRevokedData = chain.api.events.identity.IdentitySubRevoked.decode(event)
 
-                const subId = ss58.codec(chain.config.name).encode(subRevokedData.sub);
+                const subId = encodeAddress(subRevokedData.sub);
 
                 actions.push(
                     new EnsureAccount(block.header, event.extrinsic, {

@@ -15,7 +15,7 @@ const Transfer = {
         } else if (transfer.v9130.is(event)) {
             return transfer.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(event);
+            throw new UnknownVersionError(transfer);
         }
     },
 }
