@@ -56,10 +56,6 @@ export const processor = new SubstrateBatchProcessor()
         extrinsic: true,
 
     })
-    // .setBlockRange({
-    //     from: 0,
-    //     to: 1715699
-    // })
 
 if (chain.config.blockRange) processor.setBlockRange(chain.config.blockRange)
 if (chain.config.typesBundle) processor.setTypesBundle(chain.config.typesBundle)

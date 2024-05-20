@@ -4,28 +4,28 @@ import { events } from '../../types'
 
 const IdentityCleared = {
     decode(event: Event) {
-        let e = events.identity.identityCleared;
-        if (e.v1030.is(event)) {
-            const [who, deposit] = e.v1030.decode(event);
-            return {who, deposit}
-        } else if (e.v9130.is(event)) {
-            return e.v9130.decode(event)
+        let identity = events.identity.identityCleared;
+        if (identity.v1030.is(event)) {
+            const [who, deposit] = identity.v1030.decode(event);
+            return { who, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const IdentityKilled = {
     decode(event: Event) {
-        let e = events.identity.identityKilled;
-        if (e.v1030.is(event)) {
-            const [who, deposit] = e.v1030.decode(event);
-            return {who, deposit}
-        } else if (e.v9130.is(event)) {
-            return e.v9130.decode(event)
+        let identity = events.identity.identityKilled;
+        if (identity.v1030.is(event)) {
+            const [who, deposit] = identity.v1030.decode(event);
+            return { who, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }

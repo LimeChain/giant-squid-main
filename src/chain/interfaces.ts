@@ -20,7 +20,9 @@ import type statemint from './statemint/api'
 import type subsocial from './subsocial/api'
 
 
-// Enable only Kusama network to be type safe during development
+// Currently, the type definitions for other networks are not migrated to ArrowSquid, so they are temporarily disabled.
+// So, to be type safe while developing, only Kusama is enabled. Otherwise, the typescript is not happy.
+// TODO: Enable other networks when the new type definitions are generated.
 export type ChainApi =
   // | typeof acala
   // | typeof astar
@@ -32,14 +34,14 @@ export type ChainApi =
   // | typeof karura
   // | typeof khala
   | typeof kusama
-  // | typeof moonbeam
-  // | typeof moonriver
-  // | typeof phala
-  // | typeof polkadot
-  // | typeof shiden
-  // | typeof statemine
-  // | typeof statemint
-  // | typeof subsocial
+// | typeof moonbeam
+// | typeof moonriver
+// | typeof phala
+// | typeof polkadot
+// | typeof shiden
+// | typeof statemine
+// | typeof statemint
+// | typeof subsocial
 
 export interface ProcessorConfig {
   name: string
