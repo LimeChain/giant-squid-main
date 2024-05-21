@@ -15,7 +15,7 @@
     "@subsquid/typeorm-migration": "1.2.0",
     "@subsquid/typeorm-store": "^1.4.0",
     "dotenv": "^16.0.0",
-    "pg": "8.10.0",
+    "pg": "8.11.3",
     "typeorm": "0.3.17"
   },
   "devDependencies": {
