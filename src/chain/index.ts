@@ -1,16 +1,19 @@
+import fs from 'fs'
 import { assertNotNull } from '@subsquid/substrate-processor'
 import { ProcessorConfig, ChainApi, IChainData } from './interfaces'
-import {
-  KnownArchivesSubstrate,
-  lookupArchive,
-} from '@subsquid/archive-registry'
-import fs from 'fs'
+
+const ensureEnvVariable = (name: string): string => {
+  return assertNotNull(
+    process.env[name],
+    `Missing env variable ${name}`
+  );
+}
 
 function getChain(): { api: ChainApi; config: ProcessorConfig } {
-  const chainName = assertNotNull(
-    process.env.CHAIN,
-    'Missing env variable CHAIN'
-  )
+  const chainName = ensureEnvVariable('CHAIN')
+  const chainRpcEndpoint = ensureEnvVariable('CHAIN_RPC_ENDPOINT')
+  const chainGateway = ensureEnvVariable('CHAIN_GATEWAY')
+
   const chainNameKebab = chainName.split('_').join('-')
   const chainAPI = require(`./${chainNameKebab}`).default
 
@@ -29,14 +32,13 @@ function getChain(): { api: ChainApi; config: ProcessorConfig } {
   }
 
   let processorConfig: ProcessorConfig = {
-    chainName: chainConfig.network,
-    dataSource: {
-      archive: lookupArchive(
-        chainConfig.archiveName as KnownArchivesSubstrate,
-        { release: 'FireSquid' }
-      ),
-    },
+    name: chainConfig.network,
     prefix: chainConfig.prefix,
+    gateway: chainGateway,
+    endpoint: {
+      url: chainRpcEndpoint,
+      rateLimit: 10,
+    },
   }
 
   if (chainAPI.customConfig) {

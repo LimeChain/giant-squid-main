@@ -17,7 +17,7 @@ export class TransferAction extends Action<TransferData> {
         let transfer = new NativeTransfer({
             id: this.data.id,
             blockNumber: this.block.height,
-            timestamp: new Date(this.block.timestamp),
+            timestamp: new Date(this.block.timestamp ?? 0),
             extrinsicHash: this.extrinsic?.hash,
             from,
             to,

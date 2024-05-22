@@ -1,104 +1,101 @@
-import {DataNotDecodableError, UnknownVersionError} from '../../../../utils'
-import {IdentityClearIdentityCall} from '../../types/calls'
-import {
-    IdentityAddSubCall,
-    IdentityProvideJudgementCall,
-    IdentityRenameSubCall,
-    IdentitySetIdentityCall,
-    IdentitySetSubsCall,
-} from '../../types/calls'
-import {ChainContext, Call} from '../../types/support'
+import { Call } from '../../../../processor'
+import { DataNotDecodableError, UnknownVersionError } from '../../../../utils'
+import { calls } from '../../types'
 
 const set_identity = {
-    decode(ctx: ChainContext, call: Call) {
-        let e = new IdentitySetIdentityCall(ctx, call)
-        if (e.isV1030) {
+    decode(call: Call) {
+        let identity = calls.identity.setIdentity;
+
+        if (identity.v1030.is(call)) {
             return {
                 twitter: {
                     __kind: 'None',
                 },
-                ...e.asV1030.info,
+                ...identity.v1030.decode(call).info,
             }
-        } else if (e.isV1032) {
-            return e.asV1032.info
+        } else if (identity.v1032.is(call)) {
+            return identity.v1032.decode(call).info
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const set_subs = {
-    decode(ctx: ChainContext, call: Call) {
-        let e = new IdentitySetSubsCall(ctx, call)
-        if (e.isV1030) {
-            return e.asV1030
+    decode(call: Call) {
+        let identity = calls.identity.setSubs;
+
+        if (identity.v1030.is(call)) {
+            return identity.v1030.decode(call)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const provide_judgement = {
-    decode(ctx: ChainContext, call: Call) {
-        let e = new IdentityProvideJudgementCall(ctx, call)
-        if (e.isV1030) {
-            const data = e.asV1030
-            if (data.target.__kind === 'AccountId') return {...data, target: data.target.value}
-            else throw new DataNotDecodableError(e, data)
-        } else if (e.isV1050) {
-            return e.asV1050
-        } else if (e.isV2028) {
-            const data = e.asV2028
-            if (data.target.__kind === 'Id') return {...data, target: data.target.value}
-            else throw new DataNotDecodableError(e, data)
-        } else if (e.isV9111) {
-            const data = e.asV9111
-            if (data.target.__kind === 'Id') return {...data, target: data.target.value}
-            else throw new DataNotDecodableError(e, data)
-        } else if (e.isV9300) {
-            const data = e.asV9300
-            if (data.target.__kind === 'Id') return {...data, target: data.target.value}
-            else throw new DataNotDecodableError(e, data)
+    decode(call: Call) {
+        const identity = calls.identity.provideJudgement;
+        if (identity.v1030.is(call)) {
+            const data = identity.v1030.decode(call)
+            if (data.target.__kind === 'AccountId') return { ...data, target: data.target.value }
+            else throw new DataNotDecodableError(identity, data)
+        } else if (identity.v1050.is(call)) {
+            return identity.v1050.decode(call)
+        } else if (identity.v2028.is(call)) {
+            const data = identity.v2028.decode(call)
+            if (data.target.__kind === 'Id') return { ...data, target: data.target.value }
+            else throw new DataNotDecodableError(identity, data)
+        } else if (identity.v9111.is(call)) {
+            const data = identity.v9111.decode(call)
+            if (data.target.__kind === 'Id') return { ...data, target: data.target.value }
+            else throw new DataNotDecodableError(identity, data)
+        } else if (identity.v9300.is(call)) {
+            const data = identity.v9300.decode(call)
+            if (data.target.__kind === 'Id') return { ...data, target: data.target.value }
+            else throw new DataNotDecodableError(identity, data)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const add_sub = {
-    decode(ctx: ChainContext, call: Call) {
-        let e = new IdentityAddSubCall(ctx, call)
-        if (e.isV2015) {
-            return e.asV2015
-        } else if (e.isV2028) {
-            const data = e.asV2028
-            if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-            else throw new DataNotDecodableError(e, data)
-        } else if (e.isV9111) {
-            const data = e.asV9111
-            if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-            else throw new DataNotDecodableError(e, data)
+    decode(call: Call) {
+        const identity = calls.identity.addSub;
+
+        if (identity.v2015.is(call)) {
+            return identity.v2015.decode(call)
+        } else if (identity.v2028.is(call)) {
+            const data = identity.v2028.decode(call)
+            if (data.sub.__kind !== 'Index') return { ...data, sub: data.sub.value }
+            else throw new DataNotDecodableError(identity, data)
+        } else if (identity.v9111.is(call)) {
+            const data = identity.v9111.decode(call)
+            if (data.sub.__kind !== 'Index') return { ...data, sub: data.sub.value }
+            else throw new DataNotDecodableError(identity, data)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const rename_sub = {
-    decode(ctx: ChainContext, call: Call) {
-        let e = new IdentityRenameSubCall(ctx, call)
-        if (e.isV2015) {
-            return e.asV2015
-        } else if (e.isV2028) {
-            const data = e.asV2028
-            if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-            else throw new DataNotDecodableError(e, data)
-        } else if (e.isV9111) {
-            const data = e.asV9111
-            if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-            else throw new DataNotDecodableError(e, data)
+    decode(call: Call) {
+        const identityCall = calls.identity.renameSub;
+
+        if (identityCall.v2015.is(call)) {
+            return identityCall.v2015.decode(call)
+        } else if (identityCall.v2028.is(call)) {
+            const data = identityCall.v2028.decode(call)
+            if (data.sub.__kind !== 'Index') return { ...data, sub: data.sub.value }
+            else throw new DataNotDecodableError(identityCall, data)
+        } else if (identityCall.v9111.is(call)) {
+            const data = identityCall.v9111.decode(call)
+            if (data.sub.__kind !== 'Index') return { ...data, sub: data.sub.value }
+            else throw new DataNotDecodableError(identityCall, data)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identityCall)
         }
     },
 }

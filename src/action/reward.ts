@@ -16,7 +16,7 @@ export class RewardAction extends Action<RewardData> {
         let reward = new StakingReward({
             id: this.data.id,
             blockNumber: this.block.height,
-            timestamp: new Date(this.block.timestamp),
+            timestamp: new Date(this.block.timestamp ?? 0),
             extrinsicHash: this.extrinsic?.hash,
             account,
             amount: this.data.amount,

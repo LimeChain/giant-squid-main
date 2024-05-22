@@ -1,64 +1,60 @@
-import {UnknownVersionError} from '../../../../utils'
-import {
-    IdentityIdentityClearedEvent,
-    IdentityIdentityKilledEvent,
-    IdentityIdentitySubRemovedEvent,
-    IdentityIdentitySubRevokedEvent,
-} from '../../types/events'
-import {ChainContext, Event} from '../../types/support'
+import { Event } from '../../../../processor';
+import { UnknownVersionError } from '../../../../utils'
+import { events } from '../../types'
 
 const IdentityCleared = {
-    decode(ctx: ChainContext, event: Event) {
-        let e = new IdentityIdentityClearedEvent(ctx, event)
-        if (e.isV1030) {
-            const [who, deposit] = e.asV1030
-            return {who, deposit}
-        } else if (e.isV9130) {
-            return e.asV9130
+    decode(event: Event) {
+        let identity = events.identity.identityCleared;
+        if (identity.v1030.is(event)) {
+            const [who, deposit] = identity.v1030.decode(event);
+            return { who, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const IdentityKilled = {
-    decode(ctx: ChainContext, event: Event) {
-        let e = new IdentityIdentityKilledEvent(ctx, event)
-        if (e.isV1030) {
-            const [who, deposit] = e.asV1030
-            return {who, deposit}
-        } else if (e.isV9130) {
-            return e.asV9130
+    decode(event: Event) {
+        let identity = events.identity.identityKilled;
+        if (identity.v1030.is(event)) {
+            const [who, deposit] = identity.v1030.decode(event);
+            return { who, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const IdentitySubRemoved = {
-    decode(ctx: ChainContext, event: Event) {
-        let e = new IdentityIdentitySubRemovedEvent(ctx, event)
-        if (e.isV2015) {
-            const [sub, main, deposit] = e.asV2015
-            return {sub, main, deposit}
-        } else if (e.isV9130) {
-            return e.asV9130
+    decode(event: Event) {
+        const identity = events.identity.subIdentityRemoved;
+
+        if (identity.v2015.is(event)) {
+            const [sub, main, deposit] = identity.v2015.decode(event)
+            return { sub, main, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }
 
 const IdentitySubRevoked = {
-    decode(ctx: ChainContext, event: Event) {
-        let e = new IdentityIdentitySubRevokedEvent(ctx, event)
-        if (e.isV2015) {
-            const [sub, main, deposit] = e.asV2015
-            return {sub, main, deposit}
-        } else if (e.isV9130) {
-            return e.asV9130
+    decode(event: Event) {
+        const identity = events.identity.subIdentityRevoked;
+        if (identity.v2015.is(event)) {
+            const [sub, main, deposit] = identity.v2015.decode(event)
+            return { sub, main, deposit }
+        } else if (identity.v9130.is(event)) {
+            return identity.v9130.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(identity)
         }
     },
 }

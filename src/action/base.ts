@@ -1,9 +1,10 @@
 import assert from 'assert'
-import {DataHandlerContext, SubstrateBlock, SubstrateExtrinsic} from '@subsquid/substrate-processor'
-import {withErrorContext} from '@subsquid/util-internal'
+import { DataHandlerContext } from '@subsquid/substrate-processor'
+import { withErrorContext } from '@subsquid/util-internal'
 import { Store } from '@subsquid/typeorm-store'
+import { Block, BlockHeader, Extrinsic , Fields} from '../processor'
 
-export type ActionContext = DataHandlerContext<Store, unknown>
+export type ActionContext = DataHandlerContext<Store, Fields>
 
 export abstract class Action<T = unknown> {
     static async process(ctx: ActionContext, actions: Action[]) {
@@ -28,10 +29,10 @@ export abstract class Action<T = unknown> {
     protected performed = false
 
     constructor(
-        readonly block: Pick<SubstrateBlock, 'id' | 'hash' | 'height' | 'timestamp'>,
-        readonly extrinsic: Pick<SubstrateExtrinsic, 'id' | 'hash'> | undefined,
+        readonly block: Pick<BlockHeader, 'id' | 'hash' | 'height' | 'timestamp'>,
+        readonly extrinsic: Pick<Extrinsic, 'id' | 'hash'> | undefined,
         readonly data: T
-    ) {}
+    ) { }
 
     async perform(ctx: ActionContext): Promise<void> {
         assert(!this.performed)
@@ -44,14 +45,14 @@ export abstract class Action<T = unknown> {
 
 export class LazyAction extends Action {
     constructor(
-        readonly block: Pick<SubstrateBlock, 'id' | 'hash' | 'height' | 'timestamp'>,
-        readonly extrinsic: Pick<SubstrateExtrinsic, 'id' | 'hash'> | undefined,
+        readonly block: Pick<BlockHeader, 'id' | 'hash' | 'height' | 'timestamp'>,
+        readonly extrinsic: Pick<Extrinsic, 'id' | 'hash'> | undefined,
         readonly cb: (ctx: ActionContext) => Promise<Action[]>
     ) {
         super(block, extrinsic, {})
     }
 
-    protected async _perform(ctx: DataHandlerContext<Store, {}>): Promise<void> {
+    protected async _perform(ctx: ActionContext): Promise<void> {
         const actions = await this.cb(ctx)
         await Action.process(ctx, actions)
     }
