@@ -22,7 +22,6 @@ import { EnsureAccount, TransferAction, RewardAction } from './action'
 
 processor.run(new TypeormDatabase(), async (ctx) => {
     const actions: Action[] = []
-    test_ci_build_failure
 
     processItem(ctx.blocks, (block, item) => {
         switch (item.value.name) {
