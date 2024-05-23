@@ -1,4 +1,4 @@
-name: Build & Generate on Pull Request
+name: Build & Generate project files
 
 on:
   pull_request:
