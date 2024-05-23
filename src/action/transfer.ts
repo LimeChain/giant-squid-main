@@ -3,16 +3,16 @@ import { Action, ActionContext } from './base'
 
 export interface TransferData {
     id: string
-    fromId: string
-    toId: string
+    from: () => Promise<Account>
+    to: () => Promise<Account>
     amount: bigint
     success: boolean
 }
 
 export class TransferAction extends Action<TransferData> {
     protected async _perform(ctx: ActionContext): Promise<void> {
-        let from = await ctx.store.findOneByOrFail(Account, { id: this.data.fromId })
-        let to = await ctx.store.findOneByOrFail(Account, { id: this.data.toId })
+        let from = await this.data.from()
+        let to = await this.data.to()
 
         let transfer = new NativeTransfer({
             id: this.data.id,

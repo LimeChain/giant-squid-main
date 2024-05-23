@@ -4,14 +4,14 @@ import { Action, ActionContext } from './base'
 export interface RewardData {
     id: string
     amount: bigint
-    accountId: string
+    account: () => Promise<Account>
     era?: number
     validatorId?: string
 }
 
 export class RewardAction extends Action<RewardData> {
     protected async _perform(ctx: ActionContext): Promise<void> {
-        let account = await ctx.store.findOneByOrFail(Account, { id: this.data.accountId })
+        let account = await this.data.account()
 
         let reward = new StakingReward({
             id: this.data.id,
