@@ -1,14 +1,14 @@
-import {UnknownVersionError} from '../../../../utils'
-import {StakingPayoutStakersCall} from '../../types/calls'
-import {Call, ChainContext} from '../../types/support'
+import { Call } from '@subsquid/substrate-processor'
+import { UnknownVersionError } from '../../../../utils'
+import { calls } from '../../types'
 
 const payout_stakers = {
-    decode(ctx: ChainContext, event: Call) {
-        let e = new StakingPayoutStakersCall(ctx, event)
-        if (e.isV268) {
-            return e.asV268
+    decode(event: Call) {
+        const { payoutStakers } = calls.staking
+        if (payoutStakers.v268.is(event)) {
+            return payoutStakers.v268.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(payoutStakers)
         }
     },
 }
