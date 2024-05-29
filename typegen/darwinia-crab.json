@@ -1,6 +1,6 @@
 {
-    "outDir": "../src/chain/shiden/types",
-    "specVersions": "https://v2.archive.subsquid.io/metadata/shiden",
+    "outDir": "../src/chain/darwinia-crab/types",
+    "specVersions": "https://v2.archive.subsquid.io/metadata/darwinia-crab",
     "pallets": {
         "Balances": {
             "events": ["Transfer"],

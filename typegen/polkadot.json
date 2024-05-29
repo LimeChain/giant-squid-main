@@ -1,28 +1,27 @@
 {
     "outDir": "../src/chain/polkadot/types",
-    "specVersions": "https://polkadot.archive.subsquid.io/graphql",
-    "events": [
-        "Balances.Transfer",
-        "Staking.Reward",
-        "Staking.Rewarded",
-        "Identity.IdentityCleared",
-        "Identity.IdentityKilled",
-        "Identity.IdentitySubRemoved",
-        "Identity.IdentitySubRevoked"
-    ],
-    "calls": [
-        "Balances.transfer",
-        "Balances.force_transfer",
-        "Balances.transfer_keep_alive",
-        "Balances.transfer_all",
-        "Staking.payout_stakers",
-        "Identity.set_identity",
-        "Identity.set_subs",
-        "Identity.provide_judgement",
-        "Identity.add_sub",
-        "Identity.clear_identity",
-        "Identity.kill_identity",
-        "Identity.rename_sub"
-    ],
+    "specVersions": "https://v2.archive.subsquid.io/metadata/polkadot",
+    "pallets": {
+        "Balances": {
+            "events": ["Transfer"],
+            "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+        },
+        "Staking": {
+            "events": ["Reward", "Rewarded"],
+            "calls": ["payout_stakers"]
+        },
+        "Identity": {
+            "events": ["IdentityCleared", "IdentityKilled", "SubIdentityRemoved", "SubIdentityRevoked"],
+            "calls": [
+                "set_identity",
+                "set_subs",
+                "provide_judgement",
+                "add_sub",
+                "clear_identity",
+                "kill_identity",
+                "rename_sub"
+            ]
+        }
+    },
     "storage": []
 }
