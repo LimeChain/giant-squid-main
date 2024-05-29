@@ -2,9 +2,10 @@ import assert from 'assert'
 import { DataHandlerContext } from '@subsquid/substrate-processor'
 import { withErrorContext } from '@subsquid/util-internal'
 import { Store } from '@subsquid/typeorm-store'
-import { Block, BlockHeader, Extrinsic , Fields} from '../processor'
+import { StoreWithCache } from "@belopash/typeorm-store"
+import { Block, BlockHeader, Extrinsic, Fields } from '../processor'
 
-export type ActionContext = DataHandlerContext<Store, Fields>
+export type ActionContext = DataHandlerContext<StoreWithCache, Fields>
 
 export abstract class Action<T = unknown> {
     static async process(ctx: ActionContext, actions: Action[]) {
