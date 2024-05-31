@@ -34,7 +34,7 @@ function getChain(): { api: ChainApi; config: ProcessorConfig } {
   let processorConfig: ProcessorConfig = {
     name: chainConfig.network,
     prefix: chainConfig.prefix,
-    gateway: lookupArchive("kusama", {
+    gateway: lookupArchive(chainConfig.network, {
       release: "ArrowSquid",
     }),
     endpoint: {
