@@ -14,9 +14,9 @@ function getChain(): { api: ChainApi; config: ProcessorConfig } {
   const chainName = ensureEnvVariable('CHAIN')
   const chainRpcEndpoint = ensureEnvVariable('CHAIN_RPC_ENDPOINT')
   const chainNameKebab = chainName.split('_').join('-')
-  console.log(`Using chain: ${chainName} (${chainNameKebab}) ${chainRpcEndpoint}`)
+
   const chainAPI = require(`./${chainNameKebab}`).default
-  
+
   let chainsConfig: IChainData[]
   try {
     const data = fs.readFileSync('assets/chains-data.json')
@@ -34,9 +34,7 @@ function getChain(): { api: ChainApi; config: ProcessorConfig } {
   let processorConfig: ProcessorConfig = {
     name: chainConfig.network,
     prefix: chainConfig.prefix,
-    gateway: lookupArchive(chainConfig.network, {
-      release: "ArrowSquid",
-    }),
+    gateway: lookupArchive(chainConfig.network, { release: "ArrowSquid" }),
     endpoint: {
       url: chainRpcEndpoint,
       rateLimit: 10,
