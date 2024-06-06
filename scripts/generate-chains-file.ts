@@ -1,24 +1,19 @@
-import fs from 'fs'
-import {
-  CaseConverterEnum,
-  generateTemplateFilesBatch,
-} from 'generate-template-files'
+import fs from 'fs';
+import { CaseConverterEnum, generateTemplateFilesBatch } from 'generate-template-files';
 
 interface IChainData {
-  prefix: number
-  network: string
-  displayName: string
-  symbols: string[]
-  decimals: string[]
-  archiveName: string
+  prefix: number;
+  network: string;
+  displayName: string;
+  symbols: string[];
+  decimals: string[];
+  archiveName: string;
 }
 
-const chainsData: IChainData[] = JSON.parse(
-  fs.readFileSync('assets/chains-data.json').toString()
-)
+const chainsData: IChainData[] = JSON.parse(fs.readFileSync('assets/chains-data.json').toString());
 
 for (const chain of chainsData) {
-  console.log(chain.network)
+  console.log(chain.network);
   generateTemplateFilesBatch([
     {
       option: 'typegen',
@@ -68,5 +63,9 @@ for (const chain of chainsData) {
         overwrite: false,
       },
     },
-  ]).then().catch((err)=> {throw err})
+  ])
+    .then()
+    .catch((err) => {
+      throw err;
+    });
 }

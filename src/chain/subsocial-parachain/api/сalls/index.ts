@@ -1,5 +1,5 @@
-import balances from './balances'
+import balances from './balances';
 
 export default {
-    balances,
-}
+  balances,
+};

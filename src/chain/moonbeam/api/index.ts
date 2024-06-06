@@ -1,5 +1,5 @@
-import events from './events'
+import events from './events';
 
 export default {
-    events,
-}
+  events,
+};

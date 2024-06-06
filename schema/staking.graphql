@@ -1,14 +1,14 @@
 type Account @entity {
-    rewards: [StakingReward!] @derivedFrom(field: "account")
+  rewards: [StakingReward!] @derivedFrom(field: "account")
 }
 
 type StakingReward @entity {
-    id: ID!
-    timestamp: DateTime!
-    blockNumber: Int! @index
-    extrinsicHash: String @index
-    account: Account!
-    amount: BigInt!
-    era: Int
-    validatorId: ID
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  era: Int
+  validatorId: ID
 }

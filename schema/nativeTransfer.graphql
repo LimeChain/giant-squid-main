@@ -1,27 +1,27 @@
 type Account @entity {
-    transfers: [Transfer!] @derivedFrom(field: "account")
+  transfers: [Transfer!] @derivedFrom(field: "account")
 }
 
 enum TransferDirection {
-    From
-    To
+  From
+  To
 }
 
 # entity for linking account and transfer
 type Transfer @entity {
-    id: ID!
-    transfer: NativeTransfer
-    account: Account!
-    direction: TransferDirection
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
 }
 
 type NativeTransfer @entity {
-    id: ID!
-    blockNumber: Int! @index
-    timestamp: DateTime! @index
-    extrinsicHash: String @index
-    from: Account!
-    to: Account!
-    amount: BigInt! @index
-    success: Boolean!
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
 }

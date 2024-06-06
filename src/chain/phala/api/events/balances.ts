@@ -1,18 +1,18 @@
-import { Event } from '@subsquid/substrate-processor'
-import { UnknownVersionError } from '../../../../utils'
-import { events } from '../../types'
+import { Event } from '@subsquid/substrate-processor';
+import { UnknownVersionError } from '../../../../utils';
+import { events } from '../../types';
 
 export const Transfer = {
-    decode(event: Event) {
-        const { transfer } = events.balances
-        if (transfer.v1090.is(event)) {
-            return transfer.v1090.decode(event)
-        } else {
-            throw new UnknownVersionError(transfer)
-        }
-    },
-}
+  decode(event: Event) {
+    const { transfer } = events.balances;
+    if (transfer.v1090.is(event)) {
+      return transfer.v1090.decode(event);
+    } else {
+      throw new UnknownVersionError(transfer);
+    }
+  },
+};
 
 export default {
-    Transfer,
-}
+  Transfer,
+};
