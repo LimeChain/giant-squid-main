@@ -2,10 +2,22 @@ import type { SubstrateBatchProcessor } from '@subsquid/substrate-processor'
 
 import type acala from './acala/api'
 import type astar from './astar/api'
-import type bifrost from './bifrost/api'
-import type calamari from './calamari/api'
-import type efinity from './efinity/api'
-import type gmordie from './gmordie/api'
+import type amplitude from './amplitude/api'
+import type basilisk from './basilisk/api'
+import type bifrostPolkadot from './bifrost-polkadot/api'
+import type centrifuge from './centrifuge/api'
+import type clover from './clover/api'
+import type darwinia from './darwinia/api'
+import type integritee from './integritee/api'
+import type kilt from './kilt/api'
+import type litentry from './litentry/api'
+import type litmus from './litmus/api'
+import type pendulum from './pendulum/api'
+import type picasso from './picasso/api'
+import type robonomics from './robonomics/api'
+import type ternoa from './ternoa/api'
+import type turing from './turing/api'
+import type zeitgeist from './zeitgeist/api'
 import type hydradx from './hydradx/api'
 import type karura from './karura/api'
 import type khala from './khala/api'
@@ -15,33 +27,39 @@ import type moonriver from './moonriver/api'
 import type phala from './phala/api'
 import type polkadot from './polkadot/api'
 import type shiden from './shiden/api'
-import type statemine from './statemine/api'
-import type statemint from './statemint/api'
-import type subsocial from './subsocial/api'
+import type subsocial from './subsocial-parachain/api'
+import type darwiniaCrab from './darwinia-crab/api'
 
-
-// Currently, the type definitions for other networks are not migrated to ArrowSquid, so they are temporarily disabled.
-// So, to be type safe while developing, only Kusama is enabled. Otherwise, the typescript is not happy.
-// TODO: Enable other networks when the new type definitions are generated.
 export type ChainApi =
-  // | typeof acala
-  // | typeof astar
-  // | typeof bifrost
-  // | typeof calamari
-  // | typeof efinity
-  // | typeof gmordie
-  // | typeof hydradx
-  // | typeof karura
-  // | typeof khala
+  | typeof acala
+  | typeof astar
+  | typeof amplitude
+  | typeof basilisk
+  | typeof bifrostPolkadot
+  | typeof centrifuge
+  | typeof clover
+  | typeof darwinia
+  | typeof integritee
+  | typeof kilt
+  | typeof litentry
+  | typeof litmus
+  | typeof pendulum
+  | typeof picasso
+  | typeof robonomics
+  | typeof ternoa
+  | typeof turing
+  | typeof zeitgeist
+  | typeof hydradx
+  | typeof karura
+  | typeof khala
   | typeof kusama
-// | typeof moonbeam
-// | typeof moonriver
-// | typeof phala
-// | typeof polkadot
-// | typeof shiden
-// | typeof statemine
-// | typeof statemint
-// | typeof subsocial
+  | typeof moonbeam
+  | typeof moonriver
+  | typeof phala
+  | typeof polkadot
+  | typeof shiden
+  | typeof subsocial
+  | typeof darwiniaCrab
 
 export interface ProcessorConfig {
   name: string

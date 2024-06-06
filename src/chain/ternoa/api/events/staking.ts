@@ -1,17 +1,17 @@
+import { Event } from '@subsquid/substrate-processor'
 import { UnknownVersionError } from '../../../../utils'
-import { StakingRewardedEvent } from '../../types/events'
-import { ChainContext, Event } from '../../types/support'
+import { events } from '../../types'
 
 const Rewarded = {
-  decode(ctx: ChainContext, event: Event) {
-    let e = new StakingRewardedEvent(ctx, event)
-    if (e.isV1) {
-      let [stash, amount] = e.asV1
+  decode(event: Event) {
+    const { rewarded } = events.staking
+    if (rewarded.v1.is(event)) {
+      let [stash, amount] = rewarded.v1.decode(event)
       return { stash, amount }
-    } else if (e.isV11) {
-      return e.asV11
+    } else if (rewarded.v11.is(event)) {
+      return rewarded.v11.decode(event)
     } else {
-      throw new UnknownVersionError(e)
+      throw new UnknownVersionError(rewarded)
     }
   },
 }

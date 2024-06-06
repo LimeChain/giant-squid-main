@@ -1,14 +1,14 @@
-import {UnknownVersionError} from '../../../../utils'
-import {BalancesTransferEvent} from '../../types/events'
-import {ChainContext, Event} from '../../types/support'
+import { Event } from '@subsquid/substrate-processor'
+import { UnknownVersionError } from '../../../../utils'
+import { events } from '../../types'
 
 const Transfer = {
-    decode(ctx: ChainContext, event: Event) {
-        let e = new BalancesTransferEvent(ctx, event)
-        if (e.isV1) {
-            return e.asV1
+    decode(event: Event) {
+        const { transfer } = events.balances
+        if (transfer.v1.is(event)) {
+            return transfer.v1.decode(event)
         } else {
-            throw new UnknownVersionError(e)
+            throw new UnknownVersionError(transfer)
         }
     },
 }

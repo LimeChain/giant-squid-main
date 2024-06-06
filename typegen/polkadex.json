@@ -1,17 +1,16 @@
 {
     "outDir": "../src/chain/polkadex/types",
-    "specVersions": "https://polkadex.archive.subsquid.io/graphql",
+    "specVersions": "https://v2.archive.subsquid.io/metadata/polkadex",
     "typesBundle": "../assets/type-bundles/polkadex.json",
-    "events": [
-        "Balances.Transfer",
-        "Staking.Rewarded"
-    ],
-    "calls": [
-        "Balances.transfer",
-        "Balances.force_transfer",
-        "Balances.transfer_keep_alive",
-        "Balances.transfer_all",
-        "Staking.payout_stakers"
-    ],
+    "pallets": {
+        "Balances": {
+            "events": ["Transfer"],
+            "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+        },
+        "Staking": {
+            "events": ["Rewarded"],
+            "calls": ["payout_stakers"]
+        }
+    },
     "storage": []
 }

@@ -1,10 +1,30 @@
-import type {Result, Option} from './support'
+import {sts, Result, Option, Bytes, BitSequence} from './support'
 
-export type MultiAddress = MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw | MultiAddress_Address32 | MultiAddress_Address20
+export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
+    return  {
+        Address20: sts.bytes(),
+        Address32: sts.bytes(),
+        Id: AccountId32,
+        Index: sts.number(),
+        Raw: sts.bytes(),
+    }
+})
+
+export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
+
+export interface MultiAddress_Address20 {
+    __kind: 'Address20'
+    value: Bytes
+}
+
+export interface MultiAddress_Address32 {
+    __kind: 'Address32'
+    value: Bytes
+}
 
 export interface MultiAddress_Id {
     __kind: 'Id'
-    value: Uint8Array
+    value: AccountId32
 }
 
 export interface MultiAddress_Index {
@@ -14,15 +34,9 @@ export interface MultiAddress_Index {
 
 export interface MultiAddress_Raw {
     __kind: 'Raw'
-    value: Uint8Array
+    value: Bytes
 }
 
-export interface MultiAddress_Address32 {
-    __kind: 'Address32'
-    value: Uint8Array
-}
+export type AccountId32 = Bytes
 
-export interface MultiAddress_Address20 {
-    __kind: 'Address20'
-    value: Uint8Array
-}
+export const AccountId32 = sts.bytes()
