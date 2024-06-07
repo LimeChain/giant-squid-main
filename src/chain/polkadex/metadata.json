@@ -1,0 +1,16 @@
+{
+  "outDir": "./types",
+  "specVersions": "https://v2.archive.subsquid.io/metadata/polkadex",
+  "typesBundle": "../../../assets/type-bundles/polkadex.json",
+  "pallets": {
+    "Balances": {
+      "events": ["Transfer"],
+      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+    },
+    "Staking": {
+      "events": ["Rewarded"],
+      "calls": ["payout_stakers"]
+    }
+  },
+  "storage": []
+}
