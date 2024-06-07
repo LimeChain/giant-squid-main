@@ -1,0 +1,12 @@
+node_modules/
+lib/
+assets/
+
+db/migrations/
+
+manifests/
+
+src/chain/*/types/
+src/model/
+
+.env

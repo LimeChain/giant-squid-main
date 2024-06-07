@@ -1,8 +1,5 @@
-import fs from 'fs'
-import {
-  CaseConverterEnum,
-  generateTemplateFiles,
-} from 'generate-template-files'
+import fs from 'fs';
+import { CaseConverterEnum, generateTemplateFiles } from 'generate-template-files';
 
 generateTemplateFiles([
   {
@@ -44,4 +41,4 @@ generateTemplateFiles([
       overwrite: false,
     },
   },
-])
+]);

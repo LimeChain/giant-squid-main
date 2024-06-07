@@ -60,4 +60,4 @@
 
 export interface Calls {}
 
-export const calls: Calls = {}
+export const calls: Calls = {};

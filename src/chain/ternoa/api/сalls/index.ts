@@ -1,5 +1,5 @@
-import staking from './staking'
+import staking from './staking';
 
 export default {
-    staking,
-}
+  staking,
+};

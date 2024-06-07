@@ -1,7 +1,7 @@
-import balances from './balances'
-import staking from './staking'
+import balances from './balances';
+import staking from './staking';
 
 export default {
-    balances,
-    staking
-}
+  balances,
+  staking,
+};

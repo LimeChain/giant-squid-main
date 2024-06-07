@@ -1,7 +1,7 @@
-import identity from './identities'
-import staking from './staking'
+import identity from './identities';
+import staking from './staking';
 
 export default {
-    staking,
-    identity,
-}
+  staking,
+  identity,
+};
