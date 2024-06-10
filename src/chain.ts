@@ -1,22 +1,21 @@
-import { ITransferEventPalletDecoder } from "./indexer/pallets/mapper";
-import { createIndexer } from "./main"
-import { Event } from "./processor";
+import path from 'path';
+import { spawn } from 'child_process';
 
-class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
-    decode(event: Event): { from: string; } {
-        console.log('TransferEventPalletDecoder', event);
-        return { from: '0x' };
-    }
+const chainName = process.env.CHAIN;
+
+if (!chainName) {
+  console.error('CHAIN environment variable is not set.');
+  process.exit(1);
 }
 
-createIndexer({
-    config: {
-        chain: 'kusama',
-        endpoint: 'wss://kusama-rpc.polkadot.io',
-    },
-    decoders: {
-        events: {
-            'Balances.Transfer': new TransferEventPalletDecoder()
-        }
-    }
-})
+const scriptPath = path.join(__dirname, 'chain', chainName, 'main.js');
+
+console.log(`Running script at: ${scriptPath}`);
+
+const subprocess = spawn('node', [scriptPath], {
+  stdio: 'inherit',
+});
+
+subprocess.on('close', (code: number) => {
+  process.exit(code);
+});

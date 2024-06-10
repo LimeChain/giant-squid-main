@@ -1,6 +1,7 @@
-import { decodeHex, toHex } from '@subsquid/substrate-processor';
+import { isHex } from '@subsquid/util-internal-hex';
+import { decodeHex } from '@subsquid/substrate-processor';
 import * as ss58 from '@subsquid/ss58';
-import { chain } from '../chain';
+import { chain } from '../chain/index';
 import { Item, orderItems } from './orderItems';
 import { Block } from '../processor';
 
@@ -47,5 +48,27 @@ export function* splitIntoBatches<T>(list: T[], maxBatchSize: number): Generator
       offset += maxBatchSize;
     }
     yield list.slice(offset);
+  }
+}
+
+export function unwrapData(data: { __kind: string; value?: string }) {
+  switch (data.__kind) {
+    case 'None':
+      return null;
+    case 'BlakeTwo256':
+    case 'Sha256':
+    case 'Keccak256':
+    case 'ShaThree256':
+      return Buffer.from(data.value!).toString('hex');
+    default: {
+      let unwrapped = '';
+      if (isHex(data.value)) {
+        unwrapped = decodeHex(data.value).toString('utf-8');
+      } else {
+        unwrapped = Buffer.from(data.value!).toString('utf-8');
+      }
+
+      return unwrapped.replace(/\u0000/g, '');
+    }
   }
 }

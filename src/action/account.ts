@@ -1,7 +1,5 @@
-import * as ss58 from '@subsquid/ss58';
 import { Account } from '../model';
 import { Action, ActionContext } from './base';
-import { chain } from '../chain';
 import { decodeAddress } from '../utils';
 
 export interface AccountData {

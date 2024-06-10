@@ -1,61 +1,43 @@
-import { TypeormDatabaseWithCache } from '@belopash/typeorm-store'
-import { isHex } from '@subsquid/util-internal-hex'
-import { SubstrateBatchProcessor, decodeHex } from '@subsquid/substrate-processor'
-import { chain } from './chain'
-import { Call, Processor, ProcessorContext } from './processor'
-import { processItem } from './utils'
-import { Action } from './action/base'
-import { DecodersMap, PalletMapper } from './indexer/pallets/mapper'
-
-
-type IndexerParams = {
-    config: {
-        chain: string,
-        endpoint: Parameters<SubstrateBatchProcessor<any>['setRpcEndpoint']>[0],
-        gateway?: string,
-        blockRange?: {
-            from: number,
-            to?: number,
-        },
-        typesBundle?: {
-            specVersion: number,
-            types: any,
-        },
-    },
-    decoders: DecodersMap
-};
+import { TypeormDatabaseWithCache } from '@belopash/typeorm-store';
+import { isHex } from '@subsquid/util-internal-hex';
+import { SubstrateBatchProcessor, decodeHex } from '@subsquid/substrate-processor';
+import { chain } from './chain/index';
+import { Call, Processor, ProcessorContext } from './processor';
+import { processItem } from './utils';
+import { Action } from './action/base';
+import { DecodersMap, PalletMapper } from './indexer/mapper';
+import { IndexerParams } from './indexer/types';
 
 export const createIndexer = async ({ config, decoders }: IndexerParams) => {
+  const mapper = new PalletMapper(decoders, { chain: chain.config.name });
 
-    const mapper = new PalletMapper(decoders, { chain: chain.config.name })
+  const events = mapper.getEvents();
+  const calls = mapper.getCalls();
 
-    const events = mapper.getEvents()
-    const calls = mapper.getCalls()
+  const processor = new Processor(new TypeormDatabaseWithCache({ supportHotBlocks: true }), config);
 
-    const processor = new Processor(
-        new TypeormDatabaseWithCache({ supportHotBlocks: true }),
-        config
-    );
+  processor.addEvents(events);
+  processor.addCalls(calls);
+  processor.start(async (ctx: ProcessorContext) => {
+    const queue: Action[] = [];
+    // const queue: any = {}; //new Queue();
 
-    processor.addEvents(events)
-    processor.addCalls(calls)
-    processor.start(async (ctx: ProcessorContext) => {
-        const queue: any = {}//new Queue();
-
-        processItem(ctx.blocks, (block, item) => {
-            if (item.kind === 'event') {
-                const pallet = mapper.getEventPallet(item.value.name)!;
-                pallet.handle({ ctx, queue, block, item: item.value });
-            }
-            if (item.kind === 'call') {
-                const pallet = mapper.getCallPallet(item.value.name)!;
-                pallet.handle({ ctx, queue, block, item: item.value });
-            }
-        });
-
-        await queue.execute()
+    processItem(ctx.blocks, (block, item) => {
+      if (item.kind === 'event') {
+        const pallet = mapper.getEventPallet(item.value.name)!;
+        pallet.handle({ ctx, queue, block, item: item.value });
+      }
+      if (item.kind === 'call') {
+        const pallet = mapper.getCallPallet(item.value.name)!;
+        pallet.handle({ ctx, queue, block, item: item.value });
+      }
     });
-}
+
+    // await queue.execute();
+    await Action.process(ctx, queue);
+    await ctx.store.flush();
+  });
+};
 
 // processor.run(new TypeormDatabaseWithCache({ supportHotBlocks: true }), async (ctx) => {
 //     const queue: Action[] = []
@@ -511,25 +493,3 @@ export const createIndexer = async ({ config, decoders }: IndexerParams) => {
 //     await Action.process(ctx, actions)
 //     await ctx.store.flush();
 // })
-
-function unwrapData(data: { __kind: string; value?: string }) {
-  switch (data.__kind) {
-    case 'None':
-      return null;
-    case 'BlakeTwo256':
-    case 'Sha256':
-    case 'Keccak256':
-    case 'ShaThree256':
-      return Buffer.from(data.value!).toString('hex');
-    default: {
-      let unwrapped = '';
-      if (isHex(data.value)) {
-        unwrapped = decodeHex(data.value).toString('utf-8');
-      } else {
-        unwrapped = Buffer.from(data.value!).toString('utf-8');
-      }
-
-      return unwrapped.replace(/\u0000/g, '');
-    }
-  }
-}
