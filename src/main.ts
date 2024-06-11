@@ -1,11 +1,9 @@
 import { TypeormDatabaseWithCache } from '@belopash/typeorm-store';
-import { isHex } from '@subsquid/util-internal-hex';
-import { SubstrateBatchProcessor, decodeHex } from '@subsquid/substrate-processor';
 import { chain } from './chain/index';
-import { Call, Processor, ProcessorContext } from './processor';
+import { Processor, ProcessorContext } from './processor';
 import { processItem } from './utils';
 import { Action } from './action/base';
-import { DecodersMap, PalletMapper } from './indexer/mapper';
+import { PalletMapper } from './indexer/mapper';
 import { IndexerParams } from './indexer/types';
 
 export const createIndexer = async ({ config, decoders }: IndexerParams) => {
