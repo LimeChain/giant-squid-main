@@ -1,65 +1,65 @@
-import { PalletCall, PalletCallDecoder, PalletEvent, PalletEventDecoder } from './types';
-import {
-  IdentityAddSubCallPalletHandler,
-  IdentityClearIdentityCallPalletHandler,
-  IdentityProvideJudgementCallPalletHandler,
-  IdentitySetSubsCallPalletHandler,
-  SetIdentityCallPalletHandler,
-  IdentityRenameSubCallPalletHandler,
-  IdentityKillIdentityCallPalletHandler,
-} from './pallets/identity/calls/identity';
+import { IdentityInfo, PalletCall, PalletCallDecoder, PalletEvent, PalletEventDecoder, WrappedData } from './types';
+import { SetIdentityCallPalletHandler } from './pallets/identity/calls/setIdentity';
 import { TransferEventPalletHandler } from './pallets/balances/events/transfer';
-import { StakingRewardPalletHandler } from './pallets/staking/events/staking';
-import {
-  IdentitySubIdentityRemovedEventPalletHandler,
-  IdentitySubIdentityRevokedEventPalletHandler,
-} from './pallets/identity/events/identity';
+import { StakingRewardPalletHandler } from './pallets/staking/events/reward';
+import { IdentitySubIdentityRemovedEventPalletHandler } from './pallets/identity/events/subIdentityRemoved';
+import { IdentityRenameSubCallPalletHandler } from './pallets/identity/calls/renameSub';
+import { IdentitySubIdentityRevokedEventPalletHandler } from './pallets/identity/events/subIdentityRevoked';
+import { IdentitySetSubsCallPalletHandler } from './pallets/identity/calls/setSubs';
+import { IdentityProvideJudgementCallPalletHandler } from './pallets/identity/calls/provideJudgement';
+import { IdentityAddSubCallPalletHandler } from './pallets/identity/calls/addSub';
+import { IdentityClearIdentityCallPalletHandler } from './pallets/identity/calls/clearIdentity';
+import { IdentityKillIdentityCallPalletHandler } from './pallets/identity/calls/killIdentity';
 
-// TODO: Implement PalletTypes check for properties is correct
+// TODO: Check if each are correct
 export type PalletTypes = {
   events: {
     'Balances.Transfer': PalletEvent<{ from: string; to: string; amount: bigint }>;
-    'Staking.Reward': PalletEvent<{ stash: string; amount: bigint }>;
-    'Staking.Rewarded': PalletEvent<{ stash: string; amount: bigint }>;
+    'Staking.Reward': PalletEvent<{ stash: string; amount: bigint } | undefined>;
+    'Staking.Rewarded': PalletEvent<{ stash: string; amount: bigint } | undefined>;
     'Identity.SubIdentityRemoved': PalletEvent<{ sub: string; main: string; deposit: bigint }>;
     'Identity.SubIdentityRevoked': PalletEvent<{ sub: string; main: string; deposit: bigint }>;
   };
   calls: {
-    'Identity.add_sub': PalletCall<{ name: string }>;
-    'Identity.set_identity': PalletCall<{ name: string }>;
-    'Identity.rename_sub': PalletCall<{ name: string }>;
-    'Identity.set_subs': PalletCall<{ subs: string[] }>;
-    'Identity.provide_judgement': PalletCall<{ target: string; judgement: string }>;
-    'Identity.clear_identity': PalletCall<{}>;
-    'Identity.kill_identity': PalletCall<{}>;
+    'Identity.set_identity': PalletCall<IdentityInfo>;
+    'Identity.set_subs': PalletCall<{ subs: [string, WrappedData][] }>;
+    'Identity.provide_judgement': PalletCall<{ regIndex: number; target: string; judgement: WrappedData }>;
+    'Identity.add_sub': PalletCall<{ name: string; sub: string; data: WrappedData }>;
+    'Identity.clear_identity': PalletCall<{ sub: string; data: WrappedData }>;
+    'Identity.kill_identity': PalletCall<{ target: string | WrappedData }>;
+    'Identity.rename_sub': PalletCall<{ sub: string; data: WrappedData }>;
   };
 };
 
-// TODO: is this good to be placed here? I did it to have everything in 1 place
-// check if each of these is needed and is correct
+// TODO: Check if each are correct
 export interface ITransferEventPalletDecoder extends PalletEventDecoder<{ from: string; to: string; amount: bigint }> {}
-export interface IStakingRewardEventPalletDecoder extends PalletEventDecoder<{ stash: string; amount: bigint }> {}
+export interface IStakingRewardEventPalletDecoder extends PalletEventDecoder<{ stash: string; amount: bigint } | undefined> {}
 export interface IIdentitySubIdentityRemovedEventPalletDecoder extends PalletEventDecoder<{ sub: string; main: string; deposit: bigint }> {}
 export interface IIdentitySubIdentityRevokedEventPalletDecoder extends PalletEventDecoder<{ sub: string; main: string; deposit: bigint }> {}
+// TODO: check this return type
+export interface IIdentitySetIdentityCallPalletDecoder extends PalletCallDecoder<IdentityInfo> {}
+// TODO: check this return type
+export interface IIdentitySetSubsCallPalletDecoder extends PalletCallDecoder<{ subs: [string, WrappedData][] }> {}
+// TODO: check this return type
+export interface IIdentityProvideJudgementCallPalletDecoder
+  extends PalletCallDecoder<{ regIndex: number; target: string; judgement: WrappedData }> {}
+// TODO: check this return type
+export interface IIdentityAddSubCallPalletDecoder extends PalletCallDecoder<{ name: string; sub: string; data: WrappedData }> {}
+export interface IIdentityClearIdentityCallPalletDecoder extends PalletCallDecoder<{ sub: string; data: WrappedData }> {}
+export interface IIdentityKillIdentityCallPalletDecoder extends PalletCallDecoder<{ target: string | WrappedData }> {}
+export interface IIdentityRenameSubCallPalletDecoder extends PalletCallDecoder<{ sub: string; data: WrappedData }> {}
 
-export interface IIdentitySetIdentityCallPalletDecoder extends PalletCallDecoder<{ name: string }> {}
-export interface IIdentityRenameSubCallPalletDecoder extends PalletCallDecoder<{ name: string }> {}
-export interface IIdentitySetSubsCallPalletDecoder extends PalletCallDecoder<{ subs: string[] }> {}
-export interface IIdentityProvideJudgementCallPalletDecoder extends PalletCallDecoder<{ target: string; judgement: string }> {}
-export interface IIdentityAddSubCallPalletDecoder extends PalletCallDecoder<{ name: string }> {}
-export interface IIdentityClearIdentityCallPalletDecoder extends PalletCallDecoder<{}> {}
-export interface IIdentityKillIdentityCallPalletDecoder extends PalletCallDecoder<{}> {}
-
+// TODO: fix any
 export const registry: Map<string, any> = new Map()
   .set('Balances.Transfer', TransferEventPalletHandler)
-  .set('Identity.set_identity', SetIdentityCallPalletHandler)
   .set('Staking.Reward', StakingRewardPalletHandler)
   .set('Staking.Rewarded', StakingRewardPalletHandler)
   .set('Identity.SubIdentityRemoved', IdentitySubIdentityRemovedEventPalletHandler)
   .set('Identity.SubIdentityRevoked', IdentitySubIdentityRevokedEventPalletHandler)
-  .set('Identity.provide_judgement', IdentityProvideJudgementCallPalletHandler)
+  .set('Identity.set_identity', SetIdentityCallPalletHandler)
   .set('Identity.set_subs', IdentitySetSubsCallPalletHandler)
-  .set('Identity.rename_sub', IdentityRenameSubCallPalletHandler)
+  .set('Identity.provide_judgement', IdentityProvideJudgementCallPalletHandler)
   .set('Identity.add_sub', IdentityAddSubCallPalletHandler)
   .set('Identity.clear_identity', IdentityClearIdentityCallPalletHandler)
-  .set('Identity.kill_identity', IdentityKillIdentityCallPalletHandler);
+  .set('Identity.kill_identity', IdentityKillIdentityCallPalletHandler)
+  .set('Identity.rename_sub', IdentityRenameSubCallPalletHandler);

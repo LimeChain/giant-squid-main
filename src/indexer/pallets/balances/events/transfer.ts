@@ -1,19 +1,9 @@
 import { EnsureAccount, TransferAction } from '../../../../action';
 import { Action } from '../../../../action/base';
-import { chain } from '../../../../chain/index';
 import { Account } from '../../../../model';
 import { ProcessorContext, Block, Event } from '../../../../processor';
-import { encodeAddress } from '../../../../utils';
 import { PalletEventHandler } from '../../../handler';
 import { ITransferEventPalletDecoder } from '../../../registry';
-
-export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
-  decode(event: Event): { from: string; to: string; amount: bigint } {
-    const data = chain.api.events.balances.Transfer.decode(event);
-
-    return { from: data.from, to: data.to, amount: data.amount };
-  }
-}
 
 export class TransferEventPalletHandler extends PalletEventHandler<ITransferEventPalletDecoder> {
   constructor(decoder: ITransferEventPalletDecoder, options: { chain: string }) {
@@ -25,8 +15,8 @@ export class TransferEventPalletHandler extends PalletEventHandler<ITransferEven
 
     const { from, to, amount } = this.decoder.decode(event);
 
-    const fromId = encodeAddress(from);
-    const toId = encodeAddress(to);
+    const fromId = this.encodeAddress(from);
+    const toId = this.encodeAddress(to);
 
     const fromAccount = params.ctx.store.defer(Account, fromId);
     const toAccount = params.ctx.store.defer(Account, toId);

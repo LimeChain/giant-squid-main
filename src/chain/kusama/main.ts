@@ -1,14 +1,21 @@
 import { createIndexer } from '../../main';
-import { TransferEventPalletDecoder } from '../../indexer/pallets/balances/events/transfer';
-import { SetIdentityCallPalletDecoder } from '../../indexer/pallets/identity/calls/identity';
-import { StakingRewardEventPalletDecoder } from '../../indexer/pallets/staking/events/staking';
+import { ensureEnvVariable } from '../../utils';
+import { lookupArchive } from '@subsquid/archive-registry';
+import { TransferEventPalletDecoder } from './decoders/events/balances';
+import { StakingRewardEventPalletDecoder } from './decoders/events/staking';
+import {
+  IdentityAddSubCallPalletDecoder,
+  IdentityProvideJudgementCallPalletDecoder,
+  IdentitySetSubsCallPalletDecoder,
+  RenameIdentityCallPalletDecoder,
+  SetIdentityCallPalletDecoder,
+} from './decoders/calls/identities';
 
-// TODO: Extend the decoders map
 createIndexer({
   config: {
-    chain: 'kusama',
-    endpoint: 'wss://kusama-rpc.polkadot.io',
-    gateway: 'https://v2.archive.subsquid.io/network/kusama',
+    chain: ensureEnvVariable('CHAIN'),
+    endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    gateway: lookupArchive(ensureEnvVariable('CHAIN'), { release: 'ArrowSquid' }),
   },
   decoders: {
     events: {
@@ -18,6 +25,12 @@ createIndexer({
     },
     calls: {
       'Identity.set_identity': new SetIdentityCallPalletDecoder(),
+      'Identity.set_subs': new IdentitySetSubsCallPalletDecoder(),
+      'Identity.provide_judgement': new IdentityProvideJudgementCallPalletDecoder(),
+      'Identity.add_sub': new IdentityAddSubCallPalletDecoder(),
+      // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
+      // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
+      'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),
     },
   },
 });

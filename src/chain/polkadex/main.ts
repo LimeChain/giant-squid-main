@@ -1,13 +1,15 @@
 import { createIndexer } from '../../main';
-import { TransferEventPalletDecoder } from '../../indexer/pallets/balances/events/transfer';
-import { StakingRewardEventPalletDecoder } from '../../indexer/pallets/staking/events/staking';
+import { ensureEnvVariable } from '../../utils';
+import { lookupArchive } from '@subsquid/archive-registry';
+import { TransferEventPalletDecoder } from './decoders/events/balances';
+import { StakingRewardEventPalletDecoder } from './decoders/events/staking';
 
-//TODO Implement the calls: payout_stakers
 createIndexer({
   config: {
-    chain: 'polkadex',
-    endpoint: 'wss://polkadex-rpc.dwellir.com',
-    gateway: 'https://v2.archive.subsquid.io/network/polkadex',
+    chain: ensureEnvVariable('CHAIN'),
+    endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    gateway: lookupArchive(ensureEnvVariable('CHAIN'), { release: 'ArrowSquid' }),
+    typesBundle: 'assets/type-bundles/polkadex.json',
   },
   decoders: {
     events: {

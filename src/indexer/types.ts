@@ -21,6 +21,23 @@ export type PalletCall<Dto> = {
   handler: PalletCallHandler<PalletCallDecoder<Dto>>;
 };
 
+export type WrappedData = {
+  __kind: string;
+  value?: string;
+};
+
+export type IdentityInfo = {
+  web: WrappedData;
+  display: WrappedData;
+  legal: WrappedData;
+  email: WrappedData;
+  image: WrappedData;
+  pgpFingerprint: string;
+  riot: WrappedData;
+  twitter: WrappedData;
+  additional: any;
+};
+
 export type IndexerParams = {
   config: {
     chain: string;
@@ -30,10 +47,17 @@ export type IndexerParams = {
       from: number;
       to?: number;
     };
-    typesBundle?: {
-      specVersion: number;
-      types: any;
-    };
+    rateLimit?: number;
+    typesBundle?: Parameters<SubstrateBatchProcessor<any>['setTypesBundle']>[0];
   };
   decoders: DecodersMap;
 };
+
+// export interface IChainData {
+//   prefix?: number;
+//   network: string;
+//   displayName: string;
+//   symbols: string[];
+//   decimals: string[];
+//   archiveName: string;
+// }

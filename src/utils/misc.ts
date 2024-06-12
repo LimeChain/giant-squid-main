@@ -1,16 +1,11 @@
 import { isHex } from '@subsquid/util-internal-hex';
-import { decodeHex } from '@subsquid/substrate-processor';
+import { assertNotNull, decodeHex } from '@subsquid/substrate-processor';
 import * as ss58 from '@subsquid/ss58';
-import { chain } from '../chain/index';
 import { Item, orderItems } from './orderItems';
 import { Block } from '../processor';
 
-export function encodeAddress(address: string | Uint8Array) {
-  return ss58.codec(chain.config.name).encode(address);
-}
-
 export function decodeAddress(address: string) {
-  return ss58.codec(chain.config.name).decode(address);
+  return ss58.codec(ensureEnvVariable('CHAIN')).decode(address);
 }
 
 export function processItem(blocks: Block[], fn: (block: Block, item: Item) => void) {
@@ -71,4 +66,8 @@ export function unwrapData(data: { __kind: string; value?: string }) {
       return unwrapped.replace(/\u0000/g, '');
     }
   }
+}
+
+export function ensureEnvVariable(name: string): string {
+  return assertNotNull(process.env[name], `Missing env variable ${name}`);
 }
