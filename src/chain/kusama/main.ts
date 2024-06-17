@@ -1,21 +1,18 @@
-import { createIndexer } from '../../main';
+import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
-import { lookupArchive } from '@subsquid/archive-registry';
-import { TransferEventPalletDecoder } from './decoders/events/balances';
-import { StakingRewardEventPalletDecoder } from './decoders/events/staking';
-import {
-  IdentityAddSubCallPalletDecoder,
-  IdentityProvideJudgementCallPalletDecoder,
-  IdentitySetSubsCallPalletDecoder,
-  RenameIdentityCallPalletDecoder,
-  SetIdentityCallPalletDecoder,
-} from './decoders/calls/identities';
+import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
+import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
+import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
+import { IdentitySetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
+import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
+import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
+import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
+import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
 
 createIndexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    gateway: lookupArchive(ensureEnvVariable('CHAIN'), { release: 'ArrowSquid' }),
   },
   decoders: {
     events: {
@@ -28,6 +25,7 @@ createIndexer({
       'Identity.set_subs': new IdentitySetSubsCallPalletDecoder(),
       'Identity.provide_judgement': new IdentityProvideJudgementCallPalletDecoder(),
       'Identity.add_sub': new IdentityAddSubCallPalletDecoder(),
+      'Staking.payout_stakers': new PayoutStakersCallPalletDecoder(),
       // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
       // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
       'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),

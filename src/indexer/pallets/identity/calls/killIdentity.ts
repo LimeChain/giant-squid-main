@@ -1,6 +1,6 @@
 import { Block, Call } from '../../../../processor';
-import { Action, LazyAction } from '../../../../action/base';
-import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction, KillIdentityAction } from '../../../../action/identity';
+import { Action, LazyAction } from '../../../actions/base';
+import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction, KillIdentityAction } from '../../../actions/identity';
 import { Identity, Judgement } from '../../../../model';
 import { ProcessorContext } from '../../../../processor';
 import { getOriginAccountId } from '../../../../utils';

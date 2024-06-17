@@ -1,5 +1,5 @@
-import { EnsureAccount, TransferAction } from '../../../../action';
-import { Action } from '../../../../action/base';
+import { EnsureAccount, TransferAction } from '../../../actions';
+import { Action } from '../../../actions/base';
 import { Account } from '../../../../model';
 import { ProcessorContext, Block, Event } from '../../../../processor';
 import { PalletEventHandler } from '../../../handler';

@@ -1,7 +1,7 @@
 import { Block, Call } from '../../../../processor';
-import { EnsureAccount } from '../../../../action';
-import { Action } from '../../../../action/base';
-import { EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../../action/identity';
+import { EnsureAccount } from '../../../actions';
+import { Action } from '../../../actions/base';
+import { EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 import { Identity, Account, IdentitySub } from '../../../../model';
 import { ProcessorContext } from '../../../../processor';
 import { getOriginAccountId, unwrapData } from '../../../../utils';

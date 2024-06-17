@@ -1,5 +1,5 @@
-import { Action } from '../../../../action/base';
-import { RenameSubAction } from '../../../../action/identity';
+import { Action } from '../../../actions/base';
+import { RenameSubAction } from '../../../actions/identity';
 import { IdentitySub } from '../../../../model';
 import { Block, Call, ProcessorContext } from '../../../../processor';
 import { unwrapData } from '../../../../utils';

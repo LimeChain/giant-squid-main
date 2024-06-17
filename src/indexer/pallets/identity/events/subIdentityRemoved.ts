@@ -1,10 +1,10 @@
-import { Action } from '../../../../action/base';
+import { Action } from '../../../actions/base';
 import { ProcessorContext, Block, Event } from '../../../../processor';
 import { PalletEventHandler } from '../../../handler';
 import { IIdentitySubIdentityRemovedEventPalletDecoder } from '../../../registry';
 
-import { EnsureAccount } from '../../../../action';
-import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../../action/identity';
+import { EnsureAccount } from '../../../actions';
+import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 import { Account, IdentitySub } from '../../../../model';
 
 export class IdentitySubIdentityRemovedEventPalletHandler extends PalletEventHandler<IIdentitySubIdentityRemovedEventPalletDecoder> {

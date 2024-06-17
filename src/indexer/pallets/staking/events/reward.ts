@@ -1,13 +1,21 @@
-import { IStakingRewardEventPalletDecoder } from '../../../registry';
+import { IStakingPayoutStakersCallPalletDecoder, IStakingRewardEventPalletDecoder } from '../../../registry';
 import { Block, Event, ProcessorContext } from '../../../../processor';
 import { PalletEventHandler } from '../../../handler';
-import { Action } from '../../../../action/base';
+import { Action } from '../../../actions/base';
 import { Account } from '../../../../model';
-import { EnsureAccount, RewardAction } from '../../../../action';
+import { EnsureAccount, RewardAction } from '../../../actions';
 
 export class StakingRewardPalletHandler extends PalletEventHandler<IStakingRewardEventPalletDecoder> {
-  constructor(decoder: IStakingRewardEventPalletDecoder, options: { chain: string }) {
+  private payoutStakersDecoder: IStakingPayoutStakersCallPalletDecoder;
+
+  constructor(
+    decoder: IStakingRewardEventPalletDecoder,
+    options: { chain: string },
+    payoutStakersDecoder: IStakingPayoutStakersCallPalletDecoder
+  ) {
     super(decoder, options);
+
+    this.payoutStakersDecoder = payoutStakersDecoder;
   }
 
   handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Event }): any {
@@ -21,11 +29,12 @@ export class StakingRewardPalletHandler extends PalletEventHandler<IStakingRewar
 
     let validatorId: string | undefined;
     let era: number | undefined;
-    // NOTE: make this so it works with the new refactored code
+
     if (event.call?.name === 'Staking.payout_stakers') {
-      // const c = chain.api.calls.staking.payout_stakers.decode(event.call);
-      // validatorId = encodeAddress(c.validatorStash);
-      // era = c.era;
+      console.log(this.payoutStakersDecoder);
+      const callData = this.payoutStakersDecoder.decode(event.call);
+      validatorId = this.encodeAddress(callData.validatorStash);
+      era = callData.era;
     }
 
     const from = params.ctx.store.defer(Account, accountId);

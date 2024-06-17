@@ -1,10 +1,10 @@
-import { Action } from '../../../../action/base';
+import { Action } from '../../../actions/base';
 import { Block, Call, ProcessorContext } from '../../../../processor';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
 import { PalletCallHandler } from '../../../handler';
 import { Account, Identity, Judgement } from '../../../../model';
-import { EnsureAccount } from '../../../../action';
-import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../../action/identity';
+import { EnsureAccount } from '../../../actions';
+import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
 import { IIdentitySetIdentityCallPalletDecoder } from '../../../registry';
 import { WrappedData } from '../../../types';
 

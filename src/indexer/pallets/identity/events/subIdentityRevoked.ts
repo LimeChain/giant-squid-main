@@ -1,6 +1,6 @@
-import { EnsureAccount } from '../../../../action';
-import { Action } from '../../../../action/base';
-import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../../action/identity';
+import { EnsureAccount } from '../../../actions';
+import { Action } from '../../../actions/base';
+import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 import { Account, IdentitySub } from '../../../../model';
 import { Event, Block, ProcessorContext } from '../../../../processor';
 import { PalletEventHandler } from '../../../handler';

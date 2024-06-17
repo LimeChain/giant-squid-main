@@ -1,4 +1,4 @@
-import { Action } from '../action/base';
+import { Action } from './actions/base';
 import { Block, Call, ProcessorContext, Event } from '../processor';
 import * as ss58 from '@subsquid/ss58';
 

@@ -1,7 +1,7 @@
 import { Block, Call } from '../../../../processor';
-import { EnsureAccount } from '../../../../action';
-import { Action, LazyAction } from '../../../../action/base';
-import { EnsureIdentityAction, GiveJudgementAction } from '../../../../action/identity';
+import { EnsureAccount } from '../../../actions';
+import { Action, LazyAction } from '../../../actions/base';
+import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
 import { Judgement, Account, Identity } from '../../../../model';
 import { ProcessorContext } from '../../../../processor';
 import { PalletCallHandler } from '../../../handler';

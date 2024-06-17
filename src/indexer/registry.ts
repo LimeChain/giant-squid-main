@@ -28,12 +28,14 @@ export type PalletTypes = {
     'Identity.clear_identity': PalletCall<{ sub: string; data: WrappedData }>;
     'Identity.kill_identity': PalletCall<{ target: string | WrappedData }>;
     'Identity.rename_sub': PalletCall<{ sub: string; data: WrappedData }>;
+    'Staking.payout_stakers': PalletCall<{ validatorStash: string; era: number }>;
   };
 };
 
 // TODO: Check if each are correct
 export interface ITransferEventPalletDecoder extends PalletEventDecoder<{ from: string; to: string; amount: bigint }> {}
 export interface IStakingRewardEventPalletDecoder extends PalletEventDecoder<{ stash: string; amount: bigint } | undefined> {}
+export interface IStakingPayoutStakersCallPalletDecoder extends PalletCallDecoder<{ validatorStash: string; era: number }> {}
 export interface IIdentitySubIdentityRemovedEventPalletDecoder extends PalletEventDecoder<{ sub: string; main: string; deposit: bigint }> {}
 export interface IIdentitySubIdentityRevokedEventPalletDecoder extends PalletEventDecoder<{ sub: string; main: string; deposit: bigint }> {}
 // TODO: check this return type
@@ -54,6 +56,7 @@ export const registry: Map<string, any> = new Map()
   .set('Balances.Transfer', TransferEventPalletHandler)
   .set('Staking.Reward', StakingRewardPalletHandler)
   .set('Staking.Rewarded', StakingRewardPalletHandler)
+  .set('Staking.payout_stakers', StakingRewardPalletHandler)
   .set('Identity.SubIdentityRemoved', IdentitySubIdentityRemovedEventPalletHandler)
   .set('Identity.SubIdentityRevoked', IdentitySubIdentityRevokedEventPalletHandler)
   .set('Identity.set_identity', SetIdentityCallPalletHandler)

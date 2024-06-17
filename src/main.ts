@@ -1,37 +1,21 @@
-import { TypeormDatabaseWithCache } from '@belopash/typeorm-store';
-import { Processor, ProcessorContext } from './processor';
-import { processItem } from './utils/misc';
-import { Action } from './action/base';
-import { PalletMapper } from './indexer/mapper';
-import { IndexerParams } from './indexer/types';
+import path from 'path';
+import { spawn } from 'child_process';
 
-export const createIndexer = async ({ config, decoders }: IndexerParams) => {
-  const mapper = new PalletMapper(decoders, { chain: config.chain });
+const chainName = process.env.CHAIN;
 
-  const events = mapper.getEvents();
-  const calls = mapper.getCalls();
+if (!chainName) {
+  console.error('CHAIN environment variable is not set.');
+  process.exit(1);
+}
 
-  const processor = new Processor(new TypeormDatabaseWithCache({ supportHotBlocks: true }), config);
+const scriptPath = path.join(__dirname, 'chain', chainName, 'main.js');
 
-  processor.addEvents(events);
-  processor.addCalls(calls);
-  processor.start(async (ctx: ProcessorContext) => {
-    const queue: Action[] = [];
-    // const queue: any = {}; //new Queue();
+console.log(`Running script at: ${scriptPath}`);
 
-    processItem(ctx.blocks, (block, item) => {
-      if (item.kind === 'event') {
-        const pallet = mapper.getEventPallet(item.value.name)!;
-        pallet.handle({ ctx, queue, block, item: item.value });
-      }
-      if (item.kind === 'call') {
-        const pallet = mapper.getCallPallet(item.value.name)!;
-        pallet.handle({ ctx, queue, block, item: item.value });
-      }
-    });
+const subprocess = spawn('node', [scriptPath], {
+  stdio: 'inherit',
+});
 
-    // await queue.execute();
-    await Action.process(ctx, queue);
-    await ctx.store.flush();
-  });
-};
+subprocess.on('close', (code: number) => {
+  process.exit(code);
+});

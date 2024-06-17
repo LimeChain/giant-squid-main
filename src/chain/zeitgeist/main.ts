@@ -1,14 +1,12 @@
-import { createIndexer } from '../../main';
+import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
-import { lookupArchive } from '@subsquid/archive-registry';
-import { TransferEventPalletDecoder } from './decoders/events/balances';
+import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 
 createIndexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    gateway: lookupArchive(ensureEnvVariable('CHAIN'), { release: 'ArrowSquid' }),
-    typesBundle: 'assets/type-bundles/zeitgeist.json',
+    typesBundle: './type-bundles/zeitgeist.json',
   },
   decoders: {
     events: {

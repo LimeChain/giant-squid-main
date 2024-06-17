@@ -1,21 +1,18 @@
-import { createIndexer } from '../../main';
+import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
-import { lookupArchive } from '@subsquid/archive-registry';
-import {
-  IdentityAddSubCallPalletDecoder,
-  IdentityProvideJudgementCallPalletDecoder,
-  IdentitySetSubsCallPalletDecoder,
-  RenameIdentityCallPalletDecoder,
-  SetIdentityCallPalletDecoder,
-} from './decoders/calls/identities';
+import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
 import { TransferEventPalletDecoder } from './decoders/events/balances';
 import { StakingRewardEventPalletDecoder } from './decoders/events/staking';
+import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
+import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
+import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
+import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
+import { IdentitySetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
 
 createIndexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    gateway: lookupArchive(ensureEnvVariable('CHAIN'), { release: 'ArrowSquid' }),
   },
   decoders: {
     events: {
@@ -31,6 +28,7 @@ createIndexer({
       // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
       // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
       'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),
+      'Staking.payout_stakers': new PayoutStakersCallPalletDecoder(),
     },
   },
 });
