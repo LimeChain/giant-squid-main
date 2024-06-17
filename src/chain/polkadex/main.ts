@@ -2,7 +2,7 @@ import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/reward';
+import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
 
 createIndexer({
   config: {
@@ -14,9 +14,6 @@ createIndexer({
     events: {
       'Balances.Transfer': new TransferEventPalletDecoder(),
       'Staking.Rewarded': new StakingRewardEventPalletDecoder(),
-    },
-    calls: {
-      'Staking.payout_stakers': new PayoutStakersCallPalletDecoder(),
     },
   },
 });

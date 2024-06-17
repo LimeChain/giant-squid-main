@@ -21,6 +21,10 @@ export type PalletCall<Dto> = {
   handler: PalletCallHandler<PalletCallDecoder<Dto>>;
 };
 
+export type ChainPayoutStakersDecoder = {
+  payoutStakerDecoder?: Function;
+};
+
 export type WrappedData = {
   __kind: string;
   value?: string;

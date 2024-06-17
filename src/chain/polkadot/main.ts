@@ -3,7 +3,6 @@ import { ensureEnvVariable } from '../../utils';
 import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
 import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
 import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
 import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
@@ -28,7 +27,6 @@ createIndexer({
       // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
       // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
       'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),
-      'Staking.payout_stakers': new PayoutStakersCallPalletDecoder(),
     },
   },
 });

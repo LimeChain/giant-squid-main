@@ -2,7 +2,6 @@ import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
 import { IdentitySetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
 import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
 import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
@@ -25,7 +24,6 @@ createIndexer({
       'Identity.set_subs': new IdentitySetSubsCallPalletDecoder(),
       'Identity.provide_judgement': new IdentityProvideJudgementCallPalletDecoder(),
       'Identity.add_sub': new IdentityAddSubCallPalletDecoder(),
-      'Staking.payout_stakers': new PayoutStakersCallPalletDecoder(),
       // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
       // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
       'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),

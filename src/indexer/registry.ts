@@ -28,7 +28,6 @@ export type PalletTypes = {
     'Identity.clear_identity': PalletCall<{ sub: string; data: WrappedData }>;
     'Identity.kill_identity': PalletCall<{ target: string | WrappedData }>;
     'Identity.rename_sub': PalletCall<{ sub: string; data: WrappedData }>;
-    'Staking.payout_stakers': PalletCall<{ validatorStash: string; era: number }>;
   };
 };
 
@@ -56,7 +55,6 @@ export const registry: Map<string, any> = new Map()
   .set('Balances.Transfer', TransferEventPalletHandler)
   .set('Staking.Reward', StakingRewardPalletHandler)
   .set('Staking.Rewarded', StakingRewardPalletHandler)
-  .set('Staking.payout_stakers', StakingRewardPalletHandler)
   .set('Identity.SubIdentityRemoved', IdentitySubIdentityRemovedEventPalletHandler)
   .set('Identity.SubIdentityRevoked', IdentitySubIdentityRevokedEventPalletHandler)
   .set('Identity.set_identity', SetIdentityCallPalletHandler)
