@@ -1,8 +1,8 @@
 import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
 import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
-import { TransferEventPalletDecoder } from './decoders/events/balances';
-import { StakingRewardEventPalletDecoder } from './decoders/events/staking';
+import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
+import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
 import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
 import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
 import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';

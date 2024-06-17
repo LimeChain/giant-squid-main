@@ -1,7 +1,7 @@
 import { Event } from '@subsquid/substrate-processor';
-import { UnknownVersionError } from '../../../../utils';
-import { events } from '../../types';
-import { IStakingRewardEventPalletDecoder } from '../../../../indexer/registry';
+import { UnknownVersionError } from '../../../../../utils';
+import { events } from '../../../types';
+import { IStakingRewardEventPalletDecoder } from '../../../../../indexer/registry';
 
 export class StakingRewardEventPalletDecoder implements IStakingRewardEventPalletDecoder {
   decode(event: Event):

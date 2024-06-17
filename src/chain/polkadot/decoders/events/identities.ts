@@ -2,6 +2,7 @@ import { Event } from '@subsquid/substrate-processor';
 import { UnknownVersionError } from '../../../../utils';
 import { events } from '../../types';
 
+//TODO: these are unimplemented
 const IdentityCleared = {
   decode(event: Event) {
     const { identityCleared } = events.identity;
