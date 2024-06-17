@@ -1,14 +1,19 @@
 {
-    "outDir": "../src/chain/__network__KebabCase__/types",
-    "specVersions": "https://__chainArchiveName__.archive.subsquid.io/graphql",
-    "events": [
-        "Balances.Transfer"
-    ],
-    "calls": [
-        "Balances.transfer",
-        "Balances.force_transfer",
-        "Balances.transfer_keep_alive",
-        "Balances.transfer_all"
-    ],
-    "storage": []
+  "outDir": "../src/chain/__chainName__/types",
+  "specVersions": "https://__chainArchiveName__.archive.subsquid.io/metadata/__chainName__",
+  "pallets": {
+    "Balances": {
+      "events": ["Transfer"],
+      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+    },
+    "Staking": {
+      "events": ["Reward", "Rewarded"],
+      "calls": ["payout_stakers"]
+    },
+    "Identity": {
+      "events": ["IdentityCleared", "IdentityKilled", "SubIdentityRemoved", "SubIdentityRevoked"],
+      "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "clear_identity", "kill_identity", "rename_sub"]
+    }
+  },
+  "storage": []
 }
