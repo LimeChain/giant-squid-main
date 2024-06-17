@@ -1,5 +1,5 @@
 {
-  "outDir": "../src/chain/__chainName__/types",
+  "outDir": "./types",
   "specVersions": "https://__chainArchiveName__.archive.subsquid.io/metadata/__chainName__",
   "pallets": {
     "Balances": {
