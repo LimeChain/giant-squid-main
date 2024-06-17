@@ -31,7 +31,6 @@ export class StakingRewardPalletHandler extends PalletEventHandler<IStakingRewar
     let era: number | undefined;
 
     if (event.call?.name === 'Staking.payout_stakers') {
-      console.log(this.payoutStakersDecoder);
       const callData = this.payoutStakersDecoder.decode(event.call);
       validatorId = this.encodeAddress(callData.validatorStash);
       era = callData.era;
