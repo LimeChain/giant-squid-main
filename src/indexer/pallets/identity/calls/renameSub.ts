@@ -25,7 +25,6 @@ export class IdentityRenameSubCallPalletHandler extends PalletCallHandler<IIdent
 
     params.queue.push(
       new RenameSubAction(params.block.header, call.extrinsic, {
-        // this is crashing for some reason on polkadot on a specific subId on block: 1388064
         sub: () => sub.getOrFail(),
         name: unwrapData(renameSubData.data)!,
       })
