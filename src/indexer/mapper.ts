@@ -1,45 +1,57 @@
-import { PalletCallHandler, PalletEventHandler } from './handler';
-import { PalletTypes, registry } from './registry';
+import { IHandlerOptions } from './pallets/handler';
+import { PalletSetups, RegistryCall, RegistryEvent, registry } from './registry';
 
-export type DecodersMap = {
-  [K in keyof PalletTypes]?: {
-    [P in keyof PalletTypes[K]]?: PalletTypes[K][P] extends { decoder: infer D } ? D : never;
-  };
-};
-
-// TODO: Implement this
-export type HandlersMap = {
-  [K in keyof PalletTypes]: {
-    [P in keyof PalletTypes[K]]: PalletTypes[K][P] extends { handler: infer D } ? D : never;
-  };
-};
+type IEventPalletKey = keyof RegistryEvent;
+type ICallPalletKey = keyof RegistryCall;
+type IEventPalletHandler = RegistryEvent[IEventPalletKey];
+type ICallPalletHandler = RegistryCall[ICallPalletKey];
 
 export class PalletMapper {
-  // TODO: fix any
-  private events: Map<string, PalletEventHandler<any>> = new Map();
-  private calls: Map<string, PalletCallHandler<any>> = new Map();
+  private events: Map<IEventPalletKey, InstanceType<IEventPalletHandler>> = new Map();
+  private calls: Map<ICallPalletKey, InstanceType<ICallPalletHandler>> = new Map();
 
-  constructor(decoders: DecodersMap, options: { chain: string }) {
-    decoders.events &&
-      Object.entries(decoders.events).forEach(([key, decoder]) => {
-        const Pallet = registry.get(key);
+  constructor(pallets: PalletSetups, options: { chain: string }) {
+    pallets.events &&
+      Object.entries(pallets.events).forEach(([key, palletSetup]) => {
+        const name = key as IEventPalletKey;
+        const handler = this.getEventPalletInstance(name, palletSetup, options);
 
-        if (!Pallet) {
-          throw new Error(`Pallet event ${key} not found`);
-        }
-
-        this.events.set(key, new Pallet(decoder, options));
+        this.events.set(name, handler);
       });
-    decoders.calls &&
-      Object.entries(decoders.calls).forEach(([key, decoder]) => {
-        const Pallet = registry.get(key);
 
-        if (!Pallet) {
-          throw new Error(`Pallet call ${key} not found`);
-        }
+    pallets.calls &&
+      Object.entries(pallets.calls).forEach(([key, palletSetup]) => {
+        const name = key as ICallPalletKey;
+        const handler = this.getCallPalletInstance(name, palletSetup, options);
 
-        this.calls.set(key, new Pallet(decoder, options));
+        this.calls.set(name, handler);
       });
+  }
+
+  private getEventPalletInstance<Setup>(key: IEventPalletKey, palletSetup: Setup, options: IHandlerOptions): InstanceType<IEventPalletHandler> {
+    const PalletHandler = registry.events[key];
+
+    if (!PalletHandler) {
+      throw new Error(`Pallet event ${key} not found`);
+    }
+
+    // Use a type assertion to tell TypeScript that `PalletHandler` is a newable type
+    const Pallet = PalletHandler as new (setup: typeof palletSetup, options: IHandlerOptions) => InstanceType<IEventPalletHandler>;
+
+    return new Pallet(palletSetup, options);
+  }
+
+  private getCallPalletInstance<Setup>(key: ICallPalletKey, palletSetup: Setup, options: IHandlerOptions): InstanceType<ICallPalletHandler> {
+    const PalletHandler = registry.calls[key];
+
+    if (!PalletHandler) {
+      throw new Error(`Pallet event ${key} not found`);
+    }
+
+    // Use a type assertion to tell TypeScript that `PalletHandler` is a newable type
+    const Pallet = PalletHandler as new (setup: typeof palletSetup, options: IHandlerOptions) => InstanceType<ICallPalletHandler>;
+
+    return new Pallet(palletSetup, options);
   }
 
   getEvents(): string[] {
@@ -51,10 +63,10 @@ export class PalletMapper {
   }
 
   getEventPallet(name: string) {
-    return this.events.get(name);
+    return this.events.get(name as keyof RegistryEvent);
   }
 
   getCallPallet(name: string) {
-    return this.calls.get(name);
+    return this.calls.get(name as keyof RegistryCall);
   }
 }

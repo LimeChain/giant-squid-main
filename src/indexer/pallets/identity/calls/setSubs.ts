@@ -1,11 +1,11 @@
-import { Block, Call } from '../../../../processor';
+import { Block, Call } from '../../../processor';
 import { EnsureAccount } from '../../../actions';
 import { Action } from '../../../actions/base';
 import { EnsureIdentityAction, EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 import { Identity, Account, IdentitySub } from '../../../../model';
-import { ProcessorContext } from '../../../../processor';
+import { ProcessorContext } from '../../../processor';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { PalletCallHandler } from '../../../handler';
+import { PalletCallHandler } from '../../handler';
 import { IIdentitySetSubsCallPalletDecoder } from '../../../registry';
 
 export class IdentitySetSubsCallPalletHandler extends PalletCallHandler<IIdentitySetSubsCallPalletDecoder> {

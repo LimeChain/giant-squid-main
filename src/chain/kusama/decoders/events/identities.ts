@@ -1,4 +1,4 @@
-import { Event } from '../../../../processor';
+import { Event } from '../../../../indexer/processor';
 import { UnknownVersionError } from '../../../../utils';
 import { events } from '../../types';
 

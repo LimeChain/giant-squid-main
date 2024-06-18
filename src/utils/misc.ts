@@ -2,7 +2,7 @@ import { isHex } from '@subsquid/util-internal-hex';
 import { assertNotNull, decodeHex } from '@subsquid/substrate-processor';
 import * as ss58 from '@subsquid/ss58';
 import { Item, orderItems } from './orderItems';
-import { Block } from '../processor';
+import { Block } from '../indexer/processor';
 
 export function decodeAddress(address: string) {
   return ss58.codec(ensureEnvVariable('CHAIN')).decode(address);

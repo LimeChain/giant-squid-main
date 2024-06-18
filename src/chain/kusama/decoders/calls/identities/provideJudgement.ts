@@ -1,11 +1,11 @@
 import { IIdentityProvideJudgementCallPalletDecoder } from '../../../../../indexer/registry';
-import { PalletCallDecoder } from '../../../../../indexer/types';
-import { Call } from '../../../../../processor';
+import { ICallPalletDecoder } from '../../../../../indexer/types';
+import { Call } from '../../../../../indexer/processor';
 import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
 
 // TODO: fix return type
-export class IdentityProvideJudgementCallPalletDecoder implements PalletCallDecoder<IIdentityProvideJudgementCallPalletDecoder> {
+export class IdentityProvideJudgementCallPalletDecoder implements ICallPalletDecoder<IIdentityProvideJudgementCallPalletDecoder> {
   decode(call: Call): any {
     const identity = calls.identity.provideJudgement;
     if (identity.v1030.is(call)) {

@@ -1,9 +1,9 @@
 import { Action } from '../../../actions/base';
 import { RenameSubAction } from '../../../actions/identity';
 import { IdentitySub } from '../../../../model';
-import { Block, Call, ProcessorContext } from '../../../../processor';
+import { Block, Call, ProcessorContext } from '../../../processor';
 import { unwrapData } from '../../../../utils';
-import { PalletCallHandler } from '../../../handler';
+import { PalletCallHandler } from '../../handler';
 import { IIdentityRenameSubCallPalletDecoder } from '../../../registry';
 
 export class IdentityRenameSubCallPalletHandler extends PalletCallHandler<IIdentityRenameSubCallPalletDecoder> {

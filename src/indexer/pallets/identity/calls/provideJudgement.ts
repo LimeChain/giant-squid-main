@@ -1,10 +1,10 @@
-import { Block, Call } from '../../../../processor';
+import { Block, Call } from '../../../processor';
 import { EnsureAccount } from '../../../actions';
 import { Action, LazyAction } from '../../../actions/base';
 import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
 import { Judgement, Account, Identity } from '../../../../model';
-import { ProcessorContext } from '../../../../processor';
-import { PalletCallHandler } from '../../../handler';
+import { ProcessorContext } from '../../../processor';
+import { PalletCallHandler } from '../../handler';
 import { IIdentityProvideJudgementCallPalletDecoder } from '../../../registry';
 
 export class IdentityProvideJudgementCallPalletHandler extends PalletCallHandler<IIdentityProvideJudgementCallPalletDecoder> {

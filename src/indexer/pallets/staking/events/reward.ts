@@ -1,24 +1,26 @@
-import { IStakingRewardEventPalletDecoder } from '../../../registry';
-import { Block, Event, ProcessorContext } from '../../../../processor';
-import { PalletEventHandler } from '../../../handler';
-import { Action } from '../../../actions/base';
+import { EventPalletHandler, IHandlerEventParams, IHandlerOptions } from '../../handler';
 import { Account } from '../../../../model';
 import { EnsureAccount, RewardAction } from '../../../actions';
-import { payoutStakersDecoders } from '../calls/payoutStakers';
-import { ChainPayoutStakersDecoder } from '../../../types';
+import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '../../../types';
 
-export class StakingRewardPalletHandler extends PalletEventHandler<IStakingRewardEventPalletDecoder> {
-  private payoutStakersDecoder: ChainPayoutStakersDecoder | undefined;
+export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> { }
+export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> { }
 
-  constructor(decoder: IStakingRewardEventPalletDecoder, options: { chain: string }) {
-    super(decoder, options);
+interface IRewardEventPalletSetup extends IBasePalletSetup {
+  decoder: IRewardEventPalletDecoder,
+  payoutStakersDecoder: IPayoutStakersCallPalletDecoder
+};
 
-    this.payoutStakersDecoder = payoutStakersDecoders.get(options.chain);
+export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPalletSetup> {
+  private payoutStakersDecoder: IPayoutStakersCallPalletDecoder;
+
+  constructor(setup: IRewardEventPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
+
+    this.payoutStakersDecoder = setup.payoutStakersDecoder;
   }
 
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Event }): any {
-    const event = params.item as Event;
-
+  handle({ ctx, queue, block, item: event }: IHandlerEventParams) {
     const data = this.decoder.decode(event);
 
     if (data == null) return; // old format rewards skipped
@@ -30,19 +32,20 @@ export class StakingRewardPalletHandler extends PalletEventHandler<IStakingRewar
       let era: number | undefined;
 
       if (event.call?.name === 'Staking.payout_stakers') {
-        // const callData = this.payoutStakersDecoder.decode(event.call);
-        // validatorId = this.encodeAddress(callData.validatorStash);
-        // era = callData.era;
+        const callData = this.payoutStakersDecoder.decode(event.call);
+
+        validatorId = this.encodeAddress(callData.validatorStash);
+        era = callData.era;
       }
 
-      const from = params.ctx.store.defer(Account, accountId);
+      const from = ctx.store.defer(Account, accountId);
 
-      params.queue.push(
-        new EnsureAccount(params.block.header, event.extrinsic, {
+      queue.push(
+        new EnsureAccount(block.header, event.extrinsic, {
           account: () => from.get(),
           id: accountId,
         }),
-        new RewardAction(params.block.header, event.extrinsic, {
+        new RewardAction(block.header, event.extrinsic, {
           id: event.id,
           account: () => from.getOrFail(),
           amount: data.amount,

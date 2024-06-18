@@ -1,29 +1,19 @@
-import { SubstrateBatchProcessor } from '@subsquid/substrate-processor';
-import { Call, Event } from '../processor';
-import { PalletCallHandler, PalletEventHandler } from './handler';
-import { DecodersMap } from './mapper';
+import { Call, Event, ProcessorConfig } from './processor';
+import { PalletSetups } from './registry';
 
-export interface PalletEventDecoder<T> {
+export type IBasePalletSetup = {
+  decoder: {
+    decode(item: Event | Call): unknown;
+  },
+}
+
+export interface IEventPalletDecoder<T> {
   decode(event: Event): T;
 }
 
-export interface PalletCallDecoder<T> {
+export interface ICallPalletDecoder<T> {
   decode(call: Call): T;
 }
-
-export type PalletEvent<Dto> = {
-  decoder: PalletEventDecoder<Dto>;
-  handler: PalletEventHandler<PalletEventDecoder<Dto>>;
-};
-
-export type PalletCall<Dto> = {
-  decoder: PalletCallDecoder<Dto>;
-  handler: PalletCallHandler<PalletCallDecoder<Dto>>;
-};
-
-export type ChainPayoutStakersDecoder = {
-  payoutStakerDecoder?: Function;
-};
 
 export type WrappedData = {
   __kind: string;
@@ -43,18 +33,8 @@ export type IdentityInfo = {
 };
 
 export type IndexerParams = {
-  config: {
-    chain: string;
-    endpoint: Parameters<SubstrateBatchProcessor<any>['setRpcEndpoint']>[0];
-    gateway?: string;
-    blockRange?: {
-      from: number;
-      to?: number;
-    };
-    rateLimit?: number;
-    typesBundle?: Parameters<SubstrateBatchProcessor<any>['setTypesBundle']>[0];
-  };
-  decoders: DecodersMap;
+  config: ProcessorConfig;
+  pallets: PalletSetups;
 };
 
 // export interface IChainData {

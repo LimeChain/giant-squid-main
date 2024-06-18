@@ -10,6 +10,7 @@ import {
   FieldSelection,
 } from '@subsquid/substrate-processor';
 import { StoreWithCache, TypeormDatabaseWithCache } from '@belopash/typeorm-store';
+import { lookupArchive } from '@subsquid/archive-registry';
 
 const fields = {
   block: {
@@ -34,12 +35,30 @@ const fields = {
   },
 } as FieldSelection;
 
+
+export type ProcessorConfig = {
+  chain: string;
+  endpoint: Parameters<SubstrateBatchProcessor<any>['setRpcEndpoint']>[0];
+  gateway?: string;
+  blockRange?: {
+    from: number;
+    to?: number;
+  };
+  rateLimit?: number;
+  typesBundle?: Parameters<SubstrateBatchProcessor<any>['setTypesBundle']>[0];
+};
+
 export class Processor {
   processor: SubstrateBatchProcessor<typeof fields>;
   database: TypeormDatabaseWithCache;
-  constructor(db: TypeormDatabaseWithCache, config: any) {
+  constructor(db: TypeormDatabaseWithCache, config: ProcessorConfig) {
+    config.gateway = lookupArchive(config.chain, { release: 'ArrowSquid' });
+
     this.database = db;
-    this.processor = new SubstrateBatchProcessor().setFields(fields).setGateway(config.gateway).setRpcEndpoint(config.endpoint);
+    this.processor = new SubstrateBatchProcessor()
+      .setFields(fields)
+      .setGateway(config.gateway)
+      .setRpcEndpoint(config.endpoint);
 
     if (config.blockRange) {
       this.processor.setBlockRange(config.blockRange);

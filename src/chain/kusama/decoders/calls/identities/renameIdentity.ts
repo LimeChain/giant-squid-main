@@ -1,11 +1,11 @@
 import { IIdentityRenameSubCallPalletDecoder } from '../../../../../indexer/registry';
-import { PalletCallDecoder } from '../../../../../indexer/types';
-import { Call } from '../../../../../processor';
+import { ICallPalletDecoder } from '../../../../../indexer/types';
+import { Call } from '../../../../../indexer/processor';
 import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
 
 // TODO: fix return type
-export class RenameIdentityCallPalletDecoder implements PalletCallDecoder<IIdentityRenameSubCallPalletDecoder> {
+export class RenameIdentityCallPalletDecoder implements ICallPalletDecoder<IIdentityRenameSubCallPalletDecoder> {
   decode(call: Call): any {
     const identityCall = calls.identity.renameSub;
 

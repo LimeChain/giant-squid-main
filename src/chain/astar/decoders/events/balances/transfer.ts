@@ -1,10 +1,9 @@
-import { Event } from '@subsquid/substrate-processor';
 import { UnknownVersionError } from '../../../../../utils';
 import { events } from '../../../types';
-import { ITransferEventPalletDecoder } from '../../../../../indexer/registry';
+import { Event, ITransferEventPalletDecoder } from '../../../../../indexer';
 
 export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
-  decode(event: Event): { from: string; to: string; amount: bigint } {
+  decode(event: Event) {
     const { transfer } = events.balances;
     if (transfer.v1.is(event)) {
       let [from, to, amount] = transfer.v1.decode(event);

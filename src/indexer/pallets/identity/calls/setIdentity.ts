@@ -1,22 +1,21 @@
-import { Action } from '../../../actions/base';
-import { Block, Call, ProcessorContext } from '../../../../processor';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { PalletCallHandler } from '../../../handler';
+import { IHandlerCallParams, IHandlerOptions, PalletCallHandler } from '../../handler';
 import { Account, Identity, Judgement } from '../../../../model';
 import { EnsureAccount } from '../../../actions';
 import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
-import { IIdentitySetIdentityCallPalletDecoder } from '../../../registry';
-import { WrappedData } from '../../../types';
+import { IBasePalletSetup, ICallPalletDecoder, IdentityInfo, WrappedData } from '../../../types';
 
-export class SetIdentityCallPalletHandler extends PalletCallHandler<IIdentitySetIdentityCallPalletDecoder> {
-  constructor(decoder: IIdentitySetIdentityCallPalletDecoder, options: { chain: string }) {
-    super(decoder, options);
+export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfo> { }
+interface ISetIdentityCallPalletSetup extends IBasePalletSetup {
+  decoder: ISetIdentityCallPalletDecoder;
+}
+
+export class SetIdentityCallPalletHandler extends PalletCallHandler<ISetIdentityCallPalletSetup> {
+  constructor(setup: ISetIdentityCallPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
   }
 
-  // TODO: fix the return type
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Call }): any {
-    const call = params.item as Call;
-
+  handle({ ctx, block, queue, item: call }: IHandlerCallParams) {
     if (!call.success) return;
 
     const data = this.decoder.decode(call);
@@ -26,24 +25,24 @@ export class SetIdentityCallPalletHandler extends PalletCallHandler<IIdentitySet
     if (origin == null) return;
 
     const identityId = this.encodeAddress(origin);
-    const account = params.ctx.store.defer(Account, identityId);
-    const identity = params.ctx.store.defer(Identity, identityId);
+    const account = ctx.store.defer(Account, identityId);
+    const identity = ctx.store.defer(Identity, identityId);
 
-    params.queue.push(
-      new EnsureAccount(params.block.header, call.extrinsic, {
+    queue.push(
+      new EnsureAccount(block.header, call.extrinsic, {
         account: () => account.get(),
         id: identityId,
       }),
-      new EnsureIdentityAction(params.block.header, call.extrinsic, {
+      new EnsureIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.get(),
         account: () => account.getOrFail(),
         id: identityId,
       }),
-      new GiveJudgementAction(params.block.header, call.extrinsic, {
+      new GiveJudgementAction(block.header, call.extrinsic, {
         identity: () => identity.getOrFail(),
         judgement: Judgement.Unknown,
       }),
-      new SetIdentityAction(params.block.header, call.extrinsic, {
+      new SetIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.getOrFail(),
         web: unwrapData(data.web),
         display: unwrapData(data.display),

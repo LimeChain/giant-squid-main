@@ -1,13 +1,13 @@
 import { Action } from '../../../actions/base';
-import { ProcessorContext, Block, Event } from '../../../../processor';
-import { PalletEventHandler } from '../../../handler';
+import { ProcessorContext, Block, Event } from '../../../processor';
+import { EventPalletHandler } from '../../handler';
 import { IIdentitySubIdentityRemovedEventPalletDecoder } from '../../../registry';
 
 import { EnsureAccount } from '../../../actions';
 import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 import { Account, IdentitySub } from '../../../../model';
 
-export class IdentitySubIdentityRemovedEventPalletHandler extends PalletEventHandler<IIdentitySubIdentityRemovedEventPalletDecoder> {
+export class IdentitySubIdentityRemovedEventPalletHandler extends EventPalletHandler<IIdentitySubIdentityRemovedEventPalletDecoder> {
   constructor(decoder: IIdentitySubIdentityRemovedEventPalletDecoder, options: { chain: string }) {
     super(decoder, options);
   }

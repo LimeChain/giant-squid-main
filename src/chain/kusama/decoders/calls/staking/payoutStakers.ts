@@ -1,7 +1,7 @@
 import { Call } from '@subsquid/substrate-processor';
 import { UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
-import { IStakingPayoutStakersCallPalletDecoder } from '../../../../../indexer/registry';
+import { IStakingPayoutStakersCallPalletDecoder } from '../../../../../indexer';
 
 export class PayoutStakersCallPalletDecoder implements IStakingPayoutStakersCallPalletDecoder {
   decode(event: Call) {

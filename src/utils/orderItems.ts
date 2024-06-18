@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Block, Call, Event } from '../processor';
+import { Block, Call, Event } from '../indexer/processor';
 
 export type Item =
   | {

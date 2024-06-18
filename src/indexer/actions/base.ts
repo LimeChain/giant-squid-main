@@ -3,7 +3,7 @@ import { DataHandlerContext } from '@subsquid/substrate-processor';
 import { withErrorContext } from '@subsquid/util-internal';
 import { Store } from '@subsquid/typeorm-store';
 import { StoreWithCache } from '@belopash/typeorm-store';
-import { Block, BlockHeader, Extrinsic, Fields } from '../../processor';
+import { Block, BlockHeader, Extrinsic, Fields } from '../processor';
 
 export type ActionContext = DataHandlerContext<StoreWithCache, Fields>;
 
