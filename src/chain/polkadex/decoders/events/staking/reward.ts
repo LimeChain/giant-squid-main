@@ -1,15 +1,9 @@
-import { Event } from '@subsquid/substrate-processor';
-import { UnknownVersionError } from '../../../../../utils';
 import { events } from '../../../types';
-import { IStakingRewardEventPalletDecoder } from '../../../../../indexer/registry';
+import { UnknownVersionError } from '../../../../../utils';
+import { Event, IRewardEventPalletDecoder } from '../../../../../indexer';
 
-export class StakingRewardEventPalletDecoder implements IStakingRewardEventPalletDecoder {
-  decode(event: Event):
-    | {
-        stash: string;
-        amount: bigint;
-      }
-    | undefined {
+export class StakingRewardEventPalletDecoder implements IRewardEventPalletDecoder {
+  decode(event: Event) {
     const { rewarded } = events.staking;
     if (rewarded.v268.is(event)) {
       let [stash, amount] = rewarded.v268.decode(event);

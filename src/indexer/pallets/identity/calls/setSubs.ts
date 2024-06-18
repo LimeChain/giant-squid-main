@@ -1,22 +1,21 @@
-import { Block, Call } from '../../../processor';
 import { EnsureAccount } from '../../../actions';
-import { Action } from '../../../actions/base';
-import { EnsureIdentityAction, EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 import { Identity, Account, IdentitySub } from '../../../../model';
-import { ProcessorContext } from '../../../processor';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { PalletCallHandler } from '../../handler';
-import { IIdentitySetSubsCallPalletDecoder } from '../../../registry';
+import { CallPalletHandler, ICallHandlerParams } from '../../handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
+import { EnsureIdentityAction, EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 
-export class IdentitySetSubsCallPalletHandler extends PalletCallHandler<IIdentitySetSubsCallPalletDecoder> {
-  constructor(decoder: IIdentitySetSubsCallPalletDecoder, options: { chain: string }) {
+export interface ISetSubsCallPalletDecoder extends ICallPalletDecoder<{ subs: [string, WrappedData][] }> {}
+interface ISetSubsCallPalletSetup extends IBasePalletSetup {
+  decoder: ISetSubsCallPalletDecoder;
+}
+
+export class SetSubsCallPalletHandler extends CallPalletHandler<ISetSubsCallPalletSetup> {
+  constructor(decoder: ISetSubsCallPalletSetup, options: { chain: string }) {
     super(decoder, options);
   }
 
-  // TODO: fix the return type
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Call }): any {
-    const call = params.item as Call;
-
+  handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
     const setSubsData = this.decoder.decode(call);
@@ -25,38 +24,38 @@ export class IdentitySetSubsCallPalletHandler extends PalletCallHandler<IIdentit
 
     if (origin == null) return;
     const identityId = this.encodeAddress(origin);
-    const identity = params.ctx.store.defer(Identity, identityId);
-    const identityAccount = params.ctx.store.defer(Account, identityId);
+    const identity = ctx.store.defer(Identity, identityId);
+    const identityAccount = ctx.store.defer(Account, identityId);
 
     for (const subData of setSubsData.subs) {
       const subId = this.encodeAddress(subData[0]);
-      const subIdentity = params.ctx.store.defer(IdentitySub, subId);
-      const subIdentityAccount = params.ctx.store.defer(Account, subId);
+      const subIdentity = ctx.store.defer(IdentitySub, subId);
+      const subIdentityAccount = ctx.store.defer(Account, subId);
 
-      params.queue.push(
-        new EnsureAccount(params.block.header, call.extrinsic, {
+      queue.push(
+        new EnsureAccount(block.header, call.extrinsic, {
           account: () => subIdentityAccount.get(),
           id: subId,
         }),
-        new EnsureAccount(params.block.header, call.extrinsic, {
+        new EnsureAccount(block.header, call.extrinsic, {
           account: () => identityAccount.get(),
           id: identityId,
         }),
-        new EnsureIdentityAction(params.block.header, call.extrinsic, {
+        new EnsureIdentityAction(block.header, call.extrinsic, {
           identity: () => identity.get(),
           account: () => identityAccount.getOrFail(),
           id: identityId,
         }),
-        new EnsureIdentitySubAction(params.block.header, call.extrinsic, {
+        new EnsureIdentitySubAction(block.header, call.extrinsic, {
           sub: () => subIdentity.get(),
           account: () => subIdentityAccount.getOrFail(),
           id: subId,
         }),
-        new AddIdentitySubAction(params.block.header, call.extrinsic, {
+        new AddIdentitySubAction(block.header, call.extrinsic, {
           identity: () => identity.getOrFail(),
           sub: () => subIdentity.getOrFail(),
         }),
-        new RenameSubAction(params.block.header, call.extrinsic, {
+        new RenameSubAction(block.header, call.extrinsic, {
           sub: () => subIdentity.getOrFail(),
           name: unwrapData(subData[1]),
         })

@@ -1,12 +1,10 @@
-import { IIdentitySetSubsCallPalletDecoder } from '../../../../../indexer/registry';
-import { ICallPalletDecoder } from '../../../../../indexer/types';
-import { Call } from '../../../../../indexer/processor';
-import { UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
+import { Call } from '../../../../../indexer';
+import { UnknownVersionError } from '../../../../../utils';
+import { ISetSubsCallPalletDecoder } from '../../../../../indexer';
 
-// TODO: fix return type
-export class IdentitySetSubsCallPalletDecoder implements ICallPalletDecoder<IIdentitySetSubsCallPalletDecoder> {
-  decode(call: Call): any {
+export class SetSubsCallPalletDecoder implements ISetSubsCallPalletDecoder {
+  decode(call: Call) {
     const { setSubs } = calls.identity;
     if (setSubs.v5.is(call)) {
       return setSubs.v5.decode(call);

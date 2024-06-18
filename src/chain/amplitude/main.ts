@@ -1,5 +1,5 @@
-import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
+import { createIndexer, setupPallet } from '../../indexer';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 
 createIndexer({
@@ -7,9 +7,9 @@ createIndexer({
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },
-  decoders: {
+  pallets: {
     events: {
-      'Balances.Transfer': new TransferEventPalletDecoder(),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
     },
   },
 });

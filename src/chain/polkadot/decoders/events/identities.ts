@@ -1,6 +1,6 @@
-import { Event } from '@subsquid/substrate-processor';
-import { UnknownVersionError } from '../../../../utils';
 import { events } from '../../types';
+import { Event } from '../../../../indexer';
+import { UnknownVersionError } from '../../../../utils';
 
 //TODO: these are unimplemented
 const IdentityCleared = {

@@ -1,32 +1,41 @@
-import { createIndexer } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
-import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
+import { createIndexer, setupPallet } from '../../indexer';
+import { AddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
+import { SetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { IdentityAddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
-import { IdentityProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
+import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
+import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
 import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
-import { IdentitySetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
+import { ProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
 
 createIndexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },
-  decoders: {
+  pallets: {
     events: {
-      'Balances.Transfer': new TransferEventPalletDecoder(),
-      'Staking.Reward': new StakingRewardEventPalletDecoder(),
-      'Staking.Rewarded': new StakingRewardEventPalletDecoder(),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'Staking.Reward': setupPallet({
+        decoder: new StakingRewardEventPalletDecoder(),
+        payoutStakersDecoder: new PayoutStakersCallPalletDecoder(),
+      }),
+      'Staking.Rewarded': setupPallet({
+        decoder: new StakingRewardEventPalletDecoder(),
+        payoutStakersDecoder: new PayoutStakersCallPalletDecoder(),
+      }),
     },
     calls: {
-      'Identity.set_identity': new SetIdentityCallPalletDecoder(),
-      'Identity.set_subs': new IdentitySetSubsCallPalletDecoder(),
-      'Identity.provide_judgement': new IdentityProvideJudgementCallPalletDecoder(),
-      'Identity.add_sub': new IdentityAddSubCallPalletDecoder(),
-      // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
-      // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
-      'Identity.rename_sub': new RenameIdentityCallPalletDecoder(),
+      'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
+      'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
+      'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
+      'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
+      // // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
+      // // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
+      'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
     },
   },
 });
+
+// TODO: remove clear and kill identity?

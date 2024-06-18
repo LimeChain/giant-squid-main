@@ -1,9 +1,9 @@
-import { Call } from '@subsquid/substrate-processor';
-import { UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
-import { IStakingPayoutStakersCallPalletDecoder } from '../../../../../indexer/registry';
+import { Call } from '../../../../../indexer';
+import { UnknownVersionError } from '../../../../../utils';
+import { IPayoutStakersCallPalletDecoder } from '../../../../../indexer';
 
-export class PayoutStakersCallPalletDecoder implements IStakingPayoutStakersCallPalletDecoder {
+export class PayoutStakersCallPalletDecoder implements IPayoutStakersCallPalletDecoder {
   decode(event: Call) {
     const { payoutStakers } = calls.staking;
     if (payoutStakers.v268.is(event)) {

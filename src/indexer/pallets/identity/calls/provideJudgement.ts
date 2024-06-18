@@ -1,21 +1,21 @@
-import { Block, Call } from '../../../processor';
 import { EnsureAccount } from '../../../actions';
 import { Action, LazyAction } from '../../../actions/base';
-import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
 import { Judgement, Account, Identity } from '../../../../model';
-import { ProcessorContext } from '../../../processor';
-import { PalletCallHandler } from '../../handler';
-import { IIdentityProvideJudgementCallPalletDecoder } from '../../../registry';
+import { CallPalletHandler, ICallHandlerParams } from '../../handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
+import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
 
-export class IdentityProvideJudgementCallPalletHandler extends PalletCallHandler<IIdentityProvideJudgementCallPalletDecoder> {
-  constructor(decoder: IIdentityProvideJudgementCallPalletDecoder, options: { chain: string }) {
+export interface IProvideJudgementCallPalletDecoder extends ICallPalletDecoder<{ regIndex: number; target: string; judgement: WrappedData }> {}
+interface IProvideJudgementCallPalletSetup extends IBasePalletSetup {
+  decoder: IProvideJudgementCallPalletDecoder;
+}
+
+export class ProvideJudgementCallPalletHandler extends CallPalletHandler<IProvideJudgementCallPalletSetup> {
+  constructor(decoder: IProvideJudgementCallPalletSetup, options: { chain: string }) {
     super(decoder, options);
   }
 
-  // TODO: fix the return type
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Call }): any {
-    const call = params.item as Call;
-
+  handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
     const judgementGivenData = this.decoder.decode(call);
@@ -38,22 +38,22 @@ export class IdentityProvideJudgementCallPalletHandler extends PalletCallHandler
       }
     };
     const judgement = getJudgment();
-    const account = params.ctx.store.defer(Account, identityId);
-    const identity = params.ctx.store.defer(Identity, identityId);
+    const account = ctx.store.defer(Account, identityId);
+    const identity = ctx.store.defer(Identity, identityId);
 
-    params.queue.push(
-      new LazyAction(params.block.header, call.extrinsic, async (ctx) => {
+    queue.push(
+      new LazyAction(block.header, call.extrinsic, async (ctx) => {
         const action: Action[] = [];
 
-        if (params.block.header.specName.startsWith('kusama') || params.block.header.specName.startsWith('polkadot')) {
+        if (block.header.specName.startsWith('kusama') || block.header.specName.startsWith('polkadot')) {
           //[2018825, 3409356, 5926842, 5965153].includes(block.height) &&
 
           action.push(
-            new EnsureAccount(params.block.header, call.extrinsic, {
+            new EnsureAccount(block.header, call.extrinsic, {
               account: () => account.get(),
               id: identityId,
             }),
-            new EnsureIdentityAction(params.block.header, call.extrinsic, {
+            new EnsureIdentityAction(block.header, call.extrinsic, {
               identity: () => identity.get(),
               account: () => account.getOrFail(),
               id: identityId,
@@ -63,7 +63,7 @@ export class IdentityProvideJudgementCallPalletHandler extends PalletCallHandler
 
         return action;
       }),
-      new GiveJudgementAction(params.block.header, call.extrinsic, {
+      new GiveJudgementAction(block.header, call.extrinsic, {
         identity: () => identity.getOrFail(),
         judgement,
       })

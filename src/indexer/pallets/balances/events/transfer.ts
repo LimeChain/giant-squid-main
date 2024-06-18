@@ -1,17 +1,19 @@
-import { EnsureAccount, TransferAction } from '../../../actions';
 import { Account } from '../../../../model';
-import { EventPalletHandler, IHandlerEventParams, IHandlerOptions } from '../../handler';
+import { EnsureAccount, TransferAction } from '../../../actions';
 import { IBasePalletSetup, IEventPalletDecoder } from '../../../types';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 
-export interface ITransferEventPalletDecoder extends IEventPalletDecoder<{ from: string; to: string; amount: bigint }> { }
-interface ITransferEventPalletSetup extends IBasePalletSetup { decoder: ITransferEventPalletDecoder; }
+export interface ITransferEventPalletDecoder extends IEventPalletDecoder<{ from: string; to: string; amount: bigint }> {}
+interface ITransferEventPalletSetup extends IBasePalletSetup {
+  decoder: ITransferEventPalletDecoder;
+}
 
 export class TransferEventPalletHandler extends EventPalletHandler<ITransferEventPalletSetup> {
   constructor(setup: ITransferEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
-  handle({ ctx, block, queue, item: event }: IHandlerEventParams) {
+  handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const { from, to, amount } = this.decoder.decode(event);
 
     const fromId = this.encodeAddress(from);

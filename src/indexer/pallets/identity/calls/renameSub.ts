@@ -1,30 +1,30 @@
-import { Action } from '../../../actions/base';
-import { RenameSubAction } from '../../../actions/identity';
-import { IdentitySub } from '../../../../model';
-import { Block, Call, ProcessorContext } from '../../../processor';
 import { unwrapData } from '../../../../utils';
-import { PalletCallHandler } from '../../handler';
-import { IIdentityRenameSubCallPalletDecoder } from '../../../registry';
+import { IdentitySub } from '../../../../model';
+import { RenameSubAction } from '../../../actions/identity';
+import { CallPalletHandler, ICallHandlerParams } from '../../handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
 
-export class IdentityRenameSubCallPalletHandler extends PalletCallHandler<IIdentityRenameSubCallPalletDecoder> {
-  constructor(decoder: IIdentityRenameSubCallPalletDecoder, options: { chain: string }) {
+export interface IRenameSubCallPalletDecoder extends ICallPalletDecoder<{ sub: string; data: WrappedData }> {}
+interface IRenameSubCallPalletSetup extends IBasePalletSetup {
+  decoder: IRenameSubCallPalletDecoder;
+}
+
+export class RenameSubCallPalletHandler extends CallPalletHandler<IRenameSubCallPalletSetup> {
+  constructor(decoder: IRenameSubCallPalletSetup, options: { chain: string }) {
     super(decoder, options);
   }
 
-  // TODO: fix the return type
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Call }): any {
-    const call = params.item as Call;
-
+  handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
     const renameSubData = this.decoder.decode(call);
 
     const subId = this.encodeAddress(renameSubData.sub);
 
-    const sub = params.ctx.store.defer(IdentitySub, subId);
+    const sub = ctx.store.defer(IdentitySub, subId);
 
-    params.queue.push(
-      new RenameSubAction(params.block.header, call.extrinsic, {
+    queue.push(
+      new RenameSubAction(block.header, call.extrinsic, {
         sub: () => sub.getOrFail(),
         name: unwrapData(renameSubData.data)!,
       })

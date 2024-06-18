@@ -1,11 +1,9 @@
-import { IIdentitySetIdentityCallPalletDecoder } from '../../../../../indexer/registry';
-import { ICallPalletDecoder } from '../../../../../indexer/types';
-import { Call } from '../../../../../indexer/processor';
-import { UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
+import { UnknownVersionError } from '../../../../../utils';
+import { Call, ISetIdentityCallPalletDecoder } from '../../../../../indexer';
 
-// TODO: fix return type
-export class SetIdentityCallPalletDecoder implements ICallPalletDecoder<IIdentitySetIdentityCallPalletDecoder> {
+export class SetIdentityCallPalletDecoder implements ISetIdentityCallPalletDecoder {
+  // TODO: fix any
   decode(call: Call): any {
     let identity = calls.identity.setIdentity;
 

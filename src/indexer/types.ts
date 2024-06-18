@@ -1,11 +1,11 @@
-import { Call, Event, ProcessorConfig } from './processor';
 import { PalletSetups } from './registry';
+import { Call, Event, ProcessorConfig } from './processor';
 
 export type IBasePalletSetup = {
   decoder: {
     decode(item: Event | Call): unknown;
-  },
-}
+  };
+};
 
 export interface IEventPalletDecoder<T> {
   decode(event: Event): T;
@@ -29,7 +29,7 @@ export type IdentityInfo = {
   pgpFingerprint: string;
   riot: WrappedData;
   twitter: WrappedData;
-  additional: any;
+  additional?: any;
 };
 
 export type IndexerParams = {

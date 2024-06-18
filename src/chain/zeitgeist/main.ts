@@ -1,5 +1,5 @@
-import { createIndexer, setupPallet } from '../../indexer';
 import { ensureEnvVariable } from '../../utils';
+import { createIndexer, setupPallet } from '../../indexer';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 
 createIndexer({

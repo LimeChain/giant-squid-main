@@ -1,21 +1,21 @@
-import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { IHandlerCallParams, IHandlerOptions, PalletCallHandler } from '../../handler';
-import { Account, Identity, Judgement } from '../../../../model';
 import { EnsureAccount } from '../../../actions';
-import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
+import { Account, Identity, Judgement } from '../../../../model';
+import { getOriginAccountId, unwrapData } from '../../../../utils';
+import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, IdentityInfo, WrappedData } from '../../../types';
+import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
 
-export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfo> { }
+export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfo> {}
 interface ISetIdentityCallPalletSetup extends IBasePalletSetup {
   decoder: ISetIdentityCallPalletDecoder;
 }
 
-export class SetIdentityCallPalletHandler extends PalletCallHandler<ISetIdentityCallPalletSetup> {
+export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentityCallPalletSetup> {
   constructor(setup: ISetIdentityCallPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
-  handle({ ctx, block, queue, item: call }: IHandlerCallParams) {
+  handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
     const data = this.decoder.decode(call);

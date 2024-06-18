@@ -3,8 +3,7 @@
   "specVersions": "https://v2.archive.subsquid.io/metadata/polkadot",
   "pallets": {
     "Balances": {
-      "events": ["Transfer"],
-      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+      "events": ["Transfer"]
     },
     "Staking": {
       "events": ["Reward", "Rewarded"],
@@ -12,15 +11,7 @@
     },
     "Identity": {
       "events": ["IdentityCleared", "IdentityKilled", "SubIdentityRemoved", "SubIdentityRevoked"],
-      "calls": [
-        "set_identity",
-        "set_subs",
-        "provide_judgement",
-        "add_sub",
-        "clear_identity",
-        "kill_identity",
-        "rename_sub"
-      ]
+      "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "clear_identity", "kill_identity", "rename_sub"]
     }
   },
   "storage": []

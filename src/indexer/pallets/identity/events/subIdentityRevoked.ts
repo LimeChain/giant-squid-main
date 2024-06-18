@@ -1,37 +1,37 @@
 import { EnsureAccount } from '../../../actions';
-import { Action } from '../../../actions/base';
-import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 import { Account, IdentitySub } from '../../../../model';
-import { Event, Block, ProcessorContext } from '../../../processor';
-import { EventPalletHandler } from '../../handler';
-import { IIdentitySubIdentityRevokedEventPalletDecoder } from '../../../registry';
+import { IBasePalletSetup, IEventPalletDecoder } from '../../../types';
+import { EventPalletHandler, IEventHandlerParams } from '../../handler';
+import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 
-export class IdentitySubIdentityRevokedEventPalletHandler extends EventPalletHandler<IIdentitySubIdentityRevokedEventPalletDecoder> {
-  constructor(decoder: IIdentitySubIdentityRevokedEventPalletDecoder, options: { chain: string }) {
+export interface ISubIdentityRevokedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> {}
+interface ISubIdentityRevokedEventPalletSetup extends IBasePalletSetup {
+  decoder: ISubIdentityRevokedEventPalletDecoder;
+}
+
+export class SubIdentityRevokedEventPalletHandler extends EventPalletHandler<ISubIdentityRevokedEventPalletSetup> {
+  constructor(decoder: ISubIdentityRevokedEventPalletSetup, options: { chain: string }) {
     super(decoder, options);
   }
 
-  // TODO: fix the return type
-  handle(params: { ctx: ProcessorContext; queue: Action<unknown>[]; block: Block; item: Event }): any {
-    const event = params.item as Event;
-
+  handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const subRevokedData = this.decoder.decode(event);
 
     const subId = this.encodeAddress(subRevokedData.sub);
-    const subAccount = params.ctx.store.defer(Account, subId);
-    const subIdentity = params.ctx.store.defer(IdentitySub, subId);
+    const subAccount = ctx.store.defer(Account, subId);
+    const subIdentity = ctx.store.defer(IdentitySub, subId);
 
-    params.queue.push(
-      new EnsureAccount(params.block.header, event.extrinsic, {
+    queue.push(
+      new EnsureAccount(block.header, event.extrinsic, {
         account: () => subAccount.get(),
         id: subId,
       }),
-      new EnsureIdentitySubAction(params.block.header, event.extrinsic, {
+      new EnsureIdentitySubAction(block.header, event.extrinsic, {
         sub: () => subIdentity.get(),
         account: () => subAccount.getOrFail(),
         id: subId,
       }),
-      new RemoveIdentitySubAction(params.block.header, event.extrinsic, {
+      new RemoveIdentitySubAction(block.header, event.extrinsic, {
         sub: () => subIdentity.getOrFail(),
       })
     );

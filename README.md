@@ -78,3 +78,5 @@ Password: DB_PASS
 4. Implement in registry.ts the interface, calls and events.
 5. Implement each pallet action in indexer/actions folder (Could split the code in actions folder)
 6. Add tests
+
+## TODO: update this

@@ -1,5 +1,3 @@
 export * as v21 from './v21'
 export * as v10400 from './v10400'
-export * as v2800 from './v2800'
 export * as events from './events'
-export * as calls from './calls'

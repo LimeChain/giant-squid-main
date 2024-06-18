@@ -3,8 +3,7 @@
   "specVersions": "https://v2.archive.subsquid.io/metadata/darwinia",
   "pallets": {
     "Balances": {
-      "events": ["Transfer"],
-      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+      "events": ["Transfer"]
     }
   },
   "storage": []

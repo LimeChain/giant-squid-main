@@ -1,5 +1,5 @@
-import { createIndexer, setupPallet } from '../../indexer';
 import { ensureEnvVariable } from '../../utils/misc';
+import { createIndexer, setupPallet } from '../../indexer';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
 
 createIndexer({
@@ -9,7 +9,7 @@ createIndexer({
   },
   pallets: {
     events: {
-      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() })
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
     },
   },
 });

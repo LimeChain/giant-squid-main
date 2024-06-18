@@ -3,8 +3,7 @@
   "specVersions": "https://__chainArchiveName__.archive.subsquid.io/metadata/__chainName__",
   "pallets": {
     "Balances": {
-      "events": ["Transfer"],
-      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+      "events": ["Transfer"]
     },
     "Staking": {
       "events": ["Reward", "Rewarded"],

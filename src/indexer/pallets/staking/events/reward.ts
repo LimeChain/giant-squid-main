@@ -1,15 +1,15 @@
-import { EventPalletHandler, IHandlerEventParams, IHandlerOptions } from '../../handler';
 import { Account } from '../../../../model';
 import { EnsureAccount, RewardAction } from '../../../actions';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '../../../types';
 
-export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> { }
-export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> { }
+export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
+export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
 
 interface IRewardEventPalletSetup extends IBasePalletSetup {
-  decoder: IRewardEventPalletDecoder,
-  payoutStakersDecoder: IPayoutStakersCallPalletDecoder
-};
+  decoder: IRewardEventPalletDecoder;
+  payoutStakersDecoder: IPayoutStakersCallPalletDecoder;
+}
 
 export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPalletSetup> {
   private payoutStakersDecoder: IPayoutStakersCallPalletDecoder;
@@ -20,7 +20,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
     this.payoutStakersDecoder = setup.payoutStakersDecoder;
   }
 
-  handle({ ctx, queue, block, item: event }: IHandlerEventParams) {
+  handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
 
     if (data == null) return; // old format rewards skipped

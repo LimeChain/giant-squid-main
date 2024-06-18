@@ -4,7 +4,7 @@
 // import { ITransferEventPalletDecoder } from '../../../../../indexer/registry';
 
 // export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
-//   decode(event: Event): { from: string; to: string; amount: bigint } {
+//   decode(event: Event) {
 //     let transfer = events.balances.transfer;
 
 //     if (transfer.v1020.is(event)) {
@@ -20,3 +20,5 @@
 //     }
 //   }
 // }
+
+// TODO: update this template

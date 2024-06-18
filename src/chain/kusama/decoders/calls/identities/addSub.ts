@@ -1,11 +1,9 @@
-import { IIdentityAddSubCallPalletDecoder } from '../../../../../indexer/registry';
-import { ICallPalletDecoder } from '../../../../../indexer/types';
-import { Call } from '../../../../../indexer/processor';
-import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 import { calls } from '../../../types';
+import { Call, IAddSubCallPalletDecoder } from '../../../../../indexer';
+import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 
 // TODO: fix return type
-export class IdentityAddSubCallPalletDecoder implements ICallPalletDecoder<IIdentityAddSubCallPalletDecoder> {
+export class AddSubCallPalletDecoder implements IAddSubCallPalletDecoder {
   decode(call: Call): any {
     const identity = calls.identity.addSub;
 
