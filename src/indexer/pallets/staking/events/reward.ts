@@ -25,39 +25,32 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
 
     if (data == null) return; // old format rewards skipped
 
-    try {
-      let accountId = this.encodeAddress(data.stash);
+    let accountId = this.encodeAddress(data.stash);
 
-      let validatorId: string | undefined;
-      let era: number | undefined;
+    let validatorId: string | undefined;
+    let era: number | undefined;
 
-      if (event.call?.name === 'Staking.payout_stakers') {
-        const callData = this.payoutStakersDecoder.decode(event.call);
+    if (event.call?.name === 'Staking.payout_stakers') {
+      const callData = this.payoutStakersDecoder.decode(event.call);
 
-        validatorId = this.encodeAddress(callData.validatorStash);
-        era = callData.era;
-      }
-
-      const from = ctx.store.defer(Account, accountId);
-
-      queue.push(
-        new EnsureAccount(block.header, event.extrinsic, {
-          account: () => from.get(),
-          id: accountId,
-        }),
-        new RewardAction(block.header, event.extrinsic, {
-          id: event.id,
-          account: () => from.getOrFail(),
-          amount: data.amount,
-          era,
-          validatorId,
-        })
-      );
-    } catch (e) {
-      console.log(event);
-      console.log(data);
-      console.log(e);
-      process.exit(1);
+      validatorId = this.encodeAddress(callData.validatorStash);
+      era = callData.era;
     }
+
+    const from = ctx.store.defer(Account, accountId);
+
+    queue.push(
+      new EnsureAccount(block.header, event.extrinsic, {
+        account: () => from.get(),
+        id: accountId,
+      }),
+      new RewardAction(block.header, event.extrinsic, {
+        id: event.id,
+        account: () => from.getOrFail(),
+        amount: data.amount,
+        era,
+        validatorId,
+      })
+    );
   }
 }
