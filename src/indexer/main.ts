@@ -21,7 +21,6 @@ export async function createIndexer({ config, pallets }: IndexerParams) {
   processor.addCalls(calls);
   processor.start(async (ctx: ProcessorContext) => {
     const queue: Action[] = [];
-    // const queue: any = {}; //new Queue();
 
     processItem(ctx.blocks, (block, item) => {
       if (item.kind === 'event') {
@@ -34,7 +33,6 @@ export async function createIndexer({ config, pallets }: IndexerParams) {
       }
     });
 
-    // await queue.execute();
     await Action.process(ctx, queue);
     await ctx.store.flush();
   });

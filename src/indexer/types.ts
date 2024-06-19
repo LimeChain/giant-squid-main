@@ -40,12 +40,3 @@ export type IndexerParams = {
   config: ProcessorConfig;
   pallets: PalletSetups;
 };
-
-// export interface IChainData {
-//   prefix?: number;
-//   network: string;
-//   displayName: string;
-//   symbols: string[];
-//   decimals: string[];
-//   archiveName: string;
-// }

@@ -69,34 +69,6 @@ export const setSubs =  {
     ),
 }
 
-export const clearIdentity =  {
-    name: 'Identity.clear_identity',
-    /**
-     *  Clear an account's identity info and all sub-accounts and return all deposits.
-     * 
-     *  Payment: All reserved balances on the account are returned.
-     * 
-     *  The dispatch origin for this call must be _Signed_ and the sender must have a registered
-     *  identity.
-     * 
-     *  Emits `IdentityCleared` if successful.
-     * 
-     *  # <weight>
-     *  - `O(R + S + X)`
-     *    - where `R` registrar-count (governance-bounded).
-     *    - where `S` subs-count (hard- and deposit-bounded).
-     *    - where `X` additional-field-count (deposit-bounded and code-bounded).
-     *  - One balance-unreserve operation.
-     *  - `2` storage reads and `S + 2` storage deletions.
-     *  - One event.
-     *  # </weight>
-     */
-    v5: new CallType(
-        'Identity.clear_identity',
-        sts.unit()
-    ),
-}
-
 export const provideJudgement =  {
     name: 'Identity.provide_judgement',
     /**
@@ -215,91 +187,6 @@ export const provideJudgement =  {
             target: v9300.MultiAddress,
             judgement: v9300.Judgement,
             identity: v9300.H256,
-        })
-    ),
-}
-
-export const killIdentity =  {
-    name: 'Identity.kill_identity',
-    /**
-     *  Remove an account's identity and sub-account information and slash the deposits.
-     * 
-     *  Payment: Reserved balances from `set_subs` and `set_identity` are slashed and handled by
-     *  `Slash`. Verification request deposits are not returned; they should be cancelled
-     *  manually using `cancel_request`.
-     * 
-     *  The dispatch origin for this call must be _Root_ or match `T::ForceOrigin`.
-     * 
-     *  - `target`: the account whose identity the judgement is upon. This must be an account
-     *    with a registered identity.
-     * 
-     *  Emits `IdentityKilled` if successful.
-     * 
-     *  # <weight>
-     *  - `O(R + S + X)`.
-     *  - One balance-reserve operation.
-     *  - `S + 2` storage mutations.
-     *  - One event.
-     *  # </weight>
-     */
-    v5: new CallType(
-        'Identity.kill_identity',
-        sts.struct({
-            target: v5.LookupSource,
-        })
-    ),
-    /**
-     *  Remove an account's identity and sub-account information and slash the deposits.
-     * 
-     *  Payment: Reserved balances from `set_subs` and `set_identity` are slashed and handled by
-     *  `Slash`. Verification request deposits are not returned; they should be cancelled
-     *  manually using `cancel_request`.
-     * 
-     *  The dispatch origin for this call must match `T::ForceOrigin`.
-     * 
-     *  - `target`: the account whose identity the judgement is upon. This must be an account
-     *    with a registered identity.
-     * 
-     *  Emits `IdentityKilled` if successful.
-     * 
-     *  # <weight>
-     *  - `O(R + S + X)`.
-     *  - One balance-reserve operation.
-     *  - `S + 2` storage mutations.
-     *  - One event.
-     *  # </weight>
-     */
-    v28: new CallType(
-        'Identity.kill_identity',
-        sts.struct({
-            target: v28.LookupSource,
-        })
-    ),
-    /**
-     * Remove an account's identity and sub-account information and slash the deposits.
-     * 
-     * Payment: Reserved balances from `set_subs` and `set_identity` are slashed and handled by
-     * `Slash`. Verification request deposits are not returned; they should be cancelled
-     * manually using `cancel_request`.
-     * 
-     * The dispatch origin for this call must match `T::ForceOrigin`.
-     * 
-     * - `target`: the account whose identity the judgement is upon. This must be an account
-     *   with a registered identity.
-     * 
-     * Emits `IdentityKilled` if successful.
-     * 
-     * # <weight>
-     * - `O(R + S + X)`.
-     * - One balance-reserve operation.
-     * - `S + 2` storage mutations.
-     * - One event.
-     * # </weight>
-     */
-    v9110: new CallType(
-        'Identity.kill_identity',
-        sts.struct({
-            target: v9110.MultiAddress,
         })
     ),
 }

@@ -20,23 +20,3 @@ export class SetIdentityCallPalletDecoder implements ISetIdentityCallPalletDecod
     }
   }
 }
-
-// TODO: maybe remove?
-// const clear_identity = {
-//     decode(ctx: ChainContext, call: Call) {
-//         let e = new IdentityClearIdentityCall(ctx, call)
-//         if (e.isV1030) {
-//             return e.asV1030
-//         } else if (e.isV2028) {
-//             const data = e.asV2028
-//             if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-//             else throw new DataNotDecodableError(e, data)
-//         } else if (e.isV9111) {
-//             const data = e.asV9111
-//             if (data.sub.__kind !== 'Index') return {...data, sub: data.sub.value}
-//             else throw new DataNotDecodableError(e, data)
-//         } else {
-//             throw new UnknownVersionError(e)
-//         }
-//     },
-// }

@@ -179,26 +179,3 @@ export class RemoveIdentitySubAction extends Action<RemoveIdentitySubData> {
     await ctx.store.upsert(sub);
   }
 }
-
-// export interface EnsureIdentityData {
-//     identityId: string
-//     accountId: string
-// }
-
-// export class EnsureIdentityAction extends Action<EnsureIdentityData> {
-//     protected async _perform(ctx: ActionContext): Promise<void> {
-//         let identity = await ctx.store.get(Identity, this.data.identityId)
-//         if (identity != null) return
-
-//         const account = await ctx.store.getOrFail(Account, this.data.accountId)
-
-//         identity = new Identity({
-//             id: this.data.identityId,
-//             judgement: Judgement.Unknown,
-//             account,
-//             isKilled: false,
-//         })
-
-//         await ctx.store.insert(identity)
-//     }
-// }

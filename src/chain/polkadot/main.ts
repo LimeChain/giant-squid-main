@@ -31,11 +31,7 @@ createIndexer({
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
-      // // 'Identity.clear_identity': new IdentityClearIdentityCallPalletDecoder(),
-      // // 'Identity.kill_identity': new IdentityKillIdentityCallPalletDecoder(),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
     },
   },
 });
-
-// TODO: remove clear and kill identity?
