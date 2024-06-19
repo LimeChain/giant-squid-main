@@ -3,9 +3,8 @@ import { Call } from '../../../../../indexer';
 import { IProvideJudgementCallPalletDecoder } from '../../../../../indexer';
 import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 
-// TODO: fix return type
 export class ProvideJudgementCallPalletDecoder implements IProvideJudgementCallPalletDecoder {
-  decode(call: Call): any {
+  decode(call: Call) {
     const { provideJudgement } = calls.identity;
     if (provideJudgement.v5.is(call)) {
       return provideJudgement.v5.decode(call);

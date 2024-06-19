@@ -20,16 +20,20 @@ export type WrappedData = {
   value?: string;
 };
 
-export type IdentityInfo = {
-  web: WrappedData;
+export type JudgementData = {
+  __kind: string;
+};
+
+export type IdentityInfoData = {
+  additional?: any;
   display: WrappedData;
   legal: WrappedData;
-  email: WrappedData;
-  image: WrappedData;
-  pgpFingerprint: string;
+  web: WrappedData;
   riot: WrappedData;
+  email: WrappedData;
+  pgpFingerprint?: string;
+  image: WrappedData;
   twitter: WrappedData;
-  additional?: any;
 };
 
 export type IndexerParams = {

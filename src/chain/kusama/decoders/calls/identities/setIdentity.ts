@@ -3,8 +3,7 @@ import { UnknownVersionError } from '../../../../../utils';
 import { Call, ISetIdentityCallPalletDecoder } from '../../../../../indexer';
 
 export class SetIdentityCallPalletDecoder implements ISetIdentityCallPalletDecoder {
-  // TODO: fix any
-  decode(call: Call): any {
+  decode(call: Call) {
     let identity = calls.identity.setIdentity;
 
     if (identity.v1030.is(call)) {

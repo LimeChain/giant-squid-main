@@ -2,10 +2,10 @@ import { EnsureAccount } from '../../../actions';
 import { Account, Identity, Judgement } from '../../../../model';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
 import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, IdentityInfo, WrappedData } from '../../../types';
+import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '../../../types';
 import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
 
-export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfo> {}
+export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfoData> {}
 interface ISetIdentityCallPalletSetup extends IBasePalletSetup {
   decoder: ISetIdentityCallPalletDecoder;
 }
