@@ -1,7 +1,7 @@
 import { EnsureAccount } from '../../../actions';
 import { Identity, Account, IdentitySub } from '../../../../model';
 import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { CallPalletHandler, ICallHandlerParams } from '../../handler';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
 import { EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 
@@ -11,8 +11,8 @@ interface ISubCallPalletSetup extends IBasePalletSetup {
 }
 
 export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSetup> {
-  constructor(decoder: ISubCallPalletSetup, options: { chain: string }) {
-    super(decoder, options);
+  constructor(setup: ISubCallPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
   }
 
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {

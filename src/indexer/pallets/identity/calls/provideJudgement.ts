@@ -1,8 +1,8 @@
 import { EnsureAccount } from '../../../actions';
 import { Action, LazyAction } from '../../../actions/base';
 import { Judgement, Account, Identity } from '../../../../model';
-import { CallPalletHandler, ICallHandlerParams } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, JudgementData, WrappedData } from '../../../types';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
+import { IBasePalletSetup, ICallPalletDecoder, JudgementData } from '../../../types';
 import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
 
 export interface IProvideJudgementCallPalletDecoder extends ICallPalletDecoder<{ regIndex: number; judgement: JudgementData; target: string }> {}
@@ -11,8 +11,8 @@ interface IProvideJudgementCallPalletSetup extends IBasePalletSetup {
 }
 
 export class ProvideJudgementCallPalletHandler extends CallPalletHandler<IProvideJudgementCallPalletSetup> {
-  constructor(decoder: IProvideJudgementCallPalletSetup, options: { chain: string }) {
-    super(decoder, options);
+  constructor(setup: IProvideJudgementCallPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
   }
 
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {

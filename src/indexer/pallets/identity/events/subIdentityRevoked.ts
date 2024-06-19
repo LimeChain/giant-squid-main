@@ -1,17 +1,17 @@
 import { EnsureAccount } from '../../../actions';
 import { Account, IdentitySub } from '../../../../model';
 import { IBasePalletSetup, IEventPalletDecoder } from '../../../types';
-import { EventPalletHandler, IEventHandlerParams } from '../../handler';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
 
-export interface ISubIdentityRevokedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> {}
+export interface ISubIdentityRevokedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> { }
 interface ISubIdentityRevokedEventPalletSetup extends IBasePalletSetup {
   decoder: ISubIdentityRevokedEventPalletDecoder;
 }
 
 export class SubIdentityRevokedEventPalletHandler extends EventPalletHandler<ISubIdentityRevokedEventPalletSetup> {
-  constructor(decoder: ISubIdentityRevokedEventPalletSetup, options: { chain: string }) {
-    super(decoder, options);
+  constructor(setup: ISubIdentityRevokedEventPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {

@@ -1,7 +1,7 @@
 import { getOriginAccountId } from '../../../../utils';
 import { Identity, Judgement } from '../../../../model';
 import { Action, LazyAction } from '../../../actions/base';
-import { CallPalletHandler, ICallHandlerParams } from '../../handler';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
 import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction } from '../../../actions/identity';
 
@@ -11,8 +11,8 @@ interface IClearIdentityCallPalletSetup extends IBasePalletSetup {
 }
 
 export class ClearIdentityCallPalletHandler extends CallPalletHandler<IClearIdentityCallPalletSetup> {
-  constructor(decoder: IClearIdentityCallPalletSetup, options: { chain: string }) {
-    super(decoder, options);
+  constructor(setup: IClearIdentityCallPalletSetup, options: IHandlerOptions) {
+    super(setup, options);
   }
 
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {

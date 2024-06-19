@@ -38,7 +38,7 @@ abstract class BasePalletHandler<ISetup extends IBasePalletSetup> {
 }
 
 export abstract class EventPalletHandler<Setup extends IBasePalletSetup> extends BasePalletHandler<Setup> {
-  constructor(setup: Setup, options: { chain: string }) {
+  constructor(setup: Setup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -46,7 +46,7 @@ export abstract class EventPalletHandler<Setup extends IBasePalletSetup> extends
 }
 
 export abstract class CallPalletHandler<Setup extends IBasePalletSetup> extends BasePalletHandler<Setup> {
-  constructor(setup: Setup, options: { chain: string }) {
+  constructor(setup: Setup, options: IHandlerOptions) {
     super(setup, options);
   }
 
