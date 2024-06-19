@@ -5,7 +5,7 @@ import { CallPalletHandler, ICallHandlerParams } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
 import { EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
 
-export interface IAddSubCallPalletDecoder extends ICallPalletDecoder<{ name: string; sub: string; data: WrappedData }> {}
+export interface IAddSubCallPalletDecoder extends ICallPalletDecoder<{ sub: string; data: WrappedData }> {}
 interface ISubCallPalletSetup extends IBasePalletSetup {
   decoder: IAddSubCallPalletDecoder;
 }

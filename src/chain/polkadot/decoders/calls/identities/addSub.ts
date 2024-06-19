@@ -2,9 +2,8 @@ import { calls } from '../../../types';
 import { Call, IAddSubCallPalletDecoder } from '../../../../../indexer';
 import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
 
-// TODO: fix return type
 export class AddSubCallPalletDecoder implements IAddSubCallPalletDecoder {
-  decode(call: Call): any {
+  decode(call: Call) {
     const { addSub } = calls.identity;
     if (addSub.v15.is(call)) {
       return addSub.v15.decode(call);
