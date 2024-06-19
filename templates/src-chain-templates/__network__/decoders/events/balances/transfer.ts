@@ -1,7 +1,7 @@
-// import { Event } from '@subsquid/substrate-processor';
-// import { UnknownVersionError } from '../../../../../utils';
 // import { events } from '../../../types';
-// import { ITransferEventPalletDecoder } from '../../../../../indexer/registry';
+// import { Event } from '../../../../../indexer';
+// import { UnknownVersionError } from '../../../../../utils';
+// import { ITransferEventPalletDecoder } from '../../../../../indexer';
 
 // export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
 //   decode(event: Event) {
@@ -20,5 +20,3 @@
 //     }
 //   }
 // }
-
-// TODO: update this template

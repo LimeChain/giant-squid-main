@@ -1,10 +1,9 @@
-// import { IIdentitySetIdentityCallPalletDecoder } from '../../../../../indexer/registry';
-// import { ICallPalletDecoder } from '../../../../../indexer/types';
-// import { Call } from '../../../../../processor';
-// import { UnknownVersionError } from '../../../../../utils';
 // import { calls } from '../../../types';
-// export class SetIdentityCallPalletDecoder implements ICallPalletDecoder<IIdentitySetIdentityCallPalletDecoder> {
-//   decode(call: Call): any {
+// import { UnknownVersionError } from '../../../../../utils';
+// import { Call, ISetIdentityCallPalletDecoder } from '../../../../../indexer';
+
+// export class SetIdentityCallPalletDecoder implements ISetIdentityCallPalletDecoder {
+//   decode(call: Call) {
 //     let identity = calls.identity.setIdentity;
 
 //     if (identity.v1030.is(call)) {
@@ -21,5 +20,3 @@
 //     }
 //   }
 // }
-
-// TODO: update this template
