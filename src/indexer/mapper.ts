@@ -13,6 +13,8 @@ export class PalletMapper {
   constructor(pallets: PalletSetups, options: { chain: string }) {
     pallets.events &&
       Object.entries(pallets.events).forEach(([key, palletSetup]) => {
+        if (!palletSetup) return;
+
         const name = key as IEventPalletKey;
         const handler = this.getEventPalletInstance(name, palletSetup, options);
 
@@ -21,6 +23,8 @@ export class PalletMapper {
 
     pallets.calls &&
       Object.entries(pallets.calls).forEach(([key, palletSetup]) => {
+        if (!palletSetup) return;
+
         const name = key as ICallPalletKey;
         const handler = this.getCallPalletInstance(name, palletSetup, options);
 
