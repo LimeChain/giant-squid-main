@@ -10,7 +10,7 @@ export class PalletMapper {
   private events: Map<IEventPalletKey, InstanceType<IEventPalletHandler>> = new Map();
   private calls: Map<ICallPalletKey, InstanceType<ICallPalletHandler>> = new Map();
 
-  constructor(pallets: PalletSetups, options: { chain: string }) {
+  constructor(pallets: PalletSetups, options: IHandlerOptions) {
     pallets.events &&
       Object.entries(pallets.events).forEach(([key, palletSetup]) => {
         if (!palletSetup) return;
