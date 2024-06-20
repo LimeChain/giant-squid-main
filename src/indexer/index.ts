@@ -11,4 +11,4 @@ export { ISubIdentityRemovedEventPalletDecoder } from './pallets/identity/events
 export { ISubIdentityRevokedEventPalletDecoder } from './pallets/identity/events/subIdentityRevoked';
 export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from './pallets/staking/events/reward';
 
-export { createIndexer, setupPallet } from './main';
+export { Indexer, setupPallet } from './main';

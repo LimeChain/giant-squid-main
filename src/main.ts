@@ -1,21 +1,26 @@
 import path from 'path';
-import { spawn } from 'child_process';
+import { Indexer } from './indexer';
+import { ensureEnvVariable } from './utils';
 
-const chainName = process.env.CHAIN;
+async function run() {
+  try {
+    const name = ensureEnvVariable('CHAIN');
+    const indexerFile = path.join(__dirname, '/chain', name, '/main.js');
 
-if (!chainName) {
-  console.error('CHAIN environment variable is not set.');
-  process.exit(1);
+    const { indexer } = await import(indexerFile);
+
+    if (!indexer) {
+      throw new Error(`Indexer is not exported for chain: "${name}". Please, check the file at: ${indexerFile}.`);
+    }
+
+    if (!(indexer instanceof Indexer)) {
+      throw new Error(`Indexer for chain: "${name}" is not an instance of class Indexer.`);
+    }
+
+    indexer.start();
+  } catch (error: any) {
+    console.error(error.message);
+  }
 }
 
-const scriptPath = path.join(__dirname, 'chain', chainName, 'main.js');
-
-console.log(`Running script at: ${scriptPath}`);
-
-const subprocess = spawn('node', [scriptPath], {
-  stdio: 'inherit',
-});
-
-subprocess.on('close', (code: number) => {
-  process.exit(code);
-});
+run();

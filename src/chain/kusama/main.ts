@@ -1,5 +1,5 @@
 import { ensureEnvVariable } from '../../utils';
-import { createIndexer, setupPallet } from '../../indexer';
+import { Indexer, setupPallet } from '../../indexer';
 import { AddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
 import { SetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
 import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
@@ -9,7 +9,7 @@ import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutS
 import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
 import { ProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
 
-createIndexer({
+export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),

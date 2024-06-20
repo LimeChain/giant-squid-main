@@ -39,7 +39,7 @@ export class PalletMapper {
       throw new Error(`Pallet event ${key} not found`);
     }
 
-    // Use a type assertion to tell TypeScript that `PalletHandler` is a newable type
+    // Type assertion to tell TypeScript that `PalletHandler` is a newable type
     const Pallet = PalletHandler as new (setup: typeof palletSetup, options: IHandlerOptions) => InstanceType<IEventPalletHandler>;
 
     return new Pallet(palletSetup, options);

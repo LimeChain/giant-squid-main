@@ -43,18 +43,31 @@ export type ProcessorConfig = {
     from: number;
     to?: number;
   };
-  rateLimit?: number;
   typesBundle?: Parameters<SubstrateBatchProcessor<any>['setTypesBundle']>[0];
 };
 
 export class Processor {
+  private readonly DEFAULT_RPC_RATE_LIMIT = 10;
+
   processor: SubstrateBatchProcessor<typeof fields>;
   database: TypeormDatabaseWithCache;
-  constructor(db: TypeormDatabaseWithCache, config: ProcessorConfig) {
-    config.gateway = lookupArchive(config.chain, { release: 'ArrowSquid' });
 
-    this.database = db;
-    this.processor = new SubstrateBatchProcessor().setFields(fields).setGateway(config.gateway).setRpcEndpoint(config.endpoint);
+  constructor(database: TypeormDatabaseWithCache, config: ProcessorConfig) {
+    if (!config.gateway) {
+      config.gateway = lookupArchive(config.chain, { release: 'ArrowSquid' });
+    }
+
+    if (typeof config.endpoint === 'string') {
+      config.endpoint = { url: config.endpoint };
+    }
+
+    config.endpoint.rateLimit = config.endpoint.rateLimit || this.DEFAULT_RPC_RATE_LIMIT;
+
+    this.database = database;
+    this.processor = new SubstrateBatchProcessor()
+      .setFields(fields)
+      .setGateway(config.gateway)
+      .setRpcEndpoint(config.endpoint);
 
     if (config.blockRange) {
       this.processor.setBlockRange(config.blockRange);
