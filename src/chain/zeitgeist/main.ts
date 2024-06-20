@@ -6,11 +6,11 @@ export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    typesBundle: './type-bundles/zeitgeist.json',
+    typesBundle: 'assets/type-bundles/zeitgeist.json',
   },
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
     },
   },
-})
+});

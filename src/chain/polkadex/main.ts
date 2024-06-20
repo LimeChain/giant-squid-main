@@ -8,7 +8,7 @@ export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    typesBundle: './type-bundles/polkadex.json',
+    typesBundle: 'assets/type-bundles/polkadex.json',
   },
   pallets: {
     events: {
