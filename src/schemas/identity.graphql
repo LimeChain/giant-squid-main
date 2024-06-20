@@ -1,0 +1,38 @@
+type IdentityAdditionalField {
+  name: String
+  value: String
+}
+
+enum Judgement {
+  Unknown
+  FeePaid
+  Reasonable
+  KnownGood
+  OutOfDate
+  LowQuality
+  Erroneous
+}
+
+type Identity @entity {
+  id: ID!
+  account: Account! @unique
+  judgement: Judgement!
+  subs: [IdentitySub!] @derivedFrom(field: "super")
+  additional: [IdentityAdditionalField!]
+  display: String
+  legal: String
+  web: String
+  riot: String
+  email: String
+  pgpFingerprint: String
+  image: String
+  twitter: String
+  isKilled: Boolean!
+}
+
+type IdentitySub @entity {
+  id: ID!
+  super: Identity
+  account: Account! @unique
+  name: String
+}

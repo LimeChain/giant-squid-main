@@ -1,0 +1,10 @@
+type StakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  era: Int
+  validatorId: ID
+}
