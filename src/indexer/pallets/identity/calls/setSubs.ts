@@ -22,7 +22,8 @@ export class SetSubsCallPalletHandler extends CallPalletHandler<ISetSubsCallPall
 
     const origin = getOriginAccountId(call.origin);
 
-    if (origin == null) return;
+    if (!origin) return;
+
     const identityId = this.encodeAddress(origin);
     const identity = ctx.store.defer(Identity, identityId);
     const identityAccount = ctx.store.defer(Account, identityId);
@@ -36,10 +37,12 @@ export class SetSubsCallPalletHandler extends CallPalletHandler<ISetSubsCallPall
         new EnsureAccount(block.header, call.extrinsic, {
           account: () => subIdentityAccount.get(),
           id: subId,
+          pk: subData[0]
         }),
         new EnsureAccount(block.header, call.extrinsic, {
           account: () => identityAccount.get(),
           id: identityId,
+          pk: this.decodeAddress(identityId)
         }),
         new EnsureIdentityAction(block.header, call.extrinsic, {
           identity: () => identity.get(),
