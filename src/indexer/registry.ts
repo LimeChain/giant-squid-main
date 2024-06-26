@@ -10,12 +10,14 @@ import { ProvideJudgementCallPalletHandler } from './pallets/identity/calls/prov
 import { SubIdentityRemovedEventPalletHandler } from './pallets/identity/events/subIdentityRemoved';
 import { SubIdentityRevokedEventPalletHandler } from './pallets/identity/events/subIdentityRevoked';
 import { SlashEventPalletHandler } from './pallets/staking/events/slash';
+import { BondedEventPalletHandler } from './pallets/staking/events/bonded';
 
 export const registry = {
   events: {
     'Balances.Transfer': TransferEventPalletHandler,
     'Staking.Reward': RewardEventPalletHandler,
     'Staking.Rewarded': RewardEventPalletHandler,
+    'Staking.Bonded': BondedEventPalletHandler,
     'Staking.Slash': SlashEventPalletHandler,
     'Staking.Slashed': SlashEventPalletHandler,
     'Identity.SubIdentityRemoved': SubIdentityRemovedEventPalletHandler,

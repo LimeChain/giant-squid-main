@@ -26,6 +26,33 @@ export const slash =  {
     ),
 }
 
+export const bonded =  {
+    name: 'Staking.Bonded',
+    /**
+     *  An account has bonded this amount.
+     * 
+     *  NOTE: This event is only emitted when funds are bonded via a dispatchable. Notably,
+     *  it will not be emitted for staking rewards when they are added to stake.
+     */
+    v0: new EventType(
+        'Staking.Bonded',
+        sts.tuple([v0.AccountId, v0.Balance])
+    ),
+    /**
+     * An account has bonded this amount. \[stash, amount\]
+     * 
+     * NOTE: This event is only emitted when funds are bonded via a dispatchable. Notably,
+     * it will not be emitted for staking rewards when they are added to stake.
+     */
+    v9300: new EventType(
+        'Staking.Bonded',
+        sts.struct({
+            stash: v9300.AccountId32,
+            amount: sts.bigint(),
+        })
+    ),
+}
+
 export const rewarded =  {
     name: 'Staking.Rewarded',
     /**

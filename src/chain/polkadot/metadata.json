@@ -6,7 +6,7 @@
       "events": ["Transfer"]
     },
     "Staking": {
-      "events": ["Reward", "Rewarded", "Slash", "Slashed"],
+      "events": ["Reward", "Rewarded", "Slash", "Slashed", "Bonded"],
       "calls": ["payout_stakers"]
     },
     "Identity": {

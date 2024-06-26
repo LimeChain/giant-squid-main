@@ -1,5 +1,6 @@
 export { Event, Call } from './processor';
 export { ISlashEventPalletDecoder } from './pallets/staking/events/slash';
+export { IBondedEventPalletDecoder } from './pallets/staking/events/bonded';
 export { IAddSubCallPalletDecoder } from './pallets/identity/calls/addSub';
 export { ISetSubsCallPalletDecoder } from './pallets/identity/calls/setSubs';
 export { ITransferEventPalletDecoder } from './pallets/balances/events/transfer';

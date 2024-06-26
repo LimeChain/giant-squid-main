@@ -4,6 +4,7 @@ type Account @entity {
   transfers: [Transfer!] @derivedFrom(field: "account")
   rewards: [StakingReward!] @derivedFrom(field: "account")
   identity: Identity @derivedFrom(field: "account")
+  staker: Staker @derivedFrom(field: "stash")
   sub: IdentitySub @derivedFrom(field: "account")
 }
 
@@ -81,11 +82,33 @@ type StakingReward @entity {
   validatorId: ID
 }
 
+type StakingBond @entity {
+    id: ID!
+    timestamp: DateTime!
+    blockNumber: Int! @index
+    extrinsicHash: String @index
+    amount: BigInt!
+    account: Account!
+    staker: Staker!
+}
+
 type StakingSlash @entity {
   id: ID!
   timestamp: DateTime!
   blockNumber: Int! @index
   extrinsicHash: String @index
-  account: Account!
   amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+type Staker @entity {
+  id: ID! #stash Id
+  stash: Account! @unique
+
+  totalBonded: BigInt!
+  totalSlashed: BigInt!
+
+  slashes: [StakingSlash!] @derivedFrom(field: "staker")
+  bonds: [StakingBond!] @derivedFrom(field: "staker")
 }

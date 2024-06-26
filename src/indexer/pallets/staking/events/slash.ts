@@ -1,9 +1,9 @@
-import { Account } from '../../../../model';
+import { Account, Staker } from '../../../../model';
 import { EnsureAccount, SlashAction } from '../../../actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 
-export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint } | undefined> {}
+export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint } | undefined> { }
 
 interface ISlashEventPalletSetup extends IBasePalletSetup {
   decoder: ISlashEventPalletDecoder;
@@ -19,13 +19,19 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
     if (data == null) return;
 
-    const accountId = this.encodeAddress(data.staker);
+    const stakerId = this.encodeAddress(data.staker);
 
-    const from = ctx.store.defer(Account, accountId);
+    const account = ctx.store.defer(Account, stakerId);
+    const staker = ctx.store.defer(Staker, stakerId);
 
     queue.push(
-      new EnsureAccount(block.header, event.extrinsic, { account: () => from.get(), id: accountId, pk: data.staker }),
-      new SlashAction(block.header, event.extrinsic, { id: event.id, account: () => from.getOrFail(), amount: data.amount })
+      new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.staker }),
+      new SlashAction(block.header, event.extrinsic, {
+        id: event.id,
+        amount: data.amount,
+        account: () => account.getOrFail(),
+        staker: () => staker.getOrFail()
+      })
     );
   }
 }
