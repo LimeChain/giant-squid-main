@@ -23,7 +23,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
 
-    if (!data) return; // old format rewards skipped
+    if (data == null) return; // old format rewards skipped
 
     let accountId = this.encodeAddress(data.stash);
 
@@ -43,7 +43,6 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => from.get(),
         id: accountId,
-        pk: data.stash,
       }),
       new RewardAction(block.header, event.extrinsic, {
         id: event.id,

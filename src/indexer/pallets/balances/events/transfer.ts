@@ -26,12 +26,10 @@ export class TransferEventPalletHandler extends EventPalletHandler<ITransferEven
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => fromAccount.get(),
         id: fromId,
-        pk: from,
       }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => toAccount.get(),
         id: toId,
-        pk: to,
       }),
       new TransferAction(block.header, event.extrinsic, {
         id: event.id,

@@ -21,8 +21,7 @@ export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSet
     const subAddedCallData = this.decoder.decode(call);
 
     const origin = getOriginAccountId(call.origin);
-    
-    if (!origin) return;
+    if (origin == null) return;
 
     const identityId = this.encodeAddress(origin);
     const subId = this.encodeAddress(subAddedCallData.sub);
@@ -35,7 +34,6 @@ export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSet
       new EnsureAccount(block.header, call.extrinsic, {
         account: () => subIdentityAccount.get(),
         id: subId,
-        pk: subAddedCallData.sub
       }),
       new EnsureIdentitySubAction(block.header, call.extrinsic, {
         sub: () => subIdentity.get(),

@@ -1,10 +1,10 @@
 import { Account } from '../../model';
 import { Action, ActionContext } from './base';
+import { decodeAddress } from '../../utils';
 
 export interface AccountData {
   account: () => Promise<Account | undefined>;
   id: string;
-  pk: string;
 }
 
 export class EnsureAccount extends Action<AccountData> {
@@ -14,7 +14,7 @@ export class EnsureAccount extends Action<AccountData> {
 
     account = new Account({
       id: this.data.id,
-      publicKey: this.data.pk,
+      publicKey: decodeAddress(this.data.id),
     });
 
     await ctx.store.insert(account);

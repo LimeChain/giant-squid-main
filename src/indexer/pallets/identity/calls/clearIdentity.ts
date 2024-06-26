@@ -19,7 +19,7 @@ export class ClearIdentityCallPalletHandler extends CallPalletHandler<IClearIden
     if (!call.success) return;
 
     const origin = getOriginAccountId(call.origin);
-    if (!origin) return;
+    if (origin == null) return;
 
     const identityId = this.encodeAddress(origin);
     const identity = ctx.store.defer(Identity, { id: identityId, relations: { subs: true } });

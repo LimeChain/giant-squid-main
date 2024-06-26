@@ -25,7 +25,6 @@ export class SubIdentityRemovedEventPalletHandler extends EventPalletHandler<ISu
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => subAccount.get(),
         id: subId,
-        pk: subRemovedData.sub
       }),
       new EnsureIdentitySubAction(block.header, event.extrinsic, {
         sub: () => subIdentity.get(),
