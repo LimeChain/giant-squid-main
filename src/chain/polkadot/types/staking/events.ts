@@ -15,6 +15,17 @@ export const reward =  {
     ),
 }
 
+export const slash =  {
+    name: 'Staking.Slash',
+    /**
+     *  One validator (and its nominators) has been slashed by the given amount.
+     */
+    v0: new EventType(
+        'Staking.Slash',
+        sts.tuple([v0.AccountId, v0.Balance])
+    ),
+}
+
 export const rewarded =  {
     name: 'Staking.Rewarded',
     /**
@@ -42,6 +53,28 @@ export const rewarded =  {
         sts.struct({
             stash: v1001002.AccountId32,
             dest: v1001002.RewardDestination,
+            amount: sts.bigint(),
+        })
+    ),
+}
+
+export const slashed =  {
+    name: 'Staking.Slashed',
+    /**
+     *  One validator (and its nominators) has been slashed by the given amount.
+     *  \[validator, amount\]
+     */
+    v9090: new EventType(
+        'Staking.Slashed',
+        sts.tuple([v9090.AccountId, v9090.Balance])
+    ),
+    /**
+     * One staker (and potentially its nominators) has been slashed by the given amount.
+     */
+    v9300: new EventType(
+        'Staking.Slashed',
+        sts.struct({
+            staker: v9300.AccountId32,
             amount: sts.bigint(),
         })
     ),

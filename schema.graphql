@@ -1,82 +1,91 @@
 type Account @entity {
-    id: ID!
-    publicKey: ID! @index
-    transfers: [Transfer!] @derivedFrom(field: "account")
-    rewards: [StakingReward!] @derivedFrom(field: "account")
-    identity: Identity @derivedFrom(field: "account")
-    sub: IdentitySub @derivedFrom(field: "account")
+  id: ID!
+  publicKey: ID! @index
+  transfers: [Transfer!] @derivedFrom(field: "account")
+  rewards: [StakingReward!] @derivedFrom(field: "account")
+  identity: Identity @derivedFrom(field: "account")
+  sub: IdentitySub @derivedFrom(field: "account")
 }
 
 enum TransferDirection {
-    From
-    To
+  From
+  To
 }
 
 # entity for linking account and transfer
 type Transfer @entity {
-    id: ID!
-    transfer: NativeTransfer
-    account: Account!
-    direction: TransferDirection
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
 }
 
 type NativeTransfer @entity {
-    id: ID!
-    blockNumber: Int! @index
-    timestamp: DateTime! @index
-    extrinsicHash: String @index
-    from: Account!
-    to: Account!
-    amount: BigInt! @index
-    success: Boolean!
-}
-
-type StakingReward @entity {
-    id: ID!
-    timestamp: DateTime!
-    blockNumber: Int! @index
-    extrinsicHash: String @index
-    account: Account!
-    amount: BigInt!
-    era: Int
-    validatorId: ID
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
 }
 
 type IdentityAdditionalField {
-    name: String
-    value: String
+  name: String
+  value: String
 }
 
 enum Judgement {
-    Unknown
-    FeePaid
-    Reasonable
-    KnownGood
-    OutOfDate
-    LowQuality
-    Erroneous
+  Unknown
+  FeePaid
+  Reasonable
+  KnownGood
+  OutOfDate
+  LowQuality
+  Erroneous
 }
 
 type Identity @entity {
-    id: ID!
-    account: Account! @unique
-    judgement: Judgement!
-    subs: [IdentitySub!] @derivedFrom(field: "super")
-    additional: [IdentityAdditionalField!]
-    display: String
-    legal: String
-    web: String
-    riot: String
-    email: String
-    pgpFingerprint: String
-    image: String
-    twitter: String
-    isKilled: Boolean!
+  id: ID!
+  account: Account! @unique
+  judgement: Judgement!
+  subs: [IdentitySub!] @derivedFrom(field: "super")
+  additional: [IdentityAdditionalField!]
+  display: String
+  legal: String
+  web: String
+  riot: String
+  email: String
+  pgpFingerprint: String
+  image: String
+  twitter: String
+  isKilled: Boolean!
 }
 
 type IdentitySub @entity {
-    id: ID!
-    super: Identity
-    account: Account! @unique
-    name: String
+  id: ID!
+  super: Identity
+  account: Account! @unique
+  name: String
+}
+
+type StakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  era: Int
+  validatorId: ID
+}
+
+type StakingSlash @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
 }
