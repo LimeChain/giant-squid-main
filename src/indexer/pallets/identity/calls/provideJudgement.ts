@@ -52,6 +52,7 @@ export class ProvideJudgementCallPalletHandler extends CallPalletHandler<IProvid
             new EnsureAccount(block.header, call.extrinsic, {
               account: () => account.get(),
               id: identityId,
+              pk: judgementGivenData.target
             }),
             new EnsureIdentityAction(block.header, call.extrinsic, {
               identity: () => identity.get(),

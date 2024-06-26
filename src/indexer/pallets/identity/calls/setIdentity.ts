@@ -22,7 +22,7 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
 
     const origin = getOriginAccountId(call.origin);
 
-    if (origin == null) return;
+    if (!origin) return;
 
     const identityId = this.encodeAddress(origin);
     const account = ctx.store.defer(Account, identityId);
@@ -32,6 +32,7 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
       new EnsureAccount(block.header, call.extrinsic, {
         account: () => account.get(),
         id: identityId,
+        pk: this.decodeAddress(identityId),
       }),
       new EnsureIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.get(),
