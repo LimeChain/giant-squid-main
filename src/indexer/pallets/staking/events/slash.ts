@@ -3,7 +3,7 @@ import { EnsureAccount, SlashAction } from '../../../actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 
-export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint } | undefined> { }
+export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint }> {}
 
 interface ISlashEventPalletSetup extends IBasePalletSetup {
   decoder: ISlashEventPalletDecoder;
@@ -17,8 +17,6 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
 
-    if (data == null) return;
-
     const stakerId = this.encodeAddress(data.staker);
 
     const account = ctx.store.defer(Account, stakerId);
@@ -30,7 +28,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
         id: event.id,
         amount: data.amount,
         account: () => account.getOrFail(),
-        staker: () => staker.getOrFail()
+        staker: () => staker.getOrFail(),
       })
     );
   }

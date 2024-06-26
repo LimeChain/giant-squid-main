@@ -4,7 +4,7 @@ import { EnsureStaker } from '../../../actions/staking/staker';
 import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 
-export interface IBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> { }
+export interface IBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 
 interface IBondedEventPalletSetup extends IBasePalletSetup {
   decoder: IBondedEventPalletDecoder;
@@ -29,7 +29,7 @@ export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPal
         id: event.id,
         amount: data.amount,
         account: () => account.getOrFail(),
-        staker: () => staker.getOrFail()
+        staker: () => staker.getOrFail(),
       })
     );
   }

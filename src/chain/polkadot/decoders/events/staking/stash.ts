@@ -11,8 +11,6 @@ export class StakingSlashEventPalletDecoder implements ISlashEventPalletDecoder 
       if (slash.v0.is(event)) {
         let [staker, amount] = slash.v0.decode(event);
         return { staker, amount };
-      } else {
-        throw new UnknownVersionError(slash);
       }
     }
 
@@ -22,9 +20,9 @@ export class StakingSlashEventPalletDecoder implements ISlashEventPalletDecoder 
         return { staker, amount };
       } else if (slashed.v9300.is(event)) {
         return slashed.v9300.decode(event);
-      } else {
-        throw new UnknownVersionError(slashed);
       }
     }
+
+    throw new UnknownVersionError(slashed);
   }
 }

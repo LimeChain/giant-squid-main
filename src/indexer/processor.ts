@@ -64,10 +64,7 @@ export class Processor {
     config.endpoint.rateLimit = config.endpoint.rateLimit || this.DEFAULT_RPC_RATE_LIMIT;
 
     this.database = database;
-    this.processor = new SubstrateBatchProcessor()
-      .setFields(fields)
-      .setGateway(config.gateway)
-      .setRpcEndpoint(config.endpoint);
+    this.processor = new SubstrateBatchProcessor().setFields(fields).setGateway(config.gateway).setRpcEndpoint(config.endpoint);
 
     if (config.blockRange) {
       this.processor.setBlockRange(config.blockRange);
