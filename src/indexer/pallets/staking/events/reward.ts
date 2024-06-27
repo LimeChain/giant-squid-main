@@ -1,10 +1,10 @@
-import { Account } from '../../../../model';
-import { EnsureAccount, RewardAction } from '../../../actions';
+import { Account, Staker } from '../../../../model';
+import { EnsureAccount, EnsureStaker, RewardAction } from '../../../actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '../../../types';
 
-export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
-export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
+export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> { }
+export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> { }
 
 interface IRewardEventPalletSetup extends IBasePalletSetup {
   decoder: IRewardEventPalletDecoder;
@@ -38,6 +38,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
     }
 
     const from = ctx.store.defer(Account, accountId);
+    const staker = ctx.store.defer(Staker, accountId);
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
@@ -45,9 +46,15 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
         id: accountId,
         pk: data.stash,
       }),
+      new EnsureStaker(block.header, event.extrinsic, {
+        id: accountId,
+        staker: () => staker.get(),
+        account: () => from.getOrFail(),
+      }),
       new RewardAction(block.header, event.extrinsic, {
         id: event.id,
         account: () => from.getOrFail(),
+        staker: () => staker.getOrFail(),
         amount: data.amount,
         era,
         validatorId,

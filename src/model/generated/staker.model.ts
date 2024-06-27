@@ -1,6 +1,8 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToOne as OneToOne_, Index as Index_, JoinColumn as JoinColumn_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
+import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
+import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
 import {StakingBond} from "./stakingBond.model"
 
@@ -23,6 +25,12 @@ export class Staker {
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalSlashed!: bigint
+
+    @OneToMany_(() => StakingUnlockChunk, e => e.staker)
+    unlockings!: StakingUnlockChunk[]
+
+    @OneToMany_(() => StakingReward, e => e.staker)
+    rewards!: StakingReward[]
 
     @OneToMany_(() => StakingSlash, e => e.staker)
     slashes!: StakingSlash[]

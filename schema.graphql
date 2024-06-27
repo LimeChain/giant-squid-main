@@ -78,6 +78,7 @@ type StakingReward @entity {
   extrinsicHash: String @index
   account: Account!
   amount: BigInt!
+  staker: Staker!
   era: Int
   validatorId: ID
 }
@@ -118,8 +119,9 @@ type Staker @entity {
 
   totalBonded: BigInt!
   totalSlashed: BigInt!
-
+ 
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
+  rewards: [StakingReward!] @derivedFrom(field: "staker")
   slashes: [StakingSlash!] @derivedFrom(field: "staker")
   bonds: [StakingBond!] @derivedFrom(field: "staker")
 }
