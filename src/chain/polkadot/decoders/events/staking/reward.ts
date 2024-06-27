@@ -1,6 +1,6 @@
-import { events } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Event, IRewardEventPalletDecoder } from '../../../../../indexer';
+import { events } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Event, IRewardEventPalletDecoder } from '@/indexer';
 
 export class StakingRewardEventPalletDecoder implements IRewardEventPalletDecoder {
   decode(event: Event) {

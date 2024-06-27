@@ -1,9 +1,9 @@
-import { EnsureAccount } from '../../../actions';
-import { Identity, Account, IdentitySub } from '../../../../model';
-import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
-import { EnsureIdentityAction, EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '../../../actions/identity';
+import { EnsureAccount } from '@/indexer/actions';
+import { Identity, Account, IdentitySub } from '@/model';
+import { getOriginAccountId, unwrapData } from '@/utils';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
+import { EnsureIdentityAction, EnsureIdentitySubAction, AddIdentitySubAction, RenameSubAction } from '@/indexer/actions/identity';
 
 export interface ISetSubsCallPalletDecoder extends ICallPalletDecoder<{ subs: [string, WrappedData][] }> {}
 interface ISetSubsCallPalletSetup extends IBasePalletSetup {

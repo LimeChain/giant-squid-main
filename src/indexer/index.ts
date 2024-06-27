@@ -1,14 +1,14 @@
-export { Event, Call } from './processor';
-export { IAddSubCallPalletDecoder } from './pallets/identity/calls/addSub';
-export { ISetSubsCallPalletDecoder } from './pallets/identity/calls/setSubs';
-export { ITransferEventPalletDecoder } from './pallets/balances/events/transfer';
-export { IRenameSubCallPalletDecoder } from './pallets/identity/calls/renameSub';
-export { ISetIdentityCallPalletDecoder } from './pallets/identity/calls/setIdentity';
-export { IKillIdentityCallPalletDecoder } from './pallets/identity/calls/killIdentity';
-export { IClearIdentityCallPalletDecoder } from './pallets/identity/calls/clearIdentity';
-export { IProvideJudgementCallPalletDecoder } from './pallets/identity/calls/provideJudgement';
-export { ISubIdentityRemovedEventPalletDecoder } from './pallets/identity/events/subIdentityRemoved';
-export { ISubIdentityRevokedEventPalletDecoder } from './pallets/identity/events/subIdentityRevoked';
-export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from './pallets/staking/events/reward';
+export { Event, Call } from '@/indexer/processor';
+export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
+export { ISetSubsCallPalletDecoder } from '@/indexer/pallets/identity/calls/setSubs';
+export { ITransferEventPalletDecoder } from '@/indexer/pallets/balances/events/transfer';
+export { IRenameSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/renameSub';
+export { ISetIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/setIdentity';
+export { IKillIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/killIdentity';
+export { IClearIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/clearIdentity';
+export { IProvideJudgementCallPalletDecoder } from '@/indexer/pallets/identity/calls/provideJudgement';
+export { ISubIdentityRemovedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRemoved';
+export { ISubIdentityRevokedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRevoked';
+export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from '@/indexer/pallets/staking/events/reward';
 
-export { Indexer, setupPallet } from './main';
+export { Indexer, setupPallet } from '@/indexer/main';

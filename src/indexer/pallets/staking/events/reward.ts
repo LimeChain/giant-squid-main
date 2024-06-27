@@ -1,7 +1,7 @@
-import { Account } from '../../../../model';
-import { EnsureAccount, RewardAction } from '../../../actions';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '../../../types';
+import { Account } from '@/model';
+import { EnsureAccount, RewardAction } from '@/indexer/actions';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 
 export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
 export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}

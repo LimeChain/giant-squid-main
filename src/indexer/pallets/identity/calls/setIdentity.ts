@@ -1,9 +1,9 @@
-import { EnsureAccount } from '../../../actions';
-import { Account, Identity, Judgement } from '../../../../model';
-import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '../../../types';
-import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
+import { EnsureAccount } from '@/indexer/actions';
+import { Account, Identity, Judgement } from '@/model';
+import { getOriginAccountId, unwrapData } from '@/utils';
+import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '@/indexer/types';
+import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '@/indexer/actions/identity';
 
 export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfoData> {}
 interface ISetIdentityCallPalletSetup extends IBasePalletSetup {

@@ -67,6 +67,7 @@ export function unwrapData(data: { __kind: string; value?: string }) {
         unwrapped = Buffer.from(data.value!).toString('utf-8');
       }
 
+      // Removes all the null characters from the decoded string
       return unwrapped.replace(/\u0000/g, '');
     }
   }

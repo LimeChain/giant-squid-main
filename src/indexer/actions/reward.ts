@@ -1,5 +1,5 @@
-import { Account, StakingReward } from '../../model';
-import { Action, ActionContext } from './base';
+import { Account, StakingReward } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 export interface RewardData {
   id: string;
