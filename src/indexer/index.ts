@@ -1,4 +1,4 @@
-export { Event, Call } from './processor';
+export { Event, Call, Block, BlockHeader, ProcessorContext } from './processor';
 export { ISlashEventPalletDecoder } from './pallets/staking/events/slash';
 export { IBondedEventPalletDecoder } from './pallets/staking/events/bonded';
 export { IAddSubCallPalletDecoder } from './pallets/identity/calls/addSub';
@@ -13,5 +13,8 @@ export { IProvideJudgementCallPalletDecoder } from './pallets/identity/calls/pro
 export { ISubIdentityRemovedEventPalletDecoder } from './pallets/identity/events/subIdentityRemoved';
 export { ISubIdentityRevokedEventPalletDecoder } from './pallets/identity/events/subIdentityRevoked';
 export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from './pallets/staking/events/reward';
+
+export { IBondingDurationConstantGetter } from './pallets/staking/constants';
+export { ICurrentEraStorageLoader } from './pallets/staking/storage';
 
 export { Indexer, setupPallet } from './main';

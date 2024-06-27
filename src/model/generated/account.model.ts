@@ -2,6 +2,7 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, I
 import {Transfer} from "./transfer.model"
 import {StakingReward} from "./stakingReward.model"
 import {Identity} from "./identity.model"
+import {Staker} from "./staker.model"
 import {IdentitySub} from "./identitySub.model"
 
 @Entity_()
@@ -22,6 +23,7 @@ export class Account {
 
     @OneToMany_(() => StakingReward, e => e.account)
     rewards!: StakingReward[]
+
 
 
 }

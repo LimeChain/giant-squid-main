@@ -1,5 +1,5 @@
 import { PalletSetups } from './registry';
-import { BlockHeader, Call, Event, ProcessorConfig, ProcessorContext } from './processor';
+import { Block, BlockHeader, Call, Event, ProcessorConfig, ProcessorContext } from './processor';
 
 export type IBasePalletSetup = {
   decoder: {
@@ -14,6 +14,15 @@ export interface IEventPalletDecoder<T> {
 export interface ICallPalletDecoder<T> {
   decode(call: Call): T;
 }
+
+export interface IConstantPalletGetter<T> {
+  get(blockHeader: BlockHeader): T;
+}
+
+export interface IStoragePalletLoader<T> {
+  load(blockHeader: BlockHeader): Promise<T>;
+}
+
 
 export type WrappedData = {
   __kind: string;

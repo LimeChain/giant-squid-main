@@ -1,17 +1,33 @@
 import { Account, Staker } from '../../../../model';
 import { EnsureAccount, EnsureStaker, UnBondAction } from '../../../actions';
+import { Action, LazyAction } from '../../../actions/base';
+import { UnlockChunkAction } from '../../../actions/staking/unlock-chunk';
 import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
+import { IBondingDurationConstantGetter } from '../constants';
+import { ICurrentEraStorageLoader } from '../storage';
 
-export interface IUnBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
+export interface IUnBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> { }
 
 interface IUnBondedEventPalletSetup extends IBasePalletSetup {
   decoder: IUnBondedEventPalletDecoder;
+  constants: {
+    bondingDuration: IBondingDurationConstantGetter
+  },
+  storage: {
+    currentEra: ICurrentEraStorageLoader
+  }
 }
 
 export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEventPalletSetup> {
+  private constants: IUnBondedEventPalletSetup["constants"];
+  private storage: IUnBondedEventPalletSetup["storage"];
+
   constructor(setup: IUnBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
+
+    this.constants = setup.constants;
+    this.storage = setup.storage;
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
@@ -29,6 +45,25 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
         amount: data.amount,
         account: () => account.getOrFail(),
         staker: () => staker.getOrFail(),
+      }),
+      new LazyAction(block.header, event.extrinsic, async (ctx) => {
+        const queue: Action[] = [];
+
+        const bondingDuration = this.constants.bondingDuration.get(block.header);
+        const currentEra = await this.storage.currentEra.load(block.header);
+
+        if (!currentEra) return [];
+
+        queue.push(
+          new UnlockChunkAction(block.header, event.extrinsic, {
+            id: event.id,
+            amount: data.amount,
+            lockedUntilEra: currentEra + bondingDuration,
+            staker: () => staker.getOrFail(),
+          })
+        );
+
+        return queue;
       })
     );
   }

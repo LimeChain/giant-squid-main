@@ -1,5 +1,5 @@
-module.exports = class Data1719405382202 {
-    name = 'Data1719405382202'
+module.exports = class Data1719474872787 {
+    name = 'Data1719474872787'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -35,6 +35,9 @@ module.exports = class Data1719405382202 {
         await db.query(`CREATE INDEX "IDX_b38d17ce3a94eb771435464c20" ON "staking_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_cf2a5fc4d501da37ec2c60b339" ON "staking_bond" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_6dfbe050a4ef9c6b586906015e" ON "staking_bond" ("staker_id") `)
+        await db.query(`CREATE TABLE "staking_unlock_chunk" ("id" character varying NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "locked_until_era" integer NOT NULL, "amount" numeric NOT NULL, "withdrawn" boolean NOT NULL, "staker_id" character varying, CONSTRAINT "PK_8b61b896ffe18927e180f15d32c" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_e570a41acffb089d2a1ce309fd" ON "staking_unlock_chunk" ("block_number") `)
+        await db.query(`CREATE INDEX "IDX_8b99b268555fa0db5a4483c169" ON "staking_unlock_chunk" ("staker_id") `)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_dd3c998c07dabdafe827060b67f" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -48,6 +51,7 @@ module.exports = class Data1719405382202 {
         await db.query(`ALTER TABLE "staker" ADD CONSTRAINT "FK_828b14269265a736e4fef52ce26" FOREIGN KEY ("stash_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_bond" ADD CONSTRAINT "FK_cf2a5fc4d501da37ec2c60b339c" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_bond" ADD CONSTRAINT "FK_6dfbe050a4ef9c6b586906015e9" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "staking_unlock_chunk" ADD CONSTRAINT "FK_8b99b268555fa0db5a4483c1695" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     }
 
     async down(db) {
@@ -84,6 +88,9 @@ module.exports = class Data1719405382202 {
         await db.query(`DROP INDEX "public"."IDX_b38d17ce3a94eb771435464c20"`)
         await db.query(`DROP INDEX "public"."IDX_cf2a5fc4d501da37ec2c60b339"`)
         await db.query(`DROP INDEX "public"."IDX_6dfbe050a4ef9c6b586906015e"`)
+        await db.query(`DROP TABLE "staking_unlock_chunk"`)
+        await db.query(`DROP INDEX "public"."IDX_e570a41acffb089d2a1ce309fd"`)
+        await db.query(`DROP INDEX "public"."IDX_8b99b268555fa0db5a4483c169"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_dd3c998c07dabdafe827060b67f"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
@@ -97,5 +104,6 @@ module.exports = class Data1719405382202 {
         await db.query(`ALTER TABLE "staker" DROP CONSTRAINT "FK_828b14269265a736e4fef52ce26"`)
         await db.query(`ALTER TABLE "staking_bond" DROP CONSTRAINT "FK_cf2a5fc4d501da37ec2c60b339c"`)
         await db.query(`ALTER TABLE "staking_bond" DROP CONSTRAINT "FK_6dfbe050a4ef9c6b586906015e9"`)
+        await db.query(`ALTER TABLE "staking_unlock_chunk" DROP CONSTRAINT "FK_8b99b268555fa0db5a4483c1695"`)
     }
 }

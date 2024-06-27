@@ -83,13 +83,23 @@ type StakingReward @entity {
 }
 
 type StakingBond @entity {
-    id: ID!
-    timestamp: DateTime!
-    blockNumber: Int! @index
-    extrinsicHash: String @index
-    amount: BigInt!
-    account: Account!
-    staker: Staker!
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+type StakingUnlockChunk @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  staker: Staker!
+  lockedUntilEra: Int!
+  amount: BigInt!
+  withdrawn: Boolean!
 }
 
 type StakingSlash @entity {
@@ -109,6 +119,7 @@ type Staker @entity {
   totalBonded: BigInt!
   totalSlashed: BigInt!
 
+  unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
   slashes: [StakingSlash!] @derivedFrom(field: "staker")
   bonds: [StakingBond!] @derivedFrom(field: "staker")
 }
