@@ -1,5 +1,5 @@
 import { PalletSetups } from './registry';
-import { Call, Event, ProcessorConfig } from './processor';
+import { BlockHeader, Call, Event, ProcessorConfig, ProcessorContext } from './processor';
 
 export type IBasePalletSetup = {
   decoder: {
@@ -39,4 +39,27 @@ export type IdentityInfoData = {
 export type IndexerParams = {
   config: ProcessorConfig;
   pallets: PalletSetups;
+};
+
+type ConstantType<T> = {
+  new (block: BlockHeader): {
+    readonly value: T;
+  };
+};
+
+type StorageType<K extends any[], V> = {
+  new (
+    ctx: ProcessorContext,
+    block: BlockHeader,
+    ...keys: K
+  ): {
+    readonly value: Promise<V>;
+  };
+};
+
+type CurrentEraStorageType = StorageType<[], number | undefined>;
+
+export type ConstantTypes = {
+  bookingDuration: ConstantType<number>;
+  currentEra: CurrentEraStorageType;
 };

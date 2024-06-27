@@ -10,6 +10,7 @@ import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/ren
 import { ProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
 import { StakingSlashEventPalletDecoder } from './decoders/events/staking/stash';
 import { StakingBondedEventPalletDecoder } from './decoders/events/staking/bonded';
+import { StakingUnBondedEventPalletDecoder } from './decoders/events/staking/unbonded';
 
 export const indexer = new Indexer({
   config: {
@@ -22,6 +23,9 @@ export const indexer = new Indexer({
       'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
+      'Staking.Unbonded': setupPallet({
+        decoder: new StakingUnBondedEventPalletDecoder(),
+      }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },

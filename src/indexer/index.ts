@@ -3,6 +3,7 @@ export { ISlashEventPalletDecoder } from './pallets/staking/events/slash';
 export { IBondedEventPalletDecoder } from './pallets/staking/events/bonded';
 export { IAddSubCallPalletDecoder } from './pallets/identity/calls/addSub';
 export { ISetSubsCallPalletDecoder } from './pallets/identity/calls/setSubs';
+export { IUnBondedEventPalletDecoder } from './pallets/staking/events/unbonded';
 export { ITransferEventPalletDecoder } from './pallets/balances/events/transfer';
 export { IRenameSubCallPalletDecoder } from './pallets/identity/calls/renameSub';
 export { ISetIdentityCallPalletDecoder } from './pallets/identity/calls/setIdentity';

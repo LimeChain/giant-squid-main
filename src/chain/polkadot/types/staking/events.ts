@@ -53,6 +53,27 @@ export const bonded =  {
     ),
 }
 
+export const unbonded =  {
+    name: 'Staking.Unbonded',
+    /**
+     *  An account has unbonded this amount.
+     */
+    v0: new EventType(
+        'Staking.Unbonded',
+        sts.tuple([v0.AccountId, v0.Balance])
+    ),
+    /**
+     * An account has unbonded this amount.
+     */
+    v9300: new EventType(
+        'Staking.Unbonded',
+        sts.struct({
+            stash: v9300.AccountId32,
+            amount: sts.bigint(),
+        })
+    ),
+}
+
 export const rewarded =  {
     name: 'Staking.Rewarded',
     /**

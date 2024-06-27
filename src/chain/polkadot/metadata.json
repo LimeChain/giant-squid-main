@@ -6,7 +6,7 @@
       "events": ["Transfer"]
     },
     "Staking": {
-      "events": ["Reward", "Rewarded", "Slash", "Slashed", "Bonded"],
+      "events": ["Reward", "Rewarded", "Slash", "Slashed", "Bonded", "Unbonded"],
       "calls": ["payout_stakers"]
     },
     "Identity": {
@@ -14,5 +14,6 @@
       "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "rename_sub"]
     }
   },
-  "storage": []
+  "storage": ["Staking.CurrentEra"],
+  "constants": ["Staking.BondingDuration"]
 }
