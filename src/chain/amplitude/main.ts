@@ -12,4 +12,4 @@ export const indexer = new Indexer({
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
     },
   },
-})
+});

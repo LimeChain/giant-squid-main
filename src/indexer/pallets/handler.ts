@@ -1,4 +1,4 @@
-import * as Utils from '../../utils/misc'
+import * as Utils from '../../utils/misc';
 import { Action } from '../actions/base';
 import { IBasePalletSetup } from '../types';
 import { Block, Call, ProcessorContext, Event } from '../processor';

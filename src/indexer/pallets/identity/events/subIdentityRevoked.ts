@@ -4,7 +4,7 @@ import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '@/indexer/actions/identity';
 
-export interface ISubIdentityRevokedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> { }
+export interface ISubIdentityRevokedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> {}
 interface ISubIdentityRevokedEventPalletSetup extends IBasePalletSetup {
   decoder: ISubIdentityRevokedEventPalletDecoder;
 }
@@ -25,7 +25,7 @@ export class SubIdentityRevokedEventPalletHandler extends EventPalletHandler<ISu
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => subAccount.get(),
         id: subId,
-        pk: subRevokedData.sub
+        pk: subRevokedData.sub,
       }),
       new EnsureIdentitySubAction(block.header, event.extrinsic, {
         sub: () => subIdentity.get(),

@@ -37,12 +37,12 @@ export class SetSubsCallPalletHandler extends CallPalletHandler<ISetSubsCallPall
         new EnsureAccount(block.header, call.extrinsic, {
           account: () => subIdentityAccount.get(),
           id: subId,
-          pk: subData[0]
+          pk: subData[0],
         }),
         new EnsureAccount(block.header, call.extrinsic, {
           account: () => identityAccount.get(),
           id: identityId,
-          pk: this.decodeAddress(identityId)
+          pk: this.decodeAddress(identityId),
         }),
         new EnsureIdentityAction(block.header, call.extrinsic, {
           identity: () => identity.get(),
