@@ -4,8 +4,7 @@
   "typesBundle": "../../../assets/type-bundles/zeitgeist.json",
   "pallets": {
     "Balances": {
-      "events": ["Transfer"],
-      "calls": ["transfer", "force_transfer", "transfer_keep_alive", "transfer_all"]
+      "events": ["Transfer"]
     }
   },
   "storage": []

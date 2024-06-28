@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Block, Call, Event } from '../processor';
+import { Block, Call, Event } from '../indexer/processor';
 
 export type Item =
   | {
@@ -56,22 +56,11 @@ function compareEvents(a: { index: number }, b: { index: number }) {
   return a.index - b.index;
 }
 
-function compareCalls(
-  a: { extrinsicIndex: number; address: number[] },
-  b: { extrinsicIndex: number; address: number[] }
-) {
-  return (
-    a.extrinsicIndex - b.extrinsicIndex ||
-    a.address.length - b.address.length ||
-    (a.address.length == 0 ? 0 : last(a.address) - last(b.address))
-  );
+function compareCalls(a: { extrinsicIndex: number; address: number[] }, b: { extrinsicIndex: number; address: number[] }) {
+  return a.extrinsicIndex - b.extrinsicIndex || a.address.length - b.address.length || (a.address.length == 0 ? 0 : last(a.address) - last(b.address));
 }
 
-function compareCallEvent(
-  a: { extrinsicIndex: number; address: number[] },
-  b: { extrinsicIndex?: number; callAddress?: number[] },
-  callFirst: number
-) {
+function compareCallEvent(a: { extrinsicIndex: number; address: number[] }, b: { extrinsicIndex?: number; callAddress?: number[] }, callFirst: number) {
   return b.extrinsicIndex == null || b.callAddress == null
     ? 1
     : a.extrinsicIndex - b.extrinsicIndex ||

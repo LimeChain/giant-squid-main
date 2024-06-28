@@ -9,4 +9,5 @@ manifests/
 src/chain/*/types/
 src/model/
 
+docker-compose.yml
 .env

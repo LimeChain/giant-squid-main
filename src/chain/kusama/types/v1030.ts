@@ -12,6 +12,8 @@ export const IdentityJudgement: sts.Type<IdentityJudgement> = sts.closedEnum(() 
     }
 })
 
+export const Balance = sts.bigint()
+
 export type IdentityJudgement = IdentityJudgement_Erroneous | IdentityJudgement_FeePaid | IdentityJudgement_KnownGood | IdentityJudgement_LowQuality | IdentityJudgement_OutOfDate | IdentityJudgement_Reasonable | IdentityJudgement_Unknown
 
 export interface IdentityJudgement_Erroneous {
@@ -1511,6 +1513,8 @@ export interface Data_ShaThree256 {
 
 export type H256 = Bytes
 
+export const AccountId = sts.bytes()
+
 export const IdentityInfo: sts.Type<IdentityInfo> = sts.struct(() => {
     return  {
         additional: sts.array(() => IdentityInfoAdditional),
@@ -1542,7 +1546,3 @@ export interface IdentityInfo {
 export type H160 = Bytes
 
 export type IdentityInfoAdditional = [Data, Data]
-
-export const Balance = sts.bigint()
-
-export const AccountId = sts.bytes()
