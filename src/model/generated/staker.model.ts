@@ -24,6 +24,12 @@ export class Staker {
     totalBonded!: bigint
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    totalUnbonded!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    totalWithdrawn!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalSlashed!: bigint
 
     @OneToMany_(() => StakingUnlockChunk, e => e.staker)

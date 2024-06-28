@@ -12,16 +12,16 @@ interface RewardData {
 
 export class RewardAction extends Action<RewardData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    let account = await this.data.account();
-    let staker = await this.data.staker();
+    const account = await this.data.account();
+    const staker = await this.data.staker();
 
     let reward = new StakingReward({
       id: this.data.id,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
-      account,
-      staker,
+      account: account,
+      staker: staker,
       amount: this.data.amount,
       era: this.data.era,
       validatorId: this.data.validatorId,

@@ -74,6 +74,29 @@ export const unbonded =  {
     ),
 }
 
+export const withdrawn =  {
+    name: 'Staking.Withdrawn',
+    /**
+     *  An account has called `withdraw_unbonded` and removed unbonding chunks worth `Balance`
+     *  from the unlocking queue.
+     */
+    v0: new EventType(
+        'Staking.Withdrawn',
+        sts.tuple([v0.AccountId, v0.Balance])
+    ),
+    /**
+     * An account has called `withdraw_unbonded` and removed unbonding chunks worth `Balance`
+     * from the unlocking queue.
+     */
+    v9300: new EventType(
+        'Staking.Withdrawn',
+        sts.struct({
+            stash: v9300.AccountId32,
+            amount: sts.bigint(),
+        })
+    ),
+}
+
 export const rewarded =  {
     name: 'Staking.Rewarded',
     /**

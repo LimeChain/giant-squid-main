@@ -1,11 +1,12 @@
 export { Event, Call, Block, BlockHeader, ProcessorContext } from './processor';
 export { ISlashEventPalletDecoder } from './pallets/staking/events/slash';
-export { IBondedEventPalletDecoder } from './pallets/staking/events/bonded';
 export { IAddSubCallPalletDecoder } from './pallets/identity/calls/addSub';
+export { IBondedEventPalletDecoder } from './pallets/staking/events/bonded';
 export { ISetSubsCallPalletDecoder } from './pallets/identity/calls/setSubs';
 export { IUnBondedEventPalletDecoder } from './pallets/staking/events/unbonded';
 export { ITransferEventPalletDecoder } from './pallets/balances/events/transfer';
 export { IRenameSubCallPalletDecoder } from './pallets/identity/calls/renameSub';
+export { IWithdrawnEventPalletDecoder } from './pallets/staking/events/withdrawn';
 export { ISetIdentityCallPalletDecoder } from './pallets/identity/calls/setIdentity';
 export { IKillIdentityCallPalletDecoder } from './pallets/identity/calls/killIdentity';
 export { IClearIdentityCallPalletDecoder } from './pallets/identity/calls/clearIdentity';

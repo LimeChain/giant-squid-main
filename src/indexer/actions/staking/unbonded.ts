@@ -24,6 +24,7 @@ export class UnBondAction extends Action<UnBondData> {
     });
 
     staker.totalBonded -= this.data.amount;
+    staker.totalUnbonded += this.data.amount;
 
     await ctx.store.insert(bond);
     await ctx.store.upsert(staker);

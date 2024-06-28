@@ -13,6 +13,8 @@ import { StakingBondedEventPalletDecoder } from './decoders/events/staking/bonde
 import { StakingUnBondedEventPalletDecoder } from './decoders/events/staking/unbonded';
 import { BondingDurationConstantGetter } from './constants/bondingDuration';
 import { CurrentEraStorageLoader } from './storage/currentEra';
+import { LedgerStorageLoader } from './storage/ledger';
+import { StakingWithdrawnEventPalletDecoder } from './decoders/events/staking/withdrawn';
 
 export const indexer = new Indexer({
   config: {
@@ -32,7 +34,17 @@ export const indexer = new Indexer({
         },
         storage: {
           currentEra: new CurrentEraStorageLoader(),
-        }
+        },
+      }),
+      'Staking.Withdrawn': setupPallet({
+        decoder: new StakingWithdrawnEventPalletDecoder(),
+        constants: {
+          bondingDuration: new BondingDurationConstantGetter(),
+        },
+        storage: {
+          currentEra: new CurrentEraStorageLoader(),
+          ledger: new LedgerStorageLoader(),
+        },
       }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),

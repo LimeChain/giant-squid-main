@@ -12,6 +12,7 @@ import { SubIdentityRevokedEventPalletHandler } from './pallets/identity/events/
 import { SlashEventPalletHandler } from './pallets/staking/events/slash';
 import { BondedEventPalletHandler } from './pallets/staking/events/bonded';
 import { UnBondedEventPalletHandler } from './pallets/staking/events/unbonded';
+import { WithdrawnEventPalletHandler } from './pallets/staking/events/withdrawn';
 
 export const registry = {
   events: {
@@ -20,6 +21,7 @@ export const registry = {
     'Staking.Rewarded': RewardEventPalletHandler,
     'Staking.Bonded': BondedEventPalletHandler,
     'Staking.Unbonded': UnBondedEventPalletHandler,
+    'Staking.Withdrawn': WithdrawnEventPalletHandler,
     'Staking.Slash': SlashEventPalletHandler,
     'Staking.Slashed': SlashEventPalletHandler,
     'Identity.SubIdentityRemoved': SubIdentityRemovedEventPalletHandler,

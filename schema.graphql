@@ -118,8 +118,10 @@ type Staker @entity {
   stash: Account! @unique
 
   totalBonded: BigInt!
+  totalUnbonded: BigInt!
+  totalWithdrawn: BigInt!
   totalSlashed: BigInt!
- 
+
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
   rewards: [StakingReward!] @derivedFrom(field: "staker")
   slashes: [StakingSlash!] @derivedFrom(field: "staker")

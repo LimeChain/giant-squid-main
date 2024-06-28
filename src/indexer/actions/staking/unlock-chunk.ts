@@ -16,11 +16,11 @@ export class UnlockChunkAction extends Action<UnlockChunkData> {
       id: this.data.id,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
-      staker,
+      staker: staker,
       amount: this.data.amount,
       lockedUntilEra: this.data.lockedUntilEra,
       withdrawn: false,
-    })
+    });
 
     await ctx.store.insert(chunk);
   }
