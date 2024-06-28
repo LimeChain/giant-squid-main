@@ -1,18 +1,18 @@
-import { RewardEventPalletHandler } from './pallets/staking/events/reward';
-import { AddSubCallPalletHandler } from './pallets/identity/calls/addSub';
-import { SetSubsCallPalletHandler } from './pallets/identity/calls/setSubs';
-import { TransferEventPalletHandler } from './pallets/balances/events/transfer';
-import { RenameSubCallPalletHandler } from './pallets/identity/calls/renameSub';
-import { SetIdentityCallPalletHandler } from './pallets/identity/calls/setIdentity';
-import { KillIdentityCallPalletHandler } from './pallets/identity/calls/killIdentity';
-import { ClearIdentityCallPalletHandler } from './pallets/identity/calls/clearIdentity';
-import { ProvideJudgementCallPalletHandler } from './pallets/identity/calls/provideJudgement';
-import { SubIdentityRemovedEventPalletHandler } from './pallets/identity/events/subIdentityRemoved';
-import { SubIdentityRevokedEventPalletHandler } from './pallets/identity/events/subIdentityRevoked';
-import { SlashEventPalletHandler } from './pallets/staking/events/slash';
-import { BondedEventPalletHandler } from './pallets/staking/events/bonded';
-import { UnBondedEventPalletHandler } from './pallets/staking/events/unbonded';
-import { WithdrawnEventPalletHandler } from './pallets/staking/events/withdrawn';
+import { RewardEventPalletHandler } from '@/indexer/pallets/staking/events/reward';
+import { AddSubCallPalletHandler } from '@/indexer/pallets/identity/calls/addSub';
+import { SetSubsCallPalletHandler } from '@/indexer/pallets/identity/calls/setSubs';
+import { TransferEventPalletHandler } from '@/indexer/pallets/balances/events/transfer';
+import { RenameSubCallPalletHandler } from '@/indexer/pallets/identity/calls/renameSub';
+import { SetIdentityCallPalletHandler } from '@/indexer/pallets/identity/calls/setIdentity';
+import { KillIdentityCallPalletHandler } from '@/indexer/pallets/identity/calls/killIdentity';
+import { ClearIdentityCallPalletHandler } from '@/indexer/pallets/identity/calls/clearIdentity';
+import { ProvideJudgementCallPalletHandler } from '@/indexer/pallets/identity/calls/provideJudgement';
+import { SubIdentityRemovedEventPalletHandler } from '@/indexer/pallets/identity/events/subIdentityRemoved';
+import { SubIdentityRevokedEventPalletHandler } from '@/indexer/pallets/identity/events/subIdentityRevoked';
+import { SlashEventPalletHandler } from '@/indexer/pallets/staking/events/slash';
+import { BondedEventPalletHandler } from '@/indexer/pallets/staking/events/bonded';
+import { UnBondedEventPalletHandler } from '@/indexer/pallets/staking/events/unbonded';
+import { WithdrawnEventPalletHandler } from '@/indexer/pallets/staking/events/withdrawn';
 
 export const registry = {
   events: {

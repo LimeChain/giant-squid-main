@@ -1,5 +1,5 @@
-import { Account } from '../../model';
-import { Action, ActionContext } from './base';
+import { Account } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 export interface AccountData {
   account: () => Promise<Account | undefined>;

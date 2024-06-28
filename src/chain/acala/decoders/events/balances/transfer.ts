@@ -1,6 +1,6 @@
-import { events } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Event, ITransferEventPalletDecoder } from '../../../../../indexer';
+import { events } from '@/chain/acala/types';
+import { UnknownVersionError } from '@/utils';
+import { Event, ITransferEventPalletDecoder } from '@/indexer';
 
 export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
   decode(event: Event) {

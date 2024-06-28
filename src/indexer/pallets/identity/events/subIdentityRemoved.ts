@@ -1,8 +1,8 @@
-import { EnsureAccount } from '../../../actions';
-import { Account, IdentitySub } from '../../../../model';
-import { IBasePalletSetup, IEventPalletDecoder } from '../../../types';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
-import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '../../../actions/identity';
+import { EnsureAccount } from '@/indexer/actions';
+import { Account, IdentitySub } from '@/model';
+import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { EnsureIdentitySubAction, RemoveIdentitySubAction } from '@/indexer/actions/identity';
 
 export interface ISubIdentityRemovedEventPalletDecoder extends IEventPalletDecoder<{ sub: string; main: string; deposit: bigint }> {}
 interface ISubIdentityRemovedEventPalletSetup extends IBasePalletSetup {

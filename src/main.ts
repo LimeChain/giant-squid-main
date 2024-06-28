@@ -1,4 +1,5 @@
 import path from 'path';
+import 'module-alias/register';
 import { Indexer } from './indexer';
 import { ensureEnvVariable } from './utils';
 

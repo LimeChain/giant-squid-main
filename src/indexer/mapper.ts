@@ -1,5 +1,5 @@
-import { IHandlerOptions } from './pallets/handler';
-import { PalletSetups, RegistryCall, RegistryEvent, registry } from './registry';
+import { IHandlerOptions } from '@/indexer/pallets/handler';
+import { PalletSetups, RegistryCall, RegistryEvent, registry } from '@/indexer/registry';
 
 type IEventPalletKey = keyof RegistryEvent;
 type ICallPalletKey = keyof RegistryCall;

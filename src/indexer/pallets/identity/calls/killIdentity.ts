@@ -1,9 +1,9 @@
-import { getOriginAccountId } from '../../../../utils';
-import { Identity, Judgement } from '../../../../model';
-import { Action, LazyAction } from '../../../actions/base';
-import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
-import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction, KillIdentityAction } from '../../../actions/identity';
+import { getOriginAccountId } from '@/utils';
+import { Identity, Judgement } from '@/model';
+import { Action, LazyAction } from '@/indexer/actions/base';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
+import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction, KillIdentityAction } from '@/indexer/actions/identity';
 
 export interface IKillIdentityCallPalletDecoder extends ICallPalletDecoder<{ target: string | WrappedData }> {}
 interface IKillIdentityCallPalletSetup extends IBasePalletSetup {

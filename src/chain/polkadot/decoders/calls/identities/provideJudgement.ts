@@ -1,7 +1,7 @@
-import { calls } from '../../../types';
-import { Call } from '../../../../../indexer';
-import { IProvideJudgementCallPalletDecoder } from '../../../../../indexer';
-import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
+import { calls } from '@/chain/polkadot/types';
+import { Call } from '@/indexer';
+import { IProvideJudgementCallPalletDecoder } from '@/indexer';
+import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
 export class ProvideJudgementCallPalletDecoder implements IProvideJudgementCallPalletDecoder {
   decode(call: Call) {

@@ -1,8 +1,8 @@
-import { processItem } from '../utils';
-import { Action } from './actions/base';
-import { PalletMapper } from './mapper';
-import { IndexerParams } from './types';
-import { Processor, ProcessorContext } from './processor';
+import { processItem } from '@/utils';
+import { Action } from '@/indexer/actions/base';
+import { PalletMapper } from '@/indexer/mapper';
+import { IndexerParams } from '@/indexer/types';
+import { Processor, ProcessorContext } from '@/indexer/processor';
 import { TypeormDatabaseWithCache } from '@belopash/typeorm-store';
 
 export function setupPallet<T>(setup: T): T {

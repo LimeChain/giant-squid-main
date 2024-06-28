@@ -1,9 +1,9 @@
-import { EnsureAccount } from '../../../actions';
-import { Action, LazyAction } from '../../../actions/base';
-import { Judgement, Account, Identity } from '../../../../model';
-import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, JudgementData } from '../../../types';
-import { EnsureIdentityAction, GiveJudgementAction } from '../../../actions/identity';
+import { EnsureAccount } from '@/indexer/actions';
+import { Action, LazyAction } from '@/indexer/actions/base';
+import { Judgement, Account, Identity } from '@/model';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, JudgementData } from '@/indexer/types';
+import { EnsureIdentityAction, GiveJudgementAction } from '@/indexer/actions/identity';
 
 export interface IProvideJudgementCallPalletDecoder extends ICallPalletDecoder<{ regIndex: number; judgement: JudgementData; target: string }> {}
 interface IProvideJudgementCallPalletSetup extends IBasePalletSetup {

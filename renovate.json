@@ -1,20 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "packageRules": [
     {
       "groupName": "@subsquid",
-      "matchPackagePatterns": [
-        "^@subsquid/"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ]
+      "matchPackagePatterns": ["^@subsquid/"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
     }
   ],
   "automerge": true,

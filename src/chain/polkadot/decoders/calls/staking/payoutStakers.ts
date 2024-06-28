@@ -1,6 +1,6 @@
-import { calls } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Call, IPayoutStakersCallPalletDecoder } from '../../../../../indexer';
+import { calls } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Call, IPayoutStakersCallPalletDecoder } from '@/indexer';
 
 export class PayoutStakersCallPalletDecoder implements IPayoutStakersCallPalletDecoder {
   decode(event: Call) {
