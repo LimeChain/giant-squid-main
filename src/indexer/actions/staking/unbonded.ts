@@ -1,5 +1,5 @@
-import { Account, Staker, StakingBond } from '../../../model';
-import { Action, ActionContext } from '../base';
+import { Account, Staker, StakingBond } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UnBondData {
   id: string;

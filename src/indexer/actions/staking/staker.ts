@@ -1,5 +1,5 @@
-import { Account, Staker, StakingSlash } from '../../../model';
-import { Action, ActionContext } from '../base';
+import { Account, Staker, StakingRole } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface StakerData {
   id: string;
@@ -22,6 +22,7 @@ export class EnsureStaker extends Action<StakerData> {
       totalUnbonded: 0n,
       totalWithdrawn: 0n,
       totalSlashed: 0n,
+      role: StakingRole.Unknown,
     });
 
     await ctx.store.insert(staker);

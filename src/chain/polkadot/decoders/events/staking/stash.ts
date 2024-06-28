@@ -1,6 +1,6 @@
-import { events } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Event, ISlashEventPalletDecoder } from './../../../../../indexer';
+import { events } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Event, ISlashEventPalletDecoder } from '@/indexer';
 
 export class StakingSlashEventPalletDecoder implements ISlashEventPalletDecoder {
   decode(event: Event) {

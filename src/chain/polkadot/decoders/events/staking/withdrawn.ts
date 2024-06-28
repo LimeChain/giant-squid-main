@@ -1,6 +1,6 @@
-import { events } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Event, IWithdrawnEventPalletDecoder } from '../../../../../indexer';
+import { events } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Event, IWithdrawnEventPalletDecoder } from '@/indexer';
 
 export class StakingWithdrawnEventPalletDecoder implements IWithdrawnEventPalletDecoder {
   decode(event: Event) {

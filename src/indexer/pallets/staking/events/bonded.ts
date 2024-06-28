@@ -1,7 +1,7 @@
-import { Account, Staker } from '../../../../model';
-import { EnsureAccount, BondAction, EnsureStaker } from '../../../actions';
-import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
+import { Account, Staker } from '@/model';
+import { EnsureAccount, BondAction, EnsureStaker } from '@/indexer/actions';
+import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 
 export interface IBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 

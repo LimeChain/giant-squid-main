@@ -1,6 +1,6 @@
-import { constants } from '../types'
-import { UnknownVersionError } from '../../../utils';
-import { IBondingDurationConstantGetter, BlockHeader } from "../../../indexer";
+import { constants } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { IBondingDurationConstantGetter, BlockHeader } from '@/indexer';
 
 export class BondingDurationConstantGetter implements IBondingDurationConstantGetter {
   get(blockHeader: BlockHeader) {

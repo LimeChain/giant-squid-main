@@ -1,5 +1,5 @@
-import { Staker, StakingUnlockChunk } from '../../../model';
-import { Action, ActionContext } from '../base';
+import { Staker, StakingUnlockChunk } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UnlockChunkData {
   id: string;

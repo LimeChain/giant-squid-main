@@ -1,5 +1,5 @@
-import { PalletSetups } from './registry';
-import { BlockHeader, Call, Event, ProcessorConfig } from './processor';
+import { PalletSetups } from '@/indexer/registry';
+import { BlockHeader, Call, Event, ProcessorConfig } from '@/indexer/processor';
 
 export type IBasePalletSetup = {
   decoder: {
@@ -21,19 +21,6 @@ export interface IConstantPalletGetter<T> {
 
 export interface IStoragePalletLoader<T> {
   load(blockHeader: BlockHeader, accountId?: string): Promise<T>;
-}
-
-type UnlockChunkData = {
-  value: bigint;
-  era: number;
-};
-
-export interface ILedgerData {
-  stash: string;
-  total?: bigint;
-  active?: bigint;
-  unlocking?: UnlockChunkData[];
-  legacyClaimedRewards?: number[];
 }
 
 export type WrappedData = {

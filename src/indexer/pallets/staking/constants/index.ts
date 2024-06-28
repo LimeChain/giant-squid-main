@@ -1,3 +1,3 @@
-import { IConstantPalletGetter } from "../../../types";
+import { IConstantPalletGetter } from '@/indexer/types';
 
-export interface IBondingDurationConstantGetter extends IConstantPalletGetter<number> { }
+export interface IBondingDurationConstantGetter extends IConstantPalletGetter<number> {}

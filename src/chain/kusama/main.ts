@@ -1,13 +1,13 @@
-import { ensureEnvVariable } from '../../utils';
-import { Indexer, setupPallet } from '../../indexer';
-import { AddSubCallPalletDecoder } from './decoders/calls/identities/addSub';
-import { SetSubsCallPalletDecoder } from './decoders/calls/identities/setSubs';
-import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
-import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { SetIdentityCallPalletDecoder } from './decoders/calls/identities/setIdentity';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
-import { RenameIdentityCallPalletDecoder } from './decoders/calls/identities/renameIdentity';
-import { ProvideJudgementCallPalletDecoder } from './decoders/calls/identities/provideJudgement';
+import { ensureEnvVariable } from '@/utils';
+import { Indexer, setupPallet } from '@/indexer';
+import { AddSubCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/addSub';
+import { SetSubsCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/setSubs';
+import { TransferEventPalletDecoder } from '@/chain/kusama/decoders/events/balances/transfer';
+import { StakingRewardEventPalletDecoder } from '@/chain/kusama/decoders/events/staking/reward';
+import { SetIdentityCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/setIdentity';
+import { PayoutStakersCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/payoutStakers';
+import { RenameIdentityCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/renameIdentity';
+import { ProvideJudgementCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/provideJudgement';
 
 export const indexer = new Indexer({
   config: {

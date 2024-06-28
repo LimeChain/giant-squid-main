@@ -1,6 +1,6 @@
-import { events } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Event, IUnBondedEventPalletDecoder } from '../../../../../indexer';
+import { events } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Event, IUnBondedEventPalletDecoder } from '@/indexer';
 
 export class StakingUnBondedEventPalletDecoder implements IUnBondedEventPalletDecoder {
   decode(event: Event) {

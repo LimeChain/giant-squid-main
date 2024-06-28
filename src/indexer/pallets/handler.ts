@@ -1,7 +1,7 @@
-import * as Utils from '../../utils/misc';
-import { Action } from '../actions/base';
-import { IBasePalletSetup } from '../types';
-import { Block, Call, ProcessorContext, Event } from '../processor';
+import * as Utils from '@/utils/misc';
+import { Action } from '@/indexer/actions/base';
+import { IBasePalletSetup } from '@/indexer/types';
+import { Block, Call, ProcessorContext, Event } from '@/indexer/processor';
 
 export interface IHandlerOptions {
   chain: string;

@@ -71,6 +71,13 @@ type IdentitySub @entity {
   name: String
 }
 
+enum StakingRole {
+  Validator
+  Nominator
+  Idle
+  Unknown
+}
+
 type StakingReward @entity {
   id: ID!
   timestamp: DateTime!
@@ -116,6 +123,8 @@ type StakingSlash @entity {
 type Staker @entity {
   id: ID! #stash Id
   stash: Account! @unique
+
+  role: StakingRole!
 
   totalBonded: BigInt!
   totalUnbonded: BigInt!

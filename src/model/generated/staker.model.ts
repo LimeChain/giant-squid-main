@@ -1,6 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToOne as OneToOne_, Index as Index_, JoinColumn as JoinColumn_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
+import {StakingRole} from "./_stakingRole"
 import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
 import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
@@ -19,6 +20,9 @@ export class Staker {
     @OneToOne_(() => Account, {nullable: true})
     @JoinColumn_()
     stash!: Account
+
+    @Column_("varchar", {length: 9, nullable: false})
+    role!: StakingRole
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalBonded!: bigint

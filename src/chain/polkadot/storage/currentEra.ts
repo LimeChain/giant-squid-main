@@ -1,6 +1,6 @@
-import { storage } from '../types'
-import { UnknownVersionError } from '../../../utils';
-import { BlockHeader, ICurrentEraStorageLoader } from "../../../indexer";
+import { storage } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { BlockHeader, ICurrentEraStorageLoader } from '@/indexer';
 
 export class CurrentEraStorageLoader implements ICurrentEraStorageLoader {
   load(blockHeader: BlockHeader) {

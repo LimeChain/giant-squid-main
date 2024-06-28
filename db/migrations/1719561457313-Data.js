@@ -1,5 +1,5 @@
-module.exports = class Data1719481358546 {
-    name = 'Data1719481358546'
+module.exports = class Data1719561457313 {
+    name = 'Data1719561457313'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -25,7 +25,7 @@ module.exports = class Data1719481358546 {
         await db.query(`CREATE INDEX "IDX_b38d17ce3a94eb771435464c20" ON "staking_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_cf2a5fc4d501da37ec2c60b339" ON "staking_bond" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_6dfbe050a4ef9c6b586906015e" ON "staking_bond" ("staker_id") `)
-        await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "stash_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "role" character varying(9) NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "stash_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_828b14269265a736e4fef52ce2" ON "staker" ("stash_id") `)
         await db.query(`CREATE TABLE "staking_reward" ("id" character varying NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "era" integer, "validator_id" text, "account_id" character varying, "staker_id" character varying, CONSTRAINT "PK_63b6754f195dbb71232f598485b" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_6d193d26e0c88588e594475ccf" ON "staking_reward" ("block_number") `)

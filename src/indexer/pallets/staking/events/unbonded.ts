@@ -1,11 +1,11 @@
-import { Account, Staker } from '../../../../model';
-import { EnsureAccount, EnsureStaker, UnBondAction } from '../../../actions';
-import { Action, LazyAction } from '../../../actions/base';
-import { UnlockChunkAction } from '../../../actions/staking/unlock-chunk';
-import { IEventPalletDecoder, IBasePalletSetup } from '../../../types';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
-import { IBondingDurationConstantGetter } from '../constants';
-import { ICurrentEraStorageLoader } from '../storage';
+import { Account, Staker } from '@/model';
+import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
+import { Action, LazyAction } from '@/indexer/actions/base';
+import { UnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
+import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
+import { ICurrentEraStorageLoader } from '@/indexer/pallets/staking/storage';
 
 export interface IUnBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 

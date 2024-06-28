@@ -1,8 +1,8 @@
 import * as ss58 from '@subsquid/ss58';
 import { isHex } from '@subsquid/util-internal-hex';
 import { assertNotNull, decodeHex } from '@subsquid/substrate-processor';
-import { Item, orderItems } from './orderItems';
-import { Block } from '../indexer/processor';
+import { Item, orderItems } from '@/utils/orderItems';
+import { Block } from '@/indexer/processor';
 
 export function decodeAddress(address: string, chain: string) {
   return ss58.codec(chain).decode(address);
