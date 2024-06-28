@@ -23,7 +23,6 @@ export class SlashAction extends Action<SlashData> {
       amount: this.data.amount,
     });
 
-    staker.totalBonded -= this.data.amount;
     staker.totalSlashed += this.data.amount;
 
     await ctx.store.insert(slash);
