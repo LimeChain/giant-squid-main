@@ -48,7 +48,7 @@ export class WithdrawnEventPalletHandler extends EventPalletHandler<IWithdrawnEv
           let chunkSum = 0n;
 
           for (const chunk of widrawable) {
-            queue.push(new WithdrawUnlockChunkAction(block.header, event.extrinsic, { chunkId: chunk.id, value: chunk.amount }));
+            queue.push(new WithdrawUnlockChunkAction(block.header, event.extrinsic, { chunk }));
 
             chunkSum += chunk.amount;
           }
