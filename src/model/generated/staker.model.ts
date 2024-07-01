@@ -1,4 +1,4 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToOne as OneToOne_, Index as Index_, JoinColumn as JoinColumn_, OneToMany as OneToMany_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToOne as OneToOne_, Index as Index_, JoinColumn as JoinColumn_, ManyToOne as ManyToOne_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
 import {StakingRole} from "./_stakingRole"
@@ -23,6 +23,10 @@ export class Staker {
 
     @Column_("varchar", {length: 9, nullable: false})
     role!: StakingRole
+
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true})
+    payee!: Account | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalBonded!: bigint

@@ -2,6 +2,8 @@ import { Account, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
+import { Action, LazyAction } from '@/indexer/actions/base';
+import { SetPayeeAction } from '@/indexer/actions/staking/payee';
 
 export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
 export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
@@ -25,7 +27,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
 
     if (!data) return; // old format rewards skipped
 
-    let accountId = this.encodeAddress(data.stash);
+    const stakerId = this.encodeAddress(data.stash);
 
     let validatorId: string | undefined;
     let era: number | undefined;
@@ -37,27 +39,40 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
       era = callData.era;
     }
 
-    const from = ctx.store.defer(Account, accountId);
-    const staker = ctx.store.defer(Staker, accountId);
+    const from = ctx.store.defer(Account, stakerId);
+    const stakerDef = ctx.store.defer(Staker, stakerId);
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => from.get(),
-        id: accountId,
+        id: stakerId,
         pk: data.stash,
       }),
       new EnsureStaker(block.header, event.extrinsic, {
-        id: accountId,
-        staker: () => staker.get(),
+        id: stakerId,
+        staker: () => stakerDef.get(),
         account: () => from.getOrFail(),
       }),
-      new RewardAction(block.header, event.extrinsic, {
-        id: event.id,
-        account: () => from.getOrFail(),
-        staker: () => staker.getOrFail(),
-        amount: data.amount,
-        era,
-        validatorId,
+      new LazyAction(block.header, event.extrinsic, async () => {
+        const queue: Action[] = [];
+        const staker = await stakerDef.getOrFail();
+        const account = await from.getOrFail();
+        queue.push(
+          new SetPayeeAction(block.header, event.extrinsic, {
+            staker: () => Promise.resolve(staker),
+            payeeId: account.id,
+          }),
+          new RewardAction(block.header, event.extrinsic, {
+            id: event.id,
+            account: () => Promise.resolve(account),
+            staker: () => Promise.resolve(staker),
+            amount: data.amount,
+            era,
+            validatorId,
+          })
+        );
+
+        return queue;
       })
     );
   }
