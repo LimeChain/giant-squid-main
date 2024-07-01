@@ -4,7 +4,7 @@ import { Action, LazyAction } from '@/indexer/actions/base';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { ICurrentEraStorageLoader } from '@/indexer/pallets/staking/storage';
-import { WithdrawUnlockChunkAction } from '@/indexer/actions/staking/withdrawUnlockChunk';
+import { WithdrawUnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
 
 export interface IWithdrawnEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 

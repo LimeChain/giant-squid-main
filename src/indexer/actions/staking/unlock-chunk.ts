@@ -31,6 +31,7 @@ interface DecreaseUnlockChunkData {
   chunk: () => Promise<StakingUnlockChunk>;
   staker: () => Promise<Staker>;
 }
+
 export class DecreaseUnlockChunkAction extends Action<DecreaseUnlockChunkData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const chunk = await this.data.chunk();
@@ -46,5 +47,23 @@ export class DecreaseUnlockChunkAction extends Action<DecreaseUnlockChunkData> {
 
     await ctx.store.upsert(chunk);
     await ctx.store.upsert(staker);
+  }
+}
+
+interface UpdateUnlockChunkData {
+  chunkId: string;
+  value: bigint;
+}
+
+export class WithdrawUnlockChunkAction extends Action<UpdateUnlockChunkData> {
+  protected async _perform(ctx: ActionContext): Promise<void> {
+    const chunk = await ctx.store.get(StakingUnlockChunk, this.data.chunkId);
+
+    if (chunk) {
+      chunk.withdrawn = true;
+      chunk.amount = this.data.value;
+
+      await ctx.store.upsert(chunk);
+    }
   }
 }

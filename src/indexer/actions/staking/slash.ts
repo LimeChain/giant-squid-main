@@ -1,5 +1,5 @@
-import { Account, Staker, StakingSlash } from '../../../model';
-import { Action, ActionContext } from '../base';
+import { Account, Staker, StakingSlash } from '@/model';
+import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface SlashData {
   id: string;

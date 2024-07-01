@@ -5,7 +5,7 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { DecreaseUnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
 
-export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint }> { }
+export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint }> {}
 
 interface ISlashEventPalletSetup extends IBasePalletSetup {
   decoder: ISlashEventPalletDecoder;
@@ -20,7 +20,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
    * Calculate the amount to be slashed from the balance
    * If the balance is less than the slash amount, the full balance is slashed and reminder is calculated
    * Otherwise, the full amount is slashed with no remainder
-   * 
+   *
    * @param balance Total balance of the account
    * @param maxAmount Max amount to be slashed
    * @returns slashing amount and the remainder
@@ -29,7 +29,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
     const slash = {
       amount: slashAmount,
       remainder: 0n,
-    }
+    };
 
     if (balance < slashAmount) {
       slash.amount = balance;
@@ -67,7 +67,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
             amount: -bondSlash.amount,
             account: () => accountDef.getOrFail(),
             staker: () => Promise.resolve(staker),
-          }),
+          })
         );
 
         // The account is slashed more than the active bonded amount,
@@ -76,7 +76,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
           const unlockingChunks = await ctx.store.find(StakingUnlockChunk, {
             where: { staker: { id: staker.id }, withdrawn: false },
             order: { blockNumber: 'ASC' },
-          })
+          });
 
           let slashReminder = bondSlash.remainder;
           for (const chunk of unlockingChunks) {
@@ -96,7 +96,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
         }
 
         return queue;
-      }),
+      })
     );
   }
 }
