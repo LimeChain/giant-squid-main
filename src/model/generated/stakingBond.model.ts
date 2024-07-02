@@ -1,5 +1,6 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
+import {BondingType} from "./_bondingType"
 import {Account} from "./account.model"
 import {Staker} from "./staker.model"
 
@@ -11,6 +12,9 @@ export class StakingBond {
 
     @PrimaryColumn_()
     id!: string
+
+    @Column_("varchar", {length: 6, nullable: false})
+    type!: BondingType
 
     @Column_("timestamp with time zone", {nullable: false})
     timestamp!: Date

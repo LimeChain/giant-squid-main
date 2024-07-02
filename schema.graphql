@@ -90,8 +90,17 @@ type StakingReward @entity {
   validatorId: ID
 }
 
+enum BondingType {
+  Bond
+  Unbond
+  Rebond
+  Slash
+  Reward
+}
+
 type StakingBond @entity {
   id: ID!
+  type: BondingType!
   timestamp: DateTime!
   blockNumber: Int! @index
   extrinsicHash: String @index

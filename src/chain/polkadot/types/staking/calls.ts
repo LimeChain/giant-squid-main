@@ -36,3 +36,30 @@ export const payoutStakers =  {
         })
     ),
 }
+
+export const rebond =  {
+    name: 'Staking.rebond',
+    /**
+     *  Rebond a portion of the stash scheduled to be unlocked.
+     * 
+     *  The dispatch origin must be signed by the controller, and it can be only called when
+     *  [`EraElectionStatus`] is `Closed`.
+     * 
+     *  # <weight>
+     *  - Time complexity: O(L), where L is unlocking chunks
+     *  - Bounded by `MAX_UNLOCKING_CHUNKS`.
+     *  - Storage changes: Can't increase storage, only decrease it.
+     *  ---------------
+     *  - Base Weight: 34.51 µs * .048 L µs
+     *  - DB Weight:
+     *      - Reads: EraElectionStatus, Ledger, Locks, [Origin Account]
+     *      - Writes: [Origin Account], Locks, Ledger
+     *  # </weight>
+     */
+    v0: new CallType(
+        'Staking.rebond',
+        sts.struct({
+            value: sts.bigint(),
+        })
+    ),
+}

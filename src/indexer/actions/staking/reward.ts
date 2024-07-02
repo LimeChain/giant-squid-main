@@ -27,7 +27,6 @@ export class RewardAction extends Action<RewardData> {
       validatorId: this.data.validatorId,
     });
 
-    staker.totalBonded += this.data.amount;
     staker.totalRewarded += this.data.amount;
 
     await ctx.store.insert(reward);

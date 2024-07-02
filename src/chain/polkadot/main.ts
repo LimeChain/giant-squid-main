@@ -14,6 +14,7 @@ import { StakingUnBondedEventPalletDecoder } from '@/chain/polkadot/decoders/eve
 import { BondingDurationConstantGetter } from '@/chain/polkadot/constants/bondingDuration';
 import { CurrentEraStorageLoader } from '@/chain/polkadot/storage/currentEra';
 import { StakingWithdrawnEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/withdrawn';
+import { RebondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/rebond';
 
 export const indexer = new Indexer({
   config: {
@@ -45,6 +46,7 @@ export const indexer = new Indexer({
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },
     calls: {
+      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder() }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),

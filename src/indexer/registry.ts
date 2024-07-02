@@ -13,6 +13,7 @@ import { SlashEventPalletHandler } from '@/indexer/pallets/staking/events/slash'
 import { BondedEventPalletHandler } from '@/indexer/pallets/staking/events/bonded';
 import { UnBondedEventPalletHandler } from '@/indexer/pallets/staking/events/unbonded';
 import { WithdrawnEventPalletHandler } from '@/indexer/pallets/staking/events/withdrawn';
+import { RebondCallPalletHandler } from '@/indexer/pallets/staking/calls/rebond';
 
 export const registry = {
   events: {
@@ -35,6 +36,7 @@ export const registry = {
     'Identity.clear_identity': ClearIdentityCallPalletHandler,
     'Identity.kill_identity': KillIdentityCallPalletHandler,
     'Identity.rename_sub': RenameSubCallPalletHandler,
+    'Staking.rebond': RebondCallPalletHandler,
   },
 };
 

@@ -1,8 +1,9 @@
-import { Account, Staker, StakingBond } from '@/model';
+import { Account, BondingType, Staker, StakingBond } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface BondData {
   id: string;
+  type: BondingType;
   amount: bigint;
   account: () => Promise<Account>;
   staker: () => Promise<Staker>;
@@ -15,6 +16,7 @@ export class BondAction extends Action<BondData> {
 
     const bond = new StakingBond({
       id: this.data.id,
+      type: this.data.type,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,

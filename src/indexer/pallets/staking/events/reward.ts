@@ -1,5 +1,5 @@
-import { Account, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
+import { Account, BondingType, Staker } from '@/model';
+import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 import { Action, LazyAction } from '@/indexer/actions/base';
@@ -69,6 +69,13 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
             amount: data.amount,
             era,
             validatorId,
+          }),
+          new BondAction(block.header, event.extrinsic, {
+            id: event.id,
+            type: BondingType.Reward,
+            amount: data.amount,
+            account: () => Promise.resolve(account),
+            staker: () => Promise.resolve(staker),
           })
         );
 

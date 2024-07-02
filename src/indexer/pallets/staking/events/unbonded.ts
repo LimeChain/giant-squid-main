@@ -1,4 +1,4 @@
-import { Account, Staker } from '@/model';
+import { Account, BondingType, Staker } from '@/model';
 import { EnsureAccount, UnBondAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { UnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
@@ -41,6 +41,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
       new UnBondAction(block.header, event.extrinsic, {
         id: event.id,
+        type: BondingType.Unbond,
         amount: data.amount,
         account: () => account.getOrFail(),
         staker: () => staker.getOrFail(),
@@ -53,14 +54,12 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
 
         if (!currentEra) return [];
 
-        const stakerDef = await staker.getOrFail();
-
         queue.push(
           new UnlockChunkAction(block.header, event.extrinsic, {
             id: event.id,
             amount: data.amount,
             lockedUntilEra: currentEra + bondingDuration,
-            staker: () => Promise.resolve(stakerDef),
+            staker: () => staker.getOrFail(),
           })
         );
 
