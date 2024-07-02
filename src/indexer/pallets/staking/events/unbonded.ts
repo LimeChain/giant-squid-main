@@ -1,5 +1,5 @@
 import { Account, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, UnBondAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { UnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
@@ -22,6 +22,7 @@ interface IUnBondedEventPalletSetup extends IBasePalletSetup {
 export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEventPalletSetup> {
   private constants: IUnBondedEventPalletSetup['constants'];
   private storage: IUnBondedEventPalletSetup['storage'];
+  private bondingDurationCache: number | undefined;
 
   constructor(setup: IUnBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
@@ -39,7 +40,6 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
-      new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => account.getOrFail(), staker: () => staker.get() }),
       new UnBondAction(block.header, event.extrinsic, {
         id: event.id,
         amount: data.amount,
@@ -49,17 +49,23 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
       new LazyAction(block.header, event.extrinsic, async (ctx) => {
         const queue: Action[] = [];
 
-        const bondingDuration = this.constants.bondingDuration.get(block.header);
+        if (!this.bondingDurationCache) {
+          const bondingDuration = this.constants.bondingDuration.get(block.header);
+          this.bondingDurationCache = bondingDuration;
+        }
+
         const currentEra = await this.storage.currentEra.load(block.header);
 
         if (!currentEra) return [];
+
+        const stakerDef = await staker.getOrFail();
 
         queue.push(
           new UnlockChunkAction(block.header, event.extrinsic, {
             id: event.id,
             amount: data.amount,
-            lockedUntilEra: currentEra + bondingDuration,
-            staker: () => staker.getOrFail(),
+            lockedUntilEra: currentEra + this.bondingDurationCache,
+            staker: () => Promise.resolve(stakerDef),
           })
         );
 
