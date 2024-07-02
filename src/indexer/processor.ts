@@ -21,13 +21,10 @@ const fields = {
     args: true,
     origin: true,
     success: true,
-    extrinsic: true,
   },
   event: {
     name: true,
     args: true,
-    call: true,
-    extrinsic: true,
   },
   extrinsic: {
     hash: true,
@@ -78,12 +75,15 @@ export class Processor {
   addEvents(events: string[]) {
     this.processor.addEvent({
       name: events,
+      call: true,
+      extrinsic: true,
     });
   }
 
   addCalls(calls: string[]) {
     this.processor.addCall({
       name: calls,
+      extrinsic: true,
     });
   }
 

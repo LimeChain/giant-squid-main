@@ -66,6 +66,14 @@ export class PalletMapper {
     return Array.from(this.calls.keys());
   }
 
+  hasCallPallet(name: string) {
+    return this.calls.has(name as keyof RegistryCall);
+  }
+
+  hasEventPallet(name: string) {
+    return this.events.has(name as keyof RegistryEvent);
+  }
+
   getEventPallet(name: string) {
     return this.events.get(name as keyof RegistryEvent);
   }
