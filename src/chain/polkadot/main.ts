@@ -22,38 +22,34 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-    //   'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
-    //   'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-    //   'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
-    //   'Staking.Unbonded': setupPallet({
-    //     decoder: new StakingUnBondedEventPalletDecoder(),
-    //     constants: {
-    //       bondingDuration: new BondingDurationConstantGetter(),
-    //     },
-    //     storage: {
-    //       currentEra: new CurrentEraStorageLoader(),
-    //     },
-    //   }),
-    //   'Staking.Withdrawn': setupPallet({
-    //     decoder: new StakingWithdrawnEventPalletDecoder(),
-    //     constants: {
-    //       bondingDuration: new BondingDurationConstantGetter(),
-    //     },
-    //     storage: {
-    //       currentEra: new CurrentEraStorageLoader(),
-    //       ledger: new LedgerStorageLoader(),
-    //     },
-    //   }),
+      'Staking.Unbonded': setupPallet({
+        decoder: new StakingUnBondedEventPalletDecoder(),
+        constants: {
+          bondingDuration: new BondingDurationConstantGetter(),
+        },
+        storage: {
+          currentEra: new CurrentEraStorageLoader(),
+        },
+      }),
+      'Staking.Withdrawn': setupPallet({
+        decoder: new StakingWithdrawnEventPalletDecoder(),
+        storage: {
+          currentEra: new CurrentEraStorageLoader(),
+        },
+      }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },
     calls: {
-    //   'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
-    //   'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
-    //   'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
-    //   'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
-    //   'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
+      'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
+      'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
+      'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
+      'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
     },
   },
 });

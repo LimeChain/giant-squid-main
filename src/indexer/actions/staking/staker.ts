@@ -22,6 +22,7 @@ export class EnsureStaker extends Action<StakerData> {
       totalUnbonded: 0n,
       totalWithdrawn: 0n,
       totalSlashed: 0n,
+      totalRewarded: 0n,
       role: StakingRole.Unknown,
     });
 

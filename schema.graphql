@@ -132,6 +132,7 @@ type Staker @entity {
   totalUnbonded: BigInt!
   totalWithdrawn: BigInt!
   totalSlashed: BigInt!
+  totalRewarded: BigInt!
 
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
   rewards: [StakingReward!] @derivedFrom(field: "staker")
