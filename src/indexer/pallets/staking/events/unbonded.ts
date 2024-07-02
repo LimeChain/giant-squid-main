@@ -22,7 +22,6 @@ interface IUnBondedEventPalletSetup extends IBasePalletSetup {
 export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEventPalletSetup> {
   private constants: IUnBondedEventPalletSetup['constants'];
   private storage: IUnBondedEventPalletSetup['storage'];
-  private bondingDurationCache: number | undefined;
 
   constructor(setup: IUnBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
@@ -49,11 +48,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
       new LazyAction(block.header, event.extrinsic, async (ctx) => {
         const queue: Action[] = [];
 
-        if (!this.bondingDurationCache) {
-          const bondingDuration = this.constants.bondingDuration.get(block.header);
-          this.bondingDurationCache = bondingDuration;
-        }
-
+        const bondingDuration = this.constants.bondingDuration.get(block.header);
         const currentEra = await this.storage.currentEra.load(block.header);
 
         if (!currentEra) return [];
@@ -64,7 +59,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
           new UnlockChunkAction(block.header, event.extrinsic, {
             id: event.id,
             amount: data.amount,
-            lockedUntilEra: currentEra + this.bondingDurationCache,
+            lockedUntilEra: currentEra + bondingDuration,
             staker: () => Promise.resolve(stakerDef),
           })
         );

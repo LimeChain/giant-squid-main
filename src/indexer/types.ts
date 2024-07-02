@@ -20,7 +20,7 @@ export interface IConstantPalletGetter<T> {
 }
 
 export interface IStoragePalletLoader<T> {
-  load(blockHeader: BlockHeader, accountId?: string): Promise<T>;
+  load(blockHeader: BlockHeader): Promise<T>;
 }
 
 export type WrappedData = {
