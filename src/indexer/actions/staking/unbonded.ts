@@ -15,14 +15,14 @@ export class UnBondAction extends Action<UnBondData> {
     const staker = await this.data.staker();
 
     const bond = new StakingBond({
-      id: this.data.id,
+      id: this.data.id + staker.id,
       type: this.data.type,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       account: account,
       staker: staker,
-      amount: -this.data.amount,
+      amount: this.data.amount,
     });
 
     staker.totalBonded -= this.data.amount;

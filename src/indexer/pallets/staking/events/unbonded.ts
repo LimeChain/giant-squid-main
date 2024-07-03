@@ -43,7 +43,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
       new UnBondAction(block.header, event.extrinsic, {
         id: event.id,
         type: BondingType.Unbond,
-        amount: data.amount,
+        amount: -data.amount,
         account: () => account.getOrFail(),
         staker: () => staker.getOrFail(),
       }),
