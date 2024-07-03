@@ -1,5 +1,5 @@
 import { Account, BondingType, Staker } from '@/model';
-import { EnsureAccount, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { UnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
@@ -39,6 +39,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
+      new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => account.getOrFail(), staker: () => staker.get() }),
       new UnBondAction(block.header, event.extrinsic, {
         id: event.id,
         type: BondingType.Unbond,

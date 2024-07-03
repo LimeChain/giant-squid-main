@@ -1,5 +1,5 @@
 import { Account, BondingType, Staker, StakingBond, StakingUnlockChunk } from '@/model';
-import { BondAction, EnsureAccount, SlashAction } from '@/indexer/actions';
+import { BondAction, EnsureAccount, EnsureStaker, SlashAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
@@ -49,6 +49,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountDef.get(), id: stakerId, pk: data.staker }),
+      new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => accountDef.getOrFail(), staker: () => stakerDef.getOrFail() }),
       new SlashAction(block.header, event.extrinsic, {
         id: event.id,
         amount: data.amount,
