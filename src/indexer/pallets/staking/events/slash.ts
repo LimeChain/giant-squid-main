@@ -62,15 +62,17 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
         const bondSlash = this.calculateSlashAmounts(staker.activeBonded, data.amount);
 
-        queue.push(
-          new BondAction(block.header, event.extrinsic, {
-            id: event.id,
-            type: BondingType.Slash,
-            amount: -bondSlash.amount,
-            account: () => accountDef.getOrFail(),
-            staker: () => Promise.resolve(staker),
-          })
-        );
+        if (bondSlash.amount > 0) {
+          queue.push(
+            new BondAction(block.header, event.extrinsic, {
+              id: event.id,
+              type: BondingType.Slash,
+              amount: -bondSlash.amount,
+              account: () => accountDef.getOrFail(),
+              staker: () => Promise.resolve(staker),
+            })
+          );
+        }
 
         // The account is slashed more than the active bonded amount,
         // so slash the remaining amount from the unbonding tokens that are not yet withdrawn.
