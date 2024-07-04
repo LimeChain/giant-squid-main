@@ -1,5 +1,41 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export type EraIndex = number
+
+export const EraIndex = sts.number()
+
+export type AccountId = Bytes
+
+export interface StakingLedger {
+    stash: AccountId
+    total: bigint
+    active: bigint
+    unlocking: UnlockChunk[]
+    lastReward?: (EraIndex | undefined)
+}
+
+export interface UnlockChunk {
+    value: bigint
+    era: number
+}
+
+export const StakingLedger: sts.Type<StakingLedger> = sts.struct(() => {
+    return  {
+        stash: AccountId,
+        total: sts.bigint(),
+        active: sts.bigint(),
+        unlocking: sts.array(() => UnlockChunk),
+        lastReward: sts.option(() => EraIndex),
+    }
+})
+
+export const UnlockChunk: sts.Type<UnlockChunk> = sts.struct(() => {
+    return  {
+        value: sts.bigint(),
+        era: sts.number(),
+    }
+})
+
 export const IdentityJudgement: sts.Type<IdentityJudgement> = sts.closedEnum(() => {
     return  {
         Erroneous: sts.unit(),

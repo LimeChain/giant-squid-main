@@ -8,6 +8,14 @@ import { SetIdentityCallPalletDecoder } from '@/chain/kusama/decoders/calls/iden
 import { PayoutStakersCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/payoutStakers';
 import { RenameIdentityCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/renameIdentity';
 import { ProvideJudgementCallPalletDecoder } from '@/chain/kusama/decoders/calls/identities/provideJudgement';
+import { BondingDurationConstantGetter } from '@/chain/kusama/constants/bondingDuration';
+import { RebondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/rebond';
+import { StakingBondedEventPalletDecoder } from '@/chain/kusama/decoders/events/staking/bonded';
+import { StakingSlashEventPalletDecoder } from '@/chain/kusama/decoders/events/staking/slash';
+import { StakingUnBondedEventPalletDecoder } from '@/chain/kusama/decoders/events/staking/unbonded';
+import { StakingWithdrawnEventPalletDecoder } from '@/chain/kusama/decoders/events/staking/withdrawn';
+import { CurrentEraStorageLoader } from '@/chain/kusama/storage/currentEra';
+import { LedgerStorageLoader } from '@/chain/kusama/storage/ledger';
 
 export const indexer = new Indexer({
   config: {
@@ -17,16 +25,29 @@ export const indexer = new Indexer({
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
-      'Staking.Reward': setupPallet({
-        decoder: new StakingRewardEventPalletDecoder(),
-        payoutStakersDecoder: new PayoutStakersCallPalletDecoder(),
+      'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
+      'Staking.Unbonded': setupPallet({
+        decoder: new StakingUnBondedEventPalletDecoder(),
+        constants: {
+          bondingDuration: new BondingDurationConstantGetter(),
+        },
+        storage: {
+          currentEra: new CurrentEraStorageLoader(),
+        },
       }),
-      'Staking.Rewarded': setupPallet({
-        decoder: new StakingRewardEventPalletDecoder(),
-        payoutStakersDecoder: new PayoutStakersCallPalletDecoder(),
+      'Staking.Withdrawn': setupPallet({
+        decoder: new StakingWithdrawnEventPalletDecoder(),
+        storage: {
+          currentEra: new CurrentEraStorageLoader(),
+        },
       }),
+      'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },
     calls: {
+      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),

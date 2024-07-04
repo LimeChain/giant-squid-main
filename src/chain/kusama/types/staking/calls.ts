@@ -1,6 +1,24 @@
 import {sts, Block, Bytes, Option, Result, CallType, RuntimeCtx} from '../support'
 import * as v1058 from '../v1058'
 
+export const rebond =  {
+    name: 'Staking.rebond',
+    /**
+     *  Rebond a portion of the stash scheduled to be unlocked.
+     * 
+     *  # <weight>
+     *  - Time complexity: O(1). Bounded by `MAX_UNLOCKING_CHUNKS`.
+     *  - Storage changes: Can't increase storage, only decrease it.
+     *  # </weight>
+     */
+    v1038: new CallType(
+        'Staking.rebond',
+        sts.struct({
+            value: sts.bigint(),
+        })
+    ),
+}
+
 export const payoutStakers =  {
     name: 'Staking.payout_stakers',
     /**

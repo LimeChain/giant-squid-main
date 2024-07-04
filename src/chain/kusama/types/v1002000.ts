@@ -1,16 +1,13 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
-export type EraIndex = number
-
-export const EraIndex = sts.number()
-
-export type AccountId = Bytes
+export type AccountId32 = Bytes
 
 export interface StakingLedger {
-    stash: AccountId
+    stash: AccountId32
     total: bigint
     active: bigint
     unlocking: UnlockChunk[]
+    legacyClaimedRewards: number[]
 }
 
 export interface UnlockChunk {
@@ -20,10 +17,11 @@ export interface UnlockChunk {
 
 export const StakingLedger: sts.Type<StakingLedger> = sts.struct(() => {
     return  {
-        stash: AccountId,
+        stash: AccountId32,
         total: sts.bigint(),
         active: sts.bigint(),
         unlocking: sts.array(() => UnlockChunk),
+        legacyClaimedRewards: sts.array(() => sts.number()),
     }
 })
 
@@ -34,6 +32,4 @@ export const UnlockChunk: sts.Type<UnlockChunk> = sts.struct(() => {
     }
 })
 
-export const Balance = sts.bigint()
-
-export const AccountId = sts.bytes()
+export const AccountId32 = sts.bytes()
