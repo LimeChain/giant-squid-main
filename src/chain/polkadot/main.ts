@@ -8,7 +8,7 @@ import { SetIdentityCallPalletDecoder } from '@/chain/polkadot/decoders/calls/id
 import { PayoutStakersCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/payoutStakers';
 import { RenameIdentityCallPalletDecoder } from '@/chain/polkadot/decoders/calls/identities/renameIdentity';
 import { ProvideJudgementCallPalletDecoder } from '@/chain/polkadot/decoders/calls/identities/provideJudgement';
-import { StakingSlashEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/stash';
+import { StakingSlashEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/slash';
 import { StakingBondedEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/bonded';
 import { StakingUnBondedEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/unbonded';
 import { BondingDurationConstantGetter } from '@/chain/polkadot/constants/bondingDuration';
