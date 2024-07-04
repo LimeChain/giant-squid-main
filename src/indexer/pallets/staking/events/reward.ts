@@ -69,15 +69,20 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
             amount: data.amount,
             era,
             validatorId,
-          }),
-          new BondAction(block.header, event.extrinsic, {
-            id: event.id,
-            type: BondingType.Reward,
-            amount: data.amount,
-            account: () => Promise.resolve(account),
-            staker: () => Promise.resolve(staker),
           })
         );
+
+        if (data.amount > 0n) {
+          queue.push(
+            new BondAction(block.header, event.extrinsic, {
+              id: event.id,
+              type: BondingType.Reward,
+              amount: data.amount,
+              account: () => Promise.resolve(account),
+              staker: () => Promise.resolve(staker),
+            })
+          );
+        }
 
         return queue;
       })

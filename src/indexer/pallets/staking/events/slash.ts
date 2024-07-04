@@ -60,7 +60,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
         const queue: Action[] = [];
         const staker = await stakerDef.getOrFail();
 
-        const bondSlash = this.calculateSlashAmounts(staker.totalBonded, data.amount);
+        const bondSlash = this.calculateSlashAmounts(staker.activeBonded, data.amount);
 
         queue.push(
           new BondAction(block.header, event.extrinsic, {
