@@ -133,8 +133,6 @@ type Staker @entity {
   id: ID! #stash Id
   stash: Account! @unique
 
-  role: StakingRole!
-
   payee: Account
 
   totalBonded: BigInt!

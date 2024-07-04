@@ -15,6 +15,7 @@ import { BondingDurationConstantGetter } from '@/chain/polkadot/constants/bondin
 import { CurrentEraStorageLoader } from '@/chain/polkadot/storage/currentEra';
 import { StakingWithdrawnEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/withdrawn';
 import { RebondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/rebond';
+import { LedgerStorageLoader } from './storage/ledger';
 
 export const indexer = new Indexer({
   config: {
@@ -46,7 +47,7 @@ export const indexer = new Indexer({
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },
     calls: {
-      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder() }),
+      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),

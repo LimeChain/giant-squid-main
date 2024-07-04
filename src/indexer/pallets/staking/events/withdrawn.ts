@@ -1,4 +1,4 @@
-import { Account, Staker, StakingRole } from '@/model';
+import { Account, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker, WithdrawnAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
@@ -51,10 +51,6 @@ export class WithdrawnEventPalletHandler extends EventPalletHandler<IWithdrawnEv
             queue.push(new WithdrawUnlockChunkAction(block.header, event.extrinsic, { chunk }));
 
             chunkSum += chunk.amount;
-          }
-
-          if (staker.totalBonded <= 0n && staker.totalUnbonded <= 0n && staker.totalWithdrawn === chunkSum) {
-            staker.role = StakingRole.Unknown;
           }
         }
 

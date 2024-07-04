@@ -17,6 +17,6 @@ export { ISubIdentityRevokedEventPalletDecoder } from '@/indexer/pallets/identit
 export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from '@/indexer/pallets/staking/events/reward';
 
 export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
-export { ICurrentEraStorageLoader } from '@/indexer/pallets/staking/storage';
+export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
 
 export { Indexer, setupPallet } from '@/indexer/main';
