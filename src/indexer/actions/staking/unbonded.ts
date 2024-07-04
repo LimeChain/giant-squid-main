@@ -22,7 +22,7 @@ export class UnBondAction extends Action<UnBondData> {
       extrinsicHash: this.extrinsic?.hash,
       account: account,
       staker: staker,
-      amount: this.data.amount,
+      amount: -this.data.amount,
     });
 
     staker.totalBonded -= this.data.amount;
