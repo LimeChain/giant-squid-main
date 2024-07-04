@@ -49,7 +49,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountDef.get(), id: stakerId, pk: data.staker }),
-      new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => accountDef.getOrFail(), staker: () => stakerDef.getOrFail() }),
+      new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => accountDef.getOrFail(), staker: () => stakerDef.get() }),
       new SlashAction(block.header, event.extrinsic, {
         id: event.id,
         amount: data.amount,
