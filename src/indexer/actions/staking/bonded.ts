@@ -25,6 +25,7 @@ export class BondAction extends Action<BondData> {
       amount: this.data.amount,
     });
 
+    staker.activeBonded += this.data.amount;
     staker.totalBonded += this.data.amount;
 
     await ctx.store.insert(bond);

@@ -25,6 +25,9 @@ export class Staker {
     payee!: Account | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    activeBonded!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalBonded!: bigint
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})

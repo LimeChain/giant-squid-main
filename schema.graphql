@@ -135,6 +135,7 @@ type Staker @entity {
 
   payee: Account
 
+  activeBonded: BigInt!
   totalBonded: BigInt!
   totalUnbonded: BigInt!
   totalWithdrawn: BigInt!
