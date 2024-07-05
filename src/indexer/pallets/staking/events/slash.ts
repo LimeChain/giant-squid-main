@@ -1,4 +1,4 @@
-import { Account, BondingType, Staker, StakingBond, StakingUnlockChunk } from '@/model';
+import { Account, BondingType, Staker, StakingUnlockChunk } from '@/model';
 import { BondAction, EnsureAccount, EnsureStaker, SlashAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
@@ -88,7 +88,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
             queue.push(
               new DecreaseUnlockChunkAction(block.header, event.extrinsic, {
-                amount: chunk.amount - chunkSlash.amount,
+                amount: chunkSlash.amount,
                 chunk: () => Promise.resolve(chunk),
                 staker: () => Promise.resolve(staker),
               })

@@ -72,7 +72,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           })
         );
 
-        if (data.amount > 0n) {
+        if (data.amount > 0) {
           queue.push(
             new BondAction(block.header, event.extrinsic, {
               id: event.id,
