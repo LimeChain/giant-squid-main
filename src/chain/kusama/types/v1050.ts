@@ -81,6 +81,39 @@ export interface IdentityJudgement_Unknown {
 
 export type Balance = bigint
 
+export const RewardDestination: sts.Type<RewardDestination> = sts.closedEnum(() => {
+    return  {
+        Account: AccountId,
+        Controller: sts.unit(),
+        None: sts.unit(),
+        Staked: sts.unit(),
+        Stash: sts.unit(),
+    }
+})
+
+export type RewardDestination = RewardDestination_Account | RewardDestination_Controller | RewardDestination_None | RewardDestination_Staked | RewardDestination_Stash
+
+export interface RewardDestination_Account {
+    __kind: 'Account'
+    value: AccountId
+}
+
+export interface RewardDestination_Controller {
+    __kind: 'Controller'
+}
+
+export interface RewardDestination_None {
+    __kind: 'None'
+}
+
+export interface RewardDestination_Staked {
+    __kind: 'Staked'
+}
+
+export interface RewardDestination_Stash {
+    __kind: 'Stash'
+}
+
 export const LookupSource = sts.bytes()
 
 export const Balance = sts.bigint()

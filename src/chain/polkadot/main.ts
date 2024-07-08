@@ -15,7 +15,7 @@ import { BondingDurationConstantGetter } from '@/chain/polkadot/constants/bondin
 import { CurrentEraStorageLoader } from '@/chain/polkadot/storage/currentEra';
 import { StakingWithdrawnEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/withdrawn';
 import { RebondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/rebond';
-import { LedgerStorageLoader } from './storage/ledger';
+import { LedgerStorageLoader } from '@/chain/polkadot/storage/ledger';
 
 export const indexer = new Indexer({
   config: {

@@ -14,6 +14,7 @@ import { BondedEventPalletHandler } from '@/indexer/pallets/staking/events/bonde
 import { UnBondedEventPalletHandler } from '@/indexer/pallets/staking/events/unbonded';
 import { WithdrawnEventPalletHandler } from '@/indexer/pallets/staking/events/withdrawn';
 import { RebondCallPalletHandler } from '@/indexer/pallets/staking/calls/rebond';
+import { BondCallPalletHandler } from '@/indexer/pallets/staking/calls/bond';
 
 export const registry = {
   events: {
@@ -37,6 +38,7 @@ export const registry = {
     'Identity.kill_identity': KillIdentityCallPalletHandler,
     'Identity.rename_sub': RenameSubCallPalletHandler,
     'Staking.rebond': RebondCallPalletHandler,
+    'Staking.bond': BondCallPalletHandler,
   },
 };
 
