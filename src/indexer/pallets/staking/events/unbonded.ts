@@ -17,17 +17,20 @@ interface IUnBondedEventPalletSetup extends IBasePalletSetup {
   storage: {
     currentEra: ICurrentEraStorageLoader;
   };
+  skipCalls?: boolean;
 }
 
 export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEventPalletSetup> {
   private constants: IUnBondedEventPalletSetup['constants'];
   private storage: IUnBondedEventPalletSetup['storage'];
+  private skipCalls: boolean;
 
   constructor(setup: IUnBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
 
     this.constants = setup.constants;
     this.storage = setup.storage;
+    this.skipCalls = setup.skipCalls ?? true;
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
