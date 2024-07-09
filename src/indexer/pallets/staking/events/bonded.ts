@@ -26,7 +26,8 @@ export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPal
     const staker = ctx.store.defer(Staker, stakerId);
 
     // NOTE: Skip if event is emitted from the call as its already handled there
-    if ((event.call?.name === 'Staking.rebond' || event.call?.name === 'Staking.bond') && this.skipBonded === true) return;
+    if (event.call?.name === 'Staking.rebond') return;
+    if (event.call?.name === 'Staking.bond' && this.skipBonded === true) return;
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
