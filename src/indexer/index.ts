@@ -2,6 +2,7 @@ export { Event, Call, Block, BlockHeader, ProcessorContext } from '@/indexer/pro
 export { ISlashEventPalletDecoder } from '@/indexer/pallets/staking/events/slash';
 export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
 export { IRebondCallPalletDecoder } from '@/indexer/pallets/staking/calls/rebond';
+export { IUnbondCallPalletDecoder } from '@/indexer/pallets/staking/calls/unbond';
 export { IBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/bonded';
 export { ISetSubsCallPalletDecoder } from '@/indexer/pallets/identity/calls/setSubs';
 export { IUnBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/unbonded';

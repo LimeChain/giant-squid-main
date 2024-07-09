@@ -37,6 +37,9 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
     const account = ctx.store.defer(Account, stakerId);
     const staker = ctx.store.defer(Staker, stakerId);
 
+    // the event is handled in the unbond handler, so skip it
+    if (event.call?.name === 'Staking.unbond') return;
+
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
       new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => account.getOrFail(), staker: () => staker.get() }),
