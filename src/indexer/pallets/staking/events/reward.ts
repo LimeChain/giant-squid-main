@@ -1,4 +1,4 @@
-import { Account, BondingType, Staker } from '@/model';
+import { Account, BondingType, RewardDestination, Staker } from '@/model';
 import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
@@ -72,7 +72,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           })
         );
 
-        if (data.amount > 0) {
+        if (data.amount > 0 && staker.payeeType === RewardDestination.Staked) {
           queue.push(
             new BondAction(block.header, event.extrinsic, {
               id: event.id,

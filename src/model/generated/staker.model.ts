@@ -1,6 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToOne as OneToOne_, Index as Index_, JoinColumn as JoinColumn_, ManyToOne as ManyToOne_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
+import {RewardDestination} from "./_rewardDestination"
 import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
 import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
@@ -23,6 +24,9 @@ export class Staker {
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
     payee!: Account | undefined | null
+
+    @Column_("varchar", {length: 10, nullable: false})
+    payeeType!: RewardDestination
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     activeBonded!: bigint

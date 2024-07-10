@@ -16,6 +16,8 @@ import { CurrentEraStorageLoader } from '@/chain/polkadot/storage/currentEra';
 import { StakingWithdrawnEventPalletDecoder } from '@/chain/polkadot/decoders/events/staking/withdrawn';
 import { RebondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/rebond';
 import { LedgerStorageLoader } from '@/chain/polkadot/storage/ledger';
+import { BondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond';
+import { SetPayeeCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setPayee';
 
 export const indexer = new Indexer({
   config: {
@@ -27,7 +29,7 @@ export const indexer = new Indexer({
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder(), skipCalls: { skipBond: false, skipBondExtra: false } }),
+      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder(), skipCalls: { skipBondExtra: false } }),
       'Staking.Unbonded': setupPallet({
         decoder: new StakingUnBondedEventPalletDecoder(),
         constants: {
@@ -48,7 +50,9 @@ export const indexer = new Indexer({
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
     },
     calls: {
+      'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
       'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),

@@ -15,8 +15,9 @@ import { UnBondedEventPalletHandler } from '@/indexer/pallets/staking/events/unb
 import { WithdrawnEventPalletHandler } from '@/indexer/pallets/staking/events/withdrawn';
 import { RebondCallPalletHandler } from '@/indexer/pallets/staking/calls/rebond';
 import { BondCallPalletHandler } from '@/indexer/pallets/staking/calls/bond';
-import { UnbondCallPalletHandler } from './pallets/staking/calls/unbond';
-import { BondExtraCallPalletHandler } from './pallets/staking/calls/bond_extra';
+import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond';
+import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bond_extra';
+import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 
 export const registry = {
   events: {
@@ -43,6 +44,7 @@ export const registry = {
     'Staking.unbond': UnbondCallPalletHandler,
     'Staking.bond': BondCallPalletHandler,
     'Staking.bond_extra': BondExtraCallPalletHandler,
+    'Staking.set_payee': SetPayeeCallPalletHandler,
   },
 };
 

@@ -1,5 +1,155 @@
 import {sts, Block, Bytes, Option, Result, CallType, RuntimeCtx} from '../support'
 import * as v0 from '../v0'
+import * as v28 from '../v28'
+import * as v9110 from '../v9110'
+import * as v9430 from '../v9430'
+
+export const bond =  {
+    name: 'Staking.bond',
+    /**
+     *  Take the origin account as a stash and lock up `value` of its balance. `controller` will
+     *  be the account that controls it.
+     * 
+     *  `value` must be more than the `minimum_balance` specified by `T::Currency`.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash account.
+     * 
+     *  Emits `Bonded`.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Moderate complexity.
+     *  - O(1).
+     *  - Three extra DB entries.
+     * 
+     *  NOTE: Two of the storage writes (`Self::bonded`, `Self::payee`) are _never_ cleaned
+     *  unless the `origin` falls below _existential deposit_ and gets removed as dust.
+     *  ------------------
+     *  Base Weight: 67.87 µs
+     *  DB Weight:
+     *  - Read: Bonded, Ledger, [Origin Account], Current Era, History Depth, Locks
+     *  - Write: Bonded, Payee, [Origin Account], Locks, Ledger
+     *  # </weight>
+     */
+    v0: new CallType(
+        'Staking.bond',
+        sts.struct({
+            controller: v0.LookupSource,
+            value: sts.bigint(),
+            payee: v0.RewardDestination,
+        })
+    ),
+    /**
+     *  Take the origin account as a stash and lock up `value` of its balance. `controller` will
+     *  be the account that controls it.
+     * 
+     *  `value` must be more than the `minimum_balance` specified by `T::Currency`.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash account.
+     * 
+     *  Emits `Bonded`.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Moderate complexity.
+     *  - O(1).
+     *  - Three extra DB entries.
+     * 
+     *  NOTE: Two of the storage writes (`Self::bonded`, `Self::payee`) are _never_ cleaned
+     *  unless the `origin` falls below _existential deposit_ and gets removed as dust.
+     *  ------------------
+     *  Weight: O(1)
+     *  DB Weight:
+     *  - Read: Bonded, Ledger, [Origin Account], Current Era, History Depth, Locks
+     *  - Write: Bonded, Payee, [Origin Account], Locks, Ledger
+     *  # </weight>
+     */
+    v28: new CallType(
+        'Staking.bond',
+        sts.struct({
+            controller: v28.LookupSource,
+            value: sts.bigint(),
+            payee: v28.RewardDestination,
+        })
+    ),
+    /**
+     * Take the origin account as a stash and lock up `value` of its balance. `controller` will
+     * be the account that controls it.
+     * 
+     * `value` must be more than the `minimum_balance` specified by `T::Currency`.
+     * 
+     * The dispatch origin for this call must be _Signed_ by the stash account.
+     * 
+     * Emits `Bonded`.
+     * # <weight>
+     * - Independent of the arguments. Moderate complexity.
+     * - O(1).
+     * - Three extra DB entries.
+     * 
+     * NOTE: Two of the storage writes (`Self::bonded`, `Self::payee`) are _never_ cleaned
+     * unless the `origin` falls below _existential deposit_ and gets removed as dust.
+     * ------------------
+     * # </weight>
+     */
+    v9110: new CallType(
+        'Staking.bond',
+        sts.struct({
+            controller: v9110.MultiAddress,
+            value: sts.bigint(),
+            payee: v9110.RewardDestination,
+        })
+    ),
+    /**
+     * Take the origin account as a stash and lock up `value` of its balance. `controller` will
+     * be the account that controls it.
+     * 
+     * `value` must be more than the `minimum_balance` specified by `T::Currency`.
+     * 
+     * The dispatch origin for this call must be _Signed_ by the stash account.
+     * 
+     * Emits `Bonded`.
+     * ## Complexity
+     * - Independent of the arguments. Moderate complexity.
+     * - O(1).
+     * - Three extra DB entries.
+     * 
+     * NOTE: Two of the storage writes (`Self::bonded`, `Self::payee`) are _never_ cleaned
+     * unless the `origin` falls below _existential deposit_ and gets removed as dust.
+     */
+    v9430: new CallType(
+        'Staking.bond',
+        sts.struct({
+            value: sts.bigint(),
+            payee: v9430.RewardDestination,
+        })
+    ),
+}
+
+export const setPayee =  {
+    name: 'Staking.set_payee',
+    /**
+     *  (Re-)set the payment target for a controller.
+     * 
+     *  Effects will be felt at the beginning of the next era.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the controller, not the stash.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - Contains a limited number of reads.
+     *  - Writes are limited to the `origin` account key.
+     *  ---------
+     *  - Base Weight: 11.33 µs
+     *  - DB Weight:
+     *      - Read: Ledger
+     *      - Write: Payee
+     *  # </weight>
+     */
+    v0: new CallType(
+        'Staking.set_payee',
+        sts.struct({
+            payee: v0.RewardDestination,
+        })
+    ),
+}
 
 export const payoutStakers =  {
     name: 'Staking.payout_stakers',
