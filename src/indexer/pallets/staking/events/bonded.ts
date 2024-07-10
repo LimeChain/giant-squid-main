@@ -7,7 +7,7 @@ export interface IBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: 
 
 interface IBondedEventPalletSetup extends IBasePalletSetup {
   decoder: IBondedEventPalletDecoder;
-  skipCalls?: { skipBond?: boolean; skipRebond?: boolean, skipBondExtra?: boolean};
+  skipCalls?: { skipBond?: boolean; skipRebond?: boolean; skipBondExtra?: boolean };
 }
 
 export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPalletSetup> {

@@ -6,7 +6,7 @@ import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { Account, RewardDestination, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { toHex } from '@subsquid/substrate-processor';
-import { SetPayeeTypeAction } from '@/indexer/actions/staking/payee';
+import { SetPayeeAction } from '@/indexer/actions/staking/payee';
 
 export interface ISetPayeeCallPalletDecoder extends ICallPalletDecoder<{ payee: { type: string; account?: string } }> {}
 
@@ -62,7 +62,7 @@ export class SetPayeeCallPalletHandler extends CallPalletHandler<ISetPayeeCallPa
 
           queue.push(
             new EnsureAccount(block.header, call.extrinsic, { account: () => payee.get(), id: payeeId, pk: this.decodeAddress(payeeId) }),
-            new SetPayeeTypeAction(block.header, call.extrinsic, {
+            new SetPayeeAction(block.header, call.extrinsic, {
               staker: () => staker.getOrFail(),
               payeeType: data.payee.type as RewardDestination,
               account: () => payee.getOrFail(),
@@ -70,7 +70,7 @@ export class SetPayeeCallPalletHandler extends CallPalletHandler<ISetPayeeCallPa
           );
         } else {
           queue.push(
-            new SetPayeeTypeAction(block.header, call.extrinsic, {
+            new SetPayeeAction(block.header, call.extrinsic, {
               staker: () => staker.getOrFail(),
               payeeType: data.payee.type as RewardDestination,
             })

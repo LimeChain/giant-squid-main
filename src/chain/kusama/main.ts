@@ -19,6 +19,7 @@ import { LedgerStorageLoader } from '@/chain/kusama/storage/ledger';
 import { BondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond';
 import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/unbond';
 import { BondExtraCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond_extra';
+import { SetPayeeCallPalletDecoder } from './decoders/calls/staking/setPayee';
 
 export const indexer = new Indexer({
   config: {
@@ -27,7 +28,7 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      //   'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
@@ -60,11 +61,12 @@ export const indexer = new Indexer({
           bondingDuration: new BondingDurationConstantGetter(),
         },
       }),
-      'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
-      'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
-      'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
-      'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
-      'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      //   'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
+      //   'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
+      //   'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
+      //   'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
+      //   'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
     },
   },
 });

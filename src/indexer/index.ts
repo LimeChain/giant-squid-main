@@ -3,6 +3,7 @@ export { ISlashEventPalletDecoder } from '@/indexer/pallets/staking/events/slash
 export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
 export { IRebondCallPalletDecoder } from '@/indexer/pallets/staking/calls/rebond';
 export { IUnbondCallPalletDecoder } from '@/indexer/pallets/staking/calls/unbond';
+export { IBondExtraCallPalletDecoder} from '@/indexer/pallets/staking/calls/bondExtra';
 export { IBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/bonded';
 export { ISetSubsCallPalletDecoder } from '@/indexer/pallets/identity/calls/setSubs';
 export { IUnBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/unbonded';
@@ -16,7 +17,7 @@ export { IProvideJudgementCallPalletDecoder } from '@/indexer/pallets/identity/c
 export { ISubIdentityRemovedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRemoved';
 export { ISubIdentityRevokedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRevoked';
 export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from '@/indexer/pallets/staking/events/reward';
-
+export { ISetPayeeCallPalletDecoder } from '@/indexer/pallets/staking/calls/setPayee';
 export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
 export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
 

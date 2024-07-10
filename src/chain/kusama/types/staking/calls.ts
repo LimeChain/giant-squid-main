@@ -204,6 +204,29 @@ export const unbond =  {
     ),
 }
 
+export const setPayee =  {
+    name: 'Staking.set_payee',
+    /**
+     *  (Re-)set the payment target for a controller.
+     * 
+     *  Effects will be felt at the beginning of the next era.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the controller, not the stash.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - Contains a limited number of reads.
+     *  - Writes are limited to the `origin` account key.
+     *  # </weight>
+     */
+    v1020: new CallType(
+        'Staking.set_payee',
+        sts.struct({
+            payee: v1020.RewardDestination,
+        })
+    ),
+}
+
 export const rebond =  {
     name: 'Staking.rebond',
     /**

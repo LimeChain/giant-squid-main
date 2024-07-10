@@ -16,7 +16,7 @@ import { WithdrawnEventPalletHandler } from '@/indexer/pallets/staking/events/wi
 import { RebondCallPalletHandler } from '@/indexer/pallets/staking/calls/rebond';
 import { BondCallPalletHandler } from '@/indexer/pallets/staking/calls/bond';
 import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond';
-import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bond_extra';
+import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bondExtra';
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 
 export const registry = {

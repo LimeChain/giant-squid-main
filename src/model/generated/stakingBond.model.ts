@@ -13,7 +13,7 @@ export class StakingBond {
     @PrimaryColumn_()
     id!: string
 
-    @Column_("varchar", {length: 6, nullable: false})
+    @Column_("varchar", {length: 9, nullable: false})
     type!: BondingType
 
     @Column_("timestamp with time zone", {nullable: false})

@@ -92,6 +92,7 @@ type StakingReward @entity {
 
 enum BondingType {
   Bond
+  BondExtra
   Unbond
   Rebond
   Slash

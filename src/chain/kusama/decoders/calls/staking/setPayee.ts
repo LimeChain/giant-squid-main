@@ -1,12 +1,13 @@
-import { calls } from '@/chain/polkadot/types';
-import { UnknownVersionError } from '@/utils';
+import { calls } from '@/chain/kusama/types';
 import { Call, ISetPayeeCallPalletDecoder } from '@/indexer';
+import { UnknownVersionError } from '@/utils';
 
 export class SetPayeeCallPalletDecoder implements ISetPayeeCallPalletDecoder {
   decode(call: Call) {
-    const { setPayee } = calls.staking;
-    if (setPayee.v0.is(call)) {
-      let { payee } = setPayee.v0.decode(call);
+    let { setPayee } = calls.staking;
+
+    if (setPayee.v1020.is(call)) {
+      const { payee } = setPayee.v1020.decode(call);
       let payeeValue: string | undefined;
 
       if (payee.__kind === 'Account') {

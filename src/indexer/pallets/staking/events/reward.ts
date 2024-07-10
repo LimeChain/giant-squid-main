@@ -3,7 +3,6 @@ import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 import { Action, LazyAction } from '@/indexer/actions/base';
-import { SetPayeeAction } from '@/indexer/actions/staking/payee';
 
 export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
 export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
@@ -58,10 +57,6 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
         const staker = await stakerDef.getOrFail();
         const account = await from.getOrFail();
         queue.push(
-          new SetPayeeAction(block.header, event.extrinsic, {
-            staker: () => Promise.resolve(staker),
-            payeeId: account.id,
-          }),
           new RewardAction(block.header, event.extrinsic, {
             id: event.id,
             account: () => Promise.resolve(account),

@@ -1,9 +1,9 @@
 import { calls } from '@/chain/kusama/types';
 import { UnknownVersionError } from '@/utils';
 import { Call } from '@/indexer';
-import { IBondCallPalletDecoder } from '@/indexer/pallets/staking/calls/bond';
+import { IBondExtraCallPalletDecoder } from '@/indexer';
 
-export class BondExtraCallPalletDecoder implements IBondCallPalletDecoder {
+export class BondExtraCallPalletDecoder implements IBondExtraCallPalletDecoder {
   decode(call: Call) {
     const { bondExtra } = calls.staking;
 

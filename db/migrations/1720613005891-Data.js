@@ -1,5 +1,5 @@
-module.exports = class Data1720597953285 {
-    name = 'Data1720597953285'
+module.exports = class Data1720613005891 {
+    name = 'Data1720613005891'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -20,7 +20,7 @@ module.exports = class Data1720597953285 {
         await db.query(`CREATE INDEX "IDX_cad37e1e3ca51418cf3fc5268c" ON "staking_slash" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_73664be4d41309d8269a9e85af" ON "staking_slash" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_3e9b7b304fd26d01b15bd6dccd" ON "staking_slash" ("staker_id") `)
-        await db.query(`CREATE TABLE "staking_bond" ("id" character varying NOT NULL, "type" character varying(6) NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "account_id" character varying, "staker_id" character varying, CONSTRAINT "PK_35ead485d489a050c632728cdd9" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "staking_bond" ("id" character varying NOT NULL, "type" character varying(9) NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "account_id" character varying, "staker_id" character varying, CONSTRAINT "PK_35ead485d489a050c632728cdd9" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_942bbc0d8c966f77a26cb4b1cf" ON "staking_bond" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_b38d17ce3a94eb771435464c20" ON "staking_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_cf2a5fc4d501da37ec2c60b339" ON "staking_bond" ("account_id") `)

@@ -34,6 +34,8 @@ export class UnbondCallPalletHandler extends CallPalletHandler<IUnbondCallPallet
 
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (call.success === false) return;
+    // Make sure the call is not already handled in the Unbonded event handler
+    if (call.extrinsic?.events.some((e) => e.name === 'Staking.Unbonded')) return;
 
     const data = this.decoder.decode(call);
 
