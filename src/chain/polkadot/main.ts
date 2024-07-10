@@ -27,7 +27,7 @@ export const indexer = new Indexer({
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder(), skipCalls: false }),
+      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder(), skipCalls: { skipBond: false } }),
       'Staking.Unbonded': setupPallet({
         decoder: new StakingUnBondedEventPalletDecoder(),
         constants: {
@@ -36,7 +36,7 @@ export const indexer = new Indexer({
         storage: {
           currentEra: new CurrentEraStorageLoader(),
         },
-        skipCalls: false,
+        skipCalls: { skipUnbond: false },
       }),
       'Staking.Withdrawn': setupPallet({
         decoder: new StakingWithdrawnEventPalletDecoder(),

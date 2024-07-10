@@ -7,15 +7,17 @@ export interface IBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: 
 
 interface IBondedEventPalletSetup extends IBasePalletSetup {
   decoder: IBondedEventPalletDecoder;
-  skipCalls?: boolean;
+  skipCalls?: { skipBond?: boolean; skipRebond?: boolean };
 }
 
 export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPalletSetup> {
-  private skipBonded: boolean;
+  private skipCalls: IBondedEventPalletSetup['skipCalls'];
+
   constructor(setup: IBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
 
-    this.skipBonded = setup.skipCalls ?? true;
+    const skipCalls = setup.skipCalls || {};
+    this.skipCalls = { skipBond: true, skipRebond: true, ...skipCalls };
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
@@ -26,8 +28,8 @@ export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPal
     const staker = ctx.store.defer(Staker, stakerId);
 
     // NOTE: Skip if event is emitted from the call as its already handled there
-    if (event.call?.name === 'Staking.rebond') return;
-    if (event.call?.name === 'Staking.bond' && this.skipBonded === true) return;
+    if (event.call?.name === 'Staking.rebond' && this.skipCalls?.skipRebond === true) return;
+    if (event.call?.name === 'Staking.bond' && this.skipCalls?.skipBond === true) return;
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
