@@ -1,7 +1,6 @@
 import { calls } from '@/chain/polkadot/types';
 import { UnknownVersionError } from '@/utils';
-import { Call } from '@/indexer';
-import { IBondCallPalletDecoder } from '@/indexer/pallets/staking/calls/bond';
+import { Call, IBondCallPalletDecoder } from '@/indexer';
 
 export class BondCallPalletDecoder implements IBondCallPalletDecoder {
   decode(call: Call) {

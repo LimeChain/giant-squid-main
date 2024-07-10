@@ -19,7 +19,7 @@ import { LedgerStorageLoader } from '@/chain/kusama/storage/ledger';
 import { BondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond';
 import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/unbond';
 import { BondExtraCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond_extra';
-import { SetPayeeCallPalletDecoder } from './decoders/calls/staking/setPayee';
+import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setPayee';
 
 export const indexer = new Indexer({
   config: {
