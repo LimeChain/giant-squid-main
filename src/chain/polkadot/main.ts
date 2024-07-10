@@ -18,6 +18,8 @@ import { RebondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking
 import { LedgerStorageLoader } from '@/chain/polkadot/storage/ledger';
 import { BondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond';
 import { SetPayeeCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setPayee';
+import { BondExtraCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond_extra';
+import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/unbond';
 
 export const indexer = new Indexer({
   config: {
@@ -29,7 +31,7 @@ export const indexer = new Indexer({
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder(), skipCalls: { skipBondExtra: false } }),
+      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
       'Staking.Unbonded': setupPallet({
         decoder: new StakingUnBondedEventPalletDecoder(),
         constants: {
@@ -38,7 +40,6 @@ export const indexer = new Indexer({
         storage: {
           currentEra: new CurrentEraStorageLoader(),
         },
-        skipCalls: { skipUnbond: false },
       }),
       'Staking.Withdrawn': setupPallet({
         decoder: new StakingWithdrawnEventPalletDecoder(),
@@ -51,7 +52,15 @@ export const indexer = new Indexer({
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
+      'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
       'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      'Staking.unbond': setupPallet({
+        decoder: new UnbondCallPalletDecoder(),
+        storage: { ledger: new LedgerStorageLoader(), currentEra: new CurrentEraStorageLoader() },
+        constants: {
+          bondingDuration: new BondingDurationConstantGetter(),
+        },
+      }),
       'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),

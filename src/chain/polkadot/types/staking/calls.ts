@@ -123,6 +123,84 @@ export const bond =  {
     ),
 }
 
+export const bondExtra =  {
+    name: 'Staking.bond_extra',
+    /**
+     *  Add some extra amount that have appeared in the stash `free_balance` into the balance up
+     *  for staking.
+     * 
+     *  Use this if there are additional funds in your stash account that you wish to bond.
+     *  Unlike [`bond`] or [`unbond`] this function does not impose any limitation on the amount
+     *  that can be added.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash, not the controller and
+     *  it can be only called when [`EraElectionStatus`] is `Closed`.
+     * 
+     *  Emits `Bonded`.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - O(1).
+     *  - One DB entry.
+     *  ------------
+     *  Base Weight: 54.88 µs
+     *  DB Weight:
+     *  - Read: Era Election Status, Bonded, Ledger, [Origin Account], Locks
+     *  - Write: [Origin Account], Locks, Ledger
+     *  # </weight>
+     */
+    v0: new CallType(
+        'Staking.bond_extra',
+        sts.struct({
+            maxAdditional: sts.bigint(),
+        })
+    ),
+}
+
+export const unbond =  {
+    name: 'Staking.unbond',
+    /**
+     *  Schedule a portion of the stash to be unlocked ready for transfer out after the bond
+     *  period ends. If this leaves an amount actively bonded less than
+     *  T::Currency::minimum_balance(), then it is increased to the full amount.
+     * 
+     *  Once the unlock period is done, you can call `withdraw_unbonded` to actually move
+     *  the funds out of management ready for transfer.
+     * 
+     *  No more than a limited number of unlocking chunks (see `MAX_UNLOCKING_CHUNKS`)
+     *  can co-exists at the same time. In that case, [`Call::withdraw_unbonded`] need
+     *  to be called first to remove some of the chunks (if possible).
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the controller, not the stash.
+     *  And, it can be only called when [`EraElectionStatus`] is `Closed`.
+     * 
+     *  Emits `Unbonded`.
+     * 
+     *  See also [`Call::withdraw_unbonded`].
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Limited but potentially exploitable complexity.
+     *  - Contains a limited number of reads.
+     *  - Each call (requires the remainder of the bonded balance to be above `minimum_balance`)
+     *    will cause a new entry to be inserted into a vector (`Ledger.unlocking`) kept in storage.
+     *    The only way to clean the aforementioned storage item is also user-controlled via
+     *    `withdraw_unbonded`.
+     *  - One DB entry.
+     *  ----------
+     *  Base Weight: 50.34 µs
+     *  DB Weight:
+     *  - Read: Era Election Status, Ledger, Current Era, Locks, [Origin Account]
+     *  - Write: [Origin Account], Locks, Ledger
+     *  </weight>
+     */
+    v0: new CallType(
+        'Staking.unbond',
+        sts.struct({
+            value: sts.bigint(),
+        })
+    ),
+}
+
 export const setPayee =  {
     name: 'Staking.set_payee',
     /**

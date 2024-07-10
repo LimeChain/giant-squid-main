@@ -17,21 +17,17 @@ interface IUnBondedEventPalletSetup extends IBasePalletSetup {
   storage: {
     currentEra: ICurrentEraStorageLoader;
   };
-  skipCalls?: { skipUnbond?: boolean };
 }
 
 export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEventPalletSetup> {
   private constants: IUnBondedEventPalletSetup['constants'];
   private storage: IUnBondedEventPalletSetup['storage'];
-  private skipCalls: IUnBondedEventPalletSetup['skipCalls'];
 
   constructor(setup: IUnBondedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
 
     this.constants = setup.constants;
     this.storage = setup.storage;
-    const skipCalls = setup.skipCalls || {};
-    this.skipCalls = { skipUnbond: true, ...skipCalls };
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
@@ -42,7 +38,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
     const staker = ctx.store.defer(Staker, stakerId);
 
     // the event is handled in the unbond handler, so skip it
-    if (event.call?.name === 'Staking.unbond' && this.skipCalls?.skipUnbond === true) return;
+    if (event.call?.name === 'Staking.unbond') return;
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),
