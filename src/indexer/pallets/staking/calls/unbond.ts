@@ -2,7 +2,7 @@ import { toHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
 import { Account, BondingType, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { BondAction, EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { IBondingDurationConstantGetter, ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer';
@@ -60,10 +60,6 @@ export class UnbondCallPalletHandler extends CallPalletHandler<IUnbondCallPallet
 
         const stash = ctx.store.defer(Account, stashId);
         const staker = ctx.store.defer(Staker, { id: stashId });
-
-        if (stashId === 'HsTwGs2rfHa6bkzvZ35tqfEvPNpys8c2FhMW7W9S3SyPSQs') {
-          console.log('Unbonding from Stash found', { data });
-        }
 
         queue.push(
           new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),

@@ -143,6 +143,32 @@ export const bond =  {
     ),
 }
 
+export const bondExtra =  {
+    name: 'Staking.bond_extra',
+    /**
+     *  Add some extra amount that have appeared in the stash `free_balance` into the balance up
+     *  for staking.
+     * 
+     *  Use this if there are additional funds in your stash account that you wish to bond.
+     *  Unlike [`bond`] or [`unbond`] this function does not impose any limitation on the amount
+     *  that can be added.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash, not the controller.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - O(1).
+     *  - One DB entry.
+     *  # </weight>
+     */
+    v1020: new CallType(
+        'Staking.bond_extra',
+        sts.struct({
+            maxAdditional: sts.bigint(),
+        })
+    ),
+}
+
 export const unbond =  {
     name: 'Staking.unbond',
     /**

@@ -17,7 +17,8 @@ import { StakingWithdrawnEventPalletDecoder } from '@/chain/kusama/decoders/even
 import { CurrentEraStorageLoader } from '@/chain/kusama/storage/currentEra';
 import { LedgerStorageLoader } from '@/chain/kusama/storage/ledger';
 import { BondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond';
-import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/unbond';
+import { UnbondCallPalletDecoder } from './decoders/calls/staking/unbond';
+import { BondExtraCallPalletDecoder } from './decoders/calls/staking/bond_extra';
 
 export const indexer = new Indexer({
   config: {
@@ -50,6 +51,7 @@ export const indexer = new Indexer({
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
+      'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
       'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
       'Staking.unbond': setupPallet({
         decoder: new UnbondCallPalletDecoder(),
