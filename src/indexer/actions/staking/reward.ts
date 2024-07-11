@@ -20,7 +20,7 @@ export class RewardAction extends Action<RewardData> {
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
-      account: staker.payee ?? account,
+      account: staker.payee.account ?? account,
       staker: staker,
       amount: this.data.amount,
       era: this.data.era,

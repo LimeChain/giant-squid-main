@@ -18,7 +18,6 @@ export class EnsureStaker extends Action<StakerData> {
     staker = new Staker({
       id: this.data.id,
       stash: account,
-      payeeType: RewardDestination.None,
       activeBonded: 0n,
       totalBonded: 0n,
       totalUnbonded: 0n,

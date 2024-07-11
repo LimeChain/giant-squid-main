@@ -6,6 +6,7 @@ import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
 import { ICurrentEraStorageLoader } from '@/indexer/pallets/staking/storage';
+import { Call } from '@/indexer/processor';
 
 export interface IUnBondedEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 
@@ -30,15 +31,29 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
     this.storage = setup.storage;
   }
 
+  hasUnbondCall(call?: Call) {
+    if (call?.name === 'Staking.unbond') {
+      return true;
+    }
+    // It is a batch call, so check each call in the batch
+    if (call?.args?.calls?.some((call: any) => call.__kind === 'Staking' && call.value.__kind === 'unbond')) {
+      return true;
+    }
+
+    return false;
+  }
+
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
+    // It is already handled by the calls, so skip the event handler
+    if (this.hasUnbondCall(event.call)) return;
+
+    console.log('UnbondedEventPalletHandler', event.call);
+
     const data = this.decoder.decode(event);
     const stakerId = this.encodeAddress(data.stash);
 
     const account = ctx.store.defer(Account, stakerId);
     const staker = ctx.store.defer(Staker, stakerId);
-
-    // the event is handled in the unbond handler, so skip it
-    if (event.call?.name === 'Staking.unbond') return;
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: stakerId, pk: data.stash }),

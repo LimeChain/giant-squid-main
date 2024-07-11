@@ -40,7 +40,7 @@ export class SlashBondAction extends Action<SlashBondData> {
     const staker = await this.data.staker();
 
     const slash = new StakingBond({
-      id: this.data.id + staker.id,
+      id: `${this.data.id}_${staker.id}_${this.extrinsic?.hash}`,
       blockNumber: this.block.height,
       type: this.data.type,
       timestamp: new Date(this.block.timestamp ?? 0),

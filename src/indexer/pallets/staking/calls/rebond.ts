@@ -27,8 +27,6 @@ export class RebondCallPalletHandler extends CallPalletHandler<IRebondCallPallet
 
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (call.success === false) return;
-    // Make sure the call is not already handled in the Bonded event handler
-    if (call.extrinsic?.events.some((e) => e.name === 'Staking.Bonded')) return;
 
     const data = this.decoder.decode(call);
 

@@ -1,14 +1,18 @@
-import { IBasePalletSetup, ICallPalletDecoder } from '@/indexer/types';
-import { CallPalletHandler, IHandlerOptions, ICallHandlerParams } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, PayeeType } from '@/indexer/types';
+import { IHandlerOptions, ICallHandlerParams } from '@/indexer/pallets/handler';
 import { ILedgerStorageLoader } from '@/indexer';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
-import { Account, RewardDestination, Staker } from '@/model';
+import { Account, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
-import { toHex } from '@subsquid/substrate-processor';
-import { SetPayeeAction } from '@/indexer/actions/staking/payee';
+import { decodeHex, toHex } from '@subsquid/substrate-processor';
+import { BasePayeeCallPallet } from './setPayee.base';
 
-export interface ISetPayeeCallPalletDecoder extends ICallPalletDecoder<{ payee: { type: string; account?: string } }> {}
+export interface ISetPayeeCallPalletData {
+  controller?: string;
+  payee: { type: PayeeType; account?: string };
+}
+export interface ISetPayeeCallPalletDecoder extends ICallPalletDecoder<ISetPayeeCallPalletData> {}
 
 interface ISetPayeeCallPalletSetup extends IBasePalletSetup {
   decoder: ISetPayeeCallPalletDecoder;
@@ -17,7 +21,7 @@ interface ISetPayeeCallPalletSetup extends IBasePalletSetup {
   };
 }
 
-export class SetPayeeCallPalletHandler extends CallPalletHandler<ISetPayeeCallPalletSetup> {
+export class SetPayeeCallPalletHandler extends BasePayeeCallPallet<ISetPayeeCallPalletSetup> {
   storage: ISetPayeeCallPalletSetup['storage'];
 
   constructor(setup: ISetPayeeCallPalletSetup, options: IHandlerOptions) {
@@ -56,26 +60,7 @@ export class SetPayeeCallPalletHandler extends CallPalletHandler<ISetPayeeCallPa
           new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() })
         );
 
-        if (data.payee.account) {
-          const payeeId = this.encodeAddress(data.payee.account);
-          const payee = ctx.store.defer(Account, payeeId);
-
-          queue.push(
-            new EnsureAccount(block.header, call.extrinsic, { account: () => payee.get(), id: payeeId, pk: this.decodeAddress(payeeId) }),
-            new SetPayeeAction(block.header, call.extrinsic, {
-              staker: () => staker.getOrFail(),
-              payeeType: data.payee.type as RewardDestination,
-              account: () => payee.getOrFail(),
-            })
-          );
-        } else {
-          queue.push(
-            new SetPayeeAction(block.header, call.extrinsic, {
-              staker: () => staker.getOrFail(),
-              payeeType: data.payee.type as RewardDestination,
-            })
-          );
-        }
+        this.addPayee({ ctx, block, item: call, queue, data, staker, stash: ledger.stash });
 
         return queue;
       })

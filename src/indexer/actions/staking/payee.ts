@@ -1,23 +1,28 @@
-import { Account, RewardDestination, Staker } from '@/model';
+import { Account, RewardDestination, Staker, StakingPayee } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
-export interface SetPayeeData {
+export interface AddPayeeData {
+  id: string;
+  type: RewardDestination;
   staker: () => Promise<Staker>;
-  payeeType: RewardDestination;
   account?: () => Promise<Account> | undefined;
 }
 
-export class SetPayeeAction extends Action<SetPayeeData> {
+export class AddPayeeAction extends Action<AddPayeeData> {
   async _perform(ctx: ActionContext): Promise<void> {
     const staker = await this.data.staker();
+    const account = this.data.account ? await this.data.account() : null;
 
-    staker.payeeType = this.data.payeeType;
+    const payee = new StakingPayee({
+      id: this.data.id,
+      type: this.data.type,
+      account,
+      staker,
+    });
 
-    if (this.data.account) {
-      const account = await this.data.account();
-      staker.payee = account;
-    }
+    staker.payee = payee;
 
+    await ctx.store.insert(payee);
     await ctx.store.upsert(staker);
   }
 }

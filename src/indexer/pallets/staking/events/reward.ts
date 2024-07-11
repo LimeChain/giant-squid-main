@@ -39,7 +39,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
     }
 
     const from = ctx.store.defer(Account, stakerId);
-    const stakerDef = ctx.store.defer(Staker, stakerId);
+    const stakerDef = ctx.store.defer(Staker, { id: stakerId, relations: { payee: true } });
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
@@ -67,7 +67,7 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           })
         );
 
-        if (data.amount > 0 && staker.payeeType === RewardDestination.Staked) {
+        if (data.amount > 0 && staker.payee.type === RewardDestination.Staked) {
           queue.push(
             new BondAction(block.header, event.extrinsic, {
               id: event.id,

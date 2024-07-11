@@ -15,7 +15,7 @@ export class UnBondAction extends Action<UnBondData> {
     const staker = await this.data.staker();
 
     const bond = new StakingBond({
-      id: this.data.id + staker.id,
+      id: `${this.data.id}_${staker.id}_${this.extrinsic?.hash}`,
       type: this.data.type,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),

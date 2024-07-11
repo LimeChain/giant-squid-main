@@ -48,3 +48,5 @@ export type IndexerParams = {
   config: ProcessorConfig;
   pallets: PalletSetups;
 };
+
+export type PayeeType = 'Staked' | 'Stash' | 'None' | 'Controller' | 'Account';

@@ -71,13 +71,6 @@ type IdentitySub @entity {
   name: String
 }
 
-enum StakingRole {
-  Validator
-  Nominator
-  Idle
-  Unknown
-}
-
 type StakingReward @entity {
   id: ID!
   timestamp: DateTime!
@@ -138,12 +131,18 @@ enum RewardDestination {
   None
 }
 
+type StakingPayee @entity {
+  id: ID!
+  staker: Staker!
+  account: Account
+  type: RewardDestination!
+}
+
 type Staker @entity {
   id: ID! #stash Id
   stash: Account! @unique
 
-  payee: Account
-  payeeType: RewardDestination!
+  payee: StakingPayee!
 
   activeBonded: BigInt!
   totalBonded: BigInt!
