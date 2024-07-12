@@ -18,6 +18,9 @@ export class AddPayeeAction extends Action<AddPayeeData> {
       type: this.data.type,
       account,
       staker,
+      blockNumber: this.block.height,
+      extrinsicHash: this.extrinsic?.hash,
+      timestamp: new Date(this.block.timestamp ?? 0),
     });
 
     staker.payee = payee;

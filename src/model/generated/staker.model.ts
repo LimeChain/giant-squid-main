@@ -23,7 +23,7 @@ export class Staker {
 
     @Index_()
     @ManyToOne_(() => StakingPayee, {nullable: true})
-    payee!: StakingPayee
+    payee!: StakingPayee | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     activeBonded!: bigint

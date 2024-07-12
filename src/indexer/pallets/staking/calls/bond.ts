@@ -1,12 +1,11 @@
-import { ICallPalletDecoder, IBasePalletSetup, PayeeType } from '@/indexer/types';
-import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
+import { ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
 import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
-import { Account, BondingType, RewardDestination, Staker } from '@/model';
-import { AddPayeeAction } from '@/indexer/actions/staking/payee';
-import { DeferredEntity } from '@belopash/typeorm-store/lib/store';
+import { Account, BondingType, Staker } from '@/model';
 import { BasePayeeCallPallet } from './setPayee.base';
 import { ISetPayeeCallPalletData } from './setPayee';
+import { AddControllerAction } from '@/indexer/actions/staking/controller';
 
 export interface IBondCallPalletDecoder extends ICallPalletDecoder<{ amount: bigint } & ISetPayeeCallPalletData> {}
 
@@ -32,9 +31,18 @@ export class BondCallPalletHandler extends BasePayeeCallPallet<IRebondCallPallet
     const stash = ctx.store.defer(Account, stashId);
     const staker = ctx.store.defer(Staker, stashId);
 
+    const controllerId = this.encodeAddress(data.controller || origin);
+    const controller = ctx.store.defer(Account, controllerId);
+
     queue.push(
       new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),
+      new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
       new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() }),
+      new AddControllerAction(block.header, call.extrinsic, {
+        id: call.id,
+        controller: () => controller.getOrFail(),
+        staker: () => staker.getOrFail(),
+      }),
       new BondAction(block.header, call.extrinsic, {
         id: call.id,
         type: BondingType.Bond,

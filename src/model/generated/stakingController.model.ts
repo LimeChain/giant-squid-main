@@ -1,11 +1,10 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
 import {Staker} from "./staker.model"
 import {Account} from "./account.model"
-import {RewardDestination} from "./_rewardDestination"
 
 @Entity_()
-export class StakingPayee {
-    constructor(props?: Partial<StakingPayee>) {
+export class StakingController {
+    constructor(props?: Partial<StakingController>) {
         Object.assign(this, props)
     }
 
@@ -18,10 +17,7 @@ export class StakingPayee {
 
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
-    account!: Account | undefined | null
-
-    @Column_("varchar", {length: 10, nullable: false})
-    type!: RewardDestination
+    controller!: Account
 
     @Column_("timestamp with time zone", {nullable: false})
     timestamp!: Date

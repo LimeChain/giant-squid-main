@@ -136,13 +136,25 @@ type StakingPayee @entity {
   staker: Staker!
   account: Account
   type: RewardDestination!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+type StakingController @entity {
+  id: ID!
+  staker: Staker!
+  controller: Account!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
 }
 
 type Staker @entity {
   id: ID! #stash Id
   stash: Account! @unique
-
-  payee: StakingPayee!
+ 
+  payee: StakingPayee
 
   activeBonded: BigInt!
   totalBonded: BigInt!

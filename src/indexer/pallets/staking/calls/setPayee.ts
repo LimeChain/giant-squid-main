@@ -5,7 +5,7 @@ import { getOriginAccountId } from '@/utils';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { Account, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
-import { decodeHex, toHex } from '@subsquid/substrate-processor';
+import { toHex } from '@subsquid/substrate-processor';
 import { BasePayeeCallPallet } from './setPayee.base';
 
 export interface ISetPayeeCallPalletData {
@@ -39,11 +39,7 @@ export class SetPayeeCallPalletHandler extends BasePayeeCallPallet<ISetPayeeCall
 
     if (!origin) return;
 
-    const controllerId = this.encodeAddress(origin);
-    const controller = ctx.store.defer(Account, controllerId);
-
     queue.push(
-      new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
       new LazyAction(block.header, call.extrinsic, async () => {
         const queue: Action[] = [];
         const ledger = await this.storage.ledger.load(block.header, toHex(origin));

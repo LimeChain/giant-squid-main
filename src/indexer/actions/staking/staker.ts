@@ -1,5 +1,6 @@
-import { Account, RewardDestination, Staker } from '@/model';
+import { Account, RewardDestination, Staker, StakingPayee } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
+import { AddPayeeAction } from './payee';
 
 interface StakerData {
   id: string;
@@ -18,6 +19,7 @@ export class EnsureStaker extends Action<StakerData> {
     staker = new Staker({
       id: this.data.id,
       stash: account,
+      payee: undefined,
       activeBonded: 0n,
       totalBonded: 0n,
       totalUnbonded: 0n,

@@ -1,5 +1,5 @@
 import { Account, BondingType, RewardDestination, Staker } from '@/model';
-import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
+import { AddPayeeAction, BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 import { Action, LazyAction } from '@/indexer/actions/base';
@@ -38,28 +38,29 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
       era = callData.era;
     }
 
-    const from = ctx.store.defer(Account, stakerId);
+    const account = ctx.store.defer(Account, stakerId);
     const stakerDef = ctx.store.defer(Staker, { id: stakerId, relations: { payee: true } });
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
-        account: () => from.get(),
+        account: () => account.get(),
         id: stakerId,
         pk: data.stash,
       }),
       new EnsureStaker(block.header, event.extrinsic, {
         id: stakerId,
         staker: () => stakerDef.get(),
-        account: () => from.getOrFail(),
+        account: () => account.getOrFail(),
       }),
+
       new LazyAction(block.header, event.extrinsic, async () => {
         const queue: Action[] = [];
         const staker = await stakerDef.getOrFail();
-        const account = await from.getOrFail();
+
         queue.push(
           new RewardAction(block.header, event.extrinsic, {
             id: event.id,
-            account: () => Promise.resolve(account),
+            account: () => account.getOrFail(),
             staker: () => Promise.resolve(staker),
             amount: data.amount,
             era,
@@ -67,13 +68,13 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           })
         );
 
-        if (data.amount > 0 && staker.payee.type === RewardDestination.Staked) {
+        if (data.amount > 0 && staker.payee?.type === RewardDestination.Staked) {
           queue.push(
             new BondAction(block.header, event.extrinsic, {
               id: event.id,
               type: BondingType.Reward,
               amount: data.amount,
-              account: () => Promise.resolve(account),
+              account: () => account.getOrFail(),
               staker: () => Promise.resolve(staker),
             })
           );
