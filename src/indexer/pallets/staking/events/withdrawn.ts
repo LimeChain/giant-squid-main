@@ -45,16 +45,17 @@ export class WithdrawnEventPalletHandler extends EventPalletHandler<IWithdrawnEv
         if (staker.unlockings) {
           const widrawable = staker.unlockings.filter((c) => c.lockedUntilEra <= currentEra);
 
-          let chunkSum = 0n;
+          let totalWithdrawn = 0n;
 
           for (const chunk of widrawable) {
             queue.push(new WithdrawUnlockChunkAction(block.header, event.extrinsic, { chunk }));
 
-            chunkSum += chunk.amount;
+            totalWithdrawn += chunk.amount;
           }
-        }
 
-        queue.push(new WithdrawnAction(block.header, event.extrinsic, { amount: data.amount, staker: staker }));
+          // we are using "totalWithdrawn" instead of "data.amount" because not all calls are emitting event, so we cannot rely on the event data
+          queue.push(new WithdrawnAction(block.header, event.extrinsic, { amount: totalWithdrawn, staker: staker }));
+        }
 
         return queue;
       })
