@@ -7,7 +7,7 @@
     },
     "Staking": {
       "events": ["Reward", "Rewarded", "Slash", "Slashed", "Bonded", "Unbonded", "Withdrawn"],
-      "calls": ["payout_stakers", "rebond", "bond", "bond_extra", "unbond", "set_payee"]
+      "calls": ["payout_stakers", "rebond", "bond", "bond_extra", "unbond", "set_payee", "set_controller"]
     },
     "Identity": {
       "events": ["SubIdentityRemoved", "SubIdentityRevoked"],

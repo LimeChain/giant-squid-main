@@ -38,8 +38,6 @@ export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPal
       return;
     }
 
-    console.log('BondedEventPalletHandler', event.call);
-
     const data = this.decoder.decode(event);
     const stakerId = this.encodeAddress(data.stash);
 

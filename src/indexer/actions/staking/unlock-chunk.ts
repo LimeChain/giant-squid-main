@@ -13,7 +13,7 @@ export class UnlockChunkAction extends Action<UnlockChunkData> {
     const staker = await this.data.staker();
 
     const chunk = new StakingUnlockChunk({
-      id: this.data.id,
+      id: this.data.id + this.extrinsic?.hash,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       staker: staker,

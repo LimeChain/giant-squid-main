@@ -229,6 +229,102 @@ export const setPayee =  {
     ),
 }
 
+export const setController =  {
+    name: 'Staking.set_controller',
+    /**
+     *  (Re-)set the controller of a stash.
+     * 
+     *  Effects will be felt at the beginning of the next era.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash, not the controller.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - Contains a limited number of reads.
+     *  - Writes are limited to the `origin` account key.
+     *  ----------
+     *  Base Weight: 25.22 µs
+     *  DB Weight:
+     *  - Read: Bonded, Ledger New Controller, Ledger Old Controller
+     *  - Write: Bonded, Ledger New Controller, Ledger Old Controller
+     *  # </weight>
+     */
+    v0: new CallType(
+        'Staking.set_controller',
+        sts.struct({
+            controller: v0.LookupSource,
+        })
+    ),
+    /**
+     *  (Re-)set the controller of a stash.
+     * 
+     *  Effects will be felt at the beginning of the next era.
+     * 
+     *  The dispatch origin for this call must be _Signed_ by the stash, not the controller.
+     * 
+     *  # <weight>
+     *  - Independent of the arguments. Insignificant complexity.
+     *  - Contains a limited number of reads.
+     *  - Writes are limited to the `origin` account key.
+     *  ----------
+     *  Weight: O(1)
+     *  DB Weight:
+     *  - Read: Bonded, Ledger New Controller, Ledger Old Controller
+     *  - Write: Bonded, Ledger New Controller, Ledger Old Controller
+     *  # </weight>
+     */
+    v28: new CallType(
+        'Staking.set_controller',
+        sts.struct({
+            controller: v28.LookupSource,
+        })
+    ),
+    /**
+     * (Re-)set the controller of a stash.
+     * 
+     * Effects will be felt at the beginning of the next era.
+     * 
+     * The dispatch origin for this call must be _Signed_ by the stash, not the controller.
+     * 
+     * # <weight>
+     * - Independent of the arguments. Insignificant complexity.
+     * - Contains a limited number of reads.
+     * - Writes are limited to the `origin` account key.
+     * ----------
+     * Weight: O(1)
+     * DB Weight:
+     * - Read: Bonded, Ledger New Controller, Ledger Old Controller
+     * - Write: Bonded, Ledger New Controller, Ledger Old Controller
+     * # </weight>
+     */
+    v9110: new CallType(
+        'Staking.set_controller',
+        sts.struct({
+            controller: v9110.MultiAddress,
+        })
+    ),
+    /**
+     * (Re-)sets the controller of a stash to the stash itself. This function previously
+     * accepted a `controller` argument to set the controller to an account other than the
+     * stash itself. This functionality has now been removed, now only setting the controller
+     * to the stash, if it is not already.
+     * 
+     * Effects will be felt instantly (as soon as this function is completed successfully).
+     * 
+     * The dispatch origin for this call must be _Signed_ by the stash, not the controller.
+     * 
+     * ## Complexity
+     * O(1)
+     * - Independent of the arguments. Insignificant complexity.
+     * - Contains a limited number of reads.
+     * - Writes are limited to the `origin` account key.
+     */
+    v9430: new CallType(
+        'Staking.set_controller',
+        sts.unit()
+    ),
+}
+
 export const payoutStakers =  {
     name: 'Staking.payout_stakers',
     /**

@@ -3,8 +3,8 @@ import { ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
 import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { Account, BondingType, Staker } from '@/model';
-import { BasePayeeCallPallet } from './setPayee.base';
-import { ISetPayeeCallPalletData } from './setPayee';
+import { BasePayeeCallPallet } from '@/indexer/pallets/staking/calls/setPayee.base';
+import { ISetPayeeCallPalletData } from '@/indexer/pallets/staking/calls/setPayee';
 import { AddControllerAction } from '@/indexer/actions/staking/controller';
 
 export interface IBondCallPalletDecoder extends ICallPalletDecoder<{ amount: bigint } & ISetPayeeCallPalletData> {}

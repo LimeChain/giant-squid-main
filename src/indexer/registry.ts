@@ -18,7 +18,7 @@ import { BondCallPalletHandler } from '@/indexer/pallets/staking/calls/bond';
 import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond';
 import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bondExtra';
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
-import { SetControllerCallPalletHandler } from './pallets/staking/calls/setController';
+import { SetControllerCallPalletHandler } from '@/indexer/pallets/staking/calls/setController';
 
 export const registry = {
   events: {

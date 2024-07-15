@@ -1,6 +1,5 @@
 import { Account, RewardDestination, Staker, StakingPayee } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
-import { AddPayeeAction } from './payee';
 
 interface StakerData {
   id: string;

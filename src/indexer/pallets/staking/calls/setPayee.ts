@@ -6,7 +6,7 @@ import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { Account, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { toHex } from '@subsquid/substrate-processor';
-import { BasePayeeCallPallet } from './setPayee.base';
+import { BasePayeeCallPallet } from '@/indexer/pallets/staking/calls/setPayee.base';
 
 export interface ISetPayeeCallPalletData {
   controller?: string;

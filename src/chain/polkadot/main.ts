@@ -20,15 +20,12 @@ import { BondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/b
 import { SetPayeeCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setPayee';
 import { BondExtraCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond_extra';
 import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/unbond';
+import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    blockRange: {
-      from: 0,
-      to: 2200000,
-    },
   },
   pallets: {
     events: {
@@ -66,6 +63,7 @@ export const indexer = new Indexer({
         },
       }),
       'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      'Staking.set_controller': setupPallet({ decoder: new SetControllerCallPalletDecoder() }),
       'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
       'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),

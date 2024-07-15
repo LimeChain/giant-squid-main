@@ -47,8 +47,6 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
     // It is already handled by the calls, so skip the event handler
     if (this.hasUnbondCall(event.call)) return;
 
-    console.log('UnbondedEventPalletHandler', event.call);
-
     const data = this.decoder.decode(event);
     const stakerId = this.encodeAddress(data.stash);
 
