@@ -153,7 +153,8 @@ type StakingController @entity {
 type Staker @entity {
   id: ID! #stash Id
   stash: Account! @unique
- 
+  controller: Account
+
   payee: StakingPayee
 
   activeBonded: BigInt!
@@ -163,6 +164,8 @@ type Staker @entity {
   totalSlashed: BigInt!
   totalRewarded: BigInt!
 
+  payees: [StakingPayee!] @derivedFrom(field: "staker")
+  controllers: [StakingController!] @derivedFrom(field: "staker")
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
   rewards: [StakingReward!] @derivedFrom(field: "staker")
   slashes: [StakingSlash!] @derivedFrom(field: "staker")

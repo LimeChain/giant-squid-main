@@ -38,7 +38,6 @@ export class RebondCallPalletHandler extends CallPalletHandler<IRebondCallPallet
     const controller = ctx.store.defer(Account, controllerId);
 
     queue.push(
-      new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
       new LazyAction(block.header, call.extrinsic, async () => {
         const queue: Action[] = [];
 
@@ -52,11 +51,9 @@ export class RebondCallPalletHandler extends CallPalletHandler<IRebondCallPallet
         const staker = ctx.store.defer(Staker, { id: stashId });
 
         queue.push(
+          new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
           new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),
-          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() })
-        );
-
-        queue.push(
+          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() }),
           new BondAction(block.header, call.extrinsic, {
             id: call.id,
             type: BondingType.Rebond,

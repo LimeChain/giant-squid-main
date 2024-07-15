@@ -51,12 +51,13 @@ export class DecreaseUnlockChunkAction extends Action<DecreaseUnlockChunkData> {
 }
 
 interface UpdateUnlockChunkData {
-  chunk: StakingUnlockChunk;
+  chunk: () => Promise<StakingUnlockChunk>;
 }
 
 export class WithdrawUnlockChunkAction extends Action<UpdateUnlockChunkData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    const chunk = this.data.chunk;
+    const chunk = await this.data.chunk();
+
     chunk.withdrawn = true;
 
     await ctx.store.upsert(chunk);

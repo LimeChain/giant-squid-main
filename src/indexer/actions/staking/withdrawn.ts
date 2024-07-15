@@ -3,13 +3,15 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface WithdrawnData {
   amount: bigint;
-  staker: Staker;
+  staker: () => Promise<Staker>;
 }
 
 export class WithdrawnAction extends Action<WithdrawnData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    this.data.staker.totalWithdrawn += this.data.amount;
+    const staker = await this.data.staker();
 
-    await ctx.store.upsert(this.data.staker);
+    staker.totalWithdrawn += this.data.amount;
+
+    await ctx.store.upsert(staker);
   }
 }

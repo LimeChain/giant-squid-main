@@ -19,6 +19,7 @@ export class EnsureStaker extends Action<StakerData> {
       id: this.data.id,
       stash: account,
       payee: undefined,
+      controller: undefined,
       activeBonded: 0n,
       totalBonded: 0n,
       totalUnbonded: 0n,

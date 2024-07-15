@@ -2,6 +2,7 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, O
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
 import {StakingPayee} from "./stakingPayee.model"
+import {StakingController} from "./stakingController.model"
 import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
 import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
@@ -20,6 +21,10 @@ export class Staker {
     @OneToOne_(() => Account, {nullable: true})
     @JoinColumn_()
     stash!: Account
+
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true})
+    controller!: Account | undefined | null
 
     @Index_()
     @ManyToOne_(() => StakingPayee, {nullable: true})
@@ -42,6 +47,12 @@ export class Staker {
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     totalRewarded!: bigint
+
+    @OneToMany_(() => StakingPayee, e => e.staker)
+    payees!: StakingPayee[]
+
+    @OneToMany_(() => StakingController, e => e.staker)
+    controllers!: StakingController[]
 
     @OneToMany_(() => StakingUnlockChunk, e => e.staker)
     unlockings!: StakingUnlockChunk[]

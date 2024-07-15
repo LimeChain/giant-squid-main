@@ -62,11 +62,12 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
         const bondSlash = this.calculateSlashAmounts(staker.activeBonded, data.amount);
 
+        // The account has enough active bonded amount to cover the slash,
+        // so slash the amount from the active bonded amount
         if (bondSlash.amount > 0) {
           queue.push(
             new SlashBondAction(block.header, event.extrinsic, {
               id: event.id,
-              type: BondingType.Slash,
               amount: bondSlash.amount,
               account: () => accountDef.getOrFail(),
               staker: () => Promise.resolve(staker),
@@ -94,6 +95,7 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
               })
             );
 
+            // The full amount is slashed, so no need to continue
             if (chunkSlash.remainder <= 0) break;
             slashReminder = chunkSlash.remainder;
           }

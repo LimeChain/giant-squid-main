@@ -63,13 +63,9 @@ export class UnbondCallPalletHandler extends CallPalletHandler<IUnbondCallPallet
 
         queue.push(
           new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),
-          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() })
-        );
-
-        queue.push(
+          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() }),
           new UnBondAction(block.header, call.extrinsic, {
             id: call.id,
-            type: BondingType.Unbond,
             amount: data.amount,
             account: () => controller.getOrFail(),
             staker: () => staker.getOrFail(),

@@ -44,7 +44,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
-    // It is already handled by the calls, so skip the event handler
+    // The event is containing an "unbond" call, so we leave it to the call handler
     if (this.hasUnbondCall(event.call)) return;
 
     const data = this.decoder.decode(event);
@@ -58,7 +58,6 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
       new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => account.getOrFail(), staker: () => staker.get() }),
       new UnBondAction(block.header, event.extrinsic, {
         id: event.id,
-        type: BondingType.Unbond,
         amount: data.amount,
         account: () => account.getOrFail(),
         staker: () => staker.getOrFail(),

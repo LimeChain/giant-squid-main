@@ -33,7 +33,7 @@ export class BondedEventPalletHandler extends EventPalletHandler<IBondedEventPal
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
-    // It is already handled by the calls, so skip the event handler
+    // The event is containing an "unbond" call, so we leave it to the call handler
     if (this.hasBondCall(event.call)) {
       return;
     }

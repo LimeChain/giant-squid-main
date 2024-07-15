@@ -71,6 +71,8 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           })
         );
 
+        // the payee type is set to Staked, so we need to auto-bond the reward
+        // rewards with zero amount have no effect on the staking ledger, so we skip them
         if (data.amount > 0 && payee?.type === RewardDestination.Staked) {
           queue.push(
             new BondAction(block.header, event.extrinsic, {

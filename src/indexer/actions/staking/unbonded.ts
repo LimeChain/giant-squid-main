@@ -3,7 +3,6 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UnBondData {
   id: string;
-  type: BondingType;
   amount: bigint;
   account: () => Promise<Account>;
   staker: () => Promise<Staker>;
@@ -15,8 +14,8 @@ export class UnBondAction extends Action<UnBondData> {
     const staker = await this.data.staker();
 
     const bond = new StakingBond({
-      id: `${this.data.id}_${staker.id}_${this.extrinsic?.hash}`,
-      type: this.data.type,
+      id: this.composeId(this.data.id, staker.id, this.extrinsic?.hash),
+      type: BondingType.Unbond,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
@@ -27,6 +26,10 @@ export class UnBondAction extends Action<UnBondData> {
 
     staker.activeBonded -= this.data.amount;
     staker.totalUnbonded += this.data.amount;
+
+    if (staker.activeBonded < 0n) {
+      staker.activeBonded = 0n;
+    }
 
     await ctx.store.insert(bond);
     await ctx.store.upsert(staker);

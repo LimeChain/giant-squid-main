@@ -8,10 +8,6 @@ interface SlashData {
   staker: () => Promise<Staker>;
 }
 
-interface SlashBondData extends SlashData {
-  type: BondingType;
-}
-
 export class SlashAction extends Action<SlashData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const account = await this.data.account();
@@ -34,15 +30,15 @@ export class SlashAction extends Action<SlashData> {
   }
 }
 
-export class SlashBondAction extends Action<SlashBondData> {
+export class SlashBondAction extends Action<SlashData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const account = await this.data.account();
     const staker = await this.data.staker();
 
     const slash = new StakingBond({
-      id: `${this.data.id}_${staker.id}_${this.extrinsic?.hash}`,
+      id: this.composeId(this.data.id, staker.id, this.extrinsic?.hash),
       blockNumber: this.block.height,
-      type: this.data.type,
+      type: BondingType.Slash,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       account: account,
@@ -51,6 +47,10 @@ export class SlashBondAction extends Action<SlashBondData> {
     });
 
     staker.activeBonded -= this.data.amount;
+
+    if (staker.activeBonded < 0n) {
+      staker.activeBonded = 0n;
+    }
 
     await ctx.store.insert(slash);
     await ctx.store.upsert(staker);

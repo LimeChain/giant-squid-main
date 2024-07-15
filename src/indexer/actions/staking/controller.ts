@@ -21,6 +21,9 @@ export class AddControllerAction extends Action<AddControllerData> {
       timestamp: new Date(this.block.timestamp ?? 0),
     });
 
+    staker.controller = controller;
+
     await ctx.store.insert(payee);
+    await ctx.store.upsert(staker);
   }
 }

@@ -15,7 +15,7 @@ export class BondAction extends Action<BondData> {
     const staker = await this.data.staker();
 
     const bond = new StakingBond({
-      id: `${this.data.id}_${staker.id}_${this.extrinsic?.hash}`,
+      id: this.composeId(this.data.id, staker.id, this.extrinsic?.hash),
       type: this.data.type,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
