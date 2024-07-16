@@ -18,11 +18,11 @@ export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSet
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
-    const subAddedCallData = this.decoder.decode(call);
-
     const origin = getOriginAccountId(call.origin);
 
     if (!origin) return;
+
+    const subAddedCallData = this.decoder.decode(call);
 
     const identityId = this.encodeAddress(origin);
     const subId = this.encodeAddress(subAddedCallData.sub);

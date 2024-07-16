@@ -19,10 +19,10 @@ export class BondExtraCallPalletHandler extends CallPalletHandler<IBondExtraCall
     if (call.success === false) return;
 
     const origin = getOriginAccountId(call.origin);
-    const data = this.decoder.decode(call);
 
     if (!origin) return;
 
+    const data = this.decoder.decode(call);
     const stashId = this.encodeAddress(origin);
 
     const stash = ctx.store.defer(Account, stashId);

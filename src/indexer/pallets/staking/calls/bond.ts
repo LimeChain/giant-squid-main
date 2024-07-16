@@ -22,12 +22,12 @@ export class BondCallPalletHandler extends BasePayeeCallPallet<IRebondCallPallet
     if (call.success === false) return;
 
     const origin = getOriginAccountId(call.origin);
-    const data = this.decoder.decode(call);
-
+    
     if (!origin) return;
-
+    
     const stashId = this.encodeAddress(origin);
-
+    
+    const data = this.decoder.decode(call);
     const stash = ctx.store.defer(Account, stashId);
     const staker = ctx.store.defer(Staker, stashId);
 

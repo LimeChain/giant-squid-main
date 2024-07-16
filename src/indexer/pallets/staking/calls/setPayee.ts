@@ -33,11 +33,11 @@ export class SetPayeeCallPalletHandler extends BasePayeeCallPallet<ISetPayeeCall
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (call.success === false) return;
 
-    const data = this.decoder.decode(call);
-
     const origin = getOriginAccountId(call.origin);
 
     if (!origin) return;
+
+    const data = this.decoder.decode(call);
 
     queue.push(
       new LazyAction(block.header, call.extrinsic, async () => {

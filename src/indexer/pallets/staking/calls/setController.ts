@@ -20,10 +20,10 @@ export class SetControllerCallPalletHandler extends CallPalletHandler<ISetContro
     if (call.success === false) return;
 
     const origin = getOriginAccountId(call.origin);
-    const ctrler = this.decoder.decode(call);
 
     if (!origin) return;
 
+    const ctrler = this.decoder.decode(call);
     const stashId = this.encodeAddress(origin);
     const controllerId = this.encodeAddress(ctrler || origin);
 
