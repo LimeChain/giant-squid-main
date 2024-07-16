@@ -48,10 +48,6 @@ export class SlashBondAction extends Action<SlashData> {
 
     staker.activeBonded -= this.data.amount;
 
-    if (staker.activeBonded < 0n) {
-      staker.activeBonded = 0n;
-    }
-
     await ctx.store.insert(slash);
     await ctx.store.upsert(staker);
   }
