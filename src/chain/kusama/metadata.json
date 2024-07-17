@@ -12,6 +12,9 @@
     "Identity": {
       "events": ["SubIdentityRemoved", "SubIdentityRevoked"],
       "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "rename_sub"]
+    },
+    "Crowdloan": {
+        "calls": ["create"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

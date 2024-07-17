@@ -22,5 +22,6 @@ export { ISetPayeeCallPalletDecoder } from '@/indexer/pallets/staking/calls/setP
 export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
 export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
 export { ISetControllerCallPalletDecoder } from '@/indexer/pallets/staking/calls/setController';
+export { ICreateCallPalletDecoder } from '@/indexer/pallets/crowdloan/calls/create';
 
 export { Indexer, setupPallet } from '@/indexer/main';

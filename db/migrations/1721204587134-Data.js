@@ -1,5 +1,5 @@
-module.exports = class Data1721044980169 {
-    name = 'Data1721044980169'
+module.exports = class Data1721204587134 {
+    name = 'Data1721204587134'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -51,6 +51,10 @@ module.exports = class Data1721044980169 {
         await db.query(`CREATE UNIQUE INDEX "IDX_20df08516f386a2d403fe66150" ON "identity_sub" ("account_id") `)
         await db.query(`CREATE TABLE "identity" ("id" character varying NOT NULL, "judgement" character varying(10) NOT NULL, "additional" jsonb, "display" text, "legal" text, "web" text, "riot" text, "email" text, "pgp_fingerprint" text, "image" text, "twitter" text, "is_killed" boolean NOT NULL, "account_id" character varying, CONSTRAINT "REL_bafa9e6c71c3f69cef6602a809" UNIQUE ("account_id"), CONSTRAINT "PK_ff16a44186b286d5e626178f726" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_bafa9e6c71c3f69cef6602a809" ON "identity" ("account_id") `)
+        await db.query(`CREATE TABLE "crowdloan" ("id" character varying NOT NULL, "status" character varying(9) NOT NULL, "cap" numeric NOT NULL, "first_period" integer NOT NULL, "last_period" integer NOT NULL, "end_block" integer NOT NULL, "start_block" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "manager_id" character varying, CONSTRAINT "PK_19a05e349701577c8c1679ae84d" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_0f92f8d9f89b11c7fd1d1b05ac" ON "crowdloan" ("manager_id") `)
+        await db.query(`CREATE INDEX "IDX_4331ae51870805bcd175e12dbe" ON "crowdloan" ("start_block") `)
+        await db.query(`CREATE INDEX "IDX_63b3d1888a0b6d317454165f6c" ON "crowdloan" ("extrinsic_hash") `)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_dd3c998c07dabdafe827060b67f" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -72,6 +76,7 @@ module.exports = class Data1721044980169 {
         await db.query(`ALTER TABLE "identity_sub" ADD CONSTRAINT "FK_b3110339d38dddff279f6f77127" FOREIGN KEY ("super_id") REFERENCES "identity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "identity_sub" ADD CONSTRAINT "FK_20df08516f386a2d403fe66150a" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "identity" ADD CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "crowdloan" ADD CONSTRAINT "FK_0f92f8d9f89b11c7fd1d1b05ac8" FOREIGN KEY ("manager_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     }
 
     async down(db) {
@@ -124,6 +129,10 @@ module.exports = class Data1721044980169 {
         await db.query(`DROP INDEX "public"."IDX_20df08516f386a2d403fe66150"`)
         await db.query(`DROP TABLE "identity"`)
         await db.query(`DROP INDEX "public"."IDX_bafa9e6c71c3f69cef6602a809"`)
+        await db.query(`DROP TABLE "crowdloan"`)
+        await db.query(`DROP INDEX "public"."IDX_0f92f8d9f89b11c7fd1d1b05ac"`)
+        await db.query(`DROP INDEX "public"."IDX_4331ae51870805bcd175e12dbe"`)
+        await db.query(`DROP INDEX "public"."IDX_63b3d1888a0b6d317454165f6c"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_dd3c998c07dabdafe827060b67f"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
@@ -145,5 +154,6 @@ module.exports = class Data1721044980169 {
         await db.query(`ALTER TABLE "identity_sub" DROP CONSTRAINT "FK_b3110339d38dddff279f6f77127"`)
         await db.query(`ALTER TABLE "identity_sub" DROP CONSTRAINT "FK_20df08516f386a2d403fe66150a"`)
         await db.query(`ALTER TABLE "identity" DROP CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095"`)
+        await db.query(`ALTER TABLE "crowdloan" DROP CONSTRAINT "FK_0f92f8d9f89b11c7fd1d1b05ac8"`)
     }
 }

@@ -21,6 +21,7 @@ import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/u
 import { BondExtraCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond_extra';
 import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setPayee';
 import { SetControllerCallPalletDecoder } from './decoders/calls/staking/setController';
+import { CreateCallPalletDecoder } from './decoders/calls/crowdloan/create';
 
 export const indexer = new Indexer({
   config: {
@@ -69,6 +70,7 @@ export const indexer = new Indexer({
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
     },
   },
 });

@@ -19,6 +19,7 @@ import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond'
 import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bondExtra';
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 import { SetControllerCallPalletHandler } from '@/indexer/pallets/staking/calls/setController';
+import { CreateCallPalletHandler } from './pallets/crowdloan/calls/create';
 
 export const registry = {
   events: {
@@ -47,6 +48,7 @@ export const registry = {
     'Staking.bond_extra': BondExtraCallPalletHandler,
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
+    'Crowdloan.create': CreateCallPalletHandler,
   },
 };
 

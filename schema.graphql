@@ -171,3 +171,23 @@ type Staker @entity {
   slashes: [StakingSlash!] @derivedFrom(field: "staker")
   bonds: [StakingBond!] @derivedFrom(field: "staker")
 }
+
+enum CrowdloanStatus {
+  Active
+  Dissolved
+}
+type Crowdloan @entity {
+  id: ID! # para Id
+  manager: Account!
+
+  status: CrowdloanStatus!
+
+  cap: BigInt!
+  firstPeriod: Int!
+  lastPeriod: Int!
+  endBlock: Int!
+  startBlock: Int! @index
+
+  timestamp: DateTime!
+  extrinsicHash: String @index
+}
