@@ -20,8 +20,8 @@ import { BondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bon
 import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/unbond';
 import { BondExtraCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond_extra';
 import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setPayee';
-import { SetControllerCallPalletDecoder } from './decoders/calls/staking/setController';
-import { CreateCallPalletDecoder } from './decoders/calls/crowdloan/create';
+import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
+import { CreateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/crowdloan/create';
 
 export const indexer = new Indexer({
   config: {

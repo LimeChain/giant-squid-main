@@ -21,6 +21,7 @@ import { SetPayeeCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staki
 import { BondExtraCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond_extra';
 import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/unbond';
 import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
+import { CreateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/crowdloan/create';
 
 export const indexer = new Indexer({
   config: {
@@ -69,6 +70,7 @@ export const indexer = new Indexer({
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
     },
   },
 });
