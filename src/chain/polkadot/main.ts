@@ -22,6 +22,7 @@ import { BondExtraCallPalletDecoder } from '@/chain/polkadot/decoders/calls/stak
 import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/unbond';
 import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
 import { CreateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/crowdloan/create';
+import { DissolvedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/dissolved';
 
 export const indexer = new Indexer({
   config: {
@@ -51,6 +52,7 @@ export const indexer = new Indexer({
       }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),

@@ -374,3 +374,5 @@ export interface MultiAddress_Raw {
     __kind: 'Raw'
     value: Bytes
 }
+
+export const Id = sts.number()
