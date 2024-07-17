@@ -20,6 +20,7 @@ import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bond
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 import { SetControllerCallPalletHandler } from '@/indexer/pallets/staking/calls/setController';
 import { CreateCallPalletHandler } from './pallets/crowdloan/calls/create';
+import { DissolvedEventPalletHandler } from './pallets/crowdloan/events/dissolved';
 
 export const registry = {
   events: {
@@ -33,6 +34,7 @@ export const registry = {
     'Staking.Slashed': SlashEventPalletHandler,
     'Identity.SubIdentityRemoved': SubIdentityRemovedEventPalletHandler,
     'Identity.SubIdentityRevoked': SubIdentityRevokedEventPalletHandler,
+    'Crowdloan.Dissolved': DissolvedEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,

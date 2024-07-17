@@ -23,5 +23,6 @@ export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/consta
 export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
 export { ISetControllerCallPalletDecoder } from '@/indexer/pallets/staking/calls/setController';
 export { ICreateCallPalletDecoder } from '@/indexer/pallets/crowdloan/calls/create';
+export { IDissolvedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/dissolved';
 
 export { Indexer, setupPallet } from '@/indexer/main';

@@ -7,7 +7,12 @@ export class CreateCallPalletDecoder implements ICreateCallPalletDecoder {
     const { create } = calls.crowdloan;
 
     if (create.v9110.is(call)) {
-      return create.v9110.decode(call);
+      const fund = create.v9110.decode(call);
+
+      return {
+        paraId: fund.index,
+        ...fund,
+      };
     }
 
     throw new UnknownVersionError(create);

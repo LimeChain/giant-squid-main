@@ -24,3 +24,5 @@ export interface MultiSigner_Sr25519 {
     __kind: 'Sr25519'
     value: Bytes
 }
+
+export const ParaId = sts.number()

@@ -14,7 +14,8 @@
       "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "rename_sub"]
     },
     "Crowdloan": {
-        "calls": ["create"]
+      "events": ["Dissolved"],
+      "calls": ["create"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

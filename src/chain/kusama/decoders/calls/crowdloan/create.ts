@@ -1,16 +1,20 @@
-import { calls } from '@/chain/kusama/types'
+import { calls } from '@/chain/kusama/types';
 import { Call, ICreateCallPalletDecoder } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
 
 export class CreateCallPalletDecoder implements ICreateCallPalletDecoder {
+  decode(call: Call) {
+    const { create } = calls.crowdloan;
 
-    decode(call: Call) {
-        const { create } = calls.crowdloan;
+    if (create.v9010.is(call)) {
+      const fund = create.v9010.decode(call);
 
-        if (create.v9010.is(call)) {
-            return create.v9010.decode(call);
-        }
-
-        throw new UnknownVersionError(create);
+      return {
+        paraId: fund.index,
+        ...fund,
+      };
     }
+
+    throw new UnknownVersionError(create);
+  }
 }
