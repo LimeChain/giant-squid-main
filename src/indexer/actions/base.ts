@@ -7,6 +7,10 @@ import { BlockHeader, Extrinsic, Fields } from '@/indexer/processor';
 export type ActionContext = DataHandlerContext<StoreWithCache, Fields>;
 
 export abstract class Action<T = unknown> {
+  protected composeId(...parts: any[]) {
+    return parts.join('_');
+  }
+
   static async process(ctx: ActionContext, actions: Action[]) {
     for (const action of actions) {
       const actionCtx = {

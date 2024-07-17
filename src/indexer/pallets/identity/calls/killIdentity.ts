@@ -19,6 +19,7 @@ export class KillIdentityCallPalletHandler extends CallPalletHandler<IKillIdenti
     if (!call.success) return;
 
     const origin = getOriginAccountId(call.origin);
+
     if (!origin) return;
 
     const identityId = this.encodeAddress(origin);

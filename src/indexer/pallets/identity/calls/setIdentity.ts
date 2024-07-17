@@ -18,12 +18,11 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
-    const data = this.decoder.decode(call);
-
     const origin = getOriginAccountId(call.origin);
 
     if (!origin) return;
 
+    const data = this.decoder.decode(call);
     const identityId = this.encodeAddress(origin);
     const account = ctx.store.defer(Account, identityId);
     const identity = ctx.store.defer(Identity, identityId);

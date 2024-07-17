@@ -1,5 +1,5 @@
-import { PalletSetups } from './registry';
-import { Call, Event, ProcessorConfig } from './processor';
+import { PalletSetups } from '@/indexer/registry';
+import { BlockHeader, Call, Event, ProcessorConfig } from '@/indexer/processor';
 
 export type IBasePalletSetup = {
   decoder: {
@@ -13,6 +13,14 @@ export interface IEventPalletDecoder<T> {
 
 export interface ICallPalletDecoder<T> {
   decode(call: Call): T;
+}
+
+export interface IConstantPalletGetter<T> {
+  get(blockHeader: BlockHeader): T;
+}
+
+export interface IStoragePalletLoader<T> {
+  load(blockHeader: BlockHeader, ...params: unknown[]): Promise<T>;
 }
 
 export type WrappedData = {
@@ -40,3 +48,5 @@ export type IndexerParams = {
   config: ProcessorConfig;
   pallets: PalletSetups;
 };
+
+export type PayeeType = 'Staked' | 'Stash' | 'None' | 'Controller' | 'Account';

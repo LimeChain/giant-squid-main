@@ -1,8 +1,16 @@
-export { Event, Call } from '@/indexer/processor';
+export { Event, Call, Block, BlockHeader, ProcessorContext } from '@/indexer/processor';
+export { ISlashEventPalletDecoder } from '@/indexer/pallets/staking/events/slash';
 export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
+export { IBondCallPalletDecoder } from '@/indexer/pallets/staking/calls/bond';
+export { IRebondCallPalletDecoder } from '@/indexer/pallets/staking/calls/rebond';
+export { IUnbondCallPalletDecoder } from '@/indexer/pallets/staking/calls/unbond';
+export { IBondExtraCallPalletDecoder } from '@/indexer/pallets/staking/calls/bondExtra';
+export { IBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/bonded';
 export { ISetSubsCallPalletDecoder } from '@/indexer/pallets/identity/calls/setSubs';
+export { IUnBondedEventPalletDecoder } from '@/indexer/pallets/staking/events/unbonded';
 export { ITransferEventPalletDecoder } from '@/indexer/pallets/balances/events/transfer';
 export { IRenameSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/renameSub';
+export { IWithdrawnEventPalletDecoder } from '@/indexer/pallets/staking/events/withdrawn';
 export { ISetIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/setIdentity';
 export { IKillIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/killIdentity';
 export { IClearIdentityCallPalletDecoder } from '@/indexer/pallets/identity/calls/clearIdentity';
@@ -10,5 +18,9 @@ export { IProvideJudgementCallPalletDecoder } from '@/indexer/pallets/identity/c
 export { ISubIdentityRemovedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRemoved';
 export { ISubIdentityRevokedEventPalletDecoder } from '@/indexer/pallets/identity/events/subIdentityRevoked';
 export { IPayoutStakersCallPalletDecoder, IRewardEventPalletDecoder } from '@/indexer/pallets/staking/events/reward';
+export { ISetPayeeCallPalletDecoder } from '@/indexer/pallets/staking/calls/setPayee';
+export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
+export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
+export { ISetControllerCallPalletDecoder } from '@/indexer/pallets/staking/calls/setController';
 
 export { Indexer, setupPallet } from '@/indexer/main';

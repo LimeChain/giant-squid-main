@@ -19,6 +19,7 @@ export class ClearIdentityCallPalletHandler extends CallPalletHandler<IClearIden
     if (!call.success) return;
 
     const origin = getOriginAccountId(call.origin);
+
     if (!origin) return;
 
     const identityId = this.encodeAddress(origin);

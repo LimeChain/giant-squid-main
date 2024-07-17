@@ -1,8 +1,8 @@
-import { ensureEnvVariable } from '../../utils';
-import { Indexer, setupPallet } from '../../indexer';
-import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
-import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
+import { ensureEnvVariable } from '@/utils';
+import { Indexer, setupPallet } from '@/indexer';
+import { TransferEventPalletDecoder } from '@/chain/ternoa/decoders/events/balances/transfer';
+import { StakingRewardEventPalletDecoder } from '@/chain/ternoa/decoders/events/staking/reward';
+import { PayoutStakersCallPalletDecoder } from '@/chain/ternoa/decoders/calls/staking/payoutStakers';
 
 export const indexer = new Indexer({
   config: {

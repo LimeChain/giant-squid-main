@@ -1,8 +1,7 @@
 // @ts-nocheck
 import { calls } from '@/chain/<name>/types';
-import { Call } from '@/indexer';
+import { Call, IPayoutStakersCallPalletDecoder } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
-import { IPayoutStakersCallPalletDecoder } from '@/indexer';
 
 export class PayoutStakersCallPalletDecoder implements IPayoutStakersCallPalletDecoder {
   decode(event: Call) {
