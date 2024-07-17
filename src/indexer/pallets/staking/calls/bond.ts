@@ -9,12 +9,12 @@ import { AddControllerAction } from '@/indexer/actions/staking/controller';
 
 export interface IBondCallPalletDecoder extends ICallPalletDecoder<{ amount: bigint } & ISetPayeeCallPalletData> {}
 
-interface IRebondCallPalletSetup extends IBasePalletSetup {
+interface IBondCallPalletSetup extends IBasePalletSetup {
   decoder: IBondCallPalletDecoder;
 }
 
-export class BondCallPalletHandler extends BasePayeeCallPallet<IRebondCallPalletSetup> {
-  constructor(setup: IRebondCallPalletSetup, options: IHandlerOptions) {
+export class BondCallPalletHandler extends BasePayeeCallPallet<IBondCallPalletSetup> {
+  constructor(setup: IBondCallPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -22,11 +22,11 @@ export class BondCallPalletHandler extends BasePayeeCallPallet<IRebondCallPallet
     if (call.success === false) return;
 
     const origin = getOriginAccountId(call.origin);
-    
+
     if (!origin) return;
-    
+
     const stashId = this.encodeAddress(origin);
-    
+
     const data = this.decoder.decode(call);
     const stash = ctx.store.defer(Account, stashId);
     const staker = ctx.store.defer(Staker, stashId);
