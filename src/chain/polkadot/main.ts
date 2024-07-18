@@ -23,6 +23,10 @@ import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking
 import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
 import { CreateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/crowdloan/create';
 import { DissolvedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/dissolved';
+import { ReservedEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/reserved';
+import { RegisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/registered';
+import { DeregisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/deregistered';
+import { ContributedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/contributed';
 
 export const indexer = new Indexer({
   config: {
@@ -53,6 +57,10 @@ export const indexer = new Indexer({
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
+      'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
+      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),

@@ -23,10 +23,10 @@ import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking
 import { SetControllerCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setController';
 import { CreateCallPalletDecoder } from '@/chain/kusama/decoders/calls/crowdloan/create';
 import { DissolvedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/dissolved';
-import { ReservedEventPalletDecoder } from './decoders/events/registrar/reserved';
-import { RegisteredEventPalletDecoder } from './decoders/events/registrar/registered';
-import { DeregisteredEventPalletDecoder } from './decoders/events/registrar/deregistered';
-import { ContributedEventPalletDecoder } from './decoders/events/crowdloan/contributed';
+import { ReservedEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/reserved';
+import { RegisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/registered';
+import { DeregisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/deregistered';
+import { ContributedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/contributed';
 
 export const indexer = new Indexer({
   config: {

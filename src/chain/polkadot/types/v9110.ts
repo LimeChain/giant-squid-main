@@ -312,8 +312,6 @@ export const RewardDestination: sts.Type<RewardDestination> = sts.closedEnum(() 
     }
 })
 
-export const AccountId32 = sts.bytes()
-
 export type RewardDestination = RewardDestination_Account | RewardDestination_Controller | RewardDestination_None | RewardDestination_Staked | RewardDestination_Stash
 
 export interface RewardDestination_Account {
@@ -374,5 +372,7 @@ export interface MultiAddress_Raw {
     __kind: 'Raw'
     value: Bytes
 }
+
+export const AccountId32 = sts.bytes()
 
 export const Id = sts.number()
