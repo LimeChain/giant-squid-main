@@ -1,34 +1,31 @@
-import { Account, BondingType, Crowdloan, CrowdloanStatus, Staker, StakingBond } from '@/model';
+import { Crowdloan, CrowdloanStatus, Parachain } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface CreateCrowdloanData {
-  paraId: string;
+  id: string;
   cap: bigint;
   end: number;
   firstPeriod: number;
   lastPeriod: number;
-  manager: () => Promise<Account>;
+  parachain: () => Promise<Parachain>;
 }
 
 export class CreateCrowdloanAction extends Action<CreateCrowdloanData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    const manager = await this.data.manager();
+    const parachain = await this.data.parachain();
 
     const crowdloan = new Crowdloan({
-      id: this.data.paraId,
-      manager: manager,
-      cap: this.data.cap,
+      id: this.data.id,
+      parachain,
       status: CrowdloanStatus.Active,
-      firstPeriod: this.data.firstPeriod,
-      lastPeriod: this.data.lastPeriod,
+      raised: 0n,
+      cap: this.data.cap,
+      leasePeriodStart: this.data.firstPeriod,
+      leasePeriodEnd: this.data.lastPeriod,
       endBlock: this.data.end,
       startBlock: this.block.height,
-      timestamp: new Date(this.block.timestamp ?? 0),
-      extrinsicHash: this.extrinsic?.hash,
     });
 
-    // We use insert ot update because one crowdloan can be recreated multiple times
-    // eg. create/dissolve/create
-    await ctx.store.upsert(crowdloan);
+    await ctx.store.insert(crowdloan);
   }
 }

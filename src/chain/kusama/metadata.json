@@ -16,6 +16,9 @@
     "Crowdloan": {
       "events": ["Dissolved"],
       "calls": ["create"]
+    },
+    "Registrar": {
+      "events": ["Reserved", "Registered", "Deregistered"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

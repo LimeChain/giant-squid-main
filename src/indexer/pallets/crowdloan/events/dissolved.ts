@@ -1,8 +1,9 @@
-import { Crowdloan } from '@/model';
+import { Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { DissolveCrowdloanAction } from '@/indexer/actions/crowdloan.ts/dissolve';
+import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan.ts/parachain';
 
 export interface IDissolvedEventPalletDecoder extends IEventPalletDecoder<{ paraId: number }> {}
 
@@ -11,7 +12,6 @@ interface IDissolvedEventPalletSetup extends IBasePalletSetup {
 }
 
 export class DissolvedEventPalletHandler extends EventPalletHandler<IDissolvedEventPalletSetup> {
-  private counter = 0;
   constructor(setup: IDissolvedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
@@ -19,27 +19,29 @@ export class DissolvedEventPalletHandler extends EventPalletHandler<IDissolvedEv
   handle({ ctx, block, queue, item: event }: IEventHandlerParams) {
     const dissolved = this.decoder.decode(event);
 
-    const fund = ctx.store.defer(Crowdloan, dissolved.paraId.toString());
-
-    this.counter++;
-
-    console.log('total dissolved', this.counter);
+    const parachainDef = ctx.store.defer(Parachain, { id: dissolved.paraId.toString(), relations: { crowdloans: true } });
 
     queue.push(
       new LazyAction(block.header, event.extrinsic, async () => {
         const queue: Action[] = [];
 
-        const crowdloan = await fund.get();
+        const parachain = await parachainDef.getOrFail();
 
-        // Sometimes a dissolved event is emitted on a registered only crowdloans.
-        // That means, the crowdloan has never been created, so we should ignore it.
-        if (!crowdloan) return [];
+        if (parachain.crowdloans.length === 0) {
+          return [];
+        }
 
-        // TODO: Refund all contributors
+        const crowdloan = parachain.crowdloans[parachain.crowdloans.length - 1];
+
+        // TODO: refund contribution if parachain has crowdloan??
 
         queue.push(
           new DissolveCrowdloanAction(block.header, event.extrinsic, {
             crowdloan: () => Promise.resolve(crowdloan),
+          }),
+          new ChangeParachainStatusAction(block.header, event.extrinsic, {
+            parachain: () => Promise.resolve(parachain),
+            status: ParachainStatus.Dissolved,
           })
         );
 

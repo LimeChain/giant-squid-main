@@ -23,6 +23,9 @@ import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking
 import { SetControllerCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setController';
 import { CreateCallPalletDecoder } from '@/chain/kusama/decoders/calls/crowdloan/create';
 import { DissolvedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/dissolved';
+import { ReservedEventPalletDecoder } from './decoders/events/registrar/reserved';
+import { RegisteredEventPalletDecoder } from './decoders/events/registrar/registered';
+import { DeregisteredEventPalletDecoder } from './decoders/events/registrar/deregistered';
 
 export const indexer = new Indexer({
   config: {
@@ -31,47 +34,50 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
-      'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
-      'Staking.Unbonded': setupPallet({
-        decoder: new StakingUnBondedEventPalletDecoder(),
-        constants: {
-          bondingDuration: new BondingDurationConstantGetter(),
-        },
-        storage: {
-          currentEra: new CurrentEraStorageLoader(),
-        },
-      }),
-      'Staking.Withdrawn': setupPallet({
-        decoder: new StakingWithdrawnEventPalletDecoder(),
-        storage: {
-          currentEra: new CurrentEraStorageLoader(),
-        },
-      }),
-      'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
-      'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+        'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+        'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+        'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+        'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
+        'Staking.Unbonded': setupPallet({
+          decoder: new StakingUnBondedEventPalletDecoder(),
+          constants: {
+            bondingDuration: new BondingDurationConstantGetter(),
+          },
+          storage: {
+            currentEra: new CurrentEraStorageLoader(),
+          },
+        }),
+        'Staking.Withdrawn': setupPallet({
+          decoder: new StakingWithdrawnEventPalletDecoder(),
+          storage: {
+            currentEra: new CurrentEraStorageLoader(),
+          },
+        }),
+        'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+        'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
+      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
-      'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
-      'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
-      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
-      'Staking.unbond': setupPallet({
-        decoder: new UnbondCallPalletDecoder(),
-        storage: { ledger: new LedgerStorageLoader(), currentEra: new CurrentEraStorageLoader() },
-        constants: {
-          bondingDuration: new BondingDurationConstantGetter(),
-        },
-      }),
-      'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
-      'Staking.set_controller': setupPallet({ decoder: new SetControllerCallPalletDecoder() }),
-      'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
-      'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
-      'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
-      'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
-      'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+        'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
+        'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
+        'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+        'Staking.unbond': setupPallet({
+          decoder: new UnbondCallPalletDecoder(),
+          storage: { ledger: new LedgerStorageLoader(), currentEra: new CurrentEraStorageLoader() },
+          constants: {
+            bondingDuration: new BondingDurationConstantGetter(),
+          },
+        }),
+        'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+        'Staking.set_controller': setupPallet({ decoder: new SetControllerCallPalletDecoder() }),
+        'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
+        'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
+        'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
+        'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
+        'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
     },
   },

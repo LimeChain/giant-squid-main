@@ -172,22 +172,58 @@ type Staker @entity {
   bonds: [StakingBond!] @derivedFrom(field: "staker")
 }
 
+enum ParachainStatus {
+  Reserved
+  Registered
+  Deregistered
+  Parachain
+  Parathread
+  Dissolved
+}
+
+type Parachain @entity {
+  id: ID! # para id
+  manager: Account!
+
+  status: ParachainStatus!
+
+  crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
+  #   timeline: [ParachainTimeline!] @derivedFrom(field: "parachain")
+}
+
+# enum ParachainTimelineAction {
+#   Reserve
+#   Register
+#   Deregister
+#   CrowdloanCreate
+#   CrowdloanDissolve
+# }
+# type ParachainTimeline @entity {
+#   id: ID!
+#   parachain: Parachain!
+#   action: ParachainTimelineAction!
+
+#   extrinsicHash: String @index
+#   blockNumber: Int! @index
+#   timestamp: DateTime! @index
+# }
+
 enum CrowdloanStatus {
   Active
   Dissolved
 }
+
 type Crowdloan @entity {
-  id: ID! # para Id
-  manager: Account!
+  id: ID!
+  parachain: Parachain!
 
   status: CrowdloanStatus!
+  raised: BigInt!
+  #   contributions: [CrowdloanContributions!] @derivedFrom(field: "crowdloan")
 
   cap: BigInt!
-  firstPeriod: Int!
-  lastPeriod: Int!
+  leasePeriodStart: Int!
+  leasePeriodEnd: Int!
   endBlock: Int!
   startBlock: Int! @index
-
-  timestamp: DateTime!
-  extrinsicHash: String @index
 }

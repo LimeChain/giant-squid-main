@@ -1,6 +1,6 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
 import * as marshal from "./marshal"
-import {Account} from "./account.model"
+import {Parachain} from "./parachain.model"
 import {CrowdloanStatus} from "./_crowdloanStatus"
 
 @Entity_()
@@ -13,20 +13,23 @@ export class Crowdloan {
     id!: string
 
     @Index_()
-    @ManyToOne_(() => Account, {nullable: true})
-    manager!: Account
+    @ManyToOne_(() => Parachain, {nullable: true})
+    parachain!: Parachain
 
     @Column_("varchar", {length: 9, nullable: false})
     status!: CrowdloanStatus
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    raised!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     cap!: bigint
 
     @Column_("int4", {nullable: false})
-    firstPeriod!: number
+    leasePeriodStart!: number
 
     @Column_("int4", {nullable: false})
-    lastPeriod!: number
+    leasePeriodEnd!: number
 
     @Column_("int4", {nullable: false})
     endBlock!: number
@@ -34,11 +37,4 @@ export class Crowdloan {
     @Index_()
     @Column_("int4", {nullable: false})
     startBlock!: number
-
-    @Column_("timestamp with time zone", {nullable: false})
-    timestamp!: Date
-
-    @Index_()
-    @Column_("text", {nullable: true})
-    extrinsicHash!: string | undefined | null
 }
