@@ -208,6 +208,16 @@ type Parachain @entity {
 #   timestamp: DateTime! @index
 # }
 
+type CrowdloanContribution @entity {
+  id: ID!
+  crowdloan: Crowdloan!
+  account: Account!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
 enum CrowdloanStatus {
   Active
   Dissolved
@@ -219,7 +229,7 @@ type Crowdloan @entity {
 
   status: CrowdloanStatus!
   raised: BigInt!
-  #   contributions: [CrowdloanContributions!] @derivedFrom(field: "crowdloan")
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "crowdloan")
 
   cap: BigInt!
   leasePeriodStart: Int!

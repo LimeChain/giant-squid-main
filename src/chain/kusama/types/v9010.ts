@@ -25,6 +25,8 @@ export interface MultiSigner_Sr25519 {
     value: Bytes
 }
 
+export const Balance = sts.bigint()
+
 export const AccountId = sts.bytes()
 
 export const ParaId = sts.number()

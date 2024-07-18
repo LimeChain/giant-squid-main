@@ -24,6 +24,7 @@ import { DissolvedEventPalletHandler } from './pallets/crowdloan/events/dissolve
 import { ReservedParachainEventPalletHandler } from './pallets/crowdloan/events/reserved';
 import { RegisteredParachainEventPalletHandler } from './pallets/crowdloan/events/registered';
 import { DeregisteredParachainEventPalletHandler } from './pallets/crowdloan/events/deregistered';
+import { ContributedEventPalletHandler } from './pallets/crowdloan/events/contributed';
 
 export const registry = {
   events: {
@@ -38,6 +39,7 @@ export const registry = {
     'Identity.SubIdentityRemoved': SubIdentityRemovedEventPalletHandler,
     'Identity.SubIdentityRevoked': SubIdentityRevokedEventPalletHandler,
     'Crowdloan.Dissolved': DissolvedEventPalletHandler,
+    'Crowdloan.Contributed': ContributedEventPalletHandler,
     'Registrar.Reserved': ReservedParachainEventPalletHandler,
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,

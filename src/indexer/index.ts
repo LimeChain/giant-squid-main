@@ -27,5 +27,6 @@ export { IDissolvedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events
 export { IReservedParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/reserved';
 export { IRegisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/registered';
 export { IDeregisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/deregistered';
+export { IContributedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/contributed';
 
 export { Indexer, setupPallet } from '@/indexer/main';

@@ -1,5 +1,5 @@
-module.exports = class Data1721305937122 {
-    name = 'Data1721305937122'
+module.exports = class Data1721310699795 {
+    name = 'Data1721310699795'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -56,6 +56,11 @@ module.exports = class Data1721305937122 {
         await db.query(`CREATE INDEX "IDX_4331ae51870805bcd175e12dbe" ON "crowdloan" ("start_block") `)
         await db.query(`CREATE TABLE "parachain" ("id" character varying NOT NULL, "status" character varying(12) NOT NULL, "manager_id" character varying, CONSTRAINT "PK_0f6ac85862a6ca7c8873f699b61" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_f9829c2790e51743a202d5e5fc" ON "parachain" ("manager_id") `)
+        await db.query(`CREATE TABLE "crowdloan_contribution" ("id" character varying NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "crowdloan_id" character varying, "account_id" character varying, CONSTRAINT "PK_963d941c314ce6c7537daec88c4" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_18f58f8e14ac8d04405fa2fedd" ON "crowdloan_contribution" ("crowdloan_id") `)
+        await db.query(`CREATE INDEX "IDX_a1e38c9d8565acbac0c3811010" ON "crowdloan_contribution" ("account_id") `)
+        await db.query(`CREATE INDEX "IDX_b827bec8537bc13543d1be80e2" ON "crowdloan_contribution" ("block_number") `)
+        await db.query(`CREATE INDEX "IDX_ab33a9b9605b3a9e93126df641" ON "crowdloan_contribution" ("extrinsic_hash") `)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_dd3c998c07dabdafe827060b67f" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -79,6 +84,8 @@ module.exports = class Data1721305937122 {
         await db.query(`ALTER TABLE "identity" ADD CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "crowdloan" ADD CONSTRAINT "FK_005883fcd4519fa5ae88706b3a5" FOREIGN KEY ("parachain_id") REFERENCES "parachain"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "parachain" ADD CONSTRAINT "FK_f9829c2790e51743a202d5e5fc3" FOREIGN KEY ("manager_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "crowdloan_contribution" ADD CONSTRAINT "FK_18f58f8e14ac8d04405fa2fedd0" FOREIGN KEY ("crowdloan_id") REFERENCES "crowdloan"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "crowdloan_contribution" ADD CONSTRAINT "FK_a1e38c9d8565acbac0c38110100" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     }
 
     async down(db) {
@@ -136,6 +143,11 @@ module.exports = class Data1721305937122 {
         await db.query(`DROP INDEX "public"."IDX_4331ae51870805bcd175e12dbe"`)
         await db.query(`DROP TABLE "parachain"`)
         await db.query(`DROP INDEX "public"."IDX_f9829c2790e51743a202d5e5fc"`)
+        await db.query(`DROP TABLE "crowdloan_contribution"`)
+        await db.query(`DROP INDEX "public"."IDX_18f58f8e14ac8d04405fa2fedd"`)
+        await db.query(`DROP INDEX "public"."IDX_a1e38c9d8565acbac0c3811010"`)
+        await db.query(`DROP INDEX "public"."IDX_b827bec8537bc13543d1be80e2"`)
+        await db.query(`DROP INDEX "public"."IDX_ab33a9b9605b3a9e93126df641"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_dd3c998c07dabdafe827060b67f"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
@@ -159,5 +171,7 @@ module.exports = class Data1721305937122 {
         await db.query(`ALTER TABLE "identity" DROP CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095"`)
         await db.query(`ALTER TABLE "crowdloan" DROP CONSTRAINT "FK_005883fcd4519fa5ae88706b3a5"`)
         await db.query(`ALTER TABLE "parachain" DROP CONSTRAINT "FK_f9829c2790e51743a202d5e5fc3"`)
+        await db.query(`ALTER TABLE "crowdloan_contribution" DROP CONSTRAINT "FK_18f58f8e14ac8d04405fa2fedd0"`)
+        await db.query(`ALTER TABLE "crowdloan_contribution" DROP CONSTRAINT "FK_a1e38c9d8565acbac0c38110100"`)
     }
 }

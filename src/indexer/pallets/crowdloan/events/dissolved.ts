@@ -31,13 +31,11 @@ export class DissolvedEventPalletHandler extends EventPalletHandler<IDissolvedEv
           return [];
         }
 
-        const crowdloan = parachain.crowdloans[parachain.crowdloans.length - 1];
-
-        // TODO: refund contribution if parachain has crowdloan??
+        const latestCrowdloan = parachain.crowdloans.sort((a, b) => b.startBlock - a.startBlock)[0];
 
         queue.push(
           new DissolveCrowdloanAction(block.header, event.extrinsic, {
-            crowdloan: () => Promise.resolve(crowdloan),
+            crowdloan: () => Promise.resolve(latestCrowdloan),
           }),
           new ChangeParachainStatusAction(block.header, event.extrinsic, {
             parachain: () => Promise.resolve(parachain),
