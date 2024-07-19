@@ -10,18 +10,21 @@ deploy:
   processor:
     env:
       CHAIN: karura
-    cmd: ["node", "lib/main"]
+    CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_KARURA_HTTP }}
+    cmd:
+      - sqd
+      - process:prod
   api:
     cmd:
-      [
-        "npx",
-        "squid-graphql-server",
-        "--dumb-cache",
-        "in-memory",
-        "--dumb-cache-ttl",
-        "1000",
-        "--dumb-cache-size",
-        "100",
-        "--dumb-cache-max-age",
-        "1000",
-      ]
+      - sqd
+      - serve:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 30G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium
