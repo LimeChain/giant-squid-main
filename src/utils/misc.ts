@@ -4,12 +4,12 @@ import { assertNotNull, decodeHex } from '@subsquid/substrate-processor';
 import { Item, orderItems } from '@/utils/orderItems';
 import { Block } from '@/indexer/processor';
 
-export function decodeAddress(address: string, chain: string) {
-  return ss58.codec(chain).decode(address);
+export function decodeAddress(address: string, networkOrPrefix: string | number) {
+  return ss58.codec(networkOrPrefix).decode(address);
 }
 
-export function encodeAddress(address: string | Uint8Array, chain: string) {
-  return ss58.codec(chain).encode(address);
+export function encodeAddress(address: string | Uint8Array, networkOrPrefix: string | number) {
+  return ss58.codec(networkOrPrefix).encode(address);
 }
 
 export function processItem(blocks: Block[], fn: (block: Block, item: Item) => void) {

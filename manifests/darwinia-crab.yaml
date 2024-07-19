@@ -9,7 +9,7 @@ deploy:
     postgres:
   processor:
     env:
-      CHAIN: crab
+      CHAIN: darwinia-crab
       CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_DARWINIA_CRAB_HTTP }}
     cmd:
       - sqd
