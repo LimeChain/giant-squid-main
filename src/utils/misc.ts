@@ -5,10 +5,18 @@ import { Item, orderItems } from '@/utils/orderItems';
 import { Block } from '@/indexer/processor';
 
 export function decodeAddress(address: string, networkOrPrefix: string | number) {
+  if (isHex(address)) {
+    return address;
+  }
+
   return ss58.codec(networkOrPrefix).decode(address);
 }
 
 export function encodeAddress(address: string | Uint8Array, networkOrPrefix: string | number) {
+  if (isHex(address)) {
+    return address;
+  }
+
   return ss58.codec(networkOrPrefix).encode(address);
 }
 
