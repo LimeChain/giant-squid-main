@@ -10,7 +10,7 @@ deploy:
   processor:
     env:
       CHAIN: crab
-      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_CRAB_DARWINIA_HTTP }}
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_DARWINIA_CRAB_HTTP }}
     cmd:
       - sqd
       - process:prod

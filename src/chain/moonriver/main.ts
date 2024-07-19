@@ -6,6 +6,7 @@ export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    gateway: 'https://v2.archive.subsquid.io/network/moonriver-substrate',
   },
   pallets: {
     events: {

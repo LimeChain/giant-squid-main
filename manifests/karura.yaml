@@ -10,7 +10,7 @@ deploy:
   processor:
     env:
       CHAIN: karura
-    CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_KARURA_HTTP }}
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_KARURA_HTTP }}
     cmd:
       - sqd
       - process:prod
