@@ -1,7 +1,7 @@
 {
   "outDir": "./types",
   "specVersions": "https://v2.archive.subsquid.io/metadata/polkadex",
-  "typesBundle": "./type-bundles/polkadex.json",
+  "typesBundle": "../../../assets/type-bundles/polkadex.json",
   "pallets": {
     "Balances": {
       "events": ["Transfer"]

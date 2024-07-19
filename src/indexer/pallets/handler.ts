@@ -1,7 +1,7 @@
-import * as ss58 from '@subsquid/ss58';
-import { Action } from '../actions/base';
-import { IBasePalletSetup } from '../types';
-import { Block, Call, ProcessorContext, Event } from '../processor';
+import * as Utils from '@/utils/misc';
+import { Action } from '@/indexer/actions/base';
+import { IBasePalletSetup } from '@/indexer/types';
+import { Block, Call, ProcessorContext, Event } from '@/indexer/processor';
 
 export interface IHandlerOptions {
   chain: string;
@@ -31,7 +31,11 @@ abstract class BasePalletHandler<ISetup extends IBasePalletSetup> {
   }
 
   protected encodeAddress(address: string | Uint8Array) {
-    return ss58.codec(this.options.chain).encode(address);
+    return Utils.encodeAddress(address, this.options.chain);
+  }
+
+  protected decodeAddress(address: string) {
+    return Utils.decodeAddress(address, this.options.chain);
   }
 
   abstract handle(params: IEventHandlerParams | ICallHandlerParams): void;

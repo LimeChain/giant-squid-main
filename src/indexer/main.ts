@@ -1,8 +1,8 @@
-import { processItem } from '../utils';
-import { Action } from './actions/base';
-import { PalletMapper } from './mapper';
-import { IndexerParams } from './types';
-import { Processor, ProcessorContext } from './processor';
+import { processItem } from '@/utils';
+import { Action } from '@/indexer/actions/base';
+import { PalletMapper } from '@/indexer/mapper';
+import { IndexerParams } from '@/indexer/types';
+import { Processor, ProcessorContext } from '@/indexer/processor';
 import { TypeormDatabaseWithCache } from '@belopash/typeorm-store';
 
 export function setupPallet<T>(setup: T): T {
@@ -30,11 +30,11 @@ export class Indexer {
       const queue: Action[] = [];
 
       processItem(ctx.blocks, (block, item) => {
-        if (item.kind === 'event') {
+        if (item.kind === 'event' && this.mapper.hasEventPallet(item.value.name)) {
           const pallet = this.mapper.getEventPallet(item.value.name)!;
           pallet.handle({ ctx, queue, block, item: item.value });
         }
-        if (item.kind === 'call') {
+        if (item.kind === 'call' && this.mapper.hasCallPallet(item.value.name)) {
           const pallet = this.mapper.getCallPallet(item.value.name)!;
           pallet.handle({ ctx, queue, block, item: item.value });
         }

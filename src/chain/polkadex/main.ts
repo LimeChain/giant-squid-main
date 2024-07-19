@@ -1,8 +1,8 @@
-import { ensureEnvVariable } from '../../utils';
-import { Indexer, setupPallet } from '../../indexer';
-import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
-import { StakingRewardEventPalletDecoder } from './decoders/events/staking/reward';
-import { PayoutStakersCallPalletDecoder } from './decoders/calls/staking/payoutStakers';
+import { ensureEnvVariable } from '@/utils';
+import { Indexer, setupPallet } from '@/indexer';
+import { TransferEventPalletDecoder } from '@/chain/polkadex/decoders/events/balances/transfer';
+import { StakingRewardEventPalletDecoder } from '@/chain/polkadex/decoders/events/staking/reward';
+import { PayoutStakersCallPalletDecoder } from '@/chain/polkadex/decoders/calls/staking/payoutStakers';
 
 export const indexer = new Indexer({
   config: {

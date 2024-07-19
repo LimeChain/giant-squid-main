@@ -1,7 +1,7 @@
-import { Account } from '../../../../model';
-import { EnsureAccount, TransferAction } from '../../../actions';
-import { IBasePalletSetup, IEventPalletDecoder } from '../../../types';
-import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '../../handler';
+import { Account } from '@/model';
+import { EnsureAccount, TransferAction } from '@/indexer/actions';
+import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
+import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 
 export interface ITransferEventPalletDecoder extends IEventPalletDecoder<{ from: string; to: string; amount: bigint }> {}
 interface ITransferEventPalletSetup extends IBasePalletSetup {
@@ -26,10 +26,12 @@ export class TransferEventPalletHandler extends EventPalletHandler<ITransferEven
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => fromAccount.get(),
         id: fromId,
+        pk: from,
       }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => toAccount.get(),
         id: toId,
+        pk: to,
       }),
       new TransferAction(block.header, event.extrinsic, {
         id: event.id,

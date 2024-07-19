@@ -1,7 +1,7 @@
-import { calls } from '../../../types';
-import { Call } from '../../../../../indexer';
-import { UnknownVersionError } from '../../../../../utils';
-import { ISetSubsCallPalletDecoder } from '../../../../../indexer';
+import { calls } from '@/chain/polkadot/types';
+import { Call } from '@/indexer';
+import { UnknownVersionError } from '@/utils';
+import { ISetSubsCallPalletDecoder } from '@/indexer';
 
 export class SetSubsCallPalletDecoder implements ISetSubsCallPalletDecoder {
   decode(call: Call) {

@@ -1,11 +1,15 @@
+import * as ss58 from '@subsquid/ss58';
 import { isHex } from '@subsquid/util-internal-hex';
 import { assertNotNull, decodeHex } from '@subsquid/substrate-processor';
-import * as ss58 from '@subsquid/ss58';
-import { Item, orderItems } from './orderItems';
-import { Block } from '../indexer/processor';
+import { Item, orderItems } from '@/utils/orderItems';
+import { Block } from '@/indexer/processor';
 
-export function decodeAddress(address: string) {
-  return ss58.codec(ensureEnvVariable('CHAIN')).decode(address);
+export function decodeAddress(address: string, chain: string) {
+  return ss58.codec(chain).decode(address);
+}
+
+export function encodeAddress(address: string | Uint8Array, chain: string) {
+  return ss58.codec(chain).encode(address);
 }
 
 export function processItem(blocks: Block[], fn: (block: Block, item: Item) => void) {
@@ -63,6 +67,7 @@ export function unwrapData(data: { __kind: string; value?: string }) {
         unwrapped = Buffer.from(data.value!).toString('utf-8');
       }
 
+      // Removes all the null characters from the decoded string
       return unwrapped.replace(/\u0000/g, '');
     }
   }

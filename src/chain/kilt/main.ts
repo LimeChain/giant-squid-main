@@ -1,6 +1,6 @@
-import { ensureEnvVariable } from '../../utils';
-import { Indexer, setupPallet } from '../../indexer';
-import { TransferEventPalletDecoder } from './decoders/events/balances/transfer';
+import { ensureEnvVariable } from '@/utils';
+import { Indexer, setupPallet } from '@/indexer';
+import { TransferEventPalletDecoder } from '@/chain/kilt/decoders/events/balances/transfer';
 
 export const indexer = new Indexer({
   config: {

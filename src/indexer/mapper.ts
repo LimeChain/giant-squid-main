@@ -1,5 +1,5 @@
-import { IHandlerOptions } from './pallets/handler';
-import { PalletSetups, RegistryCall, RegistryEvent, registry } from './registry';
+import { IHandlerOptions } from '@/indexer/pallets/handler';
+import { PalletSetups, RegistryCall, RegistryEvent, registry } from '@/indexer/registry';
 
 type IEventPalletKey = keyof RegistryEvent;
 type ICallPalletKey = keyof RegistryCall;
@@ -64,6 +64,14 @@ export class PalletMapper {
 
   getCalls(): string[] {
     return Array.from(this.calls.keys());
+  }
+
+  hasCallPallet(name: string) {
+    return this.calls.has(name as keyof RegistryCall);
+  }
+
+  hasEventPallet(name: string) {
+    return this.events.has(name as keyof RegistryEvent);
   }
 
   getEventPallet(name: string) {

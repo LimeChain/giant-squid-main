@@ -1,7 +1,7 @@
 {
   "outDir": "./types",
   "specVersions": "https://v2.archive.subsquid.io/metadata/zeitgeist",
-  "typesBundle": "./type-bundles/zeitgeist.json",
+  "typesBundle": "../../../assets/type-bundles/zeitgeist.json",
   "pallets": {
     "Balances": {
       "events": ["Transfer"]

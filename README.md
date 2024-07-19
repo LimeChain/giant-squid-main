@@ -10,13 +10,13 @@
  npm i -g @subsquid/cli@latest
 ```
 
-- Install Docker Desktop (<https://www.docker.com/products/docker-desktop/>)
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-- Install PgAdmin 4 (<https://www.postgresql.org/ftp/pgadmin/pgadmin4/v7.8/macos/>)
+- Install [PgAdmin 4](https://www.postgresql.org/ftp/pgadmin/pgadmin4/v7.8/macos)
 
-- Register on Dwellir to get a CHAIN_RPC_ENDPOINT URL (<https://dashboard.dwellir.com/register>) (It supports most chains)
+- Register on [Dwellir](https://dashboard.dwellir.com/register) to get a `CHAIN_RPC_ENDPOINT` URL (It supports most chains)
 
-- Make a new .env file (Copy .env.example)
+- Make a new `.env` file (Copy `.env.example`)
 
 ## Run the project
 
@@ -76,5 +76,3 @@ Password: DB_PASS
 3. Apply migration
 4. Import in registry.ts the Handlers
 5. Implement each pallet action in the indexer/actions folder (Could split the code in the actions folder)
-
-## TODO: update this
