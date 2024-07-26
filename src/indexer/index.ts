@@ -28,5 +28,9 @@ export { IReservedParachainEventPalletDecoder } from '@/indexer/pallets/crowdloa
 export { IRegisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/registered';
 export { IDeregisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/deregistered';
 export { IContributedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/contributed';
+export { IPartiallyRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/partiallyRefunded';
+export { IAllRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/allRefunded';
+export { IRemoveKeysLimitConstantGetter } from '@/indexer/pallets/crowdloan/constants';
+export { IWithdrewEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/withdrew';
 
 export { Indexer, setupPallet } from '@/indexer/main';

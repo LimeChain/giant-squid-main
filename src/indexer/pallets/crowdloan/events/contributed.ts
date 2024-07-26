@@ -1,9 +1,11 @@
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
-import { Account, Parachain } from '@/model';
+import { Account, CrowdloanContributor, Parachain } from '@/model';
 import { EnsureAccount } from '@/indexer/actions';
-import { ContributeCrowdloanAction, IncreaseCrowdloanRaisedFundsAction } from '@/indexer/actions/crowdloan.ts/contribute';
+import { ContributeCrowdloanAction } from '@/indexer/actions/crowdloan/contribute';
+import { EnsureCrowdloanContributorAction } from '@/indexer/actions/crowdloan/contributor';
+import { buildContributorId, getActiveCrowdloan } from '../utils';
 
 export interface IContributedEventPalletDecoder extends IEventPalletDecoder<{ paraId: number; account: string; amount: bigint }> {}
 
@@ -29,10 +31,12 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
         const queue: Action[] = [];
 
         const parachain = await parachainDef.getOrFail();
+        const crowdloan = getActiveCrowdloan(parachain.crowdloans);
 
-        if (parachain.crowdloans.length === 0) return [];
+        if (!crowdloan) return [];
 
-        const latestCrowdloan = parachain.crowdloans.sort((a, b) => b.startBlock - a.startBlock)[0];
+        const contributorId = buildContributorId(accountId, crowdloan.id);
+        const contributorDef = ctx.store.defer(CrowdloanContributor, contributorId);
 
         queue.push(
           new EnsureAccount(block.header, event.extrinsic, {
@@ -40,15 +44,17 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
             pk: contributed.account,
             account: () => accountDef.get(),
           }),
+          new EnsureCrowdloanContributorAction(block.header, event.extrinsic, {
+            id: contributorId,
+            account: () => accountDef.getOrFail(),
+            crowdloan: () => Promise.resolve(crowdloan),
+            contributor: () => contributorDef.get(),
+          }),
           new ContributeCrowdloanAction(block.header, event.extrinsic, {
             id: event.id,
             amount: contributed.amount,
-            account: () => accountDef.getOrFail(),
-            crowdloan: () => Promise.resolve(latestCrowdloan),
-          }),
-          new IncreaseCrowdloanRaisedFundsAction(block.header, event.extrinsic, {
-            amount: contributed.amount,
-            crowdloan: () => Promise.resolve(latestCrowdloan),
+            contributor: () => contributorDef.getOrFail(),
+            crowdloan: () => Promise.resolve(crowdloan),
           })
         );
 

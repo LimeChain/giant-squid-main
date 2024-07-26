@@ -208,10 +208,40 @@ type Parachain @entity {
 #   timestamp: DateTime! @index
 # }
 
+type CrowdloanContributor @entity {
+  id: ID! # account id + crowdloan id
+  account: Account!
+
+  totalContributed: BigInt!
+  reimbursed: Boolean!
+
+  crowdloan: Crowdloan!
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "contributor")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "contributor")
+
+  timestamp: DateTime!
+  blockNumber: Int! @index
+}
+
 type CrowdloanContribution @entity {
   id: ID!
   crowdloan: Crowdloan!
-  account: Account!
+  contributor: CrowdloanContributor!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+enum CrowdloanReimbursementType {
+  Refund
+  Withdraw
+}
+type CrowdloanReimbursement @entity {
+  id: ID! # contributor id
+  crowdloan: Crowdloan!
+  contributor: CrowdloanContributor!
+  type: CrowdloanReimbursementType!
   amount: BigInt!
   timestamp: DateTime!
   blockNumber: Int! @index
@@ -229,7 +259,10 @@ type Crowdloan @entity {
 
   status: CrowdloanStatus!
   raised: BigInt!
+  reimbursed: BigInt!
+
   contributions: [CrowdloanContribution!] @derivedFrom(field: "crowdloan")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "crowdloan")
 
   cap: BigInt!
   leasePeriodStart: Int!

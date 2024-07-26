@@ -1,7 +1,9 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {Parachain} from "./parachain.model"
 import {CrowdloanStatus} from "./_crowdloanStatus"
+import {CrowdloanContribution} from "./crowdloanContribution.model"
+import {CrowdloanReimbursement} from "./crowdloanReimbursement.model"
 
 @Entity_()
 export class Crowdloan {
@@ -21,6 +23,15 @@ export class Crowdloan {
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     raised!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    reimbursed!: bigint
+
+    @OneToMany_(() => CrowdloanContribution, e => e.crowdloan)
+    contributions!: CrowdloanContribution[]
+
+    @OneToMany_(() => CrowdloanReimbursement, e => e.crowdloan)
+    reimbursements!: CrowdloanReimbursement[]
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     cap!: bigint

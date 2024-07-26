@@ -1,6 +1,6 @@
 import { Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
-import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan.ts/parachain';
+import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan/parachain';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 
 export interface IDeregisteredParachainEventPalletDecoder extends IEventPalletDecoder<{ paraId: number }> {}

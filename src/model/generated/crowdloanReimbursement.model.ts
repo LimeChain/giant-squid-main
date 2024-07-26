@@ -2,10 +2,11 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, M
 import * as marshal from "./marshal"
 import {Crowdloan} from "./crowdloan.model"
 import {CrowdloanContributor} from "./crowdloanContributor.model"
+import {CrowdloanReimbursementType} from "./_crowdloanReimbursementType"
 
 @Entity_()
-export class CrowdloanContribution {
-    constructor(props?: Partial<CrowdloanContribution>) {
+export class CrowdloanReimbursement {
+    constructor(props?: Partial<CrowdloanReimbursement>) {
         Object.assign(this, props)
     }
 
@@ -19,6 +20,9 @@ export class CrowdloanContribution {
     @Index_()
     @ManyToOne_(() => CrowdloanContributor, {nullable: true})
     contributor!: CrowdloanContributor
+
+    @Column_("varchar", {length: 8, nullable: false})
+    type!: CrowdloanReimbursementType
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     amount!: bigint

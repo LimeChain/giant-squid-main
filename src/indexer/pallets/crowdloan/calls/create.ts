@@ -1,8 +1,8 @@
 import { Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, ICallPalletDecoder } from '@/indexer/types';
-import { CreateCrowdloanAction } from '@/indexer/actions/crowdloan.ts/create';
+import { CreateCrowdloanAction } from '@/indexer/actions/crowdloan/create';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan.ts/parachain';
+import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan/parachain';
 
 export interface ICreateCallPalletDecoder extends ICallPalletDecoder<{ paraId: number; cap: bigint; end: number; firstPeriod: number; lastPeriod: number }> {}
 

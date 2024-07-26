@@ -24,6 +24,70 @@ export const contributed =  {
     ),
 }
 
+export const withdrew =  {
+    name: 'Crowdloan.Withdrew',
+    /**
+     *  Withdrew full balance of a contributor. [who, fund_index, amount]
+     */
+    v9010: new EventType(
+        'Crowdloan.Withdrew',
+        sts.tuple([v9010.AccountId, v9010.ParaId, v9010.Balance])
+    ),
+    /**
+     * Withdrew full balance of a contributor.
+     */
+    v9230: new EventType(
+        'Crowdloan.Withdrew',
+        sts.struct({
+            who: v9230.AccountId32,
+            fundIndex: v9230.Id,
+            amount: sts.bigint(),
+        })
+    ),
+}
+
+export const partiallyRefunded =  {
+    name: 'Crowdloan.PartiallyRefunded',
+    /**
+     *  The loans in a fund have been partially dissolved, i.e. there are some left
+     *  over child keys that still need to be killed. [fund_index]
+     */
+    v9010: new EventType(
+        'Crowdloan.PartiallyRefunded',
+        v9010.ParaId
+    ),
+    /**
+     * The loans in a fund have been partially dissolved, i.e. there are some left
+     * over child keys that still need to be killed.
+     */
+    v9230: new EventType(
+        'Crowdloan.PartiallyRefunded',
+        sts.struct({
+            paraId: v9230.Id,
+        })
+    ),
+}
+
+export const allRefunded =  {
+    name: 'Crowdloan.AllRefunded',
+    /**
+     *  All loans in a fund have been refunded. [fund_index]
+     */
+    v9010: new EventType(
+        'Crowdloan.AllRefunded',
+        v9010.ParaId
+    ),
+    /**
+     * All loans in a fund have been refunded.
+     */
+    v9230: new EventType(
+        'Crowdloan.AllRefunded',
+        sts.struct({
+            paraId: v9230.Id,
+        })
+    ),
+}
+
 export const dissolved =  {
     name: 'Crowdloan.Dissolved',
     /**

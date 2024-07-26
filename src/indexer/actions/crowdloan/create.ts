@@ -19,6 +19,7 @@ export class CreateCrowdloanAction extends Action<CreateCrowdloanData> {
       parachain,
       status: CrowdloanStatus.Active,
       raised: 0n,
+      reimbursed: 0n,
       cap: this.data.cap,
       leasePeriodStart: this.data.firstPeriod,
       leasePeriodEnd: this.data.lastPeriod,

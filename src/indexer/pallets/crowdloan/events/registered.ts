@@ -1,6 +1,6 @@
 import { Account, Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
-import { ChangeParachainStatusAction, CreateParachainAction } from '@/indexer/actions/crowdloan.ts/parachain';
+import { ChangeParachainStatusAction, CreateParachainAction } from '@/indexer/actions/crowdloan/parachain';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { EnsureAccount } from '@/indexer/actions';

@@ -27,6 +27,10 @@ import { ReservedEventPalletDecoder } from '@/chain/kusama/decoders/events/regis
 import { RegisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/registered';
 import { DeregisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/deregistered';
 import { ContributedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/contributed';
+import { PartiallyRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/partiallyRefunded';
+import { RemoveKeysLimitConstantGetter } from '@/chain/kusama/constants/removeKeysLimit';
+import { AllRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/allRefunded';
+import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 
 export const indexer = new Indexer({
   config: {
@@ -58,6 +62,15 @@ export const indexer = new Indexer({
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
       'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
+      'Crowdloan.PartiallyRefunded': setupPallet({
+        decoder: new PartiallyRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.AllRefunded': setupPallet({
+        decoder: new AllRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
       'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
       'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
       'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),

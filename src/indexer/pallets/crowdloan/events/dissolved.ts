@@ -2,8 +2,9 @@ import { Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
-import { DissolveCrowdloanAction } from '@/indexer/actions/crowdloan.ts/dissolve';
-import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan.ts/parachain';
+import { DissolveCrowdloanAction } from '@/indexer/actions/crowdloan/dissolve';
+import { ChangeParachainStatusAction } from '@/indexer/actions/crowdloan/parachain';
+import { getActiveCrowdloan } from '../utils';
 
 export interface IDissolvedEventPalletDecoder extends IEventPalletDecoder<{ paraId: number }> {}
 
@@ -26,16 +27,13 @@ export class DissolvedEventPalletHandler extends EventPalletHandler<IDissolvedEv
         const queue: Action[] = [];
 
         const parachain = await parachainDef.getOrFail();
+        const crowdloan = getActiveCrowdloan(parachain.crowdloans);
 
-        if (parachain.crowdloans.length === 0) {
-          return [];
-        }
-
-        const latestCrowdloan = parachain.crowdloans.sort((a, b) => b.startBlock - a.startBlock)[0];
+        if (!crowdloan) return [];
 
         queue.push(
           new DissolveCrowdloanAction(block.header, event.extrinsic, {
-            crowdloan: () => Promise.resolve(latestCrowdloan),
+            crowdloan: () => Promise.resolve(crowdloan),
           }),
           new ChangeParachainStatusAction(block.header, event.extrinsic, {
             parachain: () => Promise.resolve(parachain),
