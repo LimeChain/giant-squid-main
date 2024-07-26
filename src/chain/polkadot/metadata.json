@@ -14,7 +14,7 @@
       "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "rename_sub"]
     },
     "Crowdloan": {
-      "events": ["Dissolved", "Contributed"],
+      "events": ["Dissolved", "Contributed", "PartiallyRefunded", "AllRefunded", "Withdrew"],
       "calls": ["create"]
     },
     "Registrar": {
@@ -22,5 +22,5 @@
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],
-  "constants": ["Staking.BondingDuration"]
+  "constants": ["Staking.BondingDuration", "Crowdloan.RemoveKeysLimit"]
 }
