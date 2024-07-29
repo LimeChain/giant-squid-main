@@ -1,16 +1,16 @@
 manifestVersion: subsquid.io/v0.1
-name: gs-main-integritee
+name: gs-main-crab
 version: 1
 description: |-
-  Giant Squid Main for Integritee
+  Giant Squid Main for Darwinia Crab Network
 build:
 deploy:
   addons:
     postgres:
   processor:
     env:
-      CHAIN: integritee
-    CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_INTEGRITEE_HTTP }}
+      CHAIN: darwinia-crab
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_DARWINIA_CRAB_HTTP }}
     cmd:
       - sqd
       - process:prod

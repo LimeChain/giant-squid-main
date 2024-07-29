@@ -14,7 +14,7 @@ export class Indexer {
   private processor: Processor;
 
   constructor({ pallets, config }: IndexerParams) {
-    this.mapper = new PalletMapper(pallets, { chain: config.chain });
+    this.mapper = new PalletMapper(pallets, { chain: config.chain, prefix: config.prefix });
 
     const events = this.mapper.getEvents();
     const calls = this.mapper.getCalls();

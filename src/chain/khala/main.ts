@@ -4,6 +4,7 @@ import { TransferEventPalletDecoder } from '@/chain/khala/decoders/events/balanc
 
 export const indexer = new Indexer({
   config: {
+    prefix: 30,
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },

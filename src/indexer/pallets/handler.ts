@@ -5,6 +5,7 @@ import { Block, Call, ProcessorContext, Event } from '@/indexer/processor';
 
 export interface IHandlerOptions {
   chain: string;
+  prefix?: number;
 }
 
 export interface IEventHandlerParams {
@@ -31,11 +32,11 @@ abstract class BasePalletHandler<ISetup extends IBasePalletSetup> {
   }
 
   protected encodeAddress(address: string | Uint8Array) {
-    return Utils.encodeAddress(address, this.options.chain);
+    return Utils.encodeAddress(address, this.options.prefix ?? this.options.chain);
   }
 
   protected decodeAddress(address: string) {
-    return Utils.decodeAddress(address, this.options.chain);
+    return Utils.decodeAddress(address, this.options.prefix ?? this.options.chain);
   }
 
   abstract handle(params: IEventHandlerParams | ICallHandlerParams): void;

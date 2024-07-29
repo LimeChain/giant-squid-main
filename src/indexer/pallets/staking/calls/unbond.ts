@@ -2,7 +2,7 @@ import { toHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
 import { Account, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { EnsureAccount, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { IBondingDurationConstantGetter, ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer';
@@ -59,28 +59,36 @@ export class UnbondCallPalletHandler extends CallPalletHandler<IUnbondCallPallet
         const stashDeferred = ctx.store.defer(Account, stashId);
         const stakerDeferred = ctx.store.defer(Staker, { id: stashId });
 
-        const staker = await stakerDeferred.getOrFail();
-
-        // Some unbond extrinsics are processed more than once in different blocks by the RPC providers, so we cannot rely blindly on the unbond data
-        // We make sure the unbond amount is greater than the active bonded amount, otherwise we assume it is a duplicate extrinsic
-        if (data.amount > staker.activeBonded) {
-          return [];
-        }
-
         queue.push(
           new EnsureAccount(block.header, call.extrinsic, { account: () => controllerDeferred.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
           new EnsureAccount(block.header, call.extrinsic, { account: () => stashDeferred.get(), id: stashId, pk: this.decodeAddress(stashId) }),
-          new UnBondAction(block.header, call.extrinsic, {
-            id: call.id,
-            amount: data.amount,
-            account: () => controllerDeferred.getOrFail(),
-            staker: () => stakerDeferred.getOrFail(),
-          }),
-          new UnlockChunkAction(block.header, call.extrinsic, {
-            id: call.id,
-            amount: data.amount,
-            lockedUntilEra: currentEra + bondingDuration,
-            staker: () => stakerDeferred.getOrFail(),
+          new EnsureStaker(block.header, call.extrinsic, { staker: () => stakerDeferred.get(), account: () => stashDeferred.getOrFail(), id: stashId }),
+          new LazyAction(block.header, call.extrinsic, async () => {
+            const queue: Action[] = [];
+
+            const staker = await stakerDeferred.getOrFail();
+
+            // Some unbond extrinsics are processed more than once in different blocks by the RPC providers, so we cannot rely blindly on the unbond data
+            // We make sure the unbond amount is greater than the active bonded amount, otherwise we assume it is a duplicate extrinsic
+            if (data.amount > staker.activeBonded) {
+              return [];
+            }
+
+            queue.push(
+              new UnBondAction(block.header, call.extrinsic, {
+                id: call.id,
+                amount: data.amount,
+                account: () => controllerDeferred.getOrFail(),
+                staker: () => stakerDeferred.getOrFail(),
+              }),
+              new UnlockChunkAction(block.header, call.extrinsic, {
+                id: call.id,
+                amount: data.amount,
+                lockedUntilEra: currentEra + bondingDuration,
+                staker: () => stakerDeferred.getOrFail(),
+              })
+            );
+            return queue;
           })
         );
 
