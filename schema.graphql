@@ -188,25 +188,7 @@ type Parachain @entity {
   status: ParachainStatus!
 
   crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
-  #   timeline: [ParachainTimeline!] @derivedFrom(field: "parachain")
 }
-
-# enum ParachainTimelineAction {
-#   Reserve
-#   Register
-#   Deregister
-#   CrowdloanCreate
-#   CrowdloanDissolve
-# }
-# type ParachainTimeline @entity {
-#   id: ID!
-#   parachain: Parachain!
-#   action: ParachainTimelineAction!
-
-#   extrinsicHash: String @index
-#   blockNumber: Int! @index
-#   timestamp: DateTime! @index
-# }
 
 type CrowdloanContributor @entity {
   id: ID! # account id + crowdloan id
@@ -237,6 +219,7 @@ enum CrowdloanReimbursementType {
   Refund
   Withdraw
 }
+
 type CrowdloanReimbursement @entity {
   id: ID! # contributor id
   crowdloan: Crowdloan!
