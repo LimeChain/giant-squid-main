@@ -1,12 +1,13 @@
 import { ensureEnvVariable } from '@/utils';
 import { Indexer, setupPallet } from '@/indexer';
 import { TransferEventPalletDecoder } from '@/chain/moonbeam/decoders/events/balances/transfer';
+import { SUBSQUID_NETWORK_URL } from '@/utils/constants';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    gateway: 'https://v2.archive.subsquid.io/network/moonbeam-substrate',
+    gateway: `${SUBSQUID_NETWORK_URL}/moonbeam-substrate`,
   },
   pallets: {
     events: {
