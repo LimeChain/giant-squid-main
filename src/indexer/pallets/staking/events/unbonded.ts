@@ -1,5 +1,5 @@
 import { Account, Staker } from '@/model';
-import { EnsureAccount, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { UnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
@@ -55,6 +55,7 @@ export class UnBondedEventPalletHandler extends EventPalletHandler<IUnBondedEven
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountDeferred.get(), id: stakerId, pk: data.stash }),
+      new EnsureStaker(block.header, event.extrinsic, { staker: () => stakerDeferred.get(), account: () => accountDeferred.getOrFail(), id: stakerId }),
       new LazyAction(block.header, event.extrinsic, async (ctx) => {
         const queue: Action[] = [];
 

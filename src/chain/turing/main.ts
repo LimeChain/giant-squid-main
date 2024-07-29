@@ -4,6 +4,7 @@ import { TransferEventPalletDecoder } from '@/chain/turing/decoders/events/balan
 
 export const indexer = new Indexer({
   config: {
+    prefix: 51,
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },

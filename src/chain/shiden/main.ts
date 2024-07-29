@@ -4,6 +4,7 @@ import { TransferEventPalletDecoder } from '@/chain/shiden/decoders/events/balan
 
 export const indexer = new Indexer({
   config: {
+    prefix: 5,
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },

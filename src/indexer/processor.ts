@@ -34,6 +34,7 @@ const fields = {
 
 export type ProcessorConfig = {
   chain: string;
+  prefix?: number;
   endpoint: Parameters<SubstrateBatchProcessor<any>['setRpcEndpoint']>[0];
   gateway?: string;
   blockRange?: {
