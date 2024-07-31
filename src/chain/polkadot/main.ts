@@ -21,6 +21,16 @@ import { SetPayeeCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staki
 import { BondExtraCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/bond_extra';
 import { UnbondCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/unbond';
 import { SetControllerCallPalletDecoder } from '@/chain/polkadot/decoders/calls/staking/setController';
+import { CreateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/crowdloan/create';
+import { DissolvedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/dissolved';
+import { ReservedEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/reserved';
+import { RegisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/registered';
+import { DeregisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/deregistered';
+import { ContributedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/contributed';
+import { PartiallyRefundedEventPalletDecoder } from './decoders/events/crowdloan/partiallyRefunded';
+import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRefunded';
+import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
+import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
 
 export const indexer = new Indexer({
   config: {
@@ -50,6 +60,20 @@ export const indexer = new Indexer({
       }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      'Crowdloan.PartiallyRefunded': setupPallet({
+        decoder: new PartiallyRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.AllRefunded': setupPallet({
+        decoder: new AllRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
+      'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
+      'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
+      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -69,6 +93,7 @@ export const indexer = new Indexer({
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
     },
   },
 });

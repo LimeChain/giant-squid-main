@@ -19,6 +19,15 @@ import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond'
 import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bondExtra';
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 import { SetControllerCallPalletHandler } from '@/indexer/pallets/staking/calls/setController';
+import { CreateCallPalletHandler } from './pallets/crowdloan/calls/create';
+import { DissolvedEventPalletHandler } from './pallets/crowdloan/events/dissolved';
+import { ReservedParachainEventPalletHandler } from './pallets/crowdloan/events/reserved';
+import { RegisteredParachainEventPalletHandler } from './pallets/crowdloan/events/registered';
+import { DeregisteredParachainEventPalletHandler } from './pallets/crowdloan/events/deregistered';
+import { ContributedEventPalletHandler } from './pallets/crowdloan/events/contributed';
+import { PartiallyRefundedEventPalletHandler } from './pallets/crowdloan/events/partiallyRefunded';
+import { AllRefundedEventPalletHandler } from './pallets/crowdloan/events/allRefunded';
+import { WithdrewEventPalletHandler } from './pallets/crowdloan/events/withdrew';
 
 export const registry = {
   events: {
@@ -32,6 +41,14 @@ export const registry = {
     'Staking.Slashed': SlashEventPalletHandler,
     'Identity.SubIdentityRemoved': SubIdentityRemovedEventPalletHandler,
     'Identity.SubIdentityRevoked': SubIdentityRevokedEventPalletHandler,
+    'Crowdloan.Dissolved': DissolvedEventPalletHandler,
+    'Crowdloan.Contributed': ContributedEventPalletHandler,
+    'Crowdloan.PartiallyRefunded': PartiallyRefundedEventPalletHandler,
+    'Crowdloan.AllRefunded': AllRefundedEventPalletHandler,
+    'Crowdloan.Withdrew': WithdrewEventPalletHandler,
+    'Registrar.Reserved': ReservedParachainEventPalletHandler,
+    'Registrar.Registered': RegisteredParachainEventPalletHandler,
+    'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
@@ -47,6 +64,7 @@ export const registry = {
     'Staking.bond_extra': BondExtraCallPalletHandler,
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
+    'Crowdloan.create': CreateCallPalletHandler,
   },
 };
 

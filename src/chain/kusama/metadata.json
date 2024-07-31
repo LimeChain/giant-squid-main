@@ -12,8 +12,15 @@
     "Identity": {
       "events": ["SubIdentityRemoved", "SubIdentityRevoked"],
       "calls": ["set_identity", "set_subs", "provide_judgement", "add_sub", "rename_sub"]
+    },
+    "Crowdloan": {
+      "events": ["Dissolved", "Contributed", "PartiallyRefunded", "AllRefunded", "Withdrew"],
+      "calls": ["create"]
+    },
+    "Registrar": {
+      "events": ["Reserved", "Registered", "Deregistered"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],
-  "constants": ["Staking.BondingDuration"]
+  "constants": ["Staking.BondingDuration", "Crowdloan.RemoveKeysLimit"]
 }

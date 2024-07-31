@@ -22,5 +22,15 @@ export { ISetPayeeCallPalletDecoder } from '@/indexer/pallets/staking/calls/setP
 export { IBondingDurationConstantGetter } from '@/indexer/pallets/staking/constants';
 export { ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer/pallets/staking/storage';
 export { ISetControllerCallPalletDecoder } from '@/indexer/pallets/staking/calls/setController';
+export { ICreateCallPalletDecoder } from '@/indexer/pallets/crowdloan/calls/create';
+export { IDissolvedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/dissolved';
+export { IReservedParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/reserved';
+export { IRegisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/registered';
+export { IDeregisteredParachainEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/deregistered';
+export { IContributedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/contributed';
+export { IPartiallyRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/partiallyRefunded';
+export { IAllRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/allRefunded';
+export { IRemoveKeysLimitConstantGetter } from '@/indexer/pallets/crowdloan/constants';
+export { IWithdrewEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/withdrew';
 
 export { Indexer, setupPallet } from '@/indexer/main';

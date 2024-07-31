@@ -20,7 +20,17 @@ import { BondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bon
 import { UnbondCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/unbond';
 import { BondExtraCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/bond_extra';
 import { SetPayeeCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setPayee';
-import { SetControllerCallPalletDecoder } from './decoders/calls/staking/setController';
+import { SetControllerCallPalletDecoder } from '@/chain/kusama/decoders/calls/staking/setController';
+import { CreateCallPalletDecoder } from '@/chain/kusama/decoders/calls/crowdloan/create';
+import { DissolvedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/dissolved';
+import { ReservedEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/reserved';
+import { RegisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/registered';
+import { DeregisteredEventPalletDecoder } from '@/chain/kusama/decoders/events/registrar/deregistered';
+import { ContributedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/contributed';
+import { PartiallyRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/partiallyRefunded';
+import { RemoveKeysLimitConstantGetter } from '@/chain/kusama/constants/removeKeysLimit';
+import { AllRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/allRefunded';
+import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 
 export const indexer = new Indexer({
   config: {
@@ -50,6 +60,20 @@ export const indexer = new Indexer({
       }),
       'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
       'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
+      'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
+      'Crowdloan.PartiallyRefunded': setupPallet({
+        decoder: new PartiallyRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.AllRefunded': setupPallet({
+        decoder: new AllRefundedEventPalletDecoder(),
+        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      }),
+      'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
+      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -69,6 +93,7 @@ export const indexer = new Indexer({
       'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
     },
   },
 });

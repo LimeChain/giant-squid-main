@@ -1,5 +1,30 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export const MultiSigner: sts.Type<MultiSigner> = sts.closedEnum(() => {
+    return  {
+        Ecdsa: sts.bytes(),
+        Ed25519: sts.bytes(),
+        Sr25519: sts.bytes(),
+    }
+})
+
+export type MultiSigner = MultiSigner_Ecdsa | MultiSigner_Ed25519 | MultiSigner_Sr25519
+
+export interface MultiSigner_Ecdsa {
+    __kind: 'Ecdsa'
+    value: Bytes
+}
+
+export interface MultiSigner_Ed25519 {
+    __kind: 'Ed25519'
+    value: Bytes
+}
+
+export interface MultiSigner_Sr25519 {
+    __kind: 'Sr25519'
+    value: Bytes
+}
+
 export const Data: sts.Type<Data> = sts.closedEnum(() => {
     return  {
         BlakeTwo256: sts.bytes(),
@@ -287,8 +312,6 @@ export const RewardDestination: sts.Type<RewardDestination> = sts.closedEnum(() 
     }
 })
 
-export const AccountId32 = sts.bytes()
-
 export type RewardDestination = RewardDestination_Account | RewardDestination_Controller | RewardDestination_None | RewardDestination_Staked | RewardDestination_Stash
 
 export interface RewardDestination_Account {
@@ -349,3 +372,7 @@ export interface MultiAddress_Raw {
     __kind: 'Raw'
     value: Bytes
 }
+
+export const AccountId32 = sts.bytes()
+
+export const Id = sts.number()
