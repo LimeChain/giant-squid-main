@@ -29,7 +29,6 @@ import { DeregisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events
 import { ContributedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/contributed';
 import { PartiallyRefundedEventPalletDecoder } from './decoders/events/crowdloan/partiallyRefunded';
 import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRefunded';
-
 import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
 
