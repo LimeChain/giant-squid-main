@@ -1,5 +1,5 @@
-module.exports = class Data1721889786769 {
-    name = 'Data1721889786769'
+module.exports = class Data1723123229808 {
+    name = 'Data1723123229808'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -70,6 +70,7 @@ module.exports = class Data1721889786769 {
         await db.query(`CREATE INDEX "IDX_4331ae51870805bcd175e12dbe" ON "crowdloan" ("start_block") `)
         await db.query(`CREATE TABLE "parachain" ("id" character varying NOT NULL, "status" character varying(12) NOT NULL, "manager_id" character varying, CONSTRAINT "PK_0f6ac85862a6ca7c8873f699b61" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_f9829c2790e51743a202d5e5fc" ON "parachain" ("manager_id") `)
+        await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_dd3c998c07dabdafe827060b67f" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -170,6 +171,7 @@ module.exports = class Data1721889786769 {
         await db.query(`DROP INDEX "public"."IDX_4331ae51870805bcd175e12dbe"`)
         await db.query(`DROP TABLE "parachain"`)
         await db.query(`DROP INDEX "public"."IDX_f9829c2790e51743a202d5e5fc"`)
+        await db.query(`DROP TABLE "query_logs"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_dd3c998c07dabdafe827060b67f"`)
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
