@@ -253,3 +253,11 @@ type Crowdloan @entity {
   endBlock: Int!
   startBlock: Int! @index
 }
+
+type QueryLogs @entity {
+  id: ID!
+  query: String!
+  timestamp: DateTime!
+  location: String
+  chainName: String!
+}

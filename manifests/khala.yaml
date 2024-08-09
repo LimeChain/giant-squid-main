@@ -15,9 +15,11 @@ deploy:
       - sqd
       - process:prod
   api:
+    env:
+      CHAIN: khala
     cmd:
       - sqd
-      - serve:prod
+      - api:prod
 scale:
   dedicated: true
   addons:
