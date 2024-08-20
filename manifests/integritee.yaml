@@ -10,7 +10,7 @@ deploy:
   processor:
     env:
       CHAIN: integritee
-    CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_INTEGRITEE_HTTP }}
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_INTEGRITEE_HTTP }}
     cmd:
       - sqd
       - process:prod
