@@ -9,7 +9,7 @@ deploy:
     postgres:
   processor:
     env:
-      CHAIN: bifrost_polkadot
+      CHAIN: bifrost-polkadot
       CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_BIFROST_POLKADOT_HTTP }}
     cmd:
       - sqd

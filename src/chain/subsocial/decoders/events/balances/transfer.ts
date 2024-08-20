@@ -1,4 +1,4 @@
-import { events } from '@/chain/subsocial-parachain/types';
+import { events } from '@/chain/subsocial/types';
 import { UnknownVersionError } from '@/utils';
 import { ITransferEventPalletDecoder, Event } from '@/indexer';
 
