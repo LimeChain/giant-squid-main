@@ -1,4 +1,4 @@
-import { Account, ParachainStakingCandidateWithdraw, Staker } from '@/model';
+import { Account, ParachainStakingCandidatesWithdraw, Staker } from '@/model';
 import { Action, ActionContext } from '../base';
 
 interface ParachainCandidateLeftData {
@@ -14,7 +14,7 @@ export class ParachainCandidateLeftAction extends Action<ParachainCandidateLeftD
     const account = await this.data.account();
     const staker = await this.data.staker();
 
-    const candidateUnbondAndWithdraw = new ParachainStakingCandidateWithdraw({
+    const candidateUnbondAndWithdraw = new ParachainStakingCandidatesWithdraw({
       id: this.data.id,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),

@@ -340,7 +340,7 @@ type ParachainStakingDelegationKicked @entity {
   amount: BigInt!
 }
 
-type ParachainStakingCandidateWithdraw @entity {
+type ParachainStakingCandidatesWithdraw @entity {
   id: ID!
   timestamp: DateTime!
   blockNumber: Int! @index
@@ -350,7 +350,7 @@ type ParachainStakingCandidateWithdraw @entity {
   amount: BigInt!
 }
 
-type ParachainStakingCandidateBond @entity {
+type ParachainStakingCandidatesBond @entity {
   id: ID!
   timestamp: DateTime!
   blockNumber: Int! @index
@@ -360,7 +360,7 @@ type ParachainStakingCandidateBond @entity {
   amount: BigInt!
 }
 
-type ParachainStakingCandidateUnbond @entity {
+type ParachainStakingCandidatesUnbond @entity {
   id: ID!
   timestamp: DateTime!
   blockNumber: Int! @index
