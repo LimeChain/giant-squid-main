@@ -1,9 +1,9 @@
-import { EnsureAccount } from '../../../actions';
-import { Account, Identity, Judgement } from '../../../../model';
-import { getOriginAccountId, unwrapData } from '../../../../utils';
-import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '../../../types';
-import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '../../../actions/identity';
+import { EnsureAccount } from '@/indexer/actions';
+import { Account, Identity, Judgement } from '@/model';
+import { getOriginAccountId, unwrapData } from '@/utils';
+import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '@/indexer/types';
+import { EnsureIdentityAction, GiveJudgementAction, SetIdentityAction } from '@/indexer/actions/identity';
 
 export interface ISetIdentityCallPalletDecoder extends ICallPalletDecoder<IdentityInfoData> {}
 interface ISetIdentityCallPalletSetup extends IBasePalletSetup {
@@ -18,12 +18,11 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
   handle({ ctx, queue, block, item: call }: ICallHandlerParams) {
     if (!call.success) return;
 
-    const data = this.decoder.decode(call);
-
     const origin = getOriginAccountId(call.origin);
 
-    if (origin == null) return;
+    if (!origin) return;
 
+    const data = this.decoder.decode(call);
     const identityId = this.encodeAddress(origin);
     const account = ctx.store.defer(Account, identityId);
     const identity = ctx.store.defer(Identity, identityId);
@@ -32,6 +31,7 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
       new EnsureAccount(block.header, call.extrinsic, {
         account: () => account.get(),
         id: identityId,
+        pk: this.decodeAddress(identityId),
       }),
       new EnsureIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.get(),

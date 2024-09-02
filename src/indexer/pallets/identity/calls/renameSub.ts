@@ -1,8 +1,8 @@
-import { unwrapData } from '../../../../utils';
-import { IdentitySub } from '../../../../model';
-import { RenameSubAction } from '../../../actions/identity';
-import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '../../handler';
-import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '../../../types';
+import { unwrapData } from '@/utils';
+import { IdentitySub } from '@/model';
+import { RenameSubAction } from '@/indexer/actions/identity';
+import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
 
 export interface IRenameSubCallPalletDecoder extends ICallPalletDecoder<{ sub: string; data: WrappedData }> {}
 interface IRenameSubCallPalletSetup extends IBasePalletSetup {

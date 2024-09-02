@@ -60,17 +60,16 @@
     },
     "serve:prod": {
       "description": "Start the GraphQL API server with caching and limits",
-      "cmd": [
-        "squid-graphql-server",
-        "--dumb-cache",
-        "in-memory",
-        "--dumb-cache-ttl",
-        "1000",
-        "--dumb-cache-size",
-        "100",
-        "--dumb-cache-max-age",
-        "1000"
-      ]
+      "cmd": ["squid-graphql-server", "--dumb-cache", "in-memory", "--dumb-cache-ttl", "1000", "--dumb-cache-size", "100", "--dumb-cache-max-age", "1000"]
+    },
+    "api": {
+      "description": "Start the PostGraphile GraphQL server",
+      "deps": ["build"],
+      "cmd": ["node", "--require=dotenv/config", "lib/api.js"]
+    },
+    "api:prod": {
+      "description": "Start the PostGraphile GraphQL server in Subsquid Cloud setting",
+      "cmd": ["node", "lib/api.js"]
     },
     "check-updates": {
       "cmd": ["npx", "--yes", "npm-check-updates", "--filter=/subsquid/", "--upgrade"],

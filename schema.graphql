@@ -1,82 +1,263 @@
 type Account @entity {
-    id: ID!
-    publicKey: ID! @index
-    transfers: [Transfer!] @derivedFrom(field: "account")
-    rewards: [StakingReward!] @derivedFrom(field: "account")
-    identity: Identity @derivedFrom(field: "account")
-    sub: IdentitySub @derivedFrom(field: "account")
+  id: ID!
+  publicKey: ID! @index
+  transfers: [Transfer!] @derivedFrom(field: "account")
+  rewards: [StakingReward!] @derivedFrom(field: "account")
+  identity: Identity @derivedFrom(field: "account")
+  staker: Staker @derivedFrom(field: "stash")
+  sub: IdentitySub @derivedFrom(field: "account")
 }
 
 enum TransferDirection {
-    From
-    To
+  From
+  To
 }
 
 # entity for linking account and transfer
 type Transfer @entity {
-    id: ID!
-    transfer: NativeTransfer
-    account: Account!
-    direction: TransferDirection
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
 }
 
 type NativeTransfer @entity {
-    id: ID!
-    blockNumber: Int! @index
-    timestamp: DateTime! @index
-    extrinsicHash: String @index
-    from: Account!
-    to: Account!
-    amount: BigInt! @index
-    success: Boolean!
-}
-
-type StakingReward @entity {
-    id: ID!
-    timestamp: DateTime!
-    blockNumber: Int! @index
-    extrinsicHash: String @index
-    account: Account!
-    amount: BigInt!
-    era: Int
-    validatorId: ID
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
 }
 
 type IdentityAdditionalField {
-    name: String
-    value: String
+  name: String
+  value: String
 }
 
 enum Judgement {
-    Unknown
-    FeePaid
-    Reasonable
-    KnownGood
-    OutOfDate
-    LowQuality
-    Erroneous
+  Unknown
+  FeePaid
+  Reasonable
+  KnownGood
+  OutOfDate
+  LowQuality
+  Erroneous
 }
 
 type Identity @entity {
-    id: ID!
-    account: Account! @unique
-    judgement: Judgement!
-    subs: [IdentitySub!] @derivedFrom(field: "super")
-    additional: [IdentityAdditionalField!]
-    display: String
-    legal: String
-    web: String
-    riot: String
-    email: String
-    pgpFingerprint: String
-    image: String
-    twitter: String
-    isKilled: Boolean!
+  id: ID!
+  account: Account! @unique
+  judgement: Judgement!
+  subs: [IdentitySub!] @derivedFrom(field: "super")
+  additional: [IdentityAdditionalField!]
+  display: String
+  legal: String
+  web: String
+  riot: String
+  email: String
+  pgpFingerprint: String
+  image: String
+  twitter: String
+  isKilled: Boolean!
 }
 
 type IdentitySub @entity {
-    id: ID!
-    super: Identity
-    account: Account! @unique
-    name: String
+  id: ID!
+  super: Identity
+  account: Account! @unique
+  name: String
+}
+
+type StakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  staker: Staker!
+  era: Int
+  validatorId: ID
+}
+
+enum BondingType {
+  Bond
+  BondExtra
+  Unbond
+  Rebond
+  Slash
+  Reward
+}
+
+type StakingBond @entity {
+  id: ID!
+  type: BondingType!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+type StakingUnlockChunk @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  staker: Staker!
+  lockedUntilEra: Int!
+  amount: BigInt!
+  withdrawn: Boolean!
+}
+
+type StakingSlash @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+enum RewardDestination {
+  Staked
+  Stash
+  Controller
+  Account
+  None
+}
+
+type StakingPayee @entity {
+  id: ID!
+  staker: Staker!
+  account: Account
+  type: RewardDestination!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+type StakingController @entity {
+  id: ID!
+  staker: Staker!
+  controller: Account!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+type Staker @entity {
+  id: ID! #stash Id
+  stash: Account! @unique
+  controller: Account
+
+  payee: StakingPayee
+
+  activeBonded: BigInt!
+  totalBonded: BigInt!
+  totalUnbonded: BigInt!
+  totalWithdrawn: BigInt!
+  totalSlashed: BigInt!
+  totalRewarded: BigInt!
+
+  payees: [StakingPayee!] @derivedFrom(field: "staker")
+  controllers: [StakingController!] @derivedFrom(field: "staker")
+  unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
+  rewards: [StakingReward!] @derivedFrom(field: "staker")
+  slashes: [StakingSlash!] @derivedFrom(field: "staker")
+  bonds: [StakingBond!] @derivedFrom(field: "staker")
+}
+
+enum ParachainStatus {
+  Reserved
+  Registered
+  Deregistered
+  Parachain
+  Parathread
+  Dissolved
+}
+
+type Parachain @entity {
+  id: ID! # para id
+  manager: Account!
+
+  status: ParachainStatus!
+
+  crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
+}
+
+type CrowdloanContributor @entity {
+  id: ID! # account id + crowdloan id
+  account: Account!
+
+  totalContributed: BigInt!
+  reimbursed: Boolean!
+
+  crowdloan: Crowdloan!
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "contributor")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "contributor")
+
+  timestamp: DateTime!
+  blockNumber: Int! @index
+}
+
+type CrowdloanContribution @entity {
+  id: ID!
+  crowdloan: Crowdloan!
+  contributor: CrowdloanContributor!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+enum CrowdloanReimbursementType {
+  Refund
+  Withdraw
+}
+
+type CrowdloanReimbursement @entity {
+  id: ID! # contributor id
+  crowdloan: Crowdloan!
+  contributor: CrowdloanContributor!
+  type: CrowdloanReimbursementType!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+enum CrowdloanStatus {
+  Active
+  Dissolved
+}
+
+type Crowdloan @entity {
+  id: ID!
+  parachain: Parachain!
+
+  status: CrowdloanStatus!
+  raised: BigInt!
+  reimbursed: BigInt!
+
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "crowdloan")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "crowdloan")
+
+  cap: BigInt!
+  leasePeriodStart: Int!
+  leasePeriodEnd: Int!
+  endBlock: Int!
+  startBlock: Int! @index
+}
+
+type QueryLogs @entity {
+  id: ID!
+  query: String!
+  timestamp: DateTime!
+  location: String
+  chainName: String!
 }

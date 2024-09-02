@@ -1,6 +1,6 @@
-import { calls } from '../../../types';
-import { Call, IRenameSubCallPalletDecoder } from '../../../../../indexer';
-import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
+import { calls } from '@/chain/polkadot/types';
+import { Call, IRenameSubCallPalletDecoder } from '@/indexer';
+import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
 export class RenameIdentityCallPalletDecoder implements IRenameSubCallPalletDecoder {
   decode(call: Call) {

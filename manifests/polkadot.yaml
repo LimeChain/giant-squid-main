@@ -1,6 +1,6 @@
 manifestVersion: subsquid.io/v0.1
 name: gs-main-polkadot
-version: 2
+version: 1
 description: |-
   Giant Squid Explorer for Polkadot chain
 build:
@@ -10,18 +10,23 @@ deploy:
   processor:
     env:
       CHAIN: polkadot
-    cmd: ["node", "lib/main"]
-  api:
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_POLKADOT_HTTP }}
     cmd:
-      [
-        "npx",
-        "squid-graphql-server",
-        "--dumb-cache",
-        "in-memory",
-        "--dumb-cache-ttl",
-        "1000",
-        "--dumb-cache-size",
-        "100",
-        "--dumb-cache-max-age",
-        "1000",
-      ]
+      - sqd
+      - process:prod
+  api:
+    env:
+      CHAIN: polkadot
+    cmd:
+      - sqd
+      - api:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 90G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium

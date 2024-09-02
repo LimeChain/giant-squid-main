@@ -1,0 +1,32 @@
+manifestVersion: subsquid.io/v0.1
+name: gs-main-crab
+version: 1
+description: |-
+  Giant Squid Main for Darwinia Crab Network
+build:
+deploy:
+  addons:
+    postgres:
+  processor:
+    env:
+      CHAIN: darwinia-crab
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_DARWINIA_CRAB_HTTP }}
+    cmd:
+      - sqd
+      - process:prod
+  api:
+    env:
+      CHAIN: darwinia-crab
+    cmd:
+      - sqd
+      - api:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 30G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium

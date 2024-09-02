@@ -10,18 +10,23 @@ deploy:
   processor:
     env:
       CHAIN: hydradx
-    cmd: ["node", "lib/main"]
-  api:
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_HYDRADX_HTTP }}
     cmd:
-      [
-        "npx",
-        "squid-graphql-server",
-        "--dumb-cache",
-        "in-memory",
-        "--dumb-cache-ttl",
-        "1000",
-        "--dumb-cache-size",
-        "100",
-        "--dumb-cache-max-age",
-        "1000",
-      ]
+      - sqd
+      - process:prod
+  api:
+    env:
+      CHAIN: hydradx
+    cmd:
+      - sqd
+      - api:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 30G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium

@@ -1,7 +1,6 @@
-import { events } from '../../../types';
-import { Event } from '../../../../../indexer';
-import { UnknownVersionError } from '../../../../../utils';
-import { ITransferEventPalletDecoder } from '../../../../../indexer';
+import { events } from '@/chain/picasso/types';
+import { UnknownVersionError } from '@/utils';
+import { ITransferEventPalletDecoder, Event } from '@/indexer';
 
 export class TransferEventPalletDecoder implements ITransferEventPalletDecoder {
   decode(event: Event) {

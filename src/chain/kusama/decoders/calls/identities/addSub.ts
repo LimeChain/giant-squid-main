@@ -1,6 +1,6 @@
-import { calls } from '../../../types';
-import { Call, IAddSubCallPalletDecoder } from '../../../../../indexer';
-import { DataNotDecodableError, UnknownVersionError } from '../../../../../utils';
+import { calls } from '@/chain/kusama/types';
+import { Call, IAddSubCallPalletDecoder } from '@/indexer';
+import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
 export class AddSubCallPalletDecoder implements IAddSubCallPalletDecoder {
   decode(call: Call) {

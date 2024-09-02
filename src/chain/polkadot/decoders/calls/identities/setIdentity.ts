@@ -1,6 +1,6 @@
-import { calls } from '../../../types';
-import { UnknownVersionError } from '../../../../../utils';
-import { Call, ISetIdentityCallPalletDecoder } from '../../../../../indexer';
+import { calls } from '@/chain/polkadot/types';
+import { UnknownVersionError } from '@/utils';
+import { Call, ISetIdentityCallPalletDecoder } from '@/indexer';
 
 export class SetIdentityCallPalletDecoder implements ISetIdentityCallPalletDecoder {
   decode(call: Call) {

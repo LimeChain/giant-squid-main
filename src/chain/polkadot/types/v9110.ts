@@ -1,5 +1,30 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export const MultiSigner: sts.Type<MultiSigner> = sts.closedEnum(() => {
+    return  {
+        Ecdsa: sts.bytes(),
+        Ed25519: sts.bytes(),
+        Sr25519: sts.bytes(),
+    }
+})
+
+export type MultiSigner = MultiSigner_Ecdsa | MultiSigner_Ed25519 | MultiSigner_Sr25519
+
+export interface MultiSigner_Ecdsa {
+    __kind: 'Ecdsa'
+    value: Bytes
+}
+
+export interface MultiSigner_Ed25519 {
+    __kind: 'Ed25519'
+    value: Bytes
+}
+
+export interface MultiSigner_Sr25519 {
+    __kind: 'Sr25519'
+    value: Bytes
+}
+
 export const Data: sts.Type<Data> = sts.closedEnum(() => {
     return  {
         BlakeTwo256: sts.bytes(),
@@ -277,6 +302,41 @@ export interface Judgement_Unknown {
     __kind: 'Unknown'
 }
 
+export const RewardDestination: sts.Type<RewardDestination> = sts.closedEnum(() => {
+    return  {
+        Account: AccountId32,
+        Controller: sts.unit(),
+        None: sts.unit(),
+        Staked: sts.unit(),
+        Stash: sts.unit(),
+    }
+})
+
+export type RewardDestination = RewardDestination_Account | RewardDestination_Controller | RewardDestination_None | RewardDestination_Staked | RewardDestination_Stash
+
+export interface RewardDestination_Account {
+    __kind: 'Account'
+    value: AccountId32
+}
+
+export interface RewardDestination_Controller {
+    __kind: 'Controller'
+}
+
+export interface RewardDestination_None {
+    __kind: 'None'
+}
+
+export interface RewardDestination_Staked {
+    __kind: 'Staked'
+}
+
+export interface RewardDestination_Stash {
+    __kind: 'Stash'
+}
+
+export type AccountId32 = Bytes
+
 export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
     return  {
         Address20: sts.bytes(),
@@ -286,8 +346,6 @@ export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
         Raw: sts.bytes(),
     }
 })
-
-export const AccountId32 = sts.bytes()
 
 export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
 
@@ -315,4 +373,6 @@ export interface MultiAddress_Raw {
     value: Bytes
 }
 
-export type AccountId32 = Bytes
+export const AccountId32 = sts.bytes()
+
+export const Id = sts.number()
