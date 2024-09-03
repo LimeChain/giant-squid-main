@@ -32,5 +32,15 @@ export { IPartiallyRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloa
 export { IAllRefundedEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/allRefunded';
 export { IRemoveKeysLimitConstantGetter } from '@/indexer/pallets/crowdloan/constants';
 export { IWithdrewEventPalletDecoder } from '@/indexer/pallets/crowdloan/events/withdrew';
+export { IParachainRewardEventPalletDecoder } from '@/indexer/pallets/parachain-staking/events/rewarded';
+export { IParachainCompoundEventDecoder } from '@/indexer/pallets/parachain-staking/events/compounded';
+export { IParachainDelegationEventDecoder } from '@/indexer/pallets/parachain-staking/events/delegation';
+export { IParachainDelegationRevokedEventDecoder } from '@/indexer/pallets/parachain-staking/events/delegationRevoked';
+export { IParachainDelegationKickedEventDecoder } from '@/indexer/pallets/parachain-staking/events/delegationKicked';
+export { IParachainDelegationIncreasedEventDecoder } from '@/indexer/pallets/parachain-staking/events/delegationIncreased';
+export { IParachainDelegationDecreasedEventDecoder } from '@/indexer/pallets/parachain-staking/events/delegationDecreased';
+export { IParachainCandidateLeftEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
+export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
+export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 
 export { Indexer, setupPallet } from '@/indexer/main';

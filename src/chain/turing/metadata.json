@@ -4,6 +4,20 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "ParachainStaking": {
+      "events": [
+        "Rewarded",
+        "Compounded",
+        "Delegation",
+        "DelegationRevoked",
+        "DelegationIncreased",
+        "DelegationDecreased",
+        "DelegationKicked",
+        "CandidateLeft",
+        "CandidateBondedMore",
+        "CandidateBondedLess"
+      ]
     }
   },
   "storage": []
