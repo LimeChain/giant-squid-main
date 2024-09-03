@@ -28,16 +28,16 @@ import { ContributedEventPalletHandler } from '@/indexer/pallets/crowdloan/event
 import { PartiallyRefundedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/partiallyRefunded';
 import { AllRefundedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/allRefunded';
 import { WithdrewEventPalletHandler } from '@/indexer/pallets/crowdloan/events/withdrew';
-import { ParachainRewardEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/rewarded';
-import { ParachainCompoundEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/compounded';
-import { ParachainDelegationEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/delegation';
-import { ParachainDelegationRevokedEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/delegationRevoked';
-import { ParachainDelegationKickedEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/delegationKicked';
-import { ParachainDelegationIncreasedEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/delegationIncreased';
-import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/delegationDecreased';
-import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/candidateLeft';
-import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/candidateBondedMore';
-import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachainStaking/events/candidateBondedLess';
+import { ParachainRewardEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/rewarded';
+import { ParachainCompoundEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/compounded';
+import { ParachainDelegationEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegation';
+import { ParachainDelegationRevokedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationRevoked';
+import { ParachainDelegationKickedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationKicked';
+import { ParachainDelegationIncreasedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationIncreased';
+import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationDecreased';
+import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
+import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
+import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 
 export const registry = {
   events: {

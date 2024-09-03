@@ -1,17 +1,18 @@
-import { EnsureAccount, EnsureStaker, ParachainCompoundAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, ParachainDelegationAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachainStaking/utils';
+import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachain-staking/utils';
 import { IEventPalletDecoder } from '@/indexer/types';
 import { Account, Staker } from '@/model';
 
-export interface IParachainCompoundEventDecoder extends IEventPalletDecoder<{ stash: string; delegator: string; amount: bigint }> {}
+export interface IParachainDelegationEventDecoder
+  extends IEventPalletDecoder<{ delegator: string; amount: bigint; stash: string; delegatorPosition: { __kind: string }; autoCompundPercent?: number }> {}
 
-interface ICompoundEventPalletSetup {
-  decoder: IParachainCompoundEventDecoder;
+interface IDelegationEventPalletSetup {
+  decoder: IParachainDelegationEventDecoder;
 }
 
-export class ParachainCompoundEventPalletHandler extends EventPalletHandler<ICompoundEventPalletSetup> {
-  constructor(setup: ICompoundEventPalletSetup, options: IHandlerOptions) {
+export class ParachainDelegationEventPalletHandler extends EventPalletHandler<IDelegationEventPalletSetup> {
+  constructor(setup: IDelegationEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -25,7 +26,7 @@ export class ParachainCompoundEventPalletHandler extends EventPalletHandler<ICom
 
     const accountDef = ctx.store.defer(Account, stakerId);
     const delegatorDef = ctx.store.defer(Account, delegatorId);
-    const stakerDef = ctx.store.defer(Staker, { id: stakerId });
+    const stakerDef = ctx.store.defer(Staker, stakerId);
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
@@ -43,13 +44,15 @@ export class ParachainCompoundEventPalletHandler extends EventPalletHandler<ICom
         staker: () => stakerDef.get(),
         account: () => accountDef.getOrFail(),
       }),
-      new ParachainCompoundAction(block.header, event.extrinsic, {
+      new ParachainDelegationAction(block.header, event.extrinsic, {
         id: event.id,
         account: () => accountDef.getOrFail(),
         staker: () => stakerDef.getOrFail(),
         delegator: () => delegatorDef.getOrFail(),
         amount: data.amount,
         extrinsicHash: buildParachainStakingExtrinsicHash(block.header.height, event.index, event.extrinsicIndex),
+        delegatorPosition: data.delegatorPosition.__kind,
+        autoCompundPercent: data.autoCompundPercent,
       })
     );
   }

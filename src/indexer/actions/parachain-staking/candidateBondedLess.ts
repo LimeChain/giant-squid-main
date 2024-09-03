@@ -1,7 +1,7 @@
-import { Account, ParachainStakingCandidatesBond, Staker } from '@/model';
+import { Account, ParachainStakingCandidatesUnbonded, Staker } from '@/model';
 import { Action, ActionContext } from '../base';
 
-interface ParachainCandidateBondedMoreData {
+interface ParachainCandidateBondedLessData {
   id: string;
   amount: bigint;
   account: () => Promise<Account>;
@@ -9,12 +9,12 @@ interface ParachainCandidateBondedMoreData {
   extrinsicHash: string;
 }
 
-export class ParachainCandidateBondedMoreAction extends Action<ParachainCandidateBondedMoreData> {
+export class ParachainCandidateBondedLessAction extends Action<ParachainCandidateBondedLessData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const account = await this.data.account();
     const staker = await this.data.staker();
 
-    const candidateBondedMore = new ParachainStakingCandidatesBond({
+    const candidateUnbonded = new ParachainStakingCandidatesUnbonded({
       id: this.data.id,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
@@ -24,9 +24,9 @@ export class ParachainCandidateBondedMoreAction extends Action<ParachainCandidat
       amount: this.data.amount,
     });
 
-    staker.totalBonded += this.data.amount;
+    staker.totalBonded -= this.data.amount;
 
-    await ctx.store.insert(candidateBondedMore);
+    await ctx.store.insert(candidateUnbonded);
     await ctx.store.upsert(staker);
   }
 }

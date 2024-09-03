@@ -1,6 +1,6 @@
 import { EnsureAccount, EnsureStaker, ParachainRewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachainStaking/utils';
+import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachain-staking/utils';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { Account, Staker } from '@/model';
 
