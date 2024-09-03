@@ -4,6 +4,9 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "ParachainStaking": {
+      "events": ["Rewarded"]
     }
   },
   "storage": []

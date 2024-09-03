@@ -19,21 +19,41 @@ import { UnbondCallPalletHandler } from '@/indexer/pallets/staking/calls/unbond'
 import { BondExtraCallPalletHandler } from '@/indexer/pallets/staking/calls/bondExtra';
 import { SetPayeeCallPalletHandler } from '@/indexer/pallets/staking/calls/setPayee';
 import { SetControllerCallPalletHandler } from '@/indexer/pallets/staking/calls/setController';
-import { CreateCallPalletHandler } from './pallets/crowdloan/calls/create';
-import { DissolvedEventPalletHandler } from './pallets/crowdloan/events/dissolved';
-import { ReservedParachainEventPalletHandler } from './pallets/crowdloan/events/reserved';
-import { RegisteredParachainEventPalletHandler } from './pallets/crowdloan/events/registered';
-import { DeregisteredParachainEventPalletHandler } from './pallets/crowdloan/events/deregistered';
-import { ContributedEventPalletHandler } from './pallets/crowdloan/events/contributed';
-import { PartiallyRefundedEventPalletHandler } from './pallets/crowdloan/events/partiallyRefunded';
-import { AllRefundedEventPalletHandler } from './pallets/crowdloan/events/allRefunded';
-import { WithdrewEventPalletHandler } from './pallets/crowdloan/events/withdrew';
+import { CreateCallPalletHandler } from '@/indexer/pallets/crowdloan/calls/create';
+import { DissolvedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/dissolved';
+import { ReservedParachainEventPalletHandler } from '@/indexer/pallets/crowdloan/events/reserved';
+import { RegisteredParachainEventPalletHandler } from '@/indexer/pallets/crowdloan/events/registered';
+import { DeregisteredParachainEventPalletHandler } from '@/indexer/pallets/crowdloan/events/deregistered';
+import { ContributedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/contributed';
+import { PartiallyRefundedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/partiallyRefunded';
+import { AllRefundedEventPalletHandler } from '@/indexer/pallets/crowdloan/events/allRefunded';
+import { WithdrewEventPalletHandler } from '@/indexer/pallets/crowdloan/events/withdrew';
+import { ParachainRewardEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/rewarded';
+import { ParachainCompoundEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/compounded';
+import { ParachainDelegationEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegation';
+import { ParachainDelegationRevokedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationRevoked';
+import { ParachainDelegationKickedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationKicked';
+import { ParachainDelegationIncreasedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationIncreased';
+import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/delegationDecreased';
+import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
+import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
+import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 
 export const registry = {
   events: {
     'Balances.Transfer': TransferEventPalletHandler,
     'Staking.Reward': RewardEventPalletHandler,
     'Staking.Rewarded': RewardEventPalletHandler,
+    'ParachainStaking.Rewarded': ParachainRewardEventPalletHandler,
+    'ParachainStaking.Compounded': ParachainCompoundEventPalletHandler,
+    'ParachainStaking.Delegation': ParachainDelegationEventPalletHandler,
+    'ParachainStaking.DelegationRevoked': ParachainDelegationRevokedEventPalletHandler,
+    'ParachainStaking.DelegationKicked': ParachainDelegationKickedEventPalletHandler,
+    'ParachainStaking.DelegationIncreased': ParachainDelegationIncreasedEventPalletHandler,
+    'ParachainStaking.DelegationDecreased': ParachainDelegationDecreasedEventPalletHandler,
+    'ParachainStaking.CandidateLeft': ParachainCandidateLeftEventPalletHandler,
+    'ParachainStaking.CandidateBondedMore': ParachainCandidateBondedMoreEventPalletHandler,
+    'ParachainStaking.CandidateBondedLess': ParachainCandidateBondedLessEventPalletHandler,
     'Staking.Bonded': BondedEventPalletHandler,
     'Staking.Unbonded': UnBondedEventPalletHandler,
     'Staking.Withdrawn': WithdrawnEventPalletHandler,

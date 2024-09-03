@@ -1,6 +1,7 @@
 import { ensureEnvVariable } from '@/utils';
 import { Indexer, setupPallet } from '@/indexer';
 import { TransferEventPalletDecoder } from '@/chain/pendulum/decoders/events/balances/transfer';
+import { ParachainStakingRewardEventPalletDecoder } from '@/chain/pendulum/decoders/events/parachain-staking/rewarded';
 
 export const indexer = new Indexer({
   config: {
@@ -10,6 +11,7 @@ export const indexer = new Indexer({
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'ParachainStaking.Rewarded': setupPallet({ decoder: new ParachainStakingRewardEventPalletDecoder() }),
     },
   },
 });
