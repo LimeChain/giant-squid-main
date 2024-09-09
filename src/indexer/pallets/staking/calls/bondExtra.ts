@@ -2,6 +2,7 @@ import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
 import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
+// @ts-ignore
 import { Account, BondingType, Staker } from '@/model';
 
 export interface IBondExtraCallPalletDecoder extends ICallPalletDecoder<{ amount: bigint }> {}

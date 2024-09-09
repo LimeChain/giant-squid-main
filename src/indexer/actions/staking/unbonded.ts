@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, BondingType, Staker, StakingBond } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

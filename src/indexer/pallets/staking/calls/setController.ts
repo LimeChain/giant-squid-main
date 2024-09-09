@@ -2,6 +2,7 @@ import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
+// @ts-ignore
 import { Account, Staker } from '@/model';
 import { AddControllerAction } from '@/indexer/actions/staking/controller';
 

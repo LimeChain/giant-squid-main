@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, ParachainStakingCandidatesBonded, Staker } from '@/model';
 import { Action, ActionContext } from '../base';
 

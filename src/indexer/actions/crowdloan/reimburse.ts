@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Crowdloan, CrowdloanContributor, CrowdloanReimbursement, CrowdloanReimbursementType } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

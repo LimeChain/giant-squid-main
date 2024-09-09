@@ -3,6 +3,7 @@ import { IHandlerOptions, ICallHandlerParams } from '@/indexer/pallets/handler';
 import { ILedgerStorageLoader } from '@/indexer';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+// @ts-ignore
 import { Account, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { toHex } from '@subsquid/substrate-processor';

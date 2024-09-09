@@ -1,4 +1,5 @@
 import { EnsureAccount } from '@/indexer/actions';
+// @ts-ignore
 import { Account, IdentitySub } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

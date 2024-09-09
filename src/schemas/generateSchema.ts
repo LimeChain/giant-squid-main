@@ -1,84 +1,112 @@
 #!usr/bin/env node
 require('dotenv').config();
+import 'module-alias/register';
 
 import fs from 'fs';
 import path from 'path';
-import { ensureEnvVariable } from '../utils/misc';
+import { ensureEnvVariable } from '../utils';
 
-export async function generateSchema() {
+export const generateSchema = async () => {
   const name = ensureEnvVariable('CHAIN');
   const indexerFile = path.join(__dirname, '../chain', name, '/main.js');
 
   const { indexer } = await import(indexerFile);
 
-  const eventKeys = [...indexer.mapper.events.keys()];
-  const callKeys = [...indexer.mapper.calls.keys()];
+  const eventKeys: string[] = [...indexer.mapper.events.keys()];
+  const callKeys: string[] = [...indexer.mapper.calls.keys()];
 
-  const combinedKeys: string[] = [...eventKeys, ...callKeys];
-
-  let accountSchema = `type Account @entity {
-  id: ID!
-  publicKey: ID! @index\n\t`;
-
+  const combinedKeysSorted: string[] = [...eventKeys, ...callKeys].sort();
   const schemaPath = path.resolve(__dirname, '../../schema.graphql');
 
-  // Clear the file before starting the loop
-  fs.writeFileSync(schemaPath, '');
+  buildSchema(combinedKeysSorted, schemaPath);
+};
 
-  const appendedSchemaParts = new Set();
-
-  for (const key of combinedKeys) {
-    const lowerCaseKey = key.toLowerCase();
-
-    if (lowerCaseKey.includes('balances.transfer') && !appendedSchemaParts.has('balances.transfer')) {
-      const schemaPart = fs.readFileSync(path.join(__dirname, 'transfer.graphql'), 'utf8');
-      fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `transfers: [Transfer!] @derivedFrom(field: "account")\n\t`;
-      appendedSchemaParts.add('balances.transfer');
-    }
-
-    if (lowerCaseKey.includes('staking.reward') && !appendedSchemaParts.has('staking.reward')) {
-      const schemaPart = fs.readFileSync(path.join(__dirname, 'staking.graphql'), 'utf8');
-      fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n\t`;
-      appendedSchemaParts.add('staking.reward');
-    }
-
-    if (lowerCaseKey.includes('identity.set_identity') && !appendedSchemaParts.has('identity.set_identity')) {
-      const schemaPart = fs.readFileSync(path.join(__dirname, 'identity.graphql'), 'utf8');
-      fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `identity: Identity @derivedFrom(field: "account")\n\t`;
-      appendedSchemaParts.add('identity.set_identity');
-    }
-    if (
-      (lowerCaseKey.includes('identity.set_subs') ||
-        lowerCaseKey.includes('identity.add_sub') ||
-        lowerCaseKey.includes('identity.rename_sub') ||
-        lowerCaseKey.includes('identity.provide_judgement')) &&
-      !appendedSchemaParts.has('identity.set_subs') &&
-      !appendedSchemaParts.has('identity.add_sub') &&
-      !appendedSchemaParts.has('identity.rename_sub') &&
-      !appendedSchemaParts.has('identity.provide_judgement')
-    ) {
-      accountSchema += `sub: IdentitySub @derivedFrom(field: "account")`;
-      appendedSchemaParts.add('identity.set_subs');
-      appendedSchemaParts.add('identity.add_sub');
-      appendedSchemaParts.add('identity.rename_sub');
-      appendedSchemaParts.add('identity.provide_judgement');
-    }
-  }
-
-  accountSchema += `\n}\n`;
-
-  fs.appendFileSync(schemaPath, accountSchema);
-  const schemaString = fs.readFileSync(schemaPath, 'utf8');
-
-  fs.writeFileSync(schemaPath, schemaString);
-}
-
+// NOTE: This is done to determine if the file is being run directly or being imported as a module
 if (require.main === module) {
   generateSchema().catch((error) => {
     console.error(error);
     process.exit(1);
   });
 }
+
+const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
+  const commentsInSchema = `# This is an auto-generated file used by the graphiQL explorer to define the tables and relationships between them.\n# This file will be auto-populated based on the pallets used in src/chain/{chainName}/main.ts\n# See generateSchema.ts for more information on how this file is generated.\n\n`;
+  const queryLogs = fs.readFileSync(path.join(__dirname, 'queryLogs.graphql'), 'utf8');
+
+  // Clear the file before starting the loop and add essential files and comments
+  fs.writeFileSync(schemaPath, '');
+  fs.appendFileSync(schemaPath, commentsInSchema);
+  fs.appendFileSync(schemaPath, queryLogs);
+  fs.appendFileSync(schemaPath, '\n');
+
+  const appendedSchemaParts = new Set<string>();
+  let accountSchema = `type Account @entity {\nid: ID!\npublicKey: ID! @index\n`;
+
+  for (const key of chainPalletKeys) {
+    const lowerCaseKey = key.toLowerCase();
+
+    // Balances pallet
+    if (lowerCaseKey.includes('balances.transfer') && !appendedSchemaParts.has('balances.transfer')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'transfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `transfers: [Transfer!] @derivedFrom(field: "account")\n`;
+      appendedSchemaParts.add('balances.transfer');
+    }
+
+    // Crowdloan pallet
+    if (lowerCaseKey === 'crowdloan.create' && !appendedSchemaParts.has('crowdloan.create')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'crowdloan.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('crowdloan.create');
+    }
+
+    // Identity pallet
+    if (lowerCaseKey === 'identity.set_identity' && !appendedSchemaParts.has('identity.set_identity')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'identity.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `sub: IdentitySub @derivedFrom(field: "account")`;
+      accountSchema += `identity: Identity @derivedFrom(field: "account")\n`;
+      appendedSchemaParts.add('identity.set_identity');
+    }
+
+    // Only parachain staking rewarded as some chains have only support for that
+    if (lowerCaseKey.includes('parachainstaking.rewarded') && !appendedSchemaParts.has('parachainstaking.rewarded')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'parachainStakingRewarded.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
+      appendedSchemaParts.add('parachainstaking.rewarded');
+    }
+
+    // Parachain staking pallet
+    if (lowerCaseKey === 'parachainstaking.compounded' && !appendedSchemaParts.has('parachainstaking.rewarded')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'parachainStaking.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
+      appendedSchemaParts.add('parachainstaking.rewarded');
+      appendedSchemaParts.add('parachainstaking.compounded');
+    }
+
+    // Staking pallet
+    if (lowerCaseKey === 'staking.bonded' && !appendedSchemaParts.has('staking.bonded')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'staking.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
+      accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n`;
+      appendedSchemaParts.add('staking.reward');
+      appendedSchemaParts.add('staking.bonded');
+    }
+
+    // Only staking rewarded as some chains have only support for that
+    if ((lowerCaseKey === 'staking.reward' || lowerCaseKey === 'staking.rewarded') && !appendedSchemaParts.has('staking.reward')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'stakingRewarded.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n\t`;
+      accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n`;
+      appendedSchemaParts.add('staking.reward');
+    }
+  }
+
+  accountSchema += `\n}\n`;
+
+  fs.appendFileSync(schemaPath, accountSchema);
+};

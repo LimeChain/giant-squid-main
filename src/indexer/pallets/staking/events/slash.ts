@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, BondingType, Staker, StakingUnlockChunk } from '@/model';
 import { EnsureAccount, EnsureStaker, SlashAction, SlashBondAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';

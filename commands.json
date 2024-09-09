@@ -44,6 +44,15 @@
       "description": "Generate data access classes for an substrate metadata",
       "cmd": ["squid-substrate-typegen", { "glob": "./src/chain/**/metadata.json" }]
     },
+    "buildSchema:prod": {
+      "description": "Generate schema.graphql for deploy",
+      "deps": ["down", "up"],
+      "cmd": ["npm", "run", "buildSchema:prod"]
+    },
+    "prepare:prod": {
+      "description": "NOTE: Need to have .env configured. Prepare schema.graphql and migration for each chain before deploy. Run before deploying and after success revert changes.",
+      "deps": ["buildSchema:prod", "codegen", "migration:generate"]
+    },
     "process": {
       "description": "Load .env and start the squid processor",
       "deps": ["migration:apply"],

@@ -1,6 +1,7 @@
 import { EnsureAccount, EnsureStaker, ParachainCandidateLeftAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IEventPalletDecoder } from '@/indexer/types';
+// @ts-ignore
 import { Account, Staker } from '@/model';
 import { buildParachainStakingExtrinsicHash } from '../utils';
 

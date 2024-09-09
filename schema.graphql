@@ -1,3 +1,7 @@
+# This file will be overwritten by the schema generator when deployed to production.
+# For development purposes, you can modify this file to add custom queries or mutations.
+# When developing a pallet add the custom types/enums/mutations to the schemas folder as a different and modify generateSchema.ts to include the new schema file.
+
 type Account @entity {
   id: ID!
   publicKey: ID! @index

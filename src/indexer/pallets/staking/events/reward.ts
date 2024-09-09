@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, BondingType, RewardDestination, Staker } from '@/model';
 import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

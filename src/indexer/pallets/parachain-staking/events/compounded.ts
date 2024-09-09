@@ -2,6 +2,7 @@ import { EnsureAccount, EnsureStaker, ParachainCompoundAction } from '@/indexer/
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachain-staking/utils';
 import { IEventPalletDecoder } from '@/indexer/types';
+// @ts-ignore
 import { Account, Staker } from '@/model';
 
 export interface IParachainCompoundEventDecoder extends IEventPalletDecoder<{ stash: string; delegator: string; amount: bigint }> {}

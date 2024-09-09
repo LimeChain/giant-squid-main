@@ -1,4 +1,5 @@
 import { EnsureAccount } from '@/indexer/actions';
+// @ts-ignore
 import { Account, Identity, Judgement } from '@/model';
 import { getOriginAccountId, unwrapData } from '@/utils';
 import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '@/indexer/pallets/handler';

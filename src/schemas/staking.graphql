@@ -1,3 +1,25 @@
+type Staker @entity {
+  id: ID! #stash Id
+  stash: Account! @unique
+  controller: Account
+
+  payee: StakingPayee
+
+  activeBonded: BigInt!
+  totalBonded: BigInt!
+  totalUnbonded: BigInt!
+  totalWithdrawn: BigInt!
+  totalSlashed: BigInt!
+  totalRewarded: BigInt!
+
+  payees: [StakingPayee!] @derivedFrom(field: "staker")
+  controllers: [StakingController!] @derivedFrom(field: "staker")
+  unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
+  rewards: [StakingReward!] @derivedFrom(field: "staker")
+  slashes: [StakingSlash!] @derivedFrom(field: "staker")
+  bonds: [StakingBond!] @derivedFrom(field: "staker")
+}
+
 type StakingReward @entity {
   id: ID!
   timestamp: DateTime!
@@ -5,6 +27,74 @@ type StakingReward @entity {
   extrinsicHash: String @index
   account: Account!
   amount: BigInt!
+  staker: Staker!
   era: Int
   validatorId: ID
+}
+
+enum BondingType {
+  Bond
+  BondExtra
+  Unbond
+  Rebond
+  Slash
+  Reward
+}
+
+type StakingBond @entity {
+  id: ID!
+  type: BondingType!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+type StakingUnlockChunk @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  staker: Staker!
+  lockedUntilEra: Int!
+  amount: BigInt!
+  withdrawn: Boolean!
+}
+
+type StakingSlash @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  amount: BigInt!
+  account: Account!
+  staker: Staker!
+}
+
+enum RewardDestination {
+  Staked
+  Stash
+  Controller
+  Account
+  None
+}
+
+type StakingPayee @entity {
+  id: ID!
+  staker: Staker!
+  account: Account
+  type: RewardDestination!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+type StakingController @entity {
+  id: ID!
+  staker: Staker!
+  controller: Account!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
 }

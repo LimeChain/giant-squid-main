@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, ICallPalletDecoder } from '@/indexer/types';
 import { CreateCrowdloanAction } from '@/indexer/actions/crowdloan/create';

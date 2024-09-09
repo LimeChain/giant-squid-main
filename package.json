@@ -5,8 +5,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "prettier:check": "npx prettier --config ./.prettierrc --check '**/*.{js,ts,json}'",
-    "prettier:fix": "npx prettier --config ./.prettierrc --write '**/*.{js,ts,json}'"
+    "build": "rm -rf lib && tsc",
+    "buildSchema:prod": "npm run dynamicSchemaGeneration && npm run prettier:fix",
+    "dynamicSchemaGeneration": "rm -rf lib && tsc && npx copyfiles -u 1 src/schemas/*.graphql lib && node lib/schemas/generateSchema.js",
+    "prettier:check": "npx prettier --config ./.prettierrc --check '**/*.{js,ts,json,graphql}'",
+    "prettier:fix": "npx prettier --config ./.prettierrc --write '**/*.{js,ts,json,graphql}'"
   },
   "dependencies": {
     "@belopash/typeorm-store": "^1.5.0",

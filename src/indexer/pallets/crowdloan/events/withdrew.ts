@@ -1,3 +1,4 @@
+// @ts-ignore
 import { CrowdloanContributor, CrowdloanReimbursementType, Parachain } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

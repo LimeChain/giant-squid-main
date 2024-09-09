@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Crowdloan, CrowdloanStatus, Parachain } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

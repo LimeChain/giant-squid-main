@@ -1,0 +1,81 @@
+enum ParachainStatus {
+  Reserved
+  Registered
+  Deregistered
+  Parachain
+  Parathread
+  Dissolved
+}
+
+type Parachain @entity {
+  id: ID! # para id
+  manager: Account!
+
+  status: ParachainStatus!
+
+  crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
+}
+
+type CrowdloanContributor @entity {
+  id: ID! # account id + crowdloan id
+  account: Account!
+
+  totalContributed: BigInt!
+  reimbursed: Boolean!
+
+  crowdloan: Crowdloan!
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "contributor")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "contributor")
+
+  timestamp: DateTime!
+  blockNumber: Int! @index
+}
+
+type CrowdloanContribution @entity {
+  id: ID!
+  crowdloan: Crowdloan!
+  contributor: CrowdloanContributor!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+enum CrowdloanReimbursementType {
+  Refund
+  Withdraw
+}
+
+type CrowdloanReimbursement @entity {
+  id: ID! # contributor id
+  crowdloan: Crowdloan!
+  contributor: CrowdloanContributor!
+  type: CrowdloanReimbursementType!
+  amount: BigInt!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+}
+
+enum CrowdloanStatus {
+  Active
+  Dissolved
+}
+
+type Crowdloan @entity {
+  id: ID!
+  parachain: Parachain!
+
+  status: CrowdloanStatus!
+  raised: BigInt!
+  reimbursed: BigInt!
+
+  contributions: [CrowdloanContribution!] @derivedFrom(field: "crowdloan")
+  reimbursements: [CrowdloanReimbursement!] @derivedFrom(field: "crowdloan")
+
+  cap: BigInt!
+  leasePeriodStart: Int!
+  leasePeriodEnd: Int!
+  endBlock: Int!
+  startBlock: Int! @index
+}
