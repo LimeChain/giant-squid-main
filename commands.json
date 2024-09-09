@@ -50,7 +50,7 @@
       "cmd": ["npm", "run", "buildSchema:prod"]
     },
     "prepare:prod": {
-      "description": "NOTE: Need to have .env configured. Prepare schema.graphql and migration for each chain before deploy. Run before deploying and after success revert changes.",
+      "description": "Prepare schema.graphql and migration for each chain before deploy. used by deploy.sh",
       "deps": ["buildSchema:prod", "codegen", "migration:generate"]
     },
     "process": {
