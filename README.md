@@ -76,3 +76,14 @@ Password: DB_PASS
 3. Apply migration
 4. Import in registry.ts the Handlers
 5. Implement each pallet action in the indexer/actions folder (Could split the code in the actions folder)
+
+## Deployment to the cloud
+
+### When deploying changes to the cloud you need to use the `deploy.sh` script The script uses the `manifest.yaml` file of the chain you want to deploy to the cloud to do several things
+
+1. Dynamically generates the `schema.graphql`.
+2. Generates a migration.
+3. Deploys the newly changed files to the cloud.
+4. After the deployment is done it removes the changed files, so that local development is not affected.
+
+For more info check deploy.sh and the corresponding files.
