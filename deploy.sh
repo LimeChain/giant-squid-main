@@ -22,6 +22,7 @@ fi
 export CHAIN=$chain_name
 export CHAIN_RPC_ENDPOINT="$chain_name"
 
+# Wait a few seconds when you get the "Are you sure?" prompt it will automatically confirm
 sqd prepare:prod && {
   expect <<EOF
   spawn sqd deploy -o limechain -r -m "$manifest_file"
@@ -31,10 +32,21 @@ sqd prepare:prod && {
 EOF
 }
 
+echo "Deployment finished"
+
 sleep 10
 
 unset CHAIN
 unset CHAIN_RPC_ENDPOINT
 
+if [ -z "$CHAIN" ]; then
+  echo "CHAIN is unset"
+fi
+
+if [ -z "$CHAIN_RPC_ENDPOINT" ]; then
+  echo "CHAIN_RPC_ENDPOINT is unset"
+fi
+
 # Remove unstaged changes caused by prepare:prod
-git reset --hard
+git checkout -- .
+git clean -fd
