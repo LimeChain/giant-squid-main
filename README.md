@@ -72,10 +72,11 @@ Password: DB_PASS
 ### Adding a new pallet (Example with current structure - subject to change)
 
 1. Figure out pallet flow
-2. Create/Update DB schema
+2. Create a new schema and Update the main one
 3. Apply migration
 4. Import in registry.ts the Handlers
 5. Implement each pallet action in the indexer/actions folder (Could split the code in the actions folder)
+6. Update generateSchema.ts to support the new changes
 
 ## Deployment to the cloud
 
