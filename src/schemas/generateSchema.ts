@@ -64,7 +64,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey === 'identity.set_identity' && !appendedSchemaParts.has('identity.set_identity')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'identity.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `sub: IdentitySub @derivedFrom(field: "account")`;
+      accountSchema += `sub: IdentitySub @derivedFrom(field: "account")\n`;
       accountSchema += `identity: Identity @derivedFrom(field: "account")\n`;
       appendedSchemaParts.add('identity.set_identity');
     }
@@ -100,7 +100,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if ((lowerCaseKey === 'staking.reward' || lowerCaseKey === 'staking.rewarded') && !appendedSchemaParts.has('staking.reward')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'stakingRewarded.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n\t`;
+      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
       accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n`;
       appendedSchemaParts.add('staking.reward');
     }
