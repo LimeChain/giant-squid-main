@@ -1,5 +1,6 @@
 import { EnsureAccount } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
+// @ts-ignore
 import { Judgement, Account, Identity } from '@/model';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, JudgementData } from '@/indexer/types';

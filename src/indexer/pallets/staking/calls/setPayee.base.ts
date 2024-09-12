@@ -1,6 +1,7 @@
 import { IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams } from '@/indexer/pallets/handler';
 import { EnsureAccount, AddPayeeAction } from '@/indexer/actions';
+// @ts-ignore
 import { Account, Staker, RewardDestination } from '@/model';
 import { DeferredEntity } from '@belopash/typeorm-store/lib/store';
 import { ISetPayeeCallPalletData } from '@/indexer/pallets/staking/calls/setPayee';

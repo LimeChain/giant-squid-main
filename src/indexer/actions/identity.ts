@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, Identity, IdentityAdditionalField, Judgement, IdentitySub } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

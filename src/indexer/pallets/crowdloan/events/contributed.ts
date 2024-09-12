@@ -1,6 +1,7 @@
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
+// @ts-ignore
 import { Account, CrowdloanContributor, Parachain } from '@/model';
 import { EnsureAccount } from '@/indexer/actions';
 import { ContributeCrowdloanAction } from '@/indexer/actions/crowdloan/contribute';

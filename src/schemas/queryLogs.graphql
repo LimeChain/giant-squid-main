@@ -1,0 +1,7 @@
+type QueryLogs @entity {
+  id: ID!
+  query: String!
+  timestamp: DateTime!
+  location: String
+  chainName: String!
+}

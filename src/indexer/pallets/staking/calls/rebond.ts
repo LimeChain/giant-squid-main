@@ -1,5 +1,6 @@
 import { toHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
+// @ts-ignore
 import { Account, BondingType, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';

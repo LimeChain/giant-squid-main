@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, Parachain, ParachainStatus } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { ChangeParachainStatusAction, CreateParachainAction } from '@/indexer/actions/crowdloan/parachain';

@@ -1,4 +1,5 @@
 import { getOriginAccountId } from '@/utils';
+// @ts-ignore
 import { Identity, Judgement } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

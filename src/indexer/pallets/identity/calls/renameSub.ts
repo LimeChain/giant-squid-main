@@ -1,4 +1,5 @@
 import { unwrapData } from '@/utils';
+// @ts-ignore
 import { IdentitySub } from '@/model';
 import { RenameSubAction } from '@/indexer/actions/identity';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

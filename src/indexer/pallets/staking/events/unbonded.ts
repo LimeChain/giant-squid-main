@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';

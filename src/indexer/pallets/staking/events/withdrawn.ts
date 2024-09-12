@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker, WithdrawnAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
@@ -45,7 +46,7 @@ export class WithdrawnEventPalletHandler extends EventPalletHandler<IWithdrawnEv
 
         if (staker.unlockings.length === 0) return [];
 
-        const widrawable = staker.unlockings.filter((c) => c.lockedUntilEra <= currentEra);
+        const widrawable = staker.unlockings.filter((c: any) => c.lockedUntilEra <= currentEra);
 
         let totalWithdrawn = 0n;
 

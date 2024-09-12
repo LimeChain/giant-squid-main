@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Crowdloan } from '@/model';
 
 export const buildContributorId = (accountId: string, crowdloanId: string) => `${accountId}-${crowdloanId}`;

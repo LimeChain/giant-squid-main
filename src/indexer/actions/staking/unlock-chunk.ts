@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Staker, StakingUnlockChunk } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
