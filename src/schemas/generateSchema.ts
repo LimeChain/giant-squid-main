@@ -40,7 +40,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
   fs.appendFileSync(schemaPath, '\n');
 
   const appendedSchemaParts = new Set<string>();
-  let accountSchema = `type Account @entity {\nid: ID!\npublicKey: ID! @index\n`;
+  const accountSchema = [`type Account @entity {\nid: ID!\npublicKey: ID! @index\n`];
 
   for (const key of chainPalletKeys) {
     const lowerCaseKey = key.toLowerCase();
@@ -49,7 +49,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey.includes('balances.transfer') && !appendedSchemaParts.has('balances.transfer')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'transfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `transfers: [Transfer!] @derivedFrom(field: "account")\n`;
+      accountSchema.push(`transfers: [Transfer!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('balances.transfer');
     }
 
@@ -64,8 +64,8 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey === 'identity.set_identity' && !appendedSchemaParts.has('identity.set_identity')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'identity.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `sub: IdentitySub @derivedFrom(field: "account")\n`;
-      accountSchema += `identity: Identity @derivedFrom(field: "account")\n`;
+      accountSchema.push(`sub: IdentitySub @derivedFrom(field: "account")\n`);
+      accountSchema.push(`identity: Identity @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('identity.set_identity');
     }
 
@@ -73,7 +73,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey.includes('parachainstaking.rewarded') && !appendedSchemaParts.has('parachainstaking.rewarded')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'parachainStakingRewarded.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
+      accountSchema.push(`staker: Staker @derivedFrom(field: "stash")\n`);
       appendedSchemaParts.add('parachainstaking.rewarded');
     }
 
@@ -81,7 +81,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey === 'parachainstaking.compounded' && !appendedSchemaParts.has('parachainstaking.rewarded')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'parachainStaking.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
+      accountSchema.push(`staker: Staker @derivedFrom(field: "stash")\n`);
       appendedSchemaParts.add('parachainstaking.rewarded');
       appendedSchemaParts.add('parachainstaking.compounded');
     }
@@ -90,8 +90,8 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (lowerCaseKey === 'staking.bonded' && !appendedSchemaParts.has('staking.bonded')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'staking.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
-      accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n`;
+      accountSchema.push(`staker: Staker @derivedFrom(field: "stash")\n`);
+      accountSchema.push(`rewards: [StakingReward!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('staking.reward');
       appendedSchemaParts.add('staking.bonded');
     }
@@ -100,13 +100,15 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if ((lowerCaseKey === 'staking.reward' || lowerCaseKey === 'staking.rewarded') && !appendedSchemaParts.has('staking.reward')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'stakingRewarded.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema += `staker: Staker @derivedFrom(field: "stash")\n`;
-      accountSchema += `rewards: [StakingReward!] @derivedFrom(field: "account")\n`;
+      accountSchema.push(`staker: Staker @derivedFrom(field: "stash")\n`);
+      accountSchema.push(`rewards: [StakingReward!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('staking.reward');
     }
   }
 
-  accountSchema += `\n}\n`;
+  accountSchema.push(`\n}\n`);
 
-  fs.appendFileSync(schemaPath, accountSchema);
+  const accountSchemaString = accountSchema.join('');
+
+  fs.appendFileSync(schemaPath, accountSchemaString);
 };
