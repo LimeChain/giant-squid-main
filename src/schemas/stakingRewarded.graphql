@@ -17,11 +17,19 @@ type Staker @entity {
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
 }
 
+enum RewardDestination {
+  Staked
+  Stash
+  Controller
+  Account
+  None
+}
+
 type StakingPayee @entity {
   id: ID!
   staker: Staker!
   account: Account
-  type: String!
+  type: RewardDestination!
   timestamp: DateTime!
   blockNumber: Int! @index
   extrinsicHash: String @index
