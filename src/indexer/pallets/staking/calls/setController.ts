@@ -1,7 +1,7 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 // @ts-ignore
 import { Account, Staker } from '@/model';
 import { AddControllerAction } from '@/indexer/actions/staking/controller';
@@ -34,6 +34,7 @@ export class SetControllerCallPalletHandler extends CallPalletHandler<ISetContro
 
     queue.push(
       new EnsureAccount(block.header, call.extrinsic, { account: () => account.get(), id: stashId, pk: this.decodeAddress(stashId) }),
+      new EnsureStaker(block.header, call.extrinsic, { id: stashId, staker: () => staker.get(), account: () => account.getOrFail() }),
       new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
       new AddControllerAction(block.header, call.extrinsic, {
         id: call.id,
