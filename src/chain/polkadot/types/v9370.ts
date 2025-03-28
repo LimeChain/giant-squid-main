@@ -124,7 +124,7 @@ export const V1Junction: sts.Type<V1Junction> = sts.closedEnum(() => {
             key: sts.bytes(),
         }),
         GeneralIndex: sts.bigint(),
-        GeneralKey: sts.bytes(),
+        GeneralKey: WeakBoundedVec,
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
@@ -187,17 +187,28 @@ export interface V0BodyPart_Voice {
 
 export const V0BodyId: sts.Type<V0BodyId> = sts.closedEnum(() => {
     return  {
+        Administration: sts.unit(),
+        Defense: sts.unit(),
         Executive: sts.unit(),
         Index: sts.number(),
         Judicial: sts.unit(),
         Legislative: sts.unit(),
-        Named: sts.bytes(),
+        Named: WeakBoundedVec,
         Technical: sts.unit(),
+        Treasury: sts.unit(),
         Unit: sts.unit(),
     }
 })
 
-export type V0BodyId = V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Unit
+export type V0BodyId = V0BodyId_Administration | V0BodyId_Defense | V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Treasury | V0BodyId_Unit
+
+export interface V0BodyId_Administration {
+    __kind: 'Administration'
+}
+
+export interface V0BodyId_Defense {
+    __kind: 'Defense'
+}
 
 export interface V0BodyId_Executive {
     __kind: 'Executive'
@@ -218,22 +229,30 @@ export interface V0BodyId_Legislative {
 
 export interface V0BodyId_Named {
     __kind: 'Named'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0BodyId_Technical {
     __kind: 'Technical'
 }
 
+export interface V0BodyId_Treasury {
+    __kind: 'Treasury'
+}
+
 export interface V0BodyId_Unit {
     __kind: 'Unit'
 }
+
+export type WeakBoundedVec = Bytes
+
+export const WeakBoundedVec = sts.bytes()
 
 export const V0NetworkId: sts.Type<V0NetworkId> = sts.closedEnum(() => {
     return  {
         Any: sts.unit(),
         Kusama: sts.unit(),
-        Named: sts.bytes(),
+        Named: WeakBoundedVec,
         Polkadot: sts.unit(),
     }
 })
@@ -250,7 +269,7 @@ export interface V0NetworkId_Kusama {
 
 export interface V0NetworkId_Named {
     __kind: 'Named'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0NetworkId_Polkadot {
@@ -284,7 +303,7 @@ export interface V1Junction_GeneralIndex {
 
 export interface V1Junction_GeneralKey {
     __kind: 'GeneralKey'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V1Junction_OnlyChild {
@@ -441,7 +460,7 @@ export const V0Junction: sts.Type<V0Junction> = sts.closedEnum(() => {
             key: sts.bytes(),
         }),
         GeneralIndex: sts.bigint(),
-        GeneralKey: sts.bytes(),
+        GeneralKey: WeakBoundedVec,
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
@@ -480,7 +499,7 @@ export interface V0Junction_GeneralIndex {
 
 export interface V0Junction_GeneralKey {
     __kind: 'GeneralKey'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0Junction_OnlyChild {
@@ -645,5 +664,3 @@ export interface VersionedMultiLocation_V1 {
     __kind: 'V1'
     value: V1MultiLocation
 }
-
-export const AccountId32 = sts.bytes()

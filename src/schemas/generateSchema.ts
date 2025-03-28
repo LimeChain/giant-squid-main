@@ -104,6 +104,14 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       accountSchema.push(`rewards: [StakingReward!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('staking.reward');
     }
+
+    // XcmPallet
+    if (lowerCaseKey === 'xcmpallet.reserve_transfer_assets' && !appendedSchemaParts.has('xcmpallet.reserve_transfer_assets')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      // accountSchema.push(`xcmTransaction: [XcmTransfer!] @derivedFrom(field: "from")\n`);
+      appendedSchemaParts.add('xcmpallet.reserve_transfer_assets');
+    }
   }
 
   accountSchema.push(`\n}\n`);

@@ -31,6 +31,7 @@ import { PartiallyRefundedEventPalletDecoder } from './decoders/events/crowdloan
 import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRefunded';
 import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
+import { ReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/reserveTransferAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -39,61 +40,62 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
-      'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
-      'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
-      'Staking.Unbonded': setupPallet({
-        decoder: new StakingUnBondedEventPalletDecoder(),
-        constants: {
-          bondingDuration: new BondingDurationConstantGetter(),
-        },
-        storage: {
-          currentEra: new CurrentEraStorageLoader(),
-        },
-      }),
-      'Staking.Withdrawn': setupPallet({
-        decoder: new StakingWithdrawnEventPalletDecoder(),
-        storage: {
-          currentEra: new CurrentEraStorageLoader(),
-        },
-      }),
-      'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
-      'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
-      'Crowdloan.PartiallyRefunded': setupPallet({
-        decoder: new PartiallyRefundedEventPalletDecoder(),
-        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
-      }),
-      'Crowdloan.AllRefunded': setupPallet({
-        decoder: new AllRefundedEventPalletDecoder(),
-        constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
-      }),
-      'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
-      'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
-      'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
+      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      // 'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      // 'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
+      // 'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
+      // 'Staking.Unbonded': setupPallet({
+      //   decoder: new StakingUnBondedEventPalletDecoder(),
+      //   constants: {
+      //     bondingDuration: new BondingDurationConstantGetter(),
+      //   },
+      //   storage: {
+      //     currentEra: new CurrentEraStorageLoader(),
+      //   },
+      // }),
+      // 'Staking.Withdrawn': setupPallet({
+      //   decoder: new StakingWithdrawnEventPalletDecoder(),
+      //   storage: {
+      //     currentEra: new CurrentEraStorageLoader(),
+      //   },
+      // }),
+      // 'Staking.Slash': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      // 'Staking.Slashed': setupPallet({ decoder: new StakingSlashEventPalletDecoder() }),
+      // 'Crowdloan.PartiallyRefunded': setupPallet({
+      //   decoder: new PartiallyRefundedEventPalletDecoder(),
+      //   constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      // }),
+      // 'Crowdloan.AllRefunded': setupPallet({
+      //   decoder: new AllRefundedEventPalletDecoder(),
+      //   constants: { removeKeysLimit: new RemoveKeysLimitConstantGetter() },
+      // }),
+      // 'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
+      // 'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
+      // 'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
       'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
       'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
       'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
-      'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
-      'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
-      'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
-      'Staking.unbond': setupPallet({
-        decoder: new UnbondCallPalletDecoder(),
-        storage: { ledger: new LedgerStorageLoader(), currentEra: new CurrentEraStorageLoader() },
-        constants: {
-          bondingDuration: new BondingDurationConstantGetter(),
-        },
-      }),
-      'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
-      'Staking.set_controller': setupPallet({ decoder: new SetControllerCallPalletDecoder() }),
-      'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
-      'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
-      'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
-      'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
-      'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
-      'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      // 'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
+      // 'Staking.bond_extra': setupPallet({ decoder: new BondExtraCallPalletDecoder() }),
+      // 'Staking.rebond': setupPallet({ decoder: new RebondCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      // 'Staking.unbond': setupPallet({
+      //   decoder: new UnbondCallPalletDecoder(),
+      //   storage: { ledger: new LedgerStorageLoader(), currentEra: new CurrentEraStorageLoader() },
+      //   constants: {
+      //     bondingDuration: new BondingDurationConstantGetter(),
+      //   },
+      // }),
+      // 'Staking.set_payee': setupPallet({ decoder: new SetPayeeCallPalletDecoder(), storage: { ledger: new LedgerStorageLoader() } }),
+      // 'Staking.set_controller': setupPallet({ decoder: new SetControllerCallPalletDecoder() }),
+      // 'Identity.set_identity': setupPallet({ decoder: new SetIdentityCallPalletDecoder() }),
+      // 'Identity.set_subs': setupPallet({ decoder: new SetSubsCallPalletDecoder() }),
+      // 'Identity.provide_judgement': setupPallet({ decoder: new ProvideJudgementCallPalletDecoder() }),
+      // 'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
+      // 'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
+      // 'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      'XcmPallet.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder() }),
     },
   },
 });

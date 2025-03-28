@@ -1,0 +1,10 @@
+type XcmTransaction @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  destination: Parachain!
+  parents: Int @index
+  feeAssetItem: Int! @index
+  from: Account
+}
