@@ -19,7 +19,7 @@ export class DelegateCallPalletHandler extends CallPalletHandler<IDelegateCallPa
     super(setup, options);
   }
 
-  handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
+  handle({ block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
     const data = this.decoder.decode(call);
 

@@ -1,4 +1,4 @@
-import { Account, Delegate } from '@/model';
+import { Delegate } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface DelegateConvictionVotingData {

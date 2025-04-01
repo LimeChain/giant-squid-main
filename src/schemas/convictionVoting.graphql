@@ -7,6 +7,7 @@ type Delegate @entity {
 }
 
 type Unlock @entity {
+  id: ID!
   class: Int
-  target: Account!
+  target: String
 }

@@ -1,5 +1,4 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
-import {Account} from "./account.model"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_} from "typeorm"
 
 @Entity_()
 export class Unlock {
@@ -13,7 +12,6 @@ export class Unlock {
     @Column_("int4", {nullable: true})
     class!: number | undefined | null
 
-    @Index_()
-    @ManyToOne_(() => Account, {nullable: true})
-    target!: Account
+    @Column_("text", {nullable: true})
+    target!: string | undefined | null
 }

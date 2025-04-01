@@ -1,5 +1,5 @@
-module.exports = class Data1743503460092 {
-    name = 'Data1743503460092'
+module.exports = class Data1743513535218 {
+    name = 'Data1743513535218'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -48,8 +48,7 @@ module.exports = class Data1743503460092 {
         await db.query(`CREATE INDEX "IDX_7aa3769048ff14716eb5e0939e" ON "transfer" ("transfer_id") `)
         await db.query(`CREATE INDEX "IDX_bc8d11fdb46573269220c45af5" ON "transfer" ("account_id") `)
         await db.query(`CREATE TABLE "delegate" ("id" character varying NOT NULL, "class" integer, "to" text, "conviction" text, "balance" text, CONSTRAINT "PK_810516365b3daa9f6d6d2d4f2b7" PRIMARY KEY ("id"))`)
-        await db.query(`CREATE TABLE "unlock" ("id" character varying NOT NULL, "class" integer, "target_id" character varying, CONSTRAINT "PK_8868bfb923051689eaff89c2342" PRIMARY KEY ("id"))`)
-        await db.query(`CREATE INDEX "IDX_eb714b2f32483dc7d5219f449a" ON "unlock" ("target_id") `)
+        await db.query(`CREATE TABLE "unlock" ("id" character varying NOT NULL, "class" integer, "target" text, CONSTRAINT "PK_8868bfb923051689eaff89c2342" PRIMARY KEY ("id"))`)
         await db.query(`CREATE TABLE "crowdloan_reimbursement" ("id" character varying NOT NULL, "type" character varying(8) NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "crowdloan_id" character varying, "contributor_id" character varying, CONSTRAINT "PK_d1b5973aaff1feb561e26786316" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_ae5cd5a3ea662c36f3256f51f1" ON "crowdloan_reimbursement" ("crowdloan_id") `)
         await db.query(`CREATE INDEX "IDX_e4b4489c512a2c6a690c29864d" ON "crowdloan_reimbursement" ("contributor_id") `)
@@ -92,7 +91,6 @@ module.exports = class Data1743503460092 {
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_bc8d11fdb46573269220c45af52" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
-        await db.query(`ALTER TABLE "unlock" ADD CONSTRAINT "FK_eb714b2f32483dc7d5219f449af" FOREIGN KEY ("target_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "crowdloan_reimbursement" ADD CONSTRAINT "FK_ae5cd5a3ea662c36f3256f51f10" FOREIGN KEY ("crowdloan_id") REFERENCES "crowdloan"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "crowdloan_reimbursement" ADD CONSTRAINT "FK_e4b4489c512a2c6a690c29864d5" FOREIGN KEY ("contributor_id") REFERENCES "crowdloan_contributor"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "crowdloan_contributor" ADD CONSTRAINT "FK_872aa6a86ccdac2cfa874729be1" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -154,7 +152,6 @@ module.exports = class Data1743503460092 {
         await db.query(`DROP INDEX "public"."IDX_bc8d11fdb46573269220c45af5"`)
         await db.query(`DROP TABLE "delegate"`)
         await db.query(`DROP TABLE "unlock"`)
-        await db.query(`DROP INDEX "public"."IDX_eb714b2f32483dc7d5219f449a"`)
         await db.query(`DROP TABLE "crowdloan_reimbursement"`)
         await db.query(`DROP INDEX "public"."IDX_ae5cd5a3ea662c36f3256f51f1"`)
         await db.query(`DROP INDEX "public"."IDX_e4b4489c512a2c6a690c29864d"`)
@@ -197,7 +194,6 @@ module.exports = class Data1743503460092 {
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_bc8d11fdb46573269220c45af52"`)
-        await db.query(`ALTER TABLE "unlock" DROP CONSTRAINT "FK_eb714b2f32483dc7d5219f449af"`)
         await db.query(`ALTER TABLE "crowdloan_reimbursement" DROP CONSTRAINT "FK_ae5cd5a3ea662c36f3256f51f10"`)
         await db.query(`ALTER TABLE "crowdloan_reimbursement" DROP CONSTRAINT "FK_e4b4489c512a2c6a690c29864d5"`)
         await db.query(`ALTER TABLE "crowdloan_contributor" DROP CONSTRAINT "FK_872aa6a86ccdac2cfa874729be1"`)

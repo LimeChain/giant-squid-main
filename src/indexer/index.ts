@@ -45,5 +45,6 @@ export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/par
 
 //conviction-voting
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
+export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
 
 export { Indexer, setupPallet } from '@/indexer/main';
