@@ -43,4 +43,7 @@ export { IParachainCandidateLeftEventDecoder } from '@/indexer/pallets/parachain
 export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 
+//conviction-voting
+export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
+
 export { Indexer, setupPallet } from '@/indexer/main';

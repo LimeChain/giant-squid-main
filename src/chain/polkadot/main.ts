@@ -31,11 +31,15 @@ import { PartiallyRefundedEventPalletDecoder } from './decoders/events/crowdloan
 import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRefunded';
 import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
+import { DelegateCallPalletDecoder } from './decoders/calls/conviction-voting/delegate';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    blockRange: {
+      from: 23743144,
+    },
   },
   pallets: {
     events: {
@@ -94,6 +98,7 @@ export const indexer = new Indexer({
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
     },
   },
 });

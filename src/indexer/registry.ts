@@ -38,6 +38,7 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
+import { DelegateCallPalletHandler } from './pallets/conviction-voting/calls/delegate';
 
 export const registry = {
   events: {
@@ -85,6 +86,7 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
+    'ConvictionVoting.delegate': DelegateCallPalletHandler,
   },
 };
 

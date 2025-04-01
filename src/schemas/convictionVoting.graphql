@@ -1,0 +1,12 @@
+type Delegate @entity {
+  id: ID!
+  class: Int
+  to: String
+  conviction: String
+  balance: String
+}
+
+type Unlock @entity {
+  class: Int
+  target: Account!
+}
