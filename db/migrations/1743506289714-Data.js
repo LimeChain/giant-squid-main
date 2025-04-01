@@ -1,5 +1,5 @@
-module.exports = class Data1743153370912 {
-    name = 'Data1743153370912'
+module.exports = class Data1743506289714 {
+    name = 'Data1743506289714'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -71,7 +71,7 @@ module.exports = class Data1743153370912 {
         await db.query(`CREATE UNIQUE INDEX "IDX_20df08516f386a2d403fe66150" ON "identity_sub" ("account_id") `)
         await db.query(`CREATE TABLE "identity" ("id" character varying NOT NULL, "judgement" character varying(10) NOT NULL, "additional" jsonb, "display" text, "legal" text, "web" text, "riot" text, "email" text, "pgp_fingerprint" text, "image" text, "twitter" text, "is_killed" boolean NOT NULL, "account_id" character varying, CONSTRAINT "REL_bafa9e6c71c3f69cef6602a809" UNIQUE ("account_id"), CONSTRAINT "PK_ff16a44186b286d5e626178f726" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_bafa9e6c71c3f69cef6602a809" ON "identity" ("account_id") `)
-        await db.query(`CREATE TABLE "xcm_transaction" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "parents" integer, "fee_asset_item" integer NOT NULL, "destination_id" character varying, "from_id" character varying, CONSTRAINT "PK_e225b10248a73e93015fb137b1c" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "xcm_transaction" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "parents" integer, "fee_asset_item" integer NOT NULL, "full_result" jsonb, "destination_id" character varying, "from_id" character varying, CONSTRAINT "PK_e225b10248a73e93015fb137b1c" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_c9553ced6f920b7f71fc69ae8d" ON "xcm_transaction" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_9251effcac6fc37c21046ee173" ON "xcm_transaction" ("timestamp") `)
         await db.query(`CREATE INDEX "IDX_2bbef717dba66ef7c96571ffc7" ON "xcm_transaction" ("extrinsic_hash") `)

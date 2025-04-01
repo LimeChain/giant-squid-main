@@ -1,6 +1,8 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
+import * as marshal from "./marshal"
 import {Parachain} from "./parachain.model"
 import {Account} from "./account.model"
+import {FullResult} from "./_fullResult"
 
 @Entity_()
 export class XcmTransaction {
@@ -25,7 +27,7 @@ export class XcmTransaction {
 
     @Index_()
     @ManyToOne_(() => Parachain, {nullable: true})
-    destination!: Parachain
+    destination!: Parachain | undefined | null
 
     @Index_()
     @Column_("int4", {nullable: true})
@@ -38,4 +40,7 @@ export class XcmTransaction {
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
     from!: Account | undefined | null
+
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new FullResult(undefined, obj)}, nullable: true})
+    fullResult!: FullResult | undefined | null
 }

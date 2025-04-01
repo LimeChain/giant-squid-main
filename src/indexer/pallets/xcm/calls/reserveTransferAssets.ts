@@ -1,6 +1,5 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-// @ts-ignore
 import { Parachain } from '@/model';
 import path from 'path';
 import os from 'os';
@@ -37,12 +36,13 @@ interface DataV1002000 {
 }
 
 export interface IReserveTransferAssetsPalletDecoder
-  extends ICallPalletDecoder<{
-    data: DataV9140 | DataV9370 | DataV9420 | DataV1002000;
-    destination: number;
-    parents: number | null;
-    feeAssetItem: number;
-  }> {}
+  //   extends ICallPalletDecoder<{
+  //     data: DataV9140 | DataV9370 | DataV9420 | DataV1002000;
+  //     destination: number;
+  //     parents: number | null;
+  //     feeAssetItem: number;
+  //   }> {}
+  extends ICallPalletDecoder<any> {}
 
 interface IReserveTransferAssetsPalletSetup extends IBasePalletSetup {
   decoder: IReserveTransferAssetsPalletDecoder;
@@ -62,30 +62,37 @@ export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IRe
   }
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-
-    const { destination, parents, feeAssetItem } = this.decoder.decode(call);
-    const parachain = ctx.store.defer(Parachain, destination.toString());
-    if (!parachain) {
-      console.dir({ extHash: call.extrinsic?.hash });
-      return;
-    }
+    const decoded = this.decoder.decode(call);
+    if (!decoded) return;
 
     // fileStream.write(
     //   JSON.stringify(
-    //     { block: block.header.height, data: data },
+    //     { block: block.header.height, data: decoded.data },
     //     (key, value) => {
     //       if (typeof value === 'bigint') {
     //         return value.toString();
     //       }
-
     //       return value;
-    //     },x
+    //     },
     //     2
     //   )
     // );
 
     // fileStream.write(',\n');
 
-    queue.push(new XcmTransferAction(block.header, call.extrinsic, { id: call.id, destination: () => parachain.getOrFail(), parents, feeAssetItem }));
+    if (decoded.destination) {
+      //   const parachain = ctx.store.defer(Parachain, decoded.destination.toString());
+      //   if (!parachain) return;
+
+      queue.push(
+        new XcmTransferAction(block.header, call.extrinsic, {
+          id: call.id,
+          destination: () => {},
+          parents: decoded.parents,
+          feeAssetItem: decoded.feeAssetItem,
+          result: decoded.data,
+        })
+      );
+    }
   }
 }

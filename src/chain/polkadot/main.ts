@@ -37,6 +37,7 @@ export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    blockRange: { from: 10170049 },
   },
   pallets: {
     events: {
@@ -72,9 +73,9 @@ export const indexer = new Indexer({
       // 'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
       // 'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
       // 'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
-      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
-      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
-      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      // 'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      // 'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      // 'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       // 'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
