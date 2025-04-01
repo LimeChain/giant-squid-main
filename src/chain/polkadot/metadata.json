@@ -22,7 +22,7 @@
     },
     "ConvictionVoting": {
       "events": [],
-      "calls": ["delegate", "unlock"]
+      "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

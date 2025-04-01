@@ -1,6 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { DelegateConvictionVotingAction } from '@/indexer/actions/conviction-voting/delegate';
+import { DelegateConvictionVotingAction } from '@/indexer/actions';
 
 export interface IDelegateCallPalletDecoder
   extends ICallPalletDecoder<{

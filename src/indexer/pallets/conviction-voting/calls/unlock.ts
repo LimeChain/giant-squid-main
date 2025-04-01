@@ -1,6 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { UnlockConvictionVotingAction } from '@/indexer/actions/conviction-voting/unlock';
+import { UnlockConvictionVotingAction } from '@/indexer/actions';
 
 export interface IUnlockCallPalletDecoder
   extends ICallPalletDecoder<{

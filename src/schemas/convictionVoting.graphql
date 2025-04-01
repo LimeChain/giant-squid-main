@@ -11,3 +11,7 @@ type Unlock @entity {
   class: Int
   target: String
 }
+
+type Undelegate @entity {
+  class: Int
+}

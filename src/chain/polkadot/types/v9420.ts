@@ -81,3 +81,42 @@ export interface MultiAddress_Raw {
 }
 
 export type AccountId32 = Bytes
+
+export const Type_151: sts.Type<Type_151> = sts.closedEnum(() => {
+    return  {
+        Split: sts.enumStruct({
+            aye: sts.bigint(),
+            nay: sts.bigint(),
+        }),
+        SplitAbstain: sts.enumStruct({
+            aye: sts.bigint(),
+            nay: sts.bigint(),
+            abstain: sts.bigint(),
+        }),
+        Standard: sts.enumStruct({
+            vote: sts.number(),
+            balance: sts.bigint(),
+        }),
+    }
+})
+
+export type Type_151 = Type_151_Split | Type_151_SplitAbstain | Type_151_Standard
+
+export interface Type_151_Split {
+    __kind: 'Split'
+    aye: bigint
+    nay: bigint
+}
+
+export interface Type_151_SplitAbstain {
+    __kind: 'SplitAbstain'
+    aye: bigint
+    nay: bigint
+    abstain: bigint
+}
+
+export interface Type_151_Standard {
+    __kind: 'Standard'
+    vote: number
+    balance: bigint
+}

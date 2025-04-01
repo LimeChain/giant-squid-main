@@ -48,6 +48,10 @@ type Unlock @entity {
   target: String
 }
 
+type Undelegate @entity {
+  class: Int
+}
+
 enum ParachainStatus {
   Reserved
   Registered
