@@ -34,22 +34,42 @@ type NativeTransfer @entity {
   success: Boolean!
 }
 
-type Delegate @entity {
+type ConvictionDelegate @entity {
   id: ID!
-  class: Int
-  to: String
-  conviction: String
-  balance: String
+  class: Int!
+  to: String!
+  conviction: String!
+  balance: BigInt!
 }
 
-type Unlock @entity {
+type ConvictionUnlock @entity {
   id: ID!
-  class: Int
-  target: String
+  class: Int!
+  target: String!
 }
 
-type Undelegate @entity {
+type ConvictionUndelegate @entity {
+  class: Int!
+}
+
+type ConvictionVoteField {
+  aye: BigInt
+  nay: BigInt
+  abstain: BigInt
+  vote: Int
+  balance: BigInt
+}
+
+type ConvictionVote @entity {
+  id: ID!
+  pollIndex: Int!
+  vote: ConvictionVoteField!
+}
+
+type ConvictionRemoveVote @entity {
+  id: ID!
   class: Int
+  index: Int!
 }
 
 enum ParachainStatus {

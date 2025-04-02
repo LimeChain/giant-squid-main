@@ -20,3 +20,5 @@ export * from './parachain-staking/candidateBondedLess';
 export * from './conviction-voting/delegate';
 export * from './conviction-voting/undelegate';
 export * from './conviction-voting/unlock';
+export * from './conviction-voting/vote';
+export * from './conviction-voting/removeVote';

@@ -1,5 +1,5 @@
-module.exports = class Data1743516233296 {
-    name = 'Data1743516233296'
+module.exports = class Data1743591633545 {
+    name = 'Data1743591633545'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -47,9 +47,11 @@ module.exports = class Data1743516233296 {
         await db.query(`CREATE TABLE "transfer" ("id" character varying NOT NULL, "direction" character varying(4), "transfer_id" character varying, "account_id" character varying, CONSTRAINT "PK_fd9ddbdd49a17afcbe014401295" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_7aa3769048ff14716eb5e0939e" ON "transfer" ("transfer_id") `)
         await db.query(`CREATE INDEX "IDX_bc8d11fdb46573269220c45af5" ON "transfer" ("account_id") `)
-        await db.query(`CREATE TABLE "delegate" ("id" character varying NOT NULL, "class" integer, "to" text, "conviction" text, "balance" text, CONSTRAINT "PK_810516365b3daa9f6d6d2d4f2b7" PRIMARY KEY ("id"))`)
-        await db.query(`CREATE TABLE "unlock" ("id" character varying NOT NULL, "class" integer, "target" text, CONSTRAINT "PK_8868bfb923051689eaff89c2342" PRIMARY KEY ("id"))`)
-        await db.query(`CREATE TABLE "undelegate" ("id" character varying NOT NULL, "class" integer, CONSTRAINT "PK_0f09ebf65a7b3b5fed21a6e2096" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_delegate" ("id" character varying NOT NULL, "class" integer NOT NULL, "to" text NOT NULL, "conviction" text NOT NULL, "balance" numeric NOT NULL, CONSTRAINT "PK_22678907b742407649c70245299" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_unlock" ("id" character varying NOT NULL, "class" integer NOT NULL, "target" text NOT NULL, CONSTRAINT "PK_6399f4c2f9b76b5e0e305bcb4fa" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_undelegate" ("id" character varying NOT NULL, "class" integer NOT NULL, CONSTRAINT "PK_79587e0afbf74699a78d5f53e62" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_vote" ("id" character varying NOT NULL, "poll_index" integer NOT NULL, "vote" jsonb NOT NULL, CONSTRAINT "PK_ff0112254d31eff17e0ab8f8245" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_remove_vote" ("id" character varying NOT NULL, "class" integer, "index" integer NOT NULL, CONSTRAINT "PK_a858bfcc9b813ab56e0554468c2" PRIMARY KEY ("id"))`)
         await db.query(`CREATE TABLE "crowdloan_reimbursement" ("id" character varying NOT NULL, "type" character varying(8) NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "crowdloan_id" character varying, "contributor_id" character varying, CONSTRAINT "PK_d1b5973aaff1feb561e26786316" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_ae5cd5a3ea662c36f3256f51f1" ON "crowdloan_reimbursement" ("crowdloan_id") `)
         await db.query(`CREATE INDEX "IDX_e4b4489c512a2c6a690c29864d" ON "crowdloan_reimbursement" ("contributor_id") `)
@@ -151,9 +153,11 @@ module.exports = class Data1743516233296 {
         await db.query(`DROP TABLE "transfer"`)
         await db.query(`DROP INDEX "public"."IDX_7aa3769048ff14716eb5e0939e"`)
         await db.query(`DROP INDEX "public"."IDX_bc8d11fdb46573269220c45af5"`)
-        await db.query(`DROP TABLE "delegate"`)
-        await db.query(`DROP TABLE "unlock"`)
-        await db.query(`DROP TABLE "undelegate"`)
+        await db.query(`DROP TABLE "conviction_delegate"`)
+        await db.query(`DROP TABLE "conviction_unlock"`)
+        await db.query(`DROP TABLE "conviction_undelegate"`)
+        await db.query(`DROP TABLE "conviction_vote"`)
+        await db.query(`DROP TABLE "conviction_remove_vote"`)
         await db.query(`DROP TABLE "crowdloan_reimbursement"`)
         await db.query(`DROP INDEX "public"."IDX_ae5cd5a3ea662c36f3256f51f1"`)
         await db.query(`DROP INDEX "public"."IDX_e4b4489c512a2c6a690c29864d"`)

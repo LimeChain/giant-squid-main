@@ -1,8 +1,8 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_} from "typeorm"
 
 @Entity_()
-export class Undelegate {
-    constructor(props?: Partial<Undelegate>) {
+export class ConvictionRemoveVote {
+    constructor(props?: Partial<ConvictionRemoveVote>) {
         Object.assign(this, props)
     }
 
@@ -11,4 +11,7 @@ export class Undelegate {
 
     @Column_("int4", {nullable: true})
     class!: number | undefined | null
+
+    @Column_("int4", {nullable: false})
+    index!: number
 }

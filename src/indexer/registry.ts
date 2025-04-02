@@ -40,7 +40,9 @@ import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
-import { UndelegateCallPalletHandler } from '@/indexer//pallets/conviction-voting/calls/undelegate';
+import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
+import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
+import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 
 export const registry = {
   events: {
@@ -91,6 +93,8 @@ export const registry = {
     'ConvictionVoting.delegate': DelegateCallPalletHandler,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
+    'ConvictionVoting.vote': VoteCallPalletHandler,
+    'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
   },
 };
 

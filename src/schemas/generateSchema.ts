@@ -107,7 +107,10 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
 
     // Conviction Voting pallet
     if (
-      (lowerCaseKey === 'convictionvoting.delegate' || lowerCaseKey === 'convictionvoting.undelegate' || lowerCaseKey === 'convictionvoting.unlock') &&
+      (lowerCaseKey === 'convictionvoting.delegate' ||
+        lowerCaseKey === 'convictionvoting.undelegate' ||
+        lowerCaseKey === 'convictionvoting.unlock' ||
+        lowerCaseKey === 'convictionvoting.vote') &&
       !appendedSchemaParts.has('convictionvoting')
     ) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'convictionVoting.graphql'), 'utf8');

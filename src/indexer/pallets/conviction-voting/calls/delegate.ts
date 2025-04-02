@@ -7,7 +7,7 @@ export interface IDelegateCallPalletDecoder
     class: number;
     to: string | undefined;
     conviction: string;
-    balance: string;
+    balance: bigint;
   }> {}
 
 interface IDelegateCallPalletSetup extends IBasePalletSetup {

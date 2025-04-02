@@ -1,6 +1,6 @@
 import { calls } from '@/chain/polkadot/types';
 import { Call, IDelegateCallPalletDecoder } from '@/indexer';
-import { UnknownVersionError } from '@/utils';
+import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
 export class DelegateCallPalletDecoder implements IDelegateCallPalletDecoder {
   decode(call: Call) {
@@ -18,13 +18,19 @@ export class DelegateCallPalletDecoder implements IDelegateCallPalletDecoder {
         case 'Raw':
           to = fund.to.value;
           break;
+        case 'Index':
+          to = undefined;
+          break;
+
+        default:
+          throw new DataNotDecodableError(to, fund.to);
       }
 
       return {
         class: fund.class,
         to,
         conviction: fund.conviction.__kind,
-        balance: fund.balance.toString(),
+        balance: fund.balance,
       };
     }
 

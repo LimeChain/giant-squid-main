@@ -1,6 +1,6 @@
 import { calls } from '@/chain/polkadot/types';
 import { Call, IUnlockCallPalletDecoder } from '@/indexer';
-import { UnknownVersionError } from '@/utils';
+import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
 export class UnlockCallPalletDecoder implements IUnlockCallPalletDecoder {
   decode(call: Call) {
@@ -8,6 +8,7 @@ export class UnlockCallPalletDecoder implements IUnlockCallPalletDecoder {
     if (unlock.v9420.is(call)) {
       const fund = unlock.v9420.decode(call);
       let target;
+
       switch (fund.target.__kind) {
         case 'Id':
         case 'Address20':
@@ -15,6 +16,11 @@ export class UnlockCallPalletDecoder implements IUnlockCallPalletDecoder {
         case 'Raw':
           target = fund.target.value;
           break;
+        case 'Index':
+          target = undefined;
+          break;
+        default:
+          throw new DataNotDecodableError(unlock, fund.target);
       }
       return {
         class: fund.class,

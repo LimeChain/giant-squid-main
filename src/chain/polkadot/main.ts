@@ -34,6 +34,8 @@ import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
 import { DelegateCallPalletDecoder } from './decoders/calls/conviction-voting/delegate';
 import { UnlockCallPalletDecoder } from './decoders/calls/conviction-voting/unlock';
 import { UndelegateCallPalletDecoder } from './decoders/calls/conviction-voting/undelegate';
+import { VoteCallPalletDecoder } from './decoders/calls/conviction-voting/vote';
+import { RemoveVoteCallPalletDecoder } from './decoders/calls/conviction-voting/removeVote';
 
 export const indexer = new Indexer({
   config: {
@@ -100,6 +102,8 @@ export const indexer = new Indexer({
       'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
       'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
+      'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
+      'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
     },
   },
 });

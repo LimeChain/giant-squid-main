@@ -1,3 +1,5 @@
+import { IRemoveVoteCallPalletDecoder } from './pallets/conviction-voting/calls/removeVote';
+import { IVoteCallPalletDecoder } from './pallets/conviction-voting/calls/vote';
 export { Event, Call, Block, BlockHeader, ProcessorContext } from '@/indexer/processor';
 export { ISlashEventPalletDecoder } from '@/indexer/pallets/staking/events/slash';
 export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
@@ -47,5 +49,7 @@ export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/par
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
 export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
 export { IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/undelegate';
+export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/vote';
+export { IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 
 export { Indexer, setupPallet } from '@/indexer/main';

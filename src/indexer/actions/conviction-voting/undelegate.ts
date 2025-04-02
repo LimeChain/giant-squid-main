@@ -1,4 +1,4 @@
-import { Undelegate } from '@/model';
+import { ConvictionUndelegate } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UndelegateConvictionVotingData {
@@ -7,7 +7,7 @@ interface UndelegateConvictionVotingData {
 
 export class UndelegateConvictionVotingAction extends Action<UndelegateConvictionVotingData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    const delegate = new Undelegate({
+    const delegate = new ConvictionUndelegate({
       id: this.extrinsic?.hash,
       class: this.data.class,
     });

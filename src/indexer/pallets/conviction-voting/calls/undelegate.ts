@@ -20,8 +20,6 @@ export class UndelegateCallPalletHandler extends CallPalletHandler<IUndelegateCa
     if (!call.success) return;
     const data = this.decoder.decode(call);
 
-    console.log('Undelegate Call ');
-
     queue.push(
       new UndelegateConvictionVotingAction(block.header, call.extrinsic, {
         class: data.class,
