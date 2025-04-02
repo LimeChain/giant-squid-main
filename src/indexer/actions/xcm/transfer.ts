@@ -1,31 +1,36 @@
-import { Account, fromJsonVersionedMultiLocation, FullResult, Parachain, XcmTransaction } from '@/model';
+import { Account, XcmTransfer, XcmTransferDestination } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
+import { IXcmDestination } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
 
 interface XcmTransferActionData {
   id: string;
-  destination: () => void;
+  destination: () => Promise<{ parachain: IXcmDestination['parachain']; parents: IXcmDestination['parents'] }>;
   //   destination: () => Promise<Parachain>;
   feeAssetItem: number;
-  parents: number | null;
+  from: string;
   //   from: () => Promise<Account>;
-  result: any;
 }
 export class XcmTransferAction extends Action<XcmTransferActionData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    // const parachain = await this.data.destination().catch(() => null);
-    // if (!parachain) return;
+    const xcmDestination = await this.data.destination().catch();
+    if (!xcmDestination) return;
 
-    let transaction = new XcmTransaction({
+    let xcmTransferDestination = new XcmTransferDestination({
+      id: this.data.id,
+      parachain: xcmDestination.parachain?.toString(),
+      parents: xcmDestination.parents,
+    });
+    await ctx.store.insert(xcmTransferDestination);
+
+    let xcmTransfer = new XcmTransfer({
       id: this.data.id,
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
-      //   from: await this.data.from(),
+      from: this.data.from,
       feeAssetItem: this.data.feeAssetItem,
-      //   destination: parachain,
-      parents: this.data.parents,
-      fullResult: new FullResult({}, this.data.result),
+      destination: xcmTransferDestination,
     });
-    await ctx.store.insert(transaction);
+    await ctx.store.insert(xcmTransfer);
   }
 }

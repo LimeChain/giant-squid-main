@@ -1,5 +1,5 @@
-module.exports = class Data1743506289714 {
-    name = 'Data1743506289714'
+module.exports = class Data1743588839304 {
+    name = 'Data1743588839304'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -71,14 +71,14 @@ module.exports = class Data1743506289714 {
         await db.query(`CREATE UNIQUE INDEX "IDX_20df08516f386a2d403fe66150" ON "identity_sub" ("account_id") `)
         await db.query(`CREATE TABLE "identity" ("id" character varying NOT NULL, "judgement" character varying(10) NOT NULL, "additional" jsonb, "display" text, "legal" text, "web" text, "riot" text, "email" text, "pgp_fingerprint" text, "image" text, "twitter" text, "is_killed" boolean NOT NULL, "account_id" character varying, CONSTRAINT "REL_bafa9e6c71c3f69cef6602a809" UNIQUE ("account_id"), CONSTRAINT "PK_ff16a44186b286d5e626178f726" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_bafa9e6c71c3f69cef6602a809" ON "identity" ("account_id") `)
-        await db.query(`CREATE TABLE "xcm_transaction" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "parents" integer, "fee_asset_item" integer NOT NULL, "full_result" jsonb, "destination_id" character varying, "from_id" character varying, CONSTRAINT "PK_e225b10248a73e93015fb137b1c" PRIMARY KEY ("id"))`)
-        await db.query(`CREATE INDEX "IDX_c9553ced6f920b7f71fc69ae8d" ON "xcm_transaction" ("block_number") `)
-        await db.query(`CREATE INDEX "IDX_9251effcac6fc37c21046ee173" ON "xcm_transaction" ("timestamp") `)
-        await db.query(`CREATE INDEX "IDX_2bbef717dba66ef7c96571ffc7" ON "xcm_transaction" ("extrinsic_hash") `)
-        await db.query(`CREATE INDEX "IDX_ff80ef228768598d4453119832" ON "xcm_transaction" ("destination_id") `)
-        await db.query(`CREATE INDEX "IDX_0cff54b4393d7138155ceb7a5a" ON "xcm_transaction" ("parents") `)
-        await db.query(`CREATE INDEX "IDX_436c131c1941350aa6a9e6b52a" ON "xcm_transaction" ("fee_asset_item") `)
-        await db.query(`CREATE INDEX "IDX_412481a99014aac904f07058bd" ON "xcm_transaction" ("from_id") `)
+        await db.query(`CREATE TABLE "xcm_transfer_destination" ("id" character varying NOT NULL, "parachain" text NOT NULL, "parents" integer, CONSTRAINT "PK_aa880133974ec90fdf089da0e90" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_19c66a75a72edbbe0b09dba354" ON "xcm_transfer_destination" ("parents") `)
+        await db.query(`CREATE TABLE "xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "from" text, "destination_id" character varying, CONSTRAINT "PK_51dd82383f8ec7d2358b8df0859" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_766473f200d8c26e84ac2252d3" ON "xcm_transfer" ("block_number") `)
+        await db.query(`CREATE INDEX "IDX_28960d1f2cb3af26dab8d6c1a9" ON "xcm_transfer" ("timestamp") `)
+        await db.query(`CREATE INDEX "IDX_40a2a3aa9f698a22c3d53ba555" ON "xcm_transfer" ("extrinsic_hash") `)
+        await db.query(`CREATE INDEX "IDX_aa880133974ec90fdf089da0e9" ON "xcm_transfer" ("destination_id") `)
+        await db.query(`CREATE INDEX "IDX_7693f197d47632f0dd8f1ad63a" ON "xcm_transfer" ("fee_asset_item") `)
         await db.query(`ALTER TABLE "staking_payee" ADD CONSTRAINT "FK_68a5389e6a39fc3bc7e29933336" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_payee" ADD CONSTRAINT "FK_f22703d3cdc1f9f9d898e1bee85" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_controller" ADD CONSTRAINT "FK_1d205a09102d69c4c4d655652bc" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -108,8 +108,7 @@ module.exports = class Data1743506289714 {
         await db.query(`ALTER TABLE "identity_sub" ADD CONSTRAINT "FK_b3110339d38dddff279f6f77127" FOREIGN KEY ("super_id") REFERENCES "identity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "identity_sub" ADD CONSTRAINT "FK_20df08516f386a2d403fe66150a" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "identity" ADD CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
-        await db.query(`ALTER TABLE "xcm_transaction" ADD CONSTRAINT "FK_ff80ef228768598d4453119832e" FOREIGN KEY ("destination_id") REFERENCES "parachain"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
-        await db.query(`ALTER TABLE "xcm_transaction" ADD CONSTRAINT "FK_412481a99014aac904f07058bd6" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "xcm_transfer" ADD CONSTRAINT "FK_aa880133974ec90fdf089da0e90" FOREIGN KEY ("destination_id") REFERENCES "xcm_transfer_destination"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     }
 
     async down(db) {
@@ -182,14 +181,14 @@ module.exports = class Data1743506289714 {
         await db.query(`DROP INDEX "public"."IDX_20df08516f386a2d403fe66150"`)
         await db.query(`DROP TABLE "identity"`)
         await db.query(`DROP INDEX "public"."IDX_bafa9e6c71c3f69cef6602a809"`)
-        await db.query(`DROP TABLE "xcm_transaction"`)
-        await db.query(`DROP INDEX "public"."IDX_c9553ced6f920b7f71fc69ae8d"`)
-        await db.query(`DROP INDEX "public"."IDX_9251effcac6fc37c21046ee173"`)
-        await db.query(`DROP INDEX "public"."IDX_2bbef717dba66ef7c96571ffc7"`)
-        await db.query(`DROP INDEX "public"."IDX_ff80ef228768598d4453119832"`)
-        await db.query(`DROP INDEX "public"."IDX_0cff54b4393d7138155ceb7a5a"`)
-        await db.query(`DROP INDEX "public"."IDX_436c131c1941350aa6a9e6b52a"`)
-        await db.query(`DROP INDEX "public"."IDX_412481a99014aac904f07058bd"`)
+        await db.query(`DROP TABLE "xcm_transfer_destination"`)
+        await db.query(`DROP INDEX "public"."IDX_19c66a75a72edbbe0b09dba354"`)
+        await db.query(`DROP TABLE "xcm_transfer"`)
+        await db.query(`DROP INDEX "public"."IDX_766473f200d8c26e84ac2252d3"`)
+        await db.query(`DROP INDEX "public"."IDX_28960d1f2cb3af26dab8d6c1a9"`)
+        await db.query(`DROP INDEX "public"."IDX_40a2a3aa9f698a22c3d53ba555"`)
+        await db.query(`DROP INDEX "public"."IDX_aa880133974ec90fdf089da0e9"`)
+        await db.query(`DROP INDEX "public"."IDX_7693f197d47632f0dd8f1ad63a"`)
         await db.query(`ALTER TABLE "staking_payee" DROP CONSTRAINT "FK_68a5389e6a39fc3bc7e29933336"`)
         await db.query(`ALTER TABLE "staking_payee" DROP CONSTRAINT "FK_f22703d3cdc1f9f9d898e1bee85"`)
         await db.query(`ALTER TABLE "staking_controller" DROP CONSTRAINT "FK_1d205a09102d69c4c4d655652bc"`)
@@ -219,7 +218,6 @@ module.exports = class Data1743506289714 {
         await db.query(`ALTER TABLE "identity_sub" DROP CONSTRAINT "FK_b3110339d38dddff279f6f77127"`)
         await db.query(`ALTER TABLE "identity_sub" DROP CONSTRAINT "FK_20df08516f386a2d403fe66150a"`)
         await db.query(`ALTER TABLE "identity" DROP CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095"`)
-        await db.query(`ALTER TABLE "xcm_transaction" DROP CONSTRAINT "FK_ff80ef228768598d4453119832e"`)
-        await db.query(`ALTER TABLE "xcm_transaction" DROP CONSTRAINT "FK_412481a99014aac904f07058bd6"`)
+        await db.query(`ALTER TABLE "xcm_transfer" DROP CONSTRAINT "FK_aa880133974ec90fdf089da0e90"`)
     }
 }
