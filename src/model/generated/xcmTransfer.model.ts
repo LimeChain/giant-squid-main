@@ -1,5 +1,6 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import {XcmTransferDestination} from "./xcmTransferDestination.model"
+import {XcmTransferBeneficiary} from "./xcmTransferBeneficiary.model"
 
 @Entity_()
 export class XcmTransfer {
@@ -32,4 +33,8 @@ export class XcmTransfer {
 
     @Column_("text", {nullable: true})
     from!: string | undefined | null
+
+    @Index_()
+    @ManyToOne_(() => XcmTransferBeneficiary, {nullable: true})
+    beneficiary!: XcmTransferBeneficiary
 }

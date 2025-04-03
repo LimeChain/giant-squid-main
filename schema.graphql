@@ -262,6 +262,16 @@ type XcmTransferDestination @entity {
   parents: Int @index
 }
 
+type XcmTransferBeneficiaryKey @entity {
+  kind: String! @index
+  value: String! @index
+}
+
+type XcmTransferBeneficiary @entity {
+  parents: Int @index
+  key: XcmTransferBeneficiaryKey
+}
+
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -271,6 +281,7 @@ type XcmTransfer @entity {
   feeAssetItem: Int! @index
   # from: Account
   from: String
+  beneficiary: XcmTransferBeneficiary!
 }
 
 type Account @entity {

@@ -38,7 +38,7 @@ export const indexer = new Indexer({
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
     // blockRange: { from: 12897868, to: 12897868 },
-    blockRange: { from: 10100000 },
+    // blockRange: { from: 10100000 },
   },
   pallets: {
     events: {

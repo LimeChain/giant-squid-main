@@ -1,9 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Account, Parachain } from '@/model';
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 import { VersionedMultiAssets, VersionedMultiLocation } from '@/chain/polkadot/types/v9140';
 import { VersionedMultiAssets as VersionedMultiAssetsV2, VersionedMultiLocation as VersionedMultiLocationV2 } from '@/chain/polkadot/types/v9370';
@@ -39,10 +36,18 @@ export interface IXcmDestination {
   parents: number | null;
   parachain: number | null;
 }
+export interface IXcmTransferBeneficiary {
+  parents: number | null;
+  key: {
+    kind: string;
+    value: string;
+  };
+}
 export interface IReserveTransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
     //   data: DataV9140 | DataV9370 | DataV9420 | DataV1002000;
     destination: IXcmDestination;
+    beneficiary: IXcmTransferBeneficiary;
     feeAssetItem: number;
   }> {}
 
@@ -50,34 +55,13 @@ interface IReserveTransferAssetsPalletSetup extends IBasePalletSetup {
   decoder: IReserveTransferAssetsPalletDecoder;
 }
 
-const filePath = path.join(os.homedir(), 'Desktop', 'xcm_reserve_transfer_early.json');
-// const fileStream = fs.createWriteStream(filePath);
-// fileStream.write('[\n');
-
-// process.on('beforeExit', () => {
-//   fileStream.write('\n]');
-//   fileStream.end();
-// });
 export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IReserveTransferAssetsPalletSetup> {
   constructor(setup: IReserveTransferAssetsPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { destination, feeAssetItem } = this.decoder.decode(call);
-    // fileStream.write(
-    //   JSON.stringify(
-    //     { block: block.header.height, data: decoded.data },
-    //     (key, value) => {
-    //       if (typeof value === 'bigint') {
-    //         return value.toString();
-    //       }
-    //       return value;
-    //     },
-    //     2
-    //   )
-    // );
-    // fileStream.write(',\n');
+    const { destination, feeAssetItem, beneficiary } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (typeof destination.parachain === 'number') {
@@ -97,11 +81,11 @@ export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IRe
           destination: () => Promise.resolve(destination),
           from: fromPubKey,
           feeAssetItem: feeAssetItem,
+          beneficiary,
         })
       );
     } else {
       console.dir({ call: call.block.hash });
-      process.exit(0);
     }
   }
 }

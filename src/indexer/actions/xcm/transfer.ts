@@ -1,6 +1,6 @@
-import { Account, XcmTransfer, XcmTransferDestination } from '@/model';
+import { Account, XcmTransfer, XcmTransferBeneficiary, XcmTransferBeneficiaryKey, XcmTransferDestination } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
-import { IXcmDestination } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
+import { IXcmDestination, IXcmTransferBeneficiary } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
 
 interface XcmTransferActionData {
   id: string;
@@ -9,6 +9,7 @@ interface XcmTransferActionData {
   feeAssetItem: number;
   from: string;
   //   from: () => Promise<Account>;
+  beneficiary: IXcmTransferBeneficiary;
 }
 export class XcmTransferAction extends Action<XcmTransferActionData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
@@ -16,11 +17,24 @@ export class XcmTransferAction extends Action<XcmTransferActionData> {
     if (!xcmDestination) return;
 
     let xcmTransferDestination = new XcmTransferDestination({
-      id: this.data.id,
+      id: xcmDestination.parachain?.toString(),
       parachain: xcmDestination.parachain?.toString(),
       parents: xcmDestination.parents,
     });
-    await ctx.store.insert(xcmTransferDestination);
+    let xcmTransferBeneficiaryKey = new XcmTransferBeneficiaryKey({
+      id: `${this.data.beneficiary.key.value}-key`,
+      kind: this.data.beneficiary.key.kind,
+      value: this.data.beneficiary.key.value,
+    });
+
+    await Promise.all([ctx.store.upsert(xcmTransferDestination), ctx.store.upsert(xcmTransferBeneficiaryKey)]);
+
+    let xcmTransferBeneficiary = new XcmTransferBeneficiary({
+      id: xcmTransferBeneficiaryKey.value,
+      key: xcmTransferBeneficiaryKey,
+      parents: this.data.beneficiary.parents,
+    });
+    await ctx.store.upsert(xcmTransferBeneficiary);
 
     let xcmTransfer = new XcmTransfer({
       id: this.data.id,
@@ -30,6 +44,7 @@ export class XcmTransferAction extends Action<XcmTransferActionData> {
       from: this.data.from,
       feeAssetItem: this.data.feeAssetItem,
       destination: xcmTransferDestination,
+      beneficiary: xcmTransferBeneficiary,
     });
     await ctx.store.insert(xcmTransfer);
   }
