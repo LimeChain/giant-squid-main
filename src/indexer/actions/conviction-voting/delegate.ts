@@ -1,19 +1,27 @@
-import { ConvictionDelegate } from '@/model';
+import { Account, ConvictionDelegate } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface DelegateConvictionVotingData {
-  class: number;
-  to: string | undefined;
-  conviction: string;
-  balance: bigint;
+  id: string;
+  extrinsicHash: string | undefined;
+  from?: () => Promise<Account>;
+  to: () => Promise<Account>;
+  class?: number;
+  conviction?: string;
+  balance?: bigint;
 }
 
 export class DelegateConvictionVotingAction extends Action<DelegateConvictionVotingData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
+    let to = await this.data.to();
+    let from = await this.data.from?.();
+
     const delegate = new ConvictionDelegate({
-      id: this.extrinsic?.hash,
+      id: this.data.id,
+      extrinsicHash: this.data.extrinsicHash,
       class: this.data.class,
-      to: this.data.to,
+      from,
+      to,
       conviction: this.data.conviction,
       balance: this.data.balance,
     });

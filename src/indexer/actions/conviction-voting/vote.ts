@@ -1,8 +1,11 @@
-import { ConvictionVote, ConvictionVoteField } from '@/model';
+import { Account, ConvictionVote, ConvictionVoteField } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface VoteConvictionVotingData {
-  pollIndex: number;
+  id: string;
+  extrinsicHash: string | undefined;
+  who: () => Promise<Account>;
+  pollIndex: number | undefined;
   vote: {
     aye?: bigint;
     nay?: bigint;
@@ -14,8 +17,12 @@ interface VoteConvictionVotingData {
 
 export class VoteConvictionVotingAction extends Action<VoteConvictionVotingData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
+    const who = await this.data.who();
+
     const vote = new ConvictionVote({
-      id: this.extrinsic?.hash,
+      id: this.data.id,
+      extrinsicHash: this.data.extrinsicHash,
+      who,
       pollIndex: this.data.pollIndex,
       vote: new ConvictionVoteField(this.data.vote),
     });

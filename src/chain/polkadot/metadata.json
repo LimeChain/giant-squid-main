@@ -21,7 +21,7 @@
       "events": ["Reserved", "Registered", "Deregistered"]
     },
     "ConvictionVoting": {
-      "events": [],
+      "events": ["Delegated", "Undelegated", "Voted", "VoteRemoved"],
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }
   },

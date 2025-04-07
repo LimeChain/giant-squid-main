@@ -23,6 +23,7 @@ export class UnlockCallPalletHandler extends CallPalletHandler<IUnlockCallPallet
 
     queue.push(
       new UnlockConvictionVotingAction(block.header, call.extrinsic, {
+        id: call.id,
         class: data.class,
         target: data.target,
       })

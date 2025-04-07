@@ -38,11 +38,11 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
-import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
-import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
-import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+import { DelegatedEventPalletHandler } from '@/indexer/pallets/conviction-voting/events/delegated';
+import { UndelegatedEventPalletHandler } from '@/indexer/pallets/conviction-voting/events/undelegated';
+import { VotedEventPalletHandler } from '@/indexer/pallets/conviction-voting/events/voted';
+import { VoteRemovedEventPalletHandler } from '@/indexer/pallets/conviction-voting/events/voteRemoved';
 
 export const registry = {
   events: {
@@ -74,6 +74,10 @@ export const registry = {
     'Registrar.Reserved': ReservedParachainEventPalletHandler,
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
+    'ConvictionVoting.Delegated': DelegatedEventPalletHandler,
+    'ConvictionVoting.Undelegated': UndelegatedEventPalletHandler,
+    'ConvictionVoting.Voted': VotedEventPalletHandler,
+    'ConvictionVoting.VoteRemoved': VoteRemovedEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
@@ -90,11 +94,7 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
-    'ConvictionVoting.delegate': DelegateCallPalletHandler,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
-    'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
-    'ConvictionVoting.vote': VoteCallPalletHandler,
-    'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
   },
 };
 
