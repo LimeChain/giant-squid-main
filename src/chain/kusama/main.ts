@@ -30,7 +30,16 @@ import { ContributedEventPalletDecoder } from '@/chain/kusama/decoders/events/cr
 import { PartiallyRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/partiallyRefunded';
 import { RemoveKeysLimitConstantGetter } from '@/chain/kusama/constants/removeKeysLimit';
 import { AllRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/allRefunded';
-import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
+import { WithdrewEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/withdrew';
+import { DelegateCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/delegate';
+import { UndelegateCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/undelegate';
+import { VoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/vote';
+import { RemoveVoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/removeVote';
+import { DelegatedEventPalletDecoder } from '@/chain/kusama/decoders/events/conviction-voting/delegated';
+import { UndelegatedEventPalletDecoder } from '@/chain/kusama/decoders/events/conviction-voting/undelegate';
+import { VotedEventPalletDecoder } from '@/chain/kusama/decoders/events/conviction-voting/voted';
+import { VoteRemovedEventPalletDecoder } from '@/chain/kusama/decoders/events/conviction-voting/voteRemoved';
+import { UnlockCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/unlock';
 
 export const indexer = new Indexer({
   config: {
@@ -74,6 +83,10 @@ export const indexer = new Indexer({
       'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
       'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
       'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      'ConvictionVoting.Delegated': setupPallet({ delegateDecoder: new DelegateCallPalletDecoder(), decoder: new DelegatedEventPalletDecoder() }),
+      'ConvictionVoting.Undelegated': setupPallet({ undelegateDecoder: new UndelegateCallPalletDecoder(), decoder: new UndelegatedEventPalletDecoder() }),
+      'ConvictionVoting.Voted': setupPallet({ voteDecoder: new VoteCallPalletDecoder(), decoder: new VotedEventPalletDecoder() }),
+      'ConvictionVoting.VoteRemoved': setupPallet({ removeVoteDecoder: new RemoveVoteCallPalletDecoder(), decoder: new VoteRemovedEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -94,6 +107,7 @@ export const indexer = new Indexer({
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
     },
   },
 });
