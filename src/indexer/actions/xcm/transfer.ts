@@ -4,7 +4,7 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 interface XcmTransferActionData {
   id: string;
   from: () => Promise<Account>;
-  toChain: () => Promise<Parachain>;
+  toChain: () => Promise<Parachain | undefined>;
   to: string;
   amount: bigint;
   feeAssetItem: number;

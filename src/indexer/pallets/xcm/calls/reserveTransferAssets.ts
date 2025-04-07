@@ -33,7 +33,7 @@ export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IRe
 
       const fromPubKey = this.encodeAddress(origin);
 
-      const parachain = ctx.store.defer(Parachain, to);
+      const parachain = ctx.store.defer(Parachain, toChain);
       const account = ctx.store.defer(Account, fromPubKey);
 
       queue.push(
@@ -48,7 +48,7 @@ export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IRe
           feeAssetItem: feeAssetItem,
           amount,
           to,
-          toChain: () => parachain.getOrFail(),
+          toChain: () => parachain.get(),
         })
       );
     }

@@ -6,6 +6,6 @@ type XcmTransfer @entity {
   feeAssetItem: Int! @index
   from: Account!
   to: String!
-  toChain: Parachain!
+  toChain: Parachain
   amount: BigInt!
 }

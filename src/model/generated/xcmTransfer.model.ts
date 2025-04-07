@@ -37,7 +37,7 @@ export class XcmTransfer {
 
     @Index_()
     @ManyToOne_(() => Parachain, {nullable: true})
-    toChain!: Parachain
+    toChain!: Parachain | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     amount!: bigint
