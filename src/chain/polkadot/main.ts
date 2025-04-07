@@ -42,7 +42,7 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       // 'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       // 'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       // 'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
@@ -74,9 +74,9 @@ export const indexer = new Indexer({
       // 'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
       // 'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
       // 'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
-      // 'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
-      // 'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
-      // 'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       // 'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),

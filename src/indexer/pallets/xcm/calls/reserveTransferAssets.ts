@@ -2,52 +2,15 @@ import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Account, Parachain } from '@/model';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
-import { VersionedMultiAssets, VersionedMultiLocation } from '@/chain/polkadot/types/v9140';
-import { VersionedMultiAssets as VersionedMultiAssetsV2, VersionedMultiLocation as VersionedMultiLocationV2 } from '@/chain/polkadot/types/v9370';
-import { VersionedMultiAssets as VersionedMultiAssetsV3, VersionedMultiLocation as VersionedMultiLocationV3 } from '@/chain/polkadot/types/v9420';
-import { VersionedAssets, VersionedLocation } from '@/chain/polkadot/types/v1002000';
+import assert from 'assert';
+import { getOriginAccountId } from '@/utils';
+import { EnsureAccount } from '@/indexer/actions';
 
-// interface DataV9140 {
-//   dest: VersionedMultiLocation;
-//   beneficiary: VersionedMultiLocation;
-//   assets: VersionedMultiAssets;
-//   feeAssetItem: number;
-// }
-// interface DataV9370 {
-//   dest: VersionedMultiLocationV2;
-//   beneficiary: VersionedMultiLocationV2;
-//   assets: VersionedMultiAssetsV2;
-//   feeAssetItem: number;
-// }
-// interface DataV9420 {
-//   dest: VersionedMultiLocationV3;
-//   beneficiary: VersionedMultiLocationV3;
-//   assets: VersionedMultiAssetsV3;
-//   feeAssetItem: number;
-// }
-// interface DataV1002000 {
-//   dest: VersionedLocation;
-//   beneficiary: VersionedLocation;
-//   assets: VersionedAssets;
-//   feeAssetItem: number;
-// }
-
-export interface IXcmDestination {
-  parents: number | null;
-  parachain: number | null;
-}
-export interface IXcmTransferBeneficiary {
-  parents: number | null;
-  key: {
-    kind: string;
-    value: string;
-  };
-}
 export interface IReserveTransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
-    //   data: DataV9140 | DataV9370 | DataV9420 | DataV1002000;
-    destination: IXcmDestination;
-    beneficiary: IXcmTransferBeneficiary;
+    to: string;
+    toChain: string;
+    amount: bigint;
     feeAssetItem: number;
   }> {}
 
@@ -61,31 +24,33 @@ export class ReserveTransferAssetsPalletXcmHandler extends CallPalletHandler<IRe
   }
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { destination, feeAssetItem, beneficiary } = this.decoder.decode(call);
+    const { to, feeAssetItem, amount, toChain } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
-    if (typeof destination.parachain === 'number') {
-      const fromPubKey = call.origin.value.value;
-      // testing
-      if (!fromPubKey) {
-        console.log('ERROR', call.id, block.header.height);
-        process.exit(0);
-      }
-      //   const parachain = ctx.store.defer(Parachain, decoded.destination.toString());
-      //   const account = ctx.store.defer(Account, fromPubKey);
-      //   if (!parachain) return;
+    if (toChain) {
+      const origin = getOriginAccountId(call.origin);
+      assert(origin, 'Caller Pubkey is undefined');
+
+      const fromPubKey = this.encodeAddress(origin);
+
+      const parachain = ctx.store.defer(Parachain, to);
+      const account = ctx.store.defer(Account, fromPubKey);
 
       queue.push(
+        new EnsureAccount(block.header, call.extrinsic, {
+          account: () => account.get(),
+          id: fromPubKey,
+          pk: this.decodeAddress(fromPubKey),
+        }),
         new XcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
-          destination: () => Promise.resolve(destination),
-          from: fromPubKey,
+          from: () => account.getOrFail(),
           feeAssetItem: feeAssetItem,
-          beneficiary,
+          amount,
+          to,
+          toChain: () => parachain.getOrFail(),
         })
       );
-    } else {
-      console.dir({ call: call.block.hash });
     }
   }
 }

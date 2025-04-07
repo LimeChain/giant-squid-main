@@ -21,7 +21,8 @@
       "events": ["Reserved", "Registered", "Deregistered"]
     },
     "XcmPallet": {
-      "calls": ["reserve_transfer_assets"]
+      "calls": ["reserve_transfer_assets"],
+      "events": ["Sent"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

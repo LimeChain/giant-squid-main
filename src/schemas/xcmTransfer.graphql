@@ -1,27 +1,11 @@
-type XcmTransferDestination @entity {
-  # parachain: Parachain!
-  parachain: String!
-  parents: Int @index
-}
-
-type XcmTransferBeneficiaryKey @entity {
-  kind: String! @index
-  value: String! @index
-}
-
-type XcmTransferBeneficiary @entity {
-  parents: Int @index
-  key: XcmTransferBeneficiaryKey
-}
-
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
   timestamp: DateTime! @index
   extrinsicHash: String @index
-  destination: XcmTransferDestination!
   feeAssetItem: Int! @index
-  # from: Account
-  from: String
-  beneficiary: XcmTransferBeneficiary!
+  from: Account!
+  to: String!
+  toChain: Parachain!
+  amount: BigInt!
 }

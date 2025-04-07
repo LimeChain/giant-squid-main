@@ -1,6 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
-import {XcmTransferDestination} from "./xcmTransferDestination.model"
-import {XcmTransferBeneficiary} from "./xcmTransferBeneficiary.model"
+import * as marshal from "./marshal"
+import {Account} from "./account.model"
+import {Parachain} from "./parachain.model"
 
 @Entity_()
 export class XcmTransfer {
@@ -24,17 +25,20 @@ export class XcmTransfer {
     extrinsicHash!: string | undefined | null
 
     @Index_()
-    @ManyToOne_(() => XcmTransferDestination, {nullable: true})
-    destination!: XcmTransferDestination
-
-    @Index_()
     @Column_("int4", {nullable: false})
     feeAssetItem!: number
 
-    @Column_("text", {nullable: true})
-    from!: string | undefined | null
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true})
+    from!: Account
+
+    @Column_("text", {nullable: false})
+    to!: string
 
     @Index_()
-    @ManyToOne_(() => XcmTransferBeneficiary, {nullable: true})
-    beneficiary!: XcmTransferBeneficiary
+    @ManyToOne_(() => Parachain, {nullable: true})
+    toChain!: Parachain
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    amount!: bigint
 }

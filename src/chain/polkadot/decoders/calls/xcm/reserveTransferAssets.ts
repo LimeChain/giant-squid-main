@@ -1,29 +1,38 @@
 import { calls } from '@/chain/polkadot/types';
 import {
+  VersionedMultiAssets_V0 as VersionedMultiAssets_V0_V9140,
+  VersionedMultiAssets_V1 as VersionedMultiAssets_V1_V9140,
   VersionedMultiLocation_V0 as VersionedMultiLocation_V0_V9140,
   VersionedMultiLocation_V1 as VersionedMultiLocation_V1_V9140,
 } from '@/chain/polkadot/types/v9140';
 import {
+  VersionedMultiAssets_V0 as asVersionedMultiAssets_V0_V9370,
+  VersionedMultiAssets_V1 as asVersionedMultiAssets_V1_V9370,
   VersionedMultiLocation_V0 as VersionedMultiLocation_V0_V9370,
   VersionedMultiLocation_V1 as VersionedMultiLocation_V1_V9370,
 } from '@/chain/polkadot/types/v9370';
 import {
+  VersionedMultiAssets_V2 as VersionedMultiAssets_V2_V9420,
+  VersionedMultiAssets_V3 as VersionedMultiAssets_V3_V9420,
   VersionedMultiLocation_V2 as VersionedMultiLocation_V2_V9420,
   VersionedMultiLocation_V3 as VersionedMultiLocation_V3_V9420,
 } from '@/chain/polkadot/types/v9420';
-import { VersionedLocation_V2 as VersionedLocation_V2_V100200, VersionedLocation_V3 as VersionedLocation_V3_V100200 } from '@/chain/polkadot/types/v1002000';
+import {
+  VersionedAssets_V2 as VersionedAssets_V2_V100200,
+  VersionedAssets_V3 as VersionedAssets_V3_V100200,
+  VersionedLocation_V2 as VersionedLocation_V2_V100200,
+  VersionedLocation_V3 as VersionedLocation_V3_V100200,
+} from '@/chain/polkadot/types/v1002000';
 import { Call } from '@/indexer';
-import { IReserveTransferAssetsPalletDecoder, IXcmDestination, IXcmTransferBeneficiary } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
+import { IReserveTransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
 import { UnknownVersionError } from '@/utils';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
 
-const WRITE = true;
+const WRITE = false;
 const filePath = path.join(os.homedir(), 'Desktop', 'xcm_reserve_transfer_early.json');
-const start = fs.readFileSync(filePath);
-const fileStream = fs.createWriteStream(filePath, { start: start.length });
-
+const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
 // if (WRITE) {
 //   fileStream.write('[\n');
 
@@ -52,13 +61,14 @@ function write(data: object) {
 export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsPalletDecoder {
   decode(call: Call) {
     const { reserveTransferAssets } = calls.xcmPallet;
-    let destination: IXcmDestination = { parachain: null, parents: null };
-    let beneficiary: IXcmTransferBeneficiary = { parents: null, key: { kind: '', value: '' } };
+    let to: string = '';
+    let toChain: string = '';
+    let amount: bigint = 0n;
     let feeAssetItem: number = 0;
 
     if (reserveTransferAssets.v9140.is(call)) {
       const data = reserveTransferAssets.v9140.decode(call);
-      if (WRITE) write(data);
+      if (WRITE) write({ extrinsicHash: call.extrinsic?.hash, ...data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
       feeAssetItem = _fee;
@@ -67,14 +77,13 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
       switch (dest.__kind) {
         case 'V0': {
           const { parachainDestination } = decodeV0Dest(dest);
-          destination.parachain = parachainDestination;
+          toChain = parachainDestination;
           break;
         }
 
         case 'V1': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
+          toChain = parachainDestination;
           break;
         }
       }
@@ -83,35 +92,47 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
       switch (_beneficiary.__kind) {
         case 'V0': {
           const { beneficiaryKey } = decodeV0Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
+          to = beneficiaryKey;
           break;
         }
         case 'V1': {
           const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
+          to = beneficiaryKey;
+          break;
+        }
+      }
+
+      // Assets mapping
+      switch (_assets.__kind) {
+        case 'V0': {
+          const { amount: _amount } = decodeV0Assets(_assets);
+          amount = _amount;
+          break;
+        }
+        case 'V1': {
+          const { amount: _amount } = decodeV1ToV3Assets(_assets);
+          amount = _amount;
           break;
         }
       }
     } else if (reserveTransferAssets.v9370.is(call)) {
       const data = reserveTransferAssets.v9370.decode(call);
-      if (WRITE) write(data);
+      if (WRITE) write({ extrinsicHash: call.extrinsic?.hash, ...data });
 
-      const { assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
       feeAssetItem = _fee;
 
       // Destination mapping
       switch (dest.__kind) {
         case 'V0': {
           const { parachainDestination } = decodeV0Dest(dest);
-          destination.parachain = parachainDestination;
+          toChain = parachainDestination;
           break;
         }
 
         case 'V1': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
+          toChain = parachainDestination;
           break;
         }
       }
@@ -120,135 +141,139 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
       switch (_beneficiary.__kind) {
         case 'V0': {
           const { beneficiaryKey } = decodeV0Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
+          to = beneficiaryKey;
           break;
         }
         case 'V1': {
           const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
+          to = beneficiaryKey;
+          break;
+        }
+      }
+
+      // Assets mapping
+      switch (_assets.__kind) {
+        case 'V0': {
+          const { amount: _amount } = decodeV0Assets(_assets);
+          amount = _amount;
+          break;
+        }
+        case 'V1': {
+          const { amount: _amount } = decodeV1ToV3Assets(_assets);
+          amount = _amount;
           break;
         }
       }
     } else if (reserveTransferAssets.v9420.is(call)) {
       const data = reserveTransferAssets.v9420.decode(call);
-      if (WRITE) write(data);
+      if (WRITE) write({ extrinsicHash: call.extrinsic?.hash, ...data });
 
-      const { assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
       feeAssetItem = _fee;
 
       // Destination mapping
       switch (dest.__kind) {
-        case 'V2': {
-          const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
-          break;
-        }
-
+        case 'V2':
         case 'V3': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
+          to = parachainDestination;
           break;
         }
       }
 
       // Beneficiary mapping
       switch (_beneficiary.__kind) {
-        case 'V2': {
-          const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
-          break;
-        }
+        case 'V2':
         case 'V3': {
           const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
+          to = beneficiaryKey;
           break;
         }
       }
+
+      // Assets mapping
+      switch (_assets.__kind) {
+        case 'V2':
+        case 'V3':
+          const { amount: _amount } = decodeV1ToV3Assets(_assets);
+          amount = _amount;
+          break;
+      }
     } else if (reserveTransferAssets.v1002000.is(call)) {
       const data = reserveTransferAssets.v1002000.decode(call);
-      if (WRITE) write(data);
+      if (WRITE) write({ extrinsicHash: call.extrinsic?.hash, ...data });
 
-      const { assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
       feeAssetItem = _fee;
 
       // Destination mapping
       switch (dest.__kind) {
-        case 'V2': {
-          const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
-          break;
-        }
-
+        case 'V2':
         case 'V3': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          destination.parachain = parachainDestination;
-          destination.parents = dest.value.parents;
+          to = parachainDestination;
           break;
         }
 
         case 'V4':
-          destination.parents = dest.value.parents;
-
           // most common occuranace of V4 type calls = X1 + Parachain
           if (dest.value.interior.__kind === 'X1' && dest.value.interior.value[0].__kind === 'Parachain') {
-            destination.parachain = dest.value.interior.value[0].value;
+            to = dest.value.interior.value[0].value.toString();
           }
           break;
       }
 
       // Beneficiary mapping
       switch (_beneficiary.__kind) {
-        case 'V2': {
-          const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
-          break;
-        }
+        case 'V2':
         case 'V3': {
           const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
-          beneficiary.key = beneficiaryKey;
-          beneficiary.parents = _beneficiary.value.parents;
+          to = beneficiaryKey;
           break;
         }
 
         case 'V4':
           if (_beneficiary.value.interior.__kind === 'X1') {
-            beneficiary.parents = _beneficiary.value.parents;
-            beneficiary.key.kind = _beneficiary.value.interior.value[0].__kind;
             switch (_beneficiary.value.interior.value[0].__kind) {
               case 'AccountId32':
-                beneficiary.key.value = _beneficiary.value.interior.value[0].id;
+                to = _beneficiary.value.interior.value[0].id;
                 break;
               case 'AccountIndex64':
-                beneficiary.key.value = _beneficiary.value.interior.value[0].index.toString();
+                to = _beneficiary.value.interior.value[0].index.toString();
                 break;
               case 'AccountKey20':
-                beneficiary.key.value = _beneficiary.value.interior.value[0].key;
+                to = _beneficiary.value.interior.value[0].key;
                 break;
             }
           }
+          break;
+      }
+
+      // Assets mapping
+      switch (_assets.__kind) {
+        case 'V2':
+        case 'V3':
+          const { amount: _amount } = decodeV1ToV3Assets(_assets);
+          amount = _amount;
+          break;
+        //  No V4's found on chain so far
+        case 'V4':
           break;
       }
     } else {
       throw new UnknownVersionError(reserveTransferAssets);
     }
 
-    return { destination, feeAssetItem, beneficiary };
+    return { feeAssetItem, amount, to, toChain };
   }
 }
 
-function decodeV0Dest(dest: VersionedMultiLocation_V0_V9140 | VersionedMultiLocation_V0_V9370): { parachainDestination: IXcmDestination['parachain'] } {
-  let parachainDestination: IXcmDestination['parachain'] = null;
+function decodeV0Dest(dest: VersionedMultiLocation_V0_V9140 | VersionedMultiLocation_V0_V9370): { parachainDestination: string } {
+  let parachainDestination: string = '';
 
   // most common occuranace of V0 type calls = X1 + Parachain
   if (dest.value.__kind === 'X1' && dest.value.value.__kind === 'Parachain') {
-    parachainDestination = dest.value.value.value;
+    parachainDestination = dest.value.value.value.toString();
   }
 
   return { parachainDestination };
@@ -262,34 +287,33 @@ function decodeV1ToV3Dest(
     | VersionedLocation_V2_V100200
     | VersionedMultiLocation_V3_V9420
     | VersionedLocation_V3_V100200
-): { parachainDestination: IXcmDestination['parachain'] } {
-  let parachainDestination: IXcmDestination['parachain'] = null;
+): { parachainDestination: string } {
+  let parachainDestination: string = '';
 
   // most common occuranace of V1 type calls = X1 + Parachain
   if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-    parachainDestination = dest.value.interior.value.value;
+    parachainDestination = dest.value.interior.value.value.toString();
   }
 
   return { parachainDestination };
 }
 
 function decodeV0Beneficiary(_beneficiary: VersionedMultiLocation_V0_V9140 | VersionedMultiLocation_V0_V9370): {
-  beneficiaryKey: IXcmTransferBeneficiary['key'];
+  beneficiaryKey: string;
 } {
-  let beneficiaryKey: IXcmTransferBeneficiary['key'] = { kind: '', value: 'null' };
+  let beneficiaryKey: string = '';
 
   // only support X1 __kind
   if (_beneficiary.value.__kind === 'X1') {
-    beneficiaryKey.kind = _beneficiary.value.value.__kind;
     switch (_beneficiary.value.value.__kind) {
       case 'AccountId32':
-        beneficiaryKey.value = _beneficiary.value.value.id;
+        beneficiaryKey = _beneficiary.value.value.id;
         break;
       case 'AccountIndex64':
-        beneficiaryKey.value = _beneficiary.value.value.index.toString();
+        beneficiaryKey = _beneficiary.value.value.index.toString();
         break;
       case 'AccountKey20':
-        beneficiaryKey.value = _beneficiary.value.value.key;
+        beneficiaryKey = _beneficiary.value.value.key;
         break;
     }
   }
@@ -305,21 +329,20 @@ function decodeV1ToV3Beneficiary(
     | VersionedLocation_V2_V100200
     | VersionedMultiLocation_V3_V9420
     | VersionedLocation_V3_V100200
-): { beneficiaryKey: IXcmTransferBeneficiary['key'] } {
-  let beneficiaryKey: IXcmTransferBeneficiary['key'] = { kind: '', value: 'null' };
+): { beneficiaryKey: string } {
+  let beneficiaryKey: string = '';
 
   // only support X1 __kind
   if (_beneficiary.value.interior.__kind === 'X1') {
-    beneficiaryKey.kind = _beneficiary.value.interior.value.__kind;
     switch (_beneficiary.value.interior.value.__kind) {
       case 'AccountId32':
-        beneficiaryKey.value = _beneficiary.value.interior.value.id;
+        beneficiaryKey = _beneficiary.value.interior.value.id;
         break;
       case 'AccountIndex64':
-        beneficiaryKey.value = _beneficiary.value.interior.value.index.toString();
+        beneficiaryKey = _beneficiary.value.interior.value.index.toString();
         break;
       case 'AccountKey20':
-        beneficiaryKey.value = _beneficiary.value.interior.value.key;
+        beneficiaryKey = _beneficiary.value.interior.value.key;
         break;
     }
   }
@@ -327,177 +350,41 @@ function decodeV1ToV3Beneficiary(
   return { beneficiaryKey };
 }
 
-// OLD
-// export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsPalletDecoder {
-//   decode(call: Call) {
-//     const { reserveTransferAssets } = calls.xcmPallet;
-//     // Destination is always present
-//     let destination: number = 0;
-//     // dest.__kind: "V0" has no parents field, hence the null option
-//     let parents: number | null = null;
+function decodeV0Assets(_assets: VersionedMultiAssets_V0_V9140 | asVersionedMultiAssets_V0_V9370): {
+  amount: bigint;
+} {
+  let amount: bigint = 0n;
 
-//     if (reserveTransferAssets.v9140.is(call)) {
-//       const data = reserveTransferAssets.v9140.decode(call);
-//       const { assets, beneficiary, feeAssetItem, dest } = data;
+  // Only support ConcreteFungible __kind as it is the most common
+  if (_assets.value[0].__kind === 'ConcreteFungible') {
+    amount = _assets.value[0].amount;
+  }
 
-//       switch (dest.__kind) {
-//         case 'V0':
-//           // most common occurnace of V0 type calls = X1 + Parachain
-//           if (dest.value.__kind === 'X1' && dest.value.value.__kind === 'Parachain') {
-//             destination = dest.value.value.value;
-//             return {
-//               data: {
-//                 ...data,
-//                 dest: {
-//                   valueV0: {
-//                     kind: dest.value.__kind,
-//                     value: { isTypeOf: 'V0JunctionParachain', kind: dest.value.value.__kind, value: dest.value.value.value },
-//                     isTypeOf: 'V0MultiLocationX1',
-//                   },
-//                   kind: dest.__kind,
-//                   isTypeOf: 'VersionedMultiLocationV0',
-//                 },
-//               } as unknown as VersionedMultiLocation,
-//               destination,
-//               parents,
-//               feeAssetItem,
-//             };
-//           }
-//           break;
+  return { amount };
+}
 
-//         case 'V1': {
-//           parents = dest.value.parents;
-//           // most common occurnace of V1 type calls = X1 + Parachain
-//           if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//             destination = dest.value.interior.value.value;
-//             return {
-//               data: {
-//                 ...data,
-//                 dest: {
-//                   valueV1: {
-//                     parents: dest.value.parents,
-//                     interior: {
-//                       value: { isTypeOf: 'V1JunctionParachain', value: dest.value.interior.value.value, kind: dest.value.interior.value.__kind },
-//                       kind: dest.value.interior.__kind,
-//                       isTypeOf: 'V1JunctionsX1',
-//                     },
-//                   },
-//                   kind: data.dest.__kind,
-//                   isTypeOf: 'VersionedMultiLocationV1',
-//                 },
-//               } as unknown as VersionedMultiLocation,
-//               destination,
-//               parents,
-//               feeAssetItem,
-//             };
-//           }
-//           break;
-//         }
+function decodeV1ToV3Assets(
+  _assets:
+    | VersionedMultiAssets_V1_V9140
+    | asVersionedMultiAssets_V1_V9370
+    | VersionedMultiAssets_V2_V9420
+    | VersionedMultiAssets_V3_V9420
+    | VersionedAssets_V2_V100200
+    | VersionedAssets_V3_V100200
+): { amount: bigint } {
+  let amount: bigint = 0n;
 
-//         default:
-//           return { data, destination, parents, feeAssetItem };
-//       }
-//     } else if (reserveTransferAssets.v9370.is(call)) {
-//       const data = reserveTransferAssets.v9370.decode(call);
-//       const { assets, beneficiary, feeAssetItem, dest } = data;
+  switch (_assets.__kind) {
+    case 'V1':
+    case 'V2':
+    case 'V3':
+      if (_assets.value[0].id.__kind === 'Concrete') {
+        if (_assets.value[0].fun.__kind === 'Fungible') {
+          amount = _assets.value[0].fun.value;
+        }
+      }
+      break;
+  }
 
-//       switch (dest.__kind) {
-//         case 'V0':
-//           // most common occurnace of V0 type calls = X1 + Parachain
-//           if (dest.value.__kind === 'X1' && dest.value.value.__kind === 'Parachain') {
-//             destination = dest.value.value.value;
-//             return {
-//               data: {
-//                 ...data,
-//                 dest: {
-//                   valueV0: {
-//                     kind: dest.value.__kind,
-//                     value: { isTypeOf: 'V0JunctionParachain', kind: dest.value.value.__kind, value: dest.value.value.value },
-//                     isTypeOf: 'V0MultiLocationX1',
-//                   },
-//                   kind: dest.__kind,
-//                   isTypeOf: 'VersionedMultiLocationV0',
-//                 },
-//               } as unknown as VersionedMultiLocation,
-//               destination,
-//               parents,
-//               feeAssetItem,
-//             };
-//           }
-//           break;
-
-//         case 'V1':
-//           parents = dest.value.parents;
-//           // most common occurnace of V1 type calls = X1 + Parachain
-//           if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//             destination = dest.value.interior.value.value;
-//             return {
-//               data: {
-//                 ...data,
-//                 dest: {
-//                   valueV1: {
-//                     parents: dest.value.parents,
-//                     interior: {
-//                       value: { isTypeOf: 'V1JunctionParachain', value: dest.value.interior.value.value, kind: dest.value.interior.value.__kind },
-//                       kind: dest.value.interior.__kind,
-//                       isTypeOf: 'V1JunctionsX1',
-//                     },
-//                   },
-//                   kind: data.dest.__kind,
-//                   isTypeOf: 'VersionedMultiLocationV1',
-//                 },
-//               } as unknown as VersionedMultiLocation,
-//               destination,
-//               parents,
-//               feeAssetItem,
-//             };
-//           }
-//         default:
-//           return { data, destination, parents, feeAssetItem };
-//       }
-//     } else if (reserveTransferAssets.v9420.is(call)) {
-//       const data = reserveTransferAssets.v9420.decode(call);
-//       const { assets, beneficiary, feeAssetItem, dest } = data;
-
-//       //   switch (dest.__kind) {
-//       //     case 'V2':
-//       //       if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//       //         destination = dest.value.interior.value.value;
-//       //       }
-//       //       break;
-
-//       //     case 'V3':
-//       //       if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//       //         destination = dest.value.interior.value.value;
-//       //       }
-//       //       break;
-//       //   }
-//       return { data, destination, parents, feeAssetItem };
-//     } else if (reserveTransferAssets.v1002000.is(call)) {
-//       const data = reserveTransferAssets.v1002000.decode(call);
-//       const { assets, beneficiary, feeAssetItem, dest } = data;
-
-//       //   switch (dest.__kind) {
-//       //     case 'V2':
-//       //       if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//       //         destination = dest.value.interior.value.value;
-//       //       }
-//       //       break;
-
-//       //     case 'V3':
-//       //       if (dest.value.interior.__kind === 'X1' && dest.value.interior.value.__kind === 'Parachain') {
-//       //         destination = dest.value.interior.value.value;
-//       //       }
-//       //       break;
-
-//       //     // no calls of type V4 so far
-//       //     case 'V4':
-//       //       break;
-//       //   }
-
-//       return { data, assets, beneficiary, feeAssetItem, dest };
-//     } else {
-//       throw new UnknownVersionError(reserveTransferAssets);
-//     }
-//   }
-// }
+  return { amount };
+}
