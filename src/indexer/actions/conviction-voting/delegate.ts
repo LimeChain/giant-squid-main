@@ -4,7 +4,7 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 interface DelegateConvictionVotingData {
   id: string;
   extrinsicHash: string | undefined;
-  from: () => Promise<Account>;
+  from: () => Promise<Account | undefined>;
   to: () => Promise<Account | undefined>;
   class: number;
   conviction: string;

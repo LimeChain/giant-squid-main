@@ -21,9 +21,19 @@ export class UndelegateCallPalletHandler extends CallPalletHandler<IUndelegateCa
   handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
     const data = this.decoder.decode(call);
+    const origin = getOriginAccountId(call.origin);
+    if (!origin) return;
 
-    const accountOrigin = getOriginAccountId(call.origin);
-    const accountId = accountOrigin ? this.encodeAddress(accountOrigin) : call.origin.value.value;
+    let accountId: string;
+
+    try {
+      // Covers substrate based chains
+      accountId = this.encodeAddress(origin);
+    } catch (e) {
+      // Workaround for evm parachains
+      accountId = call.origin.value.value;
+    }
+
     const account = ctx.store.defer(Account, accountId);
 
     queue.push(

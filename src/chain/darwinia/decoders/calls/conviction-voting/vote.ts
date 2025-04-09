@@ -1,13 +1,14 @@
-import { events } from '@/chain/kusama/types';
-import { Event, IVoteRemovedEventPalletDecoder } from '@/indexer';
+import { calls } from '@/chain/darwinia/types';
+import { Call, IVoteCallPalletDecoder } from '@/indexer';
 import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 
-export class VoteRemovedEventPalletDecoder implements IVoteRemovedEventPalletDecoder {
-  decode(call: Event) {
-    const { voteRemoved } = events.convictionVoting;
+export class VoteCallPalletDecoder implements IVoteCallPalletDecoder {
+  decode(call: Call) {
+    const { vote } = calls.convictionVoting;
 
-    if (voteRemoved.v1004000.is(call)) {
-      const fund = voteRemoved.v1004000.decode(call);
+    if (vote.v6600.is(call)) {
+      const fund = vote.v6600.decode(call);
+
       let fundVote;
 
       switch (fund.vote.__kind) {
@@ -31,12 +32,15 @@ export class VoteRemovedEventPalletDecoder implements IVoteRemovedEventPalletDec
           };
           break;
         default:
-          throw new DataNotDecodableError(voteRemoved, fund.vote);
+          throw new DataNotDecodableError(vote, fund.vote);
       }
 
-      return { who: fund.who, vote: fundVote };
+      return {
+        pollIndex: fund.pollIndex,
+        vote: fundVote,
+      };
     }
 
-    throw new UnknownVersionError(voteRemoved);
+    throw new UnknownVersionError(vote);
   }
 }

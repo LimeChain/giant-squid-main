@@ -1,6 +1,8 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
-export const AccountVote: sts.Type<AccountVote> = sts.closedEnum(() => {
+export const AccountId20 = sts.bytes()
+
+export const Type_121: sts.Type<Type_121> = sts.closedEnum(() => {
     return  {
         Split: sts.enumStruct({
             aye: sts.bigint(),
@@ -18,25 +20,23 @@ export const AccountVote: sts.Type<AccountVote> = sts.closedEnum(() => {
     }
 })
 
-export type AccountVote = AccountVote_Split | AccountVote_SplitAbstain | AccountVote_Standard
+export type Type_121 = Type_121_Split | Type_121_SplitAbstain | Type_121_Standard
 
-export interface AccountVote_Split {
+export interface Type_121_Split {
     __kind: 'Split'
     aye: bigint
     nay: bigint
 }
 
-export interface AccountVote_SplitAbstain {
+export interface Type_121_SplitAbstain {
     __kind: 'SplitAbstain'
     aye: bigint
     nay: bigint
     abstain: bigint
 }
 
-export interface AccountVote_Standard {
+export interface Type_121_Standard {
     __kind: 'Standard'
     vote: number
     balance: bigint
 }
-
-export const AccountId32 = sts.bytes()

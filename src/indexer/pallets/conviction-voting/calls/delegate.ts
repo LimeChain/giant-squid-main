@@ -1,9 +1,9 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { DelegateConvictionVotingAction, EnsureAccount } from '@/indexer/actions';
-import { decodeHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
 import { Account } from '@/model';
+import { DeferredEntity } from '@belopash/typeorm-store/lib/store';
 
 export interface IDelegateCallPalletDecoder
   extends ICallPalletDecoder<{
@@ -25,15 +25,34 @@ export class DelegateCallPalletHandler extends CallPalletHandler<IDelegateCallPa
   handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
     const data = this.decoder.decode(call);
+    const origin = getOriginAccountId(call.origin);
+    if (!origin) return;
 
-    const fromOrigin = getOriginAccountId(call.origin);
-    const fromId = fromOrigin ? this.encodeAddress(fromOrigin) : call.origin.value.value;
+    let fromId: string;
+    let toAccount: DeferredEntity<Account>;
+
+    try {
+      // Covers substrate based chains
+      fromId = this.encodeAddress(origin);
+    } catch (e) {
+      // Workaround for evm parachains
+      fromId = call.origin.value.value;
+    }
     const fromAccount = ctx.store.defer(Account, fromId);
 
-    const toId = data.to ? this.encodeAddress(decodeHex(data.to)) : undefined;
-    const toAccount = toId && ctx.store.defer(Account, toId);
+    if (data.to) {
+      let toId: string;
 
-    if (toAccount && toId) {
+      try {
+        // Covers substrate based chains
+        toId = this.encodeAddress(data.to);
+      } catch (e) {
+        // Workaround for evm parachains
+        toId = data.to;
+      }
+
+      toAccount = ctx.store.defer(Account, toId);
+
       queue.push(
         new EnsureAccount(block.header, call.extrinsic, {
           account: () => toAccount.get(),
@@ -53,7 +72,7 @@ export class DelegateCallPalletHandler extends CallPalletHandler<IDelegateCallPa
         id: call.id,
         extrinsicHash: call.extrinsic?.hash,
         from: () => fromAccount.getOrFail(),
-        to: toAccount ? () => toAccount.getOrFail() : async () => undefined,
+        to: () => toAccount?.get(),
         class: data.class,
         conviction: data.conviction,
         balance: data.balance,

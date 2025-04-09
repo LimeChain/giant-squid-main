@@ -19,7 +19,6 @@ export class DelegateCallPalletDecoder implements IDelegateCallPalletDecoder {
           to = fund.to.value;
           break;
         case 'Index':
-          to = undefined;
           break;
 
         default:

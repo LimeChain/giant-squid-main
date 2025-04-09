@@ -12,6 +12,11 @@ import { ParachainStakingDelegationIncreasedEventPalletDecoder } from '@/chain/m
 import { ParachainStakingDelegationKickedEventPalletDecoder } from '@/chain/moonriver/decoders/events/parachain-staking/delegationKicked';
 import { ParachainStakingDelegationRevokedEventPalletDecoder } from '@/chain/moonriver/decoders/events/parachain-staking/delegationRevoked';
 import { ParachainStakingRewardEventPalletDecoder } from '@/chain/moonriver/decoders/events/parachain-staking/rewarded';
+import { DelegateCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/delegate';
+import { RemoveVoteCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/removeVote';
+import { UndelegateCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/undelegate';
+import { UnlockCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/unlock';
+import { VoteCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/vote';
 
 export const indexer = new Indexer({
   config: {
@@ -32,6 +37,13 @@ export const indexer = new Indexer({
       'ParachainStaking.CandidateLeft': setupPallet({ decoder: new ParachainStakingCandidateLeftEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedMore': setupPallet({ decoder: new ParachainStakingCandidateBondedMoreEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedLess': setupPallet({ decoder: new ParachainStakingCandidateBondedLessEventPalletDecoder() }),
+    },
+    calls: {
+      'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
+      'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
+      'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
+      'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
+      'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
     },
   },
 });

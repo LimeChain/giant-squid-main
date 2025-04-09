@@ -14,13 +14,13 @@ export class ConvictionRemoveVote {
     @Column_("text", {nullable: true})
     extrinsicHash!: string | undefined | null
 
-    @Column_("int4", {nullable: false})
-    class!: number
-
     @Column_("int4", {nullable: true})
-    index!: number | undefined | null
+    class!: number | undefined | null
+
+    @Column_("int4", {nullable: false})
+    index!: number
 
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
-    who!: Account | undefined | null
+    who!: Account
 }

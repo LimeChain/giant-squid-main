@@ -40,7 +40,7 @@ type ConvictionVote @entity {
 type ConvictionRemoveVote @entity {
   id: ID!
   extrinsicHash: String @index
-  class: Int!
-  index: Int
-  who: Account
+  class: Int
+  index: Int!
+  who: Account!
 }

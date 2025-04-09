@@ -29,8 +29,18 @@ export class VoteCallPalletHandler extends CallPalletHandler<IVoteCallPalletSetu
     if (!call.success) return;
     const data = this.decoder.decode(call);
     const origin = getOriginAccountId(call.origin);
+    if (!origin) return;
 
-    const whoId = origin ? this.encodeAddress(origin) : call.origin.value.value;
+    let whoId: string;
+
+    try {
+      // Covers substrate based chains
+      whoId = this.encodeAddress(origin);
+    } catch (e) {
+      // Workaround for evm parachains
+      whoId = call.origin.value.value;
+    }
+
     const whoAccount = ctx.store.defer(Account, whoId);
 
     queue.push(
