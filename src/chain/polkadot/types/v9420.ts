@@ -1,5 +1,35 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export const V3WeightLimit: sts.Type<V3WeightLimit> = sts.closedEnum(() => {
+    return  {
+        Limited: Weight,
+        Unlimited: sts.unit(),
+    }
+})
+
+export const Weight: sts.Type<Weight> = sts.struct(() => {
+    return  {
+        refTime: sts.bigint(),
+        proofSize: sts.bigint(),
+    }
+})
+
+export interface Weight {
+    refTime: bigint
+    proofSize: bigint
+}
+
+export type V3WeightLimit = V3WeightLimit_Limited | V3WeightLimit_Unlimited
+
+export interface V3WeightLimit_Limited {
+    __kind: 'Limited'
+    value: Weight
+}
+
+export interface V3WeightLimit_Unlimited {
+    __kind: 'Unlimited'
+}
+
 export const VersionedMultiAssets: sts.Type<VersionedMultiAssets> = sts.closedEnum(() => {
     return  {
         V2: sts.array(() => V2MultiAsset),

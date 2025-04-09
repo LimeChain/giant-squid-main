@@ -38,7 +38,8 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { ReserveTransferAssetsPalletXcmHandler } from './pallets/xcm/calls/reserveTransferAssets';
+import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
+import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
 
 export const registry = {
   events: {
@@ -86,7 +87,8 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
-    'XcmPallet.reserve_transfer_assets': ReserveTransferAssetsPalletXcmHandler,
+    'XcmPallet.reserve_transfer_assets': ReserveTransferAssetsPalletHandler,
+    'XcmPallet.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandler,
   },
 };
 

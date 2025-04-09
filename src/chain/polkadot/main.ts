@@ -32,17 +32,18 @@ import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRe
 import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
 import { ReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/reserveTransferAssets';
+import { LimitedReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/limitedReserveTransferAssets';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
     // blockRange: { from: 12897868, to: 12897868 },
-    // blockRange: { from: 10100000 },
+    blockRange: { from: 10100000 },
   },
   pallets: {
     events: {
-      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       // 'Staking.Reward': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       // 'Staking.Rewarded': setupPallet({ decoder: new StakingRewardEventPalletDecoder(), payoutStakersDecoder: new PayoutStakersCallPalletDecoder() }),
       // 'Staking.Bonded': setupPallet({ decoder: new StakingBondedEventPalletDecoder() }),
@@ -74,9 +75,9 @@ export const indexer = new Indexer({
       // 'Crowdloan.Withdrew': setupPallet({ decoder: new WithdrewEventPalletDecoder() }),
       // 'Crowdloan.Dissolved': setupPallet({ decoder: new DissolvedEventPalletDecoder() }),
       // 'Crowdloan.Contributed': setupPallet({ decoder: new ContributedEventPalletDecoder() }),
-      'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
-      'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
-      'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      // 'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
+      // 'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
+      // 'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
     },
     calls: {
       // 'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -97,7 +98,8 @@ export const indexer = new Indexer({
       // 'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       // 'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       // 'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
-      'XcmPallet.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder() }),
+      // 'XcmPallet.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder() }),
+      'XcmPallet.limited_reserve_transfer_assets': setupPallet({ decoder: new LimitedReserveTransferAssetsCallDecoder() }),
     },
   },
 });

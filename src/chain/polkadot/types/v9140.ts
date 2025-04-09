@@ -1,5 +1,23 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export const V2WeightLimit: sts.Type<V2WeightLimit> = sts.closedEnum(() => {
+    return  {
+        Limited: sts.bigint(),
+        Unlimited: sts.unit(),
+    }
+})
+
+export type V2WeightLimit = V2WeightLimit_Limited | V2WeightLimit_Unlimited
+
+export interface V2WeightLimit_Limited {
+    __kind: 'Limited'
+    value: bigint
+}
+
+export interface V2WeightLimit_Unlimited {
+    __kind: 'Unlimited'
+}
+
 export const VersionedMultiAssets: sts.Type<VersionedMultiAssets> = sts.closedEnum(() => {
     return  {
         V0: sts.array(() => V0MultiAsset),

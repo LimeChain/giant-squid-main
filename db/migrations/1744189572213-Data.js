@@ -1,5 +1,5 @@
-module.exports = class Data1744010683166 {
-    name = 'Data1744010683166'
+module.exports = class Data1744189572213 {
+    name = 'Data1744189572213'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -71,7 +71,7 @@ module.exports = class Data1744010683166 {
         await db.query(`CREATE UNIQUE INDEX "IDX_20df08516f386a2d403fe66150" ON "identity_sub" ("account_id") `)
         await db.query(`CREATE TABLE "identity" ("id" character varying NOT NULL, "judgement" character varying(10) NOT NULL, "additional" jsonb, "display" text, "legal" text, "web" text, "riot" text, "email" text, "pgp_fingerprint" text, "image" text, "twitter" text, "is_killed" boolean NOT NULL, "account_id" character varying, CONSTRAINT "REL_bafa9e6c71c3f69cef6602a809" UNIQUE ("account_id"), CONSTRAINT "PK_ff16a44186b286d5e626178f726" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_bafa9e6c71c3f69cef6602a809" ON "identity" ("account_id") `)
-        await db.query(`CREATE TABLE "xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text NOT NULL, "amount" numeric NOT NULL, "from_id" character varying, "to_chain_id" character varying, CONSTRAINT "PK_51dd82383f8ec7d2358b8df0859" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text NOT NULL, "amount" numeric NOT NULL, "weight_limit" numeric, "call" text NOT NULL, "from_id" character varying, "to_chain_id" character varying, CONSTRAINT "PK_51dd82383f8ec7d2358b8df0859" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_766473f200d8c26e84ac2252d3" ON "xcm_transfer" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_28960d1f2cb3af26dab8d6c1a9" ON "xcm_transfer" ("timestamp") `)
         await db.query(`CREATE INDEX "IDX_40a2a3aa9f698a22c3d53ba555" ON "xcm_transfer" ("extrinsic_hash") `)

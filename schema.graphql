@@ -266,6 +266,8 @@ type XcmTransfer @entity {
   to: String!
   toChain: Parachain
   amount: BigInt!
+  weightLimit: BigInt
+  call: String!
 }
 
 type Account @entity {

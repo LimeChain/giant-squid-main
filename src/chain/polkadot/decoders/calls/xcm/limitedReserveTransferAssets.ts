@@ -1,5 +1,6 @@
 import { calls } from '@/chain/polkadot/types';
 import {
+  V2WeightLimit,
   VersionedMultiAssets_V0 as VersionedMultiAssets_V0_V9140,
   VersionedMultiAssets_V1 as VersionedMultiAssets_V1_V9140,
   VersionedMultiLocation_V0 as VersionedMultiLocation_V0_V9140,
@@ -18,6 +19,7 @@ import {
   VersionedMultiLocation_V3 as VersionedMultiLocation_V3_V9420,
 } from '@/chain/polkadot/types/v9420';
 import {
+  V3WeightLimit,
   VersionedAssets_V2 as VersionedAssets_V2_V100200,
   VersionedAssets_V3 as VersionedAssets_V3_V100200,
   VersionedAssets_V4 as VersionedAssets_V4_V100200,
@@ -31,9 +33,10 @@ import { UnknownVersionError } from '@/utils';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
+import { ILimitedReserveTransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/limitedReserveTransferAssets';
 
-const WRITE = true;
-const filePath = path.join(os.homedir(), 'Desktop', 'xcm_reserve_transfer_early.json');
+const WRITE = false;
+const filePath = path.join(os.homedir(), 'Desktop', 'xcm_limited_reserve_transfer_assets.json');
 const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
 process.on('beforeExit', () => fileStream.end());
 
@@ -53,20 +56,22 @@ function write(data: object) {
   fileStream.write(',\n');
 }
 
-export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsPalletDecoder {
+export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveTransferAssetsPalletDecoder {
   decode(call: Call) {
-    const { reserveTransferAssets } = calls.xcmPallet;
+    const { limitedReserveTransferAssets } = calls.xcmPallet;
     let to: string = '';
     let toChain: string = '';
     let amount: bigint = 0n;
     let feeAssetItem: number = 0;
+    let weightLimit: bigint | null = null;
 
-    if (reserveTransferAssets.v9140.is(call)) {
-      const data = reserveTransferAssets.v9140.decode(call);
+    if (limitedReserveTransferAssets.v9140.is(call)) {
+      const data = limitedReserveTransferAssets.v9140.decode(call);
       if (WRITE) write({ blockHash: call.block.hash, data });
 
-      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
+      weightLimit = decodeV2WeightLimit(_weightLimit).limit;
 
       // Destination mapping
       switch (dest.__kind) {
@@ -110,12 +115,13 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
           break;
         }
       }
-    } else if (reserveTransferAssets.v9370.is(call)) {
-      const data = reserveTransferAssets.v9370.decode(call);
+    } else if (limitedReserveTransferAssets.v9370.is(call)) {
+      const data = limitedReserveTransferAssets.v9370.decode(call);
       if (WRITE) write({ blockHash: call.block.hash, data });
 
-      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
+      weightLimit = decodeV2WeightLimit(_weightLimit).limit;
 
       // Destination mapping
       switch (dest.__kind) {
@@ -159,12 +165,13 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
           break;
         }
       }
-    } else if (reserveTransferAssets.v9420.is(call)) {
-      const data = reserveTransferAssets.v9420.decode(call);
+    } else if (limitedReserveTransferAssets.v9420.is(call)) {
+      const data = limitedReserveTransferAssets.v9420.decode(call);
       if (WRITE) write({ blockHash: call.block.hash, data });
 
-      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
+      weightLimit = decodeV3WeightLimit(_weightLimit).limit;
 
       // Destination mapping
       switch (dest.__kind) {
@@ -194,12 +201,13 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
           amount = _amount;
           break;
       }
-    } else if (reserveTransferAssets.v1002000.is(call)) {
-      const data = reserveTransferAssets.v1002000.decode(call);
+    } else if (limitedReserveTransferAssets.v1002000.is(call)) {
+      const data = limitedReserveTransferAssets.v1002000.decode(call);
       if (WRITE) write({ blockHash: call.block.hash, data });
 
-      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest } = data;
+      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
+      weightLimit = decodeV3WeightLimit(_weightLimit).limit;
 
       // Destination mapping
       switch (dest.__kind) {
@@ -239,7 +247,6 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
           amount = _amount;
           break;
         }
-
         case 'V4': {
           const { amount: _amount } = decodeV4Assets(_assets);
           amount = _amount;
@@ -247,10 +254,10 @@ export class ReserveTransferAssetsCallDecoder implements IReserveTransferAssetsP
         }
       }
     } else {
-      throw new UnknownVersionError(reserveTransferAssets);
+      throw new UnknownVersionError(limitedReserveTransferAssets);
     }
 
-    return { feeAssetItem, amount, to, toChain };
+    return { feeAssetItem, amount, to, toChain, weightLimit };
   }
 }
 
@@ -422,4 +429,28 @@ function decodeV4Assets(_assets: VersionedAssets_V4_V100200): {
   }
 
   return { amount };
+}
+
+function decodeV2WeightLimit(_weightLimit: V2WeightLimit): { limit: bigint | null } {
+  let limit: bigint | null = null;
+
+  if (_weightLimit.__kind === 'Limited') {
+    limit = _weightLimit.value;
+  } else {
+    limit = null;
+  }
+
+  return { limit };
+}
+
+function decodeV3WeightLimit(_weightLimit: V3WeightLimit): { limit: bigint | null } {
+  let limit: bigint | null = null;
+
+  if (_weightLimit.__kind === 'Limited') {
+    limit = _weightLimit.value.proofSize;
+  } else {
+    limit = null;
+  }
+
+  return { limit };
 }

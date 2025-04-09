@@ -41,4 +41,10 @@ export class XcmTransfer {
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     amount!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+    weightLimit!: bigint | undefined | null
+
+    @Column_("text", {nullable: false})
+    call!: string
 }
