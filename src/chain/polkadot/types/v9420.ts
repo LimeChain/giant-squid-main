@@ -52,6 +52,8 @@ export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
     }
 })
 
+export const AccountId32 = sts.bytes()
+
 export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
 
 export interface MultiAddress_Address20 {
@@ -118,5 +120,3 @@ export interface Type_151_Standard {
     vote: number
     balance: bigint
 }
-
-export const AccountId32 = sts.bytes()

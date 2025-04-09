@@ -5,7 +5,7 @@ interface UndelegateConvictionVotingData {
   id: string;
   class: number | undefined;
   extrinsicHash: string | undefined;
-  account?: () => Promise<Account>;
+  account: () => Promise<Account>;
 }
 
 export class UndelegateConvictionVotingAction extends Action<UndelegateConvictionVotingData> {

@@ -5,15 +5,8 @@ interface RemoveVoteConvictionVotingData {
   id: string;
   extrinsicHash: string | undefined;
   who: () => Promise<Account>;
-  class?: number;
-  index?: number;
-  vote: {
-    aye?: bigint;
-    nay?: bigint;
-    balance?: bigint;
-    vote?: number;
-    abstain?: bigint;
-  };
+  index: number;
+  class: number | undefined;
 }
 
 export class RemoveVoteConvictionVotingAction extends Action<RemoveVoteConvictionVotingData> {
@@ -24,9 +17,8 @@ export class RemoveVoteConvictionVotingAction extends Action<RemoveVoteConvictio
       id: this.data.id,
       extrinsicHash: this.data.extrinsicHash,
       who,
+      index: this.data.index,
       class: this.data.class,
-      index: this.data.index ?? 0,
-      vote: new ConvictionVoteField(this.data.vote),
     });
 
     await ctx.store.upsert(removeVote);

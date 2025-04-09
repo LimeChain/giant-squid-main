@@ -10,8 +10,8 @@ export class RemoveVoteCallPalletDecoder implements IRemoveVoteCallPalletDecoder
       const fund = removeVote.v9420.decode(call);
 
       return {
-        class: fund.class,
         index: fund.index,
+        class: fund.class,
       };
     }
 

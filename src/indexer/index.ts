@@ -43,8 +43,8 @@ export { IParachainCandidateLeftEventDecoder } from '@/indexer/pallets/parachain
 export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
-export { IDelegatedEventPalletDecoder, IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/events/delegated';
-export { IUndelegatedEventPalletDecoder, IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/events/undelegated';
-export { IVotedEventPalletDecoder, IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/events/voted';
-export { IVoteRemovedEventPalletDecoder, IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/events/voteRemoved';
+export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/vote';
+export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
+export { IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/undelegate';
+export { IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 export { Indexer, setupPallet } from '@/indexer/main';

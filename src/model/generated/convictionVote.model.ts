@@ -20,8 +20,8 @@ export class ConvictionVote {
     @ManyToOne_(() => Account, {nullable: true})
     who!: Account
 
-    @Column_("int4", {nullable: true})
-    pollIndex!: number | undefined | null
+    @Column_("int4", {nullable: false})
+    pollIndex!: number
 
     @Column_("jsonb", {transformer: {to: obj => obj.toJSON(), from: obj => obj == null ? undefined : new ConvictionVoteField(undefined, obj)}, nullable: false})
     vote!: ConvictionVoteField

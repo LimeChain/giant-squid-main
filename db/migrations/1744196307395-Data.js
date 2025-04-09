@@ -1,5 +1,5 @@
-module.exports = class Data1744038233513 {
-    name = 'Data1744038233513'
+module.exports = class Data1744196307395 {
+    name = 'Data1744196307395'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -55,10 +55,10 @@ module.exports = class Data1744038233513 {
         await db.query(`CREATE TABLE "conviction_undelegate" ("id" character varying NOT NULL, "extrinsic_hash" text, "class" integer NOT NULL, "account_id" character varying, CONSTRAINT "PK_79587e0afbf74699a78d5f53e62" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_d444775464735789ec73dce575" ON "conviction_undelegate" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_11162c51c9dcef3b16519b6dfa" ON "conviction_undelegate" ("account_id") `)
-        await db.query(`CREATE TABLE "conviction_vote" ("id" character varying NOT NULL, "extrinsic_hash" text, "poll_index" integer, "vote" jsonb NOT NULL, "who_id" character varying, CONSTRAINT "PK_ff0112254d31eff17e0ab8f8245" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_vote" ("id" character varying NOT NULL, "extrinsic_hash" text, "poll_index" integer NOT NULL, "vote" jsonb NOT NULL, "who_id" character varying, CONSTRAINT "PK_ff0112254d31eff17e0ab8f8245" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_abedc813d1c9f74f128e3044b1" ON "conviction_vote" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_725e4103f7b072c904f7560dac" ON "conviction_vote" ("who_id") `)
-        await db.query(`CREATE TABLE "conviction_remove_vote" ("id" character varying NOT NULL, "extrinsic_hash" text, "class" integer, "index" integer NOT NULL, "vote" jsonb NOT NULL, "who_id" character varying, CONSTRAINT "PK_a858bfcc9b813ab56e0554468c2" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "conviction_remove_vote" ("id" character varying NOT NULL, "extrinsic_hash" text, "class" integer NOT NULL, "index" integer, "who_id" character varying, CONSTRAINT "PK_a858bfcc9b813ab56e0554468c2" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_05e5665a496a9371e1523f251b" ON "conviction_remove_vote" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_599d9e49ee89339e7868f60b29" ON "conviction_remove_vote" ("who_id") `)
         await db.query(`CREATE TABLE "crowdloan_reimbursement" ("id" character varying NOT NULL, "type" character varying(8) NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "crowdloan_id" character varying, "contributor_id" character varying, CONSTRAINT "PK_d1b5973aaff1feb561e26786316" PRIMARY KEY ("id"))`)

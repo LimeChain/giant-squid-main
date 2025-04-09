@@ -1,7 +1,5 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
-import * as marshal from "./marshal"
 import {Account} from "./account.model"
-import {ConvictionVoteField} from "./_convictionVoteField"
 
 @Entity_()
 export class ConvictionRemoveVote {
@@ -16,16 +14,13 @@ export class ConvictionRemoveVote {
     @Column_("text", {nullable: true})
     extrinsicHash!: string | undefined | null
 
-    @Column_("int4", {nullable: true})
-    class!: number | undefined | null
-
     @Column_("int4", {nullable: false})
-    index!: number
+    class!: number
+
+    @Column_("int4", {nullable: true})
+    index!: number | undefined | null
 
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
-    who!: Account
-
-    @Column_("jsonb", {transformer: {to: obj => obj.toJSON(), from: obj => obj == null ? undefined : new ConvictionVoteField(undefined, obj)}, nullable: false})
-    vote!: ConvictionVoteField
+    who!: Account | undefined | null
 }

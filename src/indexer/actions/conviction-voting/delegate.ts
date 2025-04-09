@@ -4,16 +4,16 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 interface DelegateConvictionVotingData {
   id: string;
   extrinsicHash: string | undefined;
-  from?: () => Promise<Account>;
-  to: () => Promise<Account>;
-  class?: number;
-  conviction?: string;
-  balance?: bigint;
+  from: () => Promise<Account>;
+  to: () => Promise<Account | undefined>;
+  class: number;
+  conviction: string;
+  balance: bigint;
 }
 
 export class DelegateConvictionVotingAction extends Action<DelegateConvictionVotingData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    let to = await this.data.to();
+    const to = await this.data.to?.();
     let from = await this.data.from?.();
 
     const delegate = new ConvictionDelegate({
