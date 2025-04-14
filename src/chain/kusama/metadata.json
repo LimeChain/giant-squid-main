@@ -19,6 +19,9 @@
     },
     "Registrar": {
       "events": ["Reserved", "Registered", "Deregistered"]
+    },
+    "ConvictionVoting": {
+      "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

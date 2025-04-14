@@ -30,7 +30,12 @@ import { ContributedEventPalletDecoder } from '@/chain/kusama/decoders/events/cr
 import { PartiallyRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/partiallyRefunded';
 import { RemoveKeysLimitConstantGetter } from '@/chain/kusama/constants/removeKeysLimit';
 import { AllRefundedEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/allRefunded';
-import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
+import { WithdrewEventPalletDecoder } from '@/chain/kusama/decoders/events/crowdloan/withdrew';
+import { DelegateCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/delegate';
+import { UndelegateCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/undelegate';
+import { VoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/vote';
+import { RemoveVoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/removeVote';
+import { UnlockCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/unlock';
 
 export const indexer = new Indexer({
   config: {
@@ -94,6 +99,11 @@ export const indexer = new Indexer({
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
+      'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
+      'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
+      'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
+      'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
     },
   },
 });

@@ -38,6 +38,11 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
+import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
+import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
+import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
+import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
+import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 
 export const registry = {
   events: {
@@ -85,6 +90,11 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
+    'ConvictionVoting.unlock': UnlockCallPalletHandler,
+    'ConvictionVoting.delegate': DelegateCallPalletHandler,
+    'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
+    'ConvictionVoting.vote': VoteCallPalletHandler,
+    'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
   },
 };
 

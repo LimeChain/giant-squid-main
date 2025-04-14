@@ -104,6 +104,19 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       accountSchema.push(`rewards: [StakingReward!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('staking.reward');
     }
+
+    // Conviction Voting pallet
+    if (
+      (lowerCaseKey === 'convictionvoting.delegate' ||
+        lowerCaseKey === 'convictionvoting.undelegate' ||
+        lowerCaseKey === 'convictionvoting.unlock' ||
+        lowerCaseKey === 'convictionvoting.vote') &&
+      !appendedSchemaParts.has('convictionvoting')
+    ) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'convictionVoting.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('convictionvoting');
+    }
   }
 
   accountSchema.push(`\n}\n`);

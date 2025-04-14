@@ -4,6 +4,9 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "ConvictionVoting": {
+      "calls": ["unlock", "vote", "remove_vote"]
     }
   },
   "storage": []

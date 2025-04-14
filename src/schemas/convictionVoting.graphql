@@ -1,0 +1,46 @@
+type ConvictionDelegate @entity {
+  id: ID!
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  class: Int!
+  conviction: String!
+  balance: BigInt!
+}
+
+type ConvictionUnlock @entity {
+  id: ID!
+  class: Int!
+  target: String!
+}
+
+type ConvictionUndelegate @entity {
+  id: ID!
+  extrinsicHash: String @index
+  class: Int!
+  account: Account!
+}
+
+type ConvictionVoteField {
+  aye: BigInt
+  nay: BigInt
+  abstain: BigInt
+  vote: Int
+  balance: BigInt
+}
+
+type ConvictionVote @entity {
+  id: ID!
+  extrinsicHash: String @index
+  who: Account!
+  pollIndex: Int!
+  vote: ConvictionVoteField!
+}
+
+type ConvictionRemoveVote @entity {
+  id: ID!
+  extrinsicHash: String @index
+  class: Int
+  index: Int!
+  who: Account!
+}
