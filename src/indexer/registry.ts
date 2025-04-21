@@ -43,6 +43,11 @@ import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls
 import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+import { NominationPoolsBondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/bonded';
+import { CreatePoolCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/create';
+import { SetMetadataCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
+import { NominationPoolsDestroyedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/destroyed';
+import { NominationPoolsUnbondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/unbonded';
 
 export const registry = {
   events: {
@@ -74,6 +79,9 @@ export const registry = {
     'Registrar.Reserved': ReservedParachainEventPalletHandler,
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
+    'NominationPools.Bonded': NominationPoolsBondedEventPalletHandler,
+    'NominationPools.Destroyed': NominationPoolsDestroyedEventPalletHandler,
+    'NominationPools.Unbonded': NominationPoolsUnbondedEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
@@ -95,6 +103,8 @@ export const registry = {
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
     'ConvictionVoting.vote': VoteCallPalletHandler,
     'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
+    'NominationPools.create': CreatePoolCallPalletHandler,
+    'NominationPools.set_metadata': SetMetadataCallPalletHandler,
   },
 };
 

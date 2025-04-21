@@ -1,3 +1,4 @@
+import { ISetMetadataCallPalletDecoder } from './pallets/nomination-pools/calls/setMetadata';
 export { Event, Call, Block, BlockHeader, ProcessorContext } from '@/indexer/processor';
 export { ISlashEventPalletDecoder } from '@/indexer/pallets/staking/events/slash';
 export { IAddSubCallPalletDecoder } from '@/indexer/pallets/identity/calls/addSub';
@@ -47,4 +48,9 @@ export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/call
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
 export { IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 export { IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+export { INominationPoolsBondedEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/bonded';
+export { ICreatePollCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/create';
+export { ISetMetadataCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
+export { INominationPoolsDestroyedEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/destroyed';
+export { INominationPoolsUnbondedEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/unbonded';
 export { Indexer, setupPallet } from '@/indexer/main';
