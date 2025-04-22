@@ -135,7 +135,7 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
         case 'V2':
         case 'V3': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          to = parachainDestination;
+          toChain = parachainDestination;
           break;
         }
       }
@@ -170,13 +170,13 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
         case 'V2':
         case 'V3': {
           const { parachainDestination } = decodeV1ToV3Dest(dest);
-          to = parachainDestination;
+          toChain = parachainDestination;
           break;
         }
 
         case 'V4':
           const { parachainDestination } = decodeV4Dest(dest);
-          to = parachainDestination;
+          toChain = parachainDestination;
           break;
       }
 
