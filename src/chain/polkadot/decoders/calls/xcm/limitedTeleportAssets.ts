@@ -1,7 +1,7 @@
 import { calls } from '@/chain/polkadot/types';
 import { Call } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
-import { ILimitedReserveTransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/limitedReserveTransferAssets';
+import { ILimitedTeleportAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/limitedTeleportAssets';
 import {
   decodeV0Assets,
   decodeV0Beneficiary,
@@ -16,17 +16,17 @@ import {
   decodeV4Dest,
 } from './transfer';
 
-export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveTransferAssetsPalletDecoder {
+export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsPalletDecoder {
   decode(call: Call) {
-    const { limitedReserveTransferAssets } = calls.xcmPallet;
+    const { limitedTeleportAssets } = calls.xcmPallet;
     let to: string = '';
     let toChain: string = '';
     let amount: bigint = 0n;
     let feeAssetItem: number = 0;
     let weightLimit: bigint | null = null;
 
-    if (limitedReserveTransferAssets.v9140.is(call)) {
-      const data = limitedReserveTransferAssets.v9140.decode(call);
+    if (limitedTeleportAssets.v9140.is(call)) {
+      const data = limitedTeleportAssets.v9140.decode(call);
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -74,8 +74,8 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
           break;
         }
       }
-    } else if (limitedReserveTransferAssets.v9370.is(call)) {
-      const data = limitedReserveTransferAssets.v9370.decode(call);
+    } else if (limitedTeleportAssets.v9370.is(call)) {
+      const data = limitedTeleportAssets.v9370.decode(call);
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -123,8 +123,8 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
           break;
         }
       }
-    } else if (limitedReserveTransferAssets.v9420.is(call)) {
-      const data = limitedReserveTransferAssets.v9420.decode(call);
+    } else if (limitedTeleportAssets.v9420.is(call)) {
+      const data = limitedTeleportAssets.v9420.decode(call);
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -158,8 +158,8 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
           amount = _amount;
           break;
       }
-    } else if (limitedReserveTransferAssets.v1002000.is(call)) {
-      const data = limitedReserveTransferAssets.v1002000.decode(call);
+    } else if (limitedTeleportAssets.v1002000.is(call)) {
+      const data = limitedTeleportAssets.v1002000.decode(call);
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -210,7 +210,7 @@ export class LimitedReserveTransferAssetsCallDecoder implements ILimitedReserveT
         }
       }
     } else {
-      throw new UnknownVersionError(limitedReserveTransferAssets);
+      throw new UnknownVersionError(limitedTeleportAssets);
     }
 
     return { feeAssetItem, amount, to, toChain, weightLimit };

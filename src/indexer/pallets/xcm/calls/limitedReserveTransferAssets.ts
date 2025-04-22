@@ -1,7 +1,7 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { Account, Parachain } from '@/model';
-import { XcmCall, XcmTransferAction } from '@/indexer/actions/xcm/transfer';
+import { Account, Parachain, XcmTransferCall } from '@/model';
+import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
@@ -50,7 +50,7 @@ export class LimitedReserveTransferAssetsPalletHandler extends CallPalletHandler
           amount,
           to,
           toChain: () => parachain.get(),
-          call: XcmCall.LIMITED_RESEREVE_TRANSFER_ASSETS,
+          call: XcmTransferCall.LimitedReserveTransferAssets,
           weightLimit,
         })
       );

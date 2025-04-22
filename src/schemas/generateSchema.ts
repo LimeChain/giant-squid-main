@@ -105,12 +105,18 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       appendedSchemaParts.add('staking.reward');
     }
 
+    const xcmTransferCalls = [
+      'xcmpallet.limited_reserve_transfer_assets',
+      'xcmpallet.limited_teleport_assets',
+      'xcmpallet.reserve_transfer_assets',
+      'xcmpallet.transfer_assets',
+    ];
     // XcmPallet
-    if (lowerCaseKey === 'xcmpallet.reserve_transfer_assets' && !appendedSchemaParts.has('xcmpallet.reserve_transfer_assets')) {
+    if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       // accountSchema.push(`xcmTransaction: [XcmTransfer!] @derivedFrom(field: "from")\n`);
-      appendedSchemaParts.add('xcmpallet.reserve_transfer_assets');
+      appendedSchemaParts.add(xcmTransferCalls[0]);
     }
   }
 

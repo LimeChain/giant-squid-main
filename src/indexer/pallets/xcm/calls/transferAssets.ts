@@ -6,25 +6,26 @@ import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
 
-export interface IReserveTransferAssetsPalletDecoder
+export interface ITransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
     to: string;
     toChain: string;
     amount: bigint;
     feeAssetItem: number;
+    weightLimit: bigint | null;
   }> {}
 
-interface IReserveTransferAssetsPalletSetup extends IBasePalletSetup {
-  decoder: IReserveTransferAssetsPalletDecoder;
+interface ITransferAssetsPalletSetup extends IBasePalletSetup {
+  decoder: ITransferAssetsPalletDecoder;
 }
 
-export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReserveTransferAssetsPalletSetup> {
-  constructor(setup: IReserveTransferAssetsPalletSetup, options: IHandlerOptions) {
+export class TransferAssetsPalletHandler extends CallPalletHandler<ITransferAssetsPalletSetup> {
+  constructor(setup: ITransferAssetsPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { to, feeAssetItem, amount, toChain } = this.decoder.decode(call);
+    const { to, feeAssetItem, amount, toChain, weightLimit } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (toChain) {
@@ -49,8 +50,8 @@ export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReser
           amount,
           to,
           toChain: () => parachain.get(),
-          call: XcmTransferCall.ReserveTransferAssets,
-          weightLimit: null,
+          call: XcmTransferCall.TransferAssets,
+          weightLimit,
         })
       );
     }

@@ -1,3 +1,10 @@
+enum XcmTransferCall {
+  LimitedReserveTransferAssets
+  LimitedTeleportAssets
+  ReserveTransferAssets
+  TransferAssets
+}
+
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -9,5 +16,5 @@ type XcmTransfer @entity {
   toChain: Parachain
   amount: BigInt!
   weightLimit: BigInt
-  call: String!
+  call: XcmTransferCall!
 }

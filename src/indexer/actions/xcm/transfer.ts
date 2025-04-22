@@ -1,10 +1,5 @@
-import { Account, Parachain, XcmTransfer } from '@/model';
+import { Account, Parachain, XcmTransfer, XcmTransferCall } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
-
-export enum XcmCall {
-  LIMITED_RESEREVE_TRANSFER_ASSETS = 'limited_reserve_transfer_assets',
-  RESEREVE_TRANSFER_ASSETS = 'reserve_transfer_assets',
-}
 
 interface XcmTransferActionData {
   id: string;
@@ -13,7 +8,7 @@ interface XcmTransferActionData {
   to: string;
   amount: bigint;
   feeAssetItem: number;
-  call: XcmCall;
+  call: XcmTransferCall;
   weightLimit: bigint | null;
 }
 

@@ -2,6 +2,7 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, I
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
 import {Parachain} from "./parachain.model"
+import {XcmTransferCall} from "./_xcmTransferCall"
 
 @Entity_()
 export class XcmTransfer {
@@ -45,6 +46,6 @@ export class XcmTransfer {
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     weightLimit!: bigint | undefined | null
 
-    @Column_("text", {nullable: false})
-    call!: string
+    @Column_("varchar", {length: 28, nullable: false})
+    call!: XcmTransferCall
 }

@@ -40,6 +40,8 @@ import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
 import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
+import { TransferAssetsPalletHandler } from './pallets/xcm/calls/transferAssets';
+import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedTeleportAssets';
 
 export const registry = {
   events: {
@@ -89,6 +91,8 @@ export const registry = {
     'Crowdloan.create': CreateCallPalletHandler,
     'XcmPallet.reserve_transfer_assets': ReserveTransferAssetsPalletHandler,
     'XcmPallet.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandler,
+    'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
+    'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
   },
 };
 
