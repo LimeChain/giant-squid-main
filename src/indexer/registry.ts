@@ -42,6 +42,7 @@ import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveT
 import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
 import { TransferAssetsPalletHandler } from './pallets/xcm/calls/transferAssets';
 import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenPalletHandler } from './pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 
 export const registry = {
   events: {
@@ -93,6 +94,7 @@ export const registry = {
     'XcmPallet.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandler,
     'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
     'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
+    'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
   },
 };
 

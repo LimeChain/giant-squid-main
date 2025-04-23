@@ -2,6 +2,7 @@ enum XcmTransferCall {
   LimitedReserveTransferAssets
   LimitedTeleportAssets
   ReserveTransferAssets
+  TransferAssetsUsingTypeAndThen
   TransferAssets
 }
 

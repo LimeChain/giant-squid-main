@@ -46,6 +46,6 @@ export class XcmTransfer {
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     weightLimit!: bigint | undefined | null
 
-    @Column_("varchar", {length: 28, nullable: false})
+    @Column_("varchar", {length: 30, nullable: false})
     call!: XcmTransferCall
 }

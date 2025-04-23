@@ -110,6 +110,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       'xcmpallet.limited_teleport_assets',
       'xcmpallet.reserve_transfer_assets',
       'xcmpallet.transfer_assets',
+      'xcmpallet.transfer_assets_using_type_and_then',
     ];
     // XcmPallet
     if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
