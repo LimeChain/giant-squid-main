@@ -116,7 +116,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      // accountSchema.push(`xcmTransaction: [XcmTransfer!] @derivedFrom(field: "from")\n`);
+      accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "from")\n`);
       appendedSchemaParts.add(xcmTransferCalls[0]);
     }
   }

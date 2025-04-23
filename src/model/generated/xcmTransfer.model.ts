@@ -31,7 +31,7 @@ export class XcmTransfer {
 
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
-    from!: Account
+    account!: Account
 
     @Column_("text", {nullable: false})
     to!: string

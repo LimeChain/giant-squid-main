@@ -270,7 +270,7 @@ type XcmTransfer @entity {
   timestamp: DateTime! @index
   extrinsicHash: String @index
   feeAssetItem: Int! @index
-  from: Account!
+  account: Account!
   to: String!
   toChain: Parachain
   amount: BigInt!
@@ -286,4 +286,5 @@ type Account @entity {
   identity: Identity @derivedFrom(field: "account")
   staker: Staker @derivedFrom(field: "stash")
   rewards: [StakingReward!] @derivedFrom(field: "account")
+  xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")
 }

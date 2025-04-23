@@ -45,7 +45,7 @@ export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimit
         }),
         new XcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
-          from: () => account.getOrFail(),
+          account: () => account.getOrFail(),
           feeAssetItem: feeAssetItem,
           amount,
           to,

@@ -45,7 +45,7 @@ export class TransferAssetsPalletHandler extends CallPalletHandler<ITransferAsse
         }),
         new XcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
-          from: () => account.getOrFail(),
+          account: () => account.getOrFail(),
           feeAssetItem: feeAssetItem,
           amount,
           to,

@@ -3,7 +3,7 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XcmTransferActionData {
   id: string;
-  from: () => Promise<Account>;
+  account: () => Promise<Account>;
   toChain: () => Promise<Parachain | undefined>;
   to: string;
   amount: bigint;
@@ -20,7 +20,7 @@ export class XcmTransferAction extends Action<XcmTransferActionData> {
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       feeAssetItem: this.data.feeAssetItem,
-      from: await this.data.from(),
+      account: await this.data.account(),
       to: this.data.to,
       toChain: await this.data.toChain(),
       amount: this.data.amount,

@@ -12,7 +12,7 @@ type XcmTransfer @entity {
   timestamp: DateTime! @index
   extrinsicHash: String @index
   feeAssetItem: Int! @index
-  from: Account!
+  account: Account!
   to: String!
   toChain: Parachain
   amount: BigInt!
