@@ -42,7 +42,7 @@
     },
     "typegen": {
       "description": "Generate data access classes for an substrate metadata",
-      "cmd": ["squid-substrate-typegen", { "glob": "./src/chain/polkadot/metadata.json" }]
+      "cmd": ["squid-substrate-typegen", { "glob": "./src/chain/moonbeam/metadata.json" }]
     },
     "buildSchema:prod": {
       "description": "Generate schema.graphql for deploy",

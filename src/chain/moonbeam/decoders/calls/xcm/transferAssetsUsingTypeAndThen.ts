@@ -1,31 +1,31 @@
-import { calls } from '@/chain/polkadot/types';
+import { calls } from '@/chain/moonbeam/types';
 import { Call } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
 import {
   decodeV1ToV3Assets,
-  decodeV1ToV3Beneficiary,
+  decodeV1ToV3CustomXcmOnDest,
   decodeV1ToV3Dest,
   decodeV3WeightLimit,
   decodeV4Assets,
-  decodeV4Beneficiary,
+  decodeV4CustomXcmOnDest,
   decodeV4Dest,
 } from './transfer';
-import { ITransferAssetsPalletDecoder } from '@/indexer/pallets/polkadotXcm/calls/transferAssets';
+import { ITransferAssetsUsingTypeAndThenPalletDecoder } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 
-export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
+export class TransferAssetsUsingTypeAndThenCallDecoder implements ITransferAssetsUsingTypeAndThenPalletDecoder {
   decode(call: Call) {
-    const { transferAssets } = calls.xcmPallet;
+    const { transferAssetsUsingTypeAndThen } = calls.polkadotXcm;
     let to: string = '';
     let toChain: string = '';
     let amount: bigint = 0n;
+    // no `feeAssetItem` field in `transfer_assets_using_type_and_then` call -> use default value
     let feeAssetItem: number = 0;
     let weightLimit: bigint | null = null;
 
-    if (transferAssets.v1002000.is(call)) {
-      const data = transferAssets.v1002000.decode(call);
+    if (transferAssetsUsingTypeAndThen.v3100.is(call)) {
+      const data = transferAssetsUsingTypeAndThen.v3100.decode(call);
 
-      const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
-      feeAssetItem = _fee;
+      const { assets: _assets, dest, weightLimit: _weightLimit, assetsTransferType, feesTransferType, remoteFeesId, customXcmOnDest } = data;
       weightLimit = decodeV3WeightLimit(_weightLimit).limit;
 
       // Destination mapping
@@ -43,19 +43,19 @@ export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
           break;
       }
 
-      // Beneficiary mapping
-      switch (_beneficiary.__kind) {
+      // XcmOnDest mapping
+      switch (customXcmOnDest.__kind) {
         case 'V2':
         case 'V3': {
-          const { beneficiaryKey } = decodeV1ToV3Beneficiary(_beneficiary);
+          const { beneficiaryKey } = decodeV1ToV3CustomXcmOnDest(customXcmOnDest);
           to = beneficiaryKey;
           break;
         }
-
-        case 'V4':
-          const { beneficiaryKey } = decodeV4Beneficiary(_beneficiary);
+        case 'V4': {
+          const { beneficiaryKey } = decodeV4CustomXcmOnDest(customXcmOnDest);
           to = beneficiaryKey;
           break;
+        }
       }
 
       // Assets mapping
@@ -73,7 +73,7 @@ export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
         }
       }
     } else {
-      throw new UnknownVersionError(transferAssets);
+      throw new UnknownVersionError(transferAssetsUsingTypeAndThen);
     }
 
     return { feeAssetItem, amount, to, toChain, weightLimit };

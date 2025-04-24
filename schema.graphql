@@ -2,38 +2,6 @@
 # This file will be auto-populated based on the pallets used in src/chain/{chainName}/main.ts
 # See generateSchema.ts for more information on how this file is generated.
 
-type QueryLogs @entity {
-  id: ID!
-  query: String!
-  timestamp: DateTime!
-  location: String
-  chainName: String!
-}
-
-enum TransferDirection {
-  From
-  To
-}
-
-# entity for linking account and transfer
-type Transfer @entity {
-  id: ID!
-  transfer: NativeTransfer
-  account: Account!
-  direction: TransferDirection
-}
-
-type NativeTransfer @entity {
-  id: ID!
-  blockNumber: Int! @index
-  timestamp: DateTime! @index
-  extrinsicHash: String @index
-  from: Account!
-  to: Account!
-  amount: BigInt! @index
-  success: Boolean!
-}
-
 enum ParachainStatus {
   Reserved
   Registered
@@ -169,64 +137,8 @@ type Staker @entity {
   totalSlashed: BigInt!
   totalRewarded: BigInt!
 
-  payees: [StakingPayee!] @derivedFrom(field: "staker")
-  controllers: [StakingController!] @derivedFrom(field: "staker")
+  payees: [StakingPayee] @derivedFrom(field: "staker")
   unlockings: [StakingUnlockChunk!] @derivedFrom(field: "staker")
-  rewards: [StakingReward!] @derivedFrom(field: "staker")
-  slashes: [StakingSlash!] @derivedFrom(field: "staker")
-  bonds: [StakingBond!] @derivedFrom(field: "staker")
-}
-
-type StakingReward @entity {
-  id: ID!
-  timestamp: DateTime!
-  blockNumber: Int! @index
-  extrinsicHash: String @index
-  account: Account!
-  amount: BigInt!
-  staker: Staker!
-  era: Int
-  validatorId: ID
-}
-
-enum BondingType {
-  Bond
-  BondExtra
-  Unbond
-  Rebond
-  Slash
-  Reward
-}
-
-type StakingBond @entity {
-  id: ID!
-  type: BondingType!
-  timestamp: DateTime!
-  blockNumber: Int! @index
-  extrinsicHash: String @index
-  amount: BigInt!
-  account: Account!
-  staker: Staker!
-}
-
-type StakingUnlockChunk @entity {
-  id: ID!
-  timestamp: DateTime!
-  blockNumber: Int! @index
-  staker: Staker!
-  lockedUntilEra: Int!
-  amount: BigInt!
-  withdrawn: Boolean!
-}
-
-type StakingSlash @entity {
-  id: ID!
-  timestamp: DateTime!
-  blockNumber: Int! @index
-  extrinsicHash: String @index
-  amount: BigInt!
-  account: Account!
-  staker: Staker!
 }
 
 enum RewardDestination {
@@ -247,13 +159,188 @@ type StakingPayee @entity {
   extrinsicHash: String @index
 }
 
-type StakingController @entity {
+type StakingUnlockChunk @entity {
   id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
   staker: Staker!
-  controller: Account!
+  lockedUntilEra: Int!
+  amount: BigInt!
+  withdrawn: Boolean!
+}
+
+type StakingReward @entity {
+  id: ID!
   timestamp: DateTime!
   blockNumber: Int! @index
   extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  staker: Staker!
+  era: Int
+  validatorId: ID
+}
+
+type ParachainStakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCompound @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegation @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+  delegatorPosition: String
+  autoCompundPercent: Int!
+}
+
+type ParachainStakingDelegationRevoked @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationIncreased @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationDecreased @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationKicked @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesWithdrawed @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesBonded @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesUnbonded @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+enum PolkadotXcmTransferCall {
+  LimitedReserveTransferAssets
+  LimitedTeleportAssets
+  ReserveTransferAssets
+  TransferAssetsUsingTypeAndThen
+  TransferAssets
+}
+
+type PolkadotXcmTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  feeAssetItem: Int! @index
+  account: Account!
+  to: String!
+  toChain: String! @index
+  amount: BigInt!
+  weightLimit: BigInt
+  call: PolkadotXcmTransferCall!
+}
+
+type QueryLogs @entity {
+  id: ID!
+  query: String!
+  timestamp: DateTime!
+  location: String
+  chainName: String!
+}
+
+enum TransferDirection {
+  From
+  To
+}
+
+# entity for linking account and transfer
+type Transfer @entity {
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
+}
+
+type NativeTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
 }
 
 enum XcmTransferCall {
@@ -287,4 +374,5 @@ type Account @entity {
   staker: Staker @derivedFrom(field: "stash")
   rewards: [StakingReward!] @derivedFrom(field: "account")
   xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")
+  polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")
 }

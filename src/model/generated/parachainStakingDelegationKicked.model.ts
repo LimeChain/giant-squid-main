@@ -4,8 +4,8 @@ import {Account} from "./account.model"
 import {Staker} from "./staker.model"
 
 @Entity_()
-export class StakingSlash {
-    constructor(props?: Partial<StakingSlash>) {
+export class ParachainStakingDelegationKicked {
+    constructor(props?: Partial<ParachainStakingDelegationKicked>) {
         Object.assign(this, props)
     }
 
@@ -23,9 +23,6 @@ export class StakingSlash {
     @Column_("text", {nullable: true})
     extrinsicHash!: string | undefined | null
 
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    amount!: bigint
-
     @Index_()
     @ManyToOne_(() => Account, {nullable: true})
     account!: Account
@@ -33,4 +30,11 @@ export class StakingSlash {
     @Index_()
     @ManyToOne_(() => Staker, {nullable: true})
     staker!: Staker
+
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true})
+    delegator!: Account
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    amount!: bigint
 }

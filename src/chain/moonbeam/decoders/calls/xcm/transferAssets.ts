@@ -1,4 +1,4 @@
-import { calls } from '@/chain/polkadot/types';
+import { calls } from '@/chain/moonbeam/types';
 import { Call } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
 import {
@@ -14,15 +14,15 @@ import { ITransferAssetsPalletDecoder } from '@/indexer/pallets/polkadotXcm/call
 
 export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
   decode(call: Call) {
-    const { transferAssets } = calls.xcmPallet;
+    const { transferAssets } = calls.polkadotXcm;
     let to: string = '';
     let toChain: string = '';
     let amount: bigint = 0n;
     let feeAssetItem: number = 0;
     let weightLimit: bigint | null = null;
 
-    if (transferAssets.v1002000.is(call)) {
-      const data = transferAssets.v1002000.decode(call);
+    if (transferAssets.v2901.is(call)) {
+      const data = transferAssets.v2901.decode(call);
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;

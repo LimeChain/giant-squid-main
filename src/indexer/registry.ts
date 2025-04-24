@@ -38,11 +38,16 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
+import { LimitedReserveTransferAssetsPalletHandler as PolkadotXcmLimitedReserveTransferAssetsPalletHandler } from './pallets/polkadotXcm/calls/limitedReserveTransferAssets';
+import { TransferAssetsPalletHandler as PolkadotXcmTransferAssetsPalletHandler } from './pallets/polkadotXcm/calls/transferAssets';
+import { LimitedTeleportAssetsPalletHandler as PolkadotXcmLimitedTeleportAssetsPalletHandler } from './pallets/polkadotXcm/calls/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenPalletHandler as PolkadotXcmTransferAssetsUsingTypeAndThenPalletHandler } from './pallets/polkadotXcm/calls/transferAssetsUsingTypeAndThen';
+import { ReserveTransferAssetsPalletHandler as PolkadotXcmReserveTransferAssetsPalletHandler } from './pallets/polkadotXcm/calls/reserveTransferAssets';
 import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
 import { TransferAssetsPalletHandler } from './pallets/xcm/calls/transferAssets';
 import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedTeleportAssets';
 import { TransferAssetsUsingTypeAndThenPalletHandler } from './pallets/xcm/calls/transferAssetsUsingTypeAndThen';
+import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
 
 export const registry = {
   events: {
@@ -95,6 +100,11 @@ export const registry = {
     'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
     'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
     'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
+    'PolkadotXcm.transfer_assets': PolkadotXcmTransferAssetsPalletHandler,
+    'PolkadotXcm.reserve_transfer_assets': PolkadotXcmReserveTransferAssetsPalletHandler,
+    'PolkadotXcm.limited_reserve_transfer_assets': PolkadotXcmLimitedReserveTransferAssetsPalletHandler,
+    'PolkadotXcm.limited_teleport_assets': PolkadotXcmLimitedTeleportAssetsPalletHandler,
+    'PolkadotXcm.transfer_assets_using_type_and_then': PolkadotXcmTransferAssetsUsingTypeAndThenPalletHandler,
   },
 };
 

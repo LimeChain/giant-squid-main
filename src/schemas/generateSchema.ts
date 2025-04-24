@@ -116,8 +116,23 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
-      accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "from")\n`);
+      accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add(xcmTransferCalls[0]);
+    }
+
+    const polkadotXcmTransferCalls = [
+      'polkadotxcm.limited_reserve_transfer_assets',
+      'polkadotxcm.limited_teleport_assets',
+      'polkadotxcm.reserve_transfer_assets',
+      'polkadotxcm.transfer_assets',
+      'polkadotxcm.transfer_assets_using_type_and_then',
+    ];
+    // PolkadotXcm
+    if (polkadotXcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(polkadotXcmTransferCalls[0])) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'polkadotXcmTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")\n`);
+      appendedSchemaParts.add(polkadotXcmTransferCalls[0]);
     }
   }
 

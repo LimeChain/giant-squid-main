@@ -12,6 +12,10 @@ import { ParachainStakingDelegationKickedEventPalletDecoder } from '@/chain/moon
 import { ParachainStakingCandidateLeftEventPalletDecoder } from '@/chain/moonbeam/decoders/events/parachain-staking/candidateLeft';
 import { ParachainStakingCandidateBondedMoreEventPalletDecoder } from '@/chain/moonbeam/decoders/events/parachain-staking/candidateBondedMore';
 import { ParachainStakingCandidateBondedLessEventPalletDecoder } from '@/chain/moonbeam/decoders/events/parachain-staking/candidateBondedLess';
+import { TransferAssetsCallDecoder } from '@/chain/moonbeam/decoders/calls/xcm/transferAssets';
+import { LimitedReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/limitedReserveTransferAssets';
+import { LimitedTeleportAssetsCallDecoder } from './decoders/calls/xcm/limitedTeleportAssets';
+import { ReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/reserveTransferAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -20,6 +24,13 @@ export const indexer = new Indexer({
     gateway: `${SUBSQUID_NETWORK_URL}/moonbeam-substrate`,
   },
   pallets: {
+    calls: {
+      'PolkadotXcm.transfer_assets': setupPallet({ decoder: new TransferAssetsCallDecoder(), isEvmCompatable: true }),
+      'PolkadotXcm.limited_reserve_transfer_assets': setupPallet({ decoder: new LimitedReserveTransferAssetsCallDecoder(), isEvmCompatable: true }),
+      'PolkadotXcm.limited_teleport_assets': setupPallet({ decoder: new LimitedTeleportAssetsCallDecoder(), isEvmCompatable: true }),
+      'PolkadotXcm.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder(), isEvmCompatable: true }),
+      'PolkadotXcm.transfer_assets_using_type_and_then': setupPallet({ decoder: new TransferAssetsCallDecoder(), isEvmCompatable: true }),
+    },
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'ParachainStaking.Rewarded': setupPallet({ decoder: new ParachainStakingRewardEventPalletDecoder() }),
