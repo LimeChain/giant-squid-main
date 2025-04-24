@@ -12,31 +12,6 @@ import {
 } from './transfer';
 import { ITransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/transferAssets';
 
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
-
-const WRITE = true;
-const filePath = path.join(os.homedir(), 'Desktop', 'xcm_transfer_assets.json');
-const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
-process.on('beforeExit', () => fileStream.end());
-
-function write(data: object) {
-  fileStream.write(
-    JSON.stringify(
-      data,
-      (key, value) => {
-        if (typeof value === 'bigint') {
-          return value.toString();
-        }
-        return value;
-      },
-      2
-    )
-  );
-  fileStream.write(',\n');
-}
-
 export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
   decode(call: Call) {
     const { transferAssets } = calls.xcmPallet;
@@ -48,7 +23,6 @@ export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
 
     if (transferAssets.v1002000.is(call)) {
       const data = transferAssets.v1002000.decode(call);
-      if (WRITE) write({ blockHash: call.block.hash, data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;

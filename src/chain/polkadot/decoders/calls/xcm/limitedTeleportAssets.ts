@@ -16,31 +16,6 @@ import {
   decodeV4Dest,
 } from './transfer';
 
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
-
-const WRITE = true;
-const filePath = path.join(os.homedir(), 'Desktop', 'xcm_limited_teleport_assets.json');
-const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
-process.on('beforeExit', () => fileStream.end());
-
-function write(data: object) {
-  fileStream.write(
-    JSON.stringify(
-      data,
-      (key, value) => {
-        if (typeof value === 'bigint') {
-          return value.toString();
-        }
-        return value;
-      },
-      2
-    )
-  );
-  fileStream.write(',\n');
-}
-
 export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsPalletDecoder {
   decode(call: Call) {
     const { limitedTeleportAssets } = calls.xcmPallet;
@@ -52,7 +27,6 @@ export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsP
 
     if (limitedTeleportAssets.v9140.is(call)) {
       const data = limitedTeleportAssets.v9140.decode(call);
-      if (WRITE) write({ blockHash: call.block.hash, data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -102,7 +76,6 @@ export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsP
       }
     } else if (limitedTeleportAssets.v9370.is(call)) {
       const data = limitedTeleportAssets.v9370.decode(call);
-      if (WRITE) write({ blockHash: call.block.hash, data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -152,7 +125,6 @@ export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsP
       }
     } else if (limitedTeleportAssets.v9420.is(call)) {
       const data = limitedTeleportAssets.v9420.decode(call);
-      if (WRITE) write({ blockHash: call.block.hash, data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
@@ -188,7 +160,6 @@ export class LimitedTeleportAssetsCallDecoder implements ILimitedTeleportAssetsP
       }
     } else if (limitedTeleportAssets.v1002000.is(call)) {
       const data = limitedTeleportAssets.v1002000.decode(call);
-      if (WRITE) write({ blockHash: call.block.hash, data });
 
       const { assets: _assets, beneficiary: _beneficiary, feeAssetItem: _fee, dest, weightLimit: _weightLimit } = data;
       feeAssetItem = _fee;
