@@ -27,21 +27,27 @@ import { ReservedEventPalletDecoder } from '@/chain/polkadot/decoders/events/reg
 import { RegisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/registered';
 import { DeregisteredEventPalletDecoder } from '@/chain/polkadot/decoders/events/registrar/deregistered';
 import { ContributedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/contributed';
-import { PartiallyRefundedEventPalletDecoder } from './decoders/events/crowdloan/partiallyRefunded';
-import { AllRefundedEventPalletDecoder } from './decoders/events/crowdloan/allRefunded';
-import { WithdrewEventPalletDecoder } from './decoders/events/crowdloan/withdrew';
+import { PartiallyRefundedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/partiallyRefunded';
+import { AllRefundedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/allRefunded';
+import { WithdrewEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
 import { ReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/reserveTransferAssets';
 import { LimitedReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/limitedReserveTransferAssets';
 import { TransferAssetsCallDecoder } from './decoders/calls/xcm/transferAssets';
 import { LimitedTeleportAssetsCallDecoder } from './decoders/calls/xcm/limitedTeleportAssets';
 import { TransferAssetsUsingTypeAndThenCallDecoder } from './decoders/calls/xcm/transferAssetsUsingTypeAndThen';
+import { DelegateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/delegate';
+import { UnlockCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/unlock';
+import { VoteCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/vote';
+import { UndelegateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/undelegate';
+import { RemoveVoteCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/removeVote';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },
+
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
@@ -104,6 +110,11 @@ export const indexer = new Indexer({
       'XcmPallet.transfer_assets': setupPallet({ decoder: new TransferAssetsCallDecoder() }),
       'XcmPallet.limited_teleport_assets': setupPallet({ decoder: new LimitedTeleportAssetsCallDecoder() }),
       'XcmPallet.transfer_assets_using_type_and_then': setupPallet({ decoder: new TransferAssetsUsingTypeAndThenCallDecoder() }),
+      'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
+      'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
+      'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
+      'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
+      'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
     },
   },
 });

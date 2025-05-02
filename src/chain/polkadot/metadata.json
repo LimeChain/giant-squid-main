@@ -28,6 +28,9 @@
         "limited_teleport_assets",
         "transfer_assets_using_type_and_then"
       ]
+    },
+    "ConvictionVoting": {
+      "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

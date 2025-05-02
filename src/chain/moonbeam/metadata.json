@@ -28,6 +28,9 @@
         "transfer_assets_using_type_and_then"
       ],
       "events": ["Sent"]
+    },
+    "ConvictionVoting": {
+      "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }
   },
   "storage": []

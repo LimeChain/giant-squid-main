@@ -2,7 +2,11 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, O
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
 import {StakingPayee} from "./stakingPayee.model"
+import {StakingController} from "./stakingController.model"
 import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
+import {StakingReward} from "./stakingReward.model"
+import {StakingSlash} from "./stakingSlash.model"
+import {StakingBond} from "./stakingBond.model"
 
 @Entity_()
 export class Staker {
@@ -47,6 +51,18 @@ export class Staker {
     @OneToMany_(() => StakingPayee, e => e.staker)
     payees!: StakingPayee[]
 
+    @OneToMany_(() => StakingController, e => e.staker)
+    controllers!: StakingController[]
+
     @OneToMany_(() => StakingUnlockChunk, e => e.staker)
     unlockings!: StakingUnlockChunk[]
+
+    @OneToMany_(() => StakingReward, e => e.staker)
+    rewards!: StakingReward[]
+
+    @OneToMany_(() => StakingSlash, e => e.staker)
+    slashes!: StakingSlash[]
+
+    @OneToMany_(() => StakingBond, e => e.staker)
+    bonds!: StakingBond[]
 }

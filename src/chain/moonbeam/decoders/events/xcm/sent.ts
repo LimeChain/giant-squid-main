@@ -1,7 +1,6 @@
 import { events } from '@/chain/moonbeam/types';
 import { UnknownVersionError } from '@/utils';
-import { Event } from '@/indexer';
-import { ISentEventPalletDecoder } from '@/indexer/pallets/polkadotXcm/events/sent';
+import { Event, ISentEventPalletDecoder } from '@/indexer';
 
 import { TransferAssetsCallDecoder } from '../../calls/polkadotXcm/transferAssets';
 import assert from 'assert';

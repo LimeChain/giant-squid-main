@@ -44,6 +44,11 @@ import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedT
 import { TransferAssetsUsingTypeAndThenPalletHandler } from './pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
 import { SentEventPalletHandler } from './pallets/polkadotXcm/events/sent';
+import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
+import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
+import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
+import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
+import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 
 export const registry = {
   events: {
@@ -97,6 +102,11 @@ export const registry = {
     'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
     'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
     'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
+    'ConvictionVoting.unlock': UnlockCallPalletHandler,
+    'ConvictionVoting.delegate': DelegateCallPalletHandler,
+    'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
+    'ConvictionVoting.vote': VoteCallPalletHandler,
+    'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
   },
 };
 

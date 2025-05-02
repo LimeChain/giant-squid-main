@@ -105,35 +105,48 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       appendedSchemaParts.add('staking.reward');
     }
 
-    const xcmTransferCalls = [
-      'xcmpallet.limited_reserve_transfer_assets',
-      'xcmpallet.limited_teleport_assets',
-      'xcmpallet.reserve_transfer_assets',
-      'xcmpallet.transfer_assets',
-      'xcmpallet.transfer_assets_using_type_and_then',
-    ];
     // XcmPallet for relay chains
-    if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
+    if (
+      (lowerCaseKey === 'xcmpallet.limited_reserve_transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.limited_teleport_assets' ||
+        lowerCaseKey === 'xcmpallet.reserve_transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.transfer_assets_using_type_and_then.transfer_assets') &&
+      !appendedSchemaParts.has('xcmpallet')
+    ) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")\n`);
-      appendedSchemaParts.add(xcmTransferCalls[0]);
+      appendedSchemaParts.add('xcmpallet');
     }
 
-    const polkadotXcmTransferCalls = [
-      'polkadotxcm.sent',
-      'polkadotxcm.limited_reserve_transfer_assets',
-      'polkadotxcm.limited_teleport_assets',
-      'polkadotxcm.reserve_transfer_assets',
-      'polkadotxcm.transfer_assets',
-      'polkadotxcm.transfer_assets_using_type_and_then',
-    ];
     // PolkadotXcm for parachains
-    if (polkadotXcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(polkadotXcmTransferCalls[0])) {
+    if (
+      (lowerCaseKey === 'polkadotxcm.sent' ||
+        lowerCaseKey === 'polkadotxcm.limited_reserve_transfer_assets' ||
+        lowerCaseKey === 'polkadotxcm.limited_teleport_assets' ||
+        lowerCaseKey === 'polkadotxcm.reserve_transfer_assets' ||
+        lowerCaseKey === 'polkadotxcm.transfer_assets' ||
+        lowerCaseKey === 'polkadotxcm.transfer_assets_using_type_and_then') &&
+      !appendedSchemaParts.has('polkadotxcm')
+    ) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'polkadotXcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       accountSchema.push(`polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")\n`);
-      appendedSchemaParts.add(polkadotXcmTransferCalls[0]);
+      appendedSchemaParts.add('polkadotxcm');
+    }
+
+    // Conviction Voting pallet
+    if (
+      (lowerCaseKey === 'convictionvoting.delegate' ||
+        lowerCaseKey === 'convictionvoting.undelegate' ||
+        lowerCaseKey === 'convictionvoting.unlock' ||
+        lowerCaseKey === 'convictionvoting.vote') &&
+      !appendedSchemaParts.has('convictionvoting')
+    ) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'convictionVoting.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('convictionvoting');
     }
   }
 
