@@ -1,36 +1,37 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { CreatePoolAction } from '@/indexer/actions/nomination-pools/pool';
+import { UpdatePoolAction } from '@/indexer/actions/nomination-pools/pool';
 import { getOriginAccountId } from '@/utils';
-import { Account, Staker } from '@/model';
+import { Account, Pool, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 
-export interface INominationPoolsCreatePollCallPalletDecoder
+export interface INominationPoolsUpdateRolesCallPalletDecoder
   extends ICallPalletDecoder<{
-    amount: bigint;
-    root: string;
-    nominator: string;
-    toggler: string;
+    poolId: string;
+    root: string | undefined;
+    nominator: string | undefined;
+    toggler: string | undefined;
   }> {}
 
-interface INominationPoolsCreatePoolCallPalletSetup extends IBasePalletSetup {
-  decoder: INominationPoolsCreatePollCallPalletDecoder;
+interface INominationPoolsUpdateRolesCallPalletSetup extends IBasePalletSetup {
+  decoder: INominationPoolsUpdateRolesCallPalletDecoder;
 }
 
-export class NominationPoolsCreatePoolCallPalletHandler extends CallPalletHandler<INominationPoolsCreatePoolCallPalletSetup> {
-  constructor(setup: INominationPoolsCreatePoolCallPalletSetup, options: IHandlerOptions) {
+export class NominationPoolsUpdateRolesCallPalletHandler extends CallPalletHandler<INominationPoolsUpdateRolesCallPalletSetup> {
+  constructor(setup: INominationPoolsUpdateRolesCallPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
   handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (call.success === false) return;
-    const origin = getOriginAccountId(call.origin);
-    if (!origin) return;
+
     const data = this.decoder.decode(call);
 
-    const creatorId = this.encodeAddress(origin);
-    const creatorAccount = ctx.store.defer(Account, creatorId);
-    const creatorStaker = ctx.store.defer(Staker, creatorId);
+    if (!data.root || !data.nominator || !data.toggler) {
+      return;
+    }
+
+    const pool = ctx.store.defer(Pool, data.poolId.toString());
 
     const rootAccountId = this.encodeAddress(data.root);
     const rootAccount = ctx.store.defer(Account, rootAccountId);
@@ -45,8 +46,6 @@ export class NominationPoolsCreatePoolCallPalletHandler extends CallPalletHandle
     const togglerStaker = ctx.store.defer(Staker, togglerAccountId);
 
     queue.push(
-      new EnsureAccount(block.header, call.extrinsic, { account: () => creatorAccount.get(), id: creatorId, pk: this.decodeAddress(creatorId) }),
-      new EnsureStaker(block.header, call.extrinsic, { id: creatorId, account: () => creatorAccount.getOrFail(), staker: () => creatorStaker.get() }),
       new EnsureAccount(block.header, call.extrinsic, { account: () => rootAccount.get(), id: rootAccountId, pk: this.decodeAddress(rootAccountId) }),
       new EnsureStaker(block.header, call.extrinsic, { id: rootAccountId, account: () => rootAccount.getOrFail(), staker: () => rootStaker.get() }),
       new EnsureAccount(block.header, call.extrinsic, {
@@ -61,12 +60,11 @@ export class NominationPoolsCreatePoolCallPalletHandler extends CallPalletHandle
       }),
       new EnsureAccount(block.header, call.extrinsic, { account: () => togglerAccount.get(), id: togglerAccountId, pk: this.decodeAddress(togglerAccountId) }),
       new EnsureStaker(block.header, call.extrinsic, { id: togglerAccountId, account: () => togglerAccount.getOrFail(), staker: () => togglerStaker.get() }),
-      new CreatePoolAction(block.header, call.extrinsic, {
-        creator: () => creatorStaker.getOrFail(),
+      new UpdatePoolAction(block.header, call.extrinsic, {
+        pool: () => pool.getOrFail(),
         root: () => rootStaker.getOrFail(),
         nominator: () => nominatorStaker.getOrFail(),
         toggler: () => togglerStaker.getOrFail(),
-        totalBonded: data.amount,
       })
     );
   }

@@ -1,9 +1,9 @@
 import { calls, v9291, v9420 } from '@/chain/polkadot/types';
 
-import { Call, ICreatePollCallPalletDecoder } from '@/indexer';
+import { Call, INominationPoolsCreatePollCallPalletDecoder } from '@/indexer';
 import { DataNotDecodableError } from '@/utils';
 
-export class CreatePoolCallPalletDecoder implements ICreatePollCallPalletDecoder {
+export class CreatePoolCallPalletDecoder implements INominationPoolsCreatePollCallPalletDecoder {
   decode(call: Call) {
     const { create } = calls.nominationPools;
 

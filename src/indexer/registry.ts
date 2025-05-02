@@ -44,10 +44,15 @@ import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/c
 import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
 import { NominationPoolsBondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/bonded';
-import { CreatePoolCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/create';
-import { SetMetadataCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
+import { NominationPoolsCreatePoolCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/create';
+import { NominationPoolsSetMetadataCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
 import { NominationPoolsDestroyedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/destroyed';
 import { NominationPoolsUnbondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/unbonded';
+import { NominationPoolsUpdateRolesCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/updateRoles';
+import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/stateChanged';
+import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
+import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
+import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
 
 export const registry = {
   events: {
@@ -82,6 +87,9 @@ export const registry = {
     'NominationPools.Bonded': NominationPoolsBondedEventPalletHandler,
     'NominationPools.Destroyed': NominationPoolsDestroyedEventPalletHandler,
     'NominationPools.Unbonded': NominationPoolsUnbondedEventPalletHandler,
+    'NominationPools.StateChanged': NominationPoolsStateChangedEventPalletHandler,
+    'NominationPools.PaidOut': NominationPoolsPaidOutEventPalletHandler,
+    'NominationPools.Withdrawn': NominationPoolsWithdrawnEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
@@ -103,8 +111,10 @@ export const registry = {
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
     'ConvictionVoting.vote': VoteCallPalletHandler,
     'ConvictionVoting.remove_vote': RemoveVoteCallPalletHandler,
-    'NominationPools.create': CreatePoolCallPalletHandler,
-    'NominationPools.set_metadata': SetMetadataCallPalletHandler,
+    'NominationPools.create': NominationPoolsCreatePoolCallPalletHandler,
+    'NominationPools.set_metadata': NominationPoolsSetMetadataCallPalletHandler,
+    'NominationPools.update_roles': NominationPoolsUpdateRolesCallPalletHandler,
+    'NominationPools.nominate': NominationPoolsNominateCallPalletHandler,
   },
 };
 

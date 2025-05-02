@@ -7,7 +7,11 @@ export class NominationPoolsDestroyedEventPalletDecoder implements INominationPo
     const { destroyed } = events.nominationPools;
 
     if (destroyed.v9280.is(event)) {
-      return destroyed.v9280.decode(event);
+      const data = destroyed.v9280.decode(event);
+
+      return {
+        poolId: data.poolId.toString(),
+      };
     }
 
     throw new UnknownVersionError(destroyed);

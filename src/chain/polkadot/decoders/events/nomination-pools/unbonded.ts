@@ -7,7 +7,15 @@ export class NominationPoolsUnbondedEventPalletDecoder implements INominationPoo
     const { unbonded } = events.nominationPools;
 
     if (unbonded.v9280.is(event)) {
-      return unbonded.v9280.decode(event);
+      const data = unbonded.v9280.decode(event);
+
+      return {
+        member: data.member,
+        poolId: data.poolId.toString(),
+        balance: data.balance,
+        points: data.points,
+        era: data.era,
+      };
     }
 
     throw new UnknownVersionError(unbonded);

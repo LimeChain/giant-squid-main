@@ -1,13 +1,11 @@
-// @ts-ignore
 import { Account, Pool, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Call } from '@/indexer/processor';
 import { NominationPoolsBondAction } from '@/indexer/actions/nomination-pools/bonded';
-import { EnsurePool } from '@/indexer/actions/nomination-pools/pool';
 
-export interface INominationPoolsBondedEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: number; bonded: bigint; joined: boolean }> {}
+export interface INominationPoolsBondedEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: string; bonded: bigint; joined: boolean }> {}
 
 interface INominationPoolsBondedEventPalletSetup extends IBasePalletSetup {
   decoder: INominationPoolsBondedEventPalletDecoder;
@@ -21,8 +19,6 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
   hasBondCall(call?: Call) {
     switch (call?.name) {
       case 'NominationPools.join':
-      case 'NominationPools.create':
-      case 'NominationPools.create_with_pool_id':
       case 'NominationPools.bond_extra':
       case 'NominationPools.bond_extra_other':
         return true;
@@ -34,8 +30,6 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
         if (batchCall.__kind === 'NominationPools') {
           switch (batchCall.value.__kind) {
             case 'join':
-            case 'create':
-            case 'create_with_pool_id':
             case 'bond_extra':
             case 'bond_extra_other':
               return true;
@@ -48,12 +42,13 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
   }
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
-    if (!this.hasBondCall(event.call) && !event.call) {
+    if (!this.hasBondCall(event.call)) {
       return;
     }
 
     const data = this.decoder.decode(event);
-    const poolId = data.poolId.toString();
+
+    const poolId = data.poolId;
     const accountId = this.encodeAddress(data.member);
 
     const account = ctx.store.defer(Account, accountId);
@@ -61,9 +56,6 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
     const pool = ctx.store.defer(Pool, poolId);
 
     queue.push(
-      new EnsurePool(block.header, event.extrinsic, {
-        id: poolId,
-      }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureStaker(block.header, event.extrinsic, { id: accountId, account: () => account.getOrFail(), staker: () => staker.get() }),
       new NominationPoolsBondAction(block.header, event.extrinsic, {

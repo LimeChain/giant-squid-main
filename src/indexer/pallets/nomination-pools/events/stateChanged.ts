@@ -3,14 +3,14 @@ import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { UpdatePoolAction } from '@/indexer/actions/nomination-pools/pool';
 
-export interface INominationPoolsDestroyedEventPalletDecoder extends IEventPalletDecoder<{ poolId: string }> {}
+export interface INominationPoolsStateChangedEventPalletDecoder extends IEventPalletDecoder<{ poolId: string; newState: PoolStatus }> {}
 
-interface INominationPoolsDestroyedEventPalletSetup extends IBasePalletSetup {
-  decoder: INominationPoolsDestroyedEventPalletDecoder;
+interface INominationPoolsStateChangedEventPalletSetup extends IBasePalletSetup {
+  decoder: INominationPoolsStateChangedEventPalletDecoder;
 }
 
-export class NominationPoolsDestroyedEventPalletHandler extends EventPalletHandler<INominationPoolsDestroyedEventPalletSetup> {
-  constructor(setup: INominationPoolsDestroyedEventPalletSetup, options: IHandlerOptions) {
+export class NominationPoolsStateChangedEventPalletHandler extends EventPalletHandler<INominationPoolsStateChangedEventPalletSetup> {
+  constructor(setup: INominationPoolsStateChangedEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -21,8 +21,7 @@ export class NominationPoolsDestroyedEventPalletHandler extends EventPalletHandl
     queue.push(
       new UpdatePoolAction(block.header, event.extrinsic, {
         pool: () => pool.getOrFail(),
-        status: PoolStatus.Destroyed,
-        totalBonded: BigInt(0),
+        status: data.newState,
       })
     );
   }

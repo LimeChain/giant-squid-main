@@ -232,23 +232,54 @@ type NominationPoolsUnbound @entity {
   staker: Staker!
 }
 
+type NominationPoolsWithdrawn @entity {
+  id: ID!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  pool: Pool! @index
+  balance: BigInt!
+  points: BigInt!
+  member: Staker!
+}
+
+type NominationPoolsPaidOut @entity {
+  id: ID!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  member: Staker! @index
+  pool: Pool! @index
+  payout: BigInt!
+}
+
+type NominationPoolsNominate @entity {
+  id: ID!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  pool: Pool! @index
+  validators: [String]
+}
+
 enum PoolStatus {
   Open
+  Blocked
+  Destroying
   Destroyed
 }
 
 type Pool @entity {
   id: ID!
   name: String
-  stash: String
-  reward: String
-  creator: String
-  root: String
-  toggler: String
-  nominator: String
-  totalBonded: BigInt
-  status: PoolStatus
+  creator: Staker
+  root: Staker!
+  nominator: Staker!
+  toggler: Staker!
+  totalBonded: BigInt!
+  status: PoolStatus!
   members: [Staker!] @derivedFrom(field: "pool")
+  nominations: [NominationPoolsNominate!] @derivedFrom(field: "pool")
+  unbondings: [NominationPoolsUnbound!] @derivedFrom(field: "pool")
+  payouts: [NominationPoolsPaidOut!] @derivedFrom(field: "pool")
+  bonds: [NominationPoolsBond!] @derivedFrom(field: "pool")
 }
 
 type Staker @entity {

@@ -1,7 +1,11 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
-import {PoolStatus} from "./_poolStatus"
 import {Staker} from "./staker.model"
+import {PoolStatus} from "./_poolStatus"
+import {NominationPoolsNominate} from "./nominationPoolsNominate.model"
+import {NominationPoolsUnbound} from "./nominationPoolsUnbound.model"
+import {NominationPoolsPaidOut} from "./nominationPoolsPaidOut.model"
+import {NominationPoolsBond} from "./nominationPoolsBond.model"
 
 @Entity_()
 export class Pool {
@@ -15,30 +19,40 @@ export class Pool {
     @Column_("text", {nullable: true})
     name!: string | undefined | null
 
-    @Column_("text", {nullable: true})
-    stash!: string | undefined | null
+    @Index_()
+    @ManyToOne_(() => Staker, {nullable: true})
+    creator!: Staker | undefined | null
 
-    @Column_("text", {nullable: true})
-    reward!: string | undefined | null
+    @Index_()
+    @ManyToOne_(() => Staker, {nullable: true})
+    root!: Staker
 
-    @Column_("text", {nullable: true})
-    creator!: string | undefined | null
+    @Index_()
+    @ManyToOne_(() => Staker, {nullable: true})
+    nominator!: Staker
 
-    @Column_("text", {nullable: true})
-    root!: string | undefined | null
+    @Index_()
+    @ManyToOne_(() => Staker, {nullable: true})
+    toggler!: Staker
 
-    @Column_("text", {nullable: true})
-    toggler!: string | undefined | null
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    totalBonded!: bigint
 
-    @Column_("text", {nullable: true})
-    nominator!: string | undefined | null
-
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
-    totalBonded!: bigint | undefined | null
-
-    @Column_("varchar", {length: 9, nullable: true})
-    status!: PoolStatus | undefined | null
+    @Column_("varchar", {length: 10, nullable: false})
+    status!: PoolStatus
 
     @OneToMany_(() => Staker, e => e.pool)
     members!: Staker[]
+
+    @OneToMany_(() => NominationPoolsNominate, e => e.pool)
+    nominations!: NominationPoolsNominate[]
+
+    @OneToMany_(() => NominationPoolsUnbound, e => e.pool)
+    unbondings!: NominationPoolsUnbound[]
+
+    @OneToMany_(() => NominationPoolsPaidOut, e => e.pool)
+    payouts!: NominationPoolsPaidOut[]
+
+    @OneToMany_(() => NominationPoolsBond, e => e.pool)
+    bonds!: NominationPoolsBond[]
 }

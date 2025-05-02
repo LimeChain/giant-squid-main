@@ -59,6 +59,27 @@ export const unbonded =  {
     ),
 }
 
+export const withdrawn =  {
+    name: 'NominationPools.Withdrawn',
+    /**
+     * A member has withdrawn from their pool.
+     * 
+     * The given number of `points` have been dissolved in return of `balance`.
+     * 
+     * Similar to `Unbonded` event, in the absence of slashing, the ratio of point to balance
+     * will be 1.
+     */
+    v9280: new EventType(
+        'NominationPools.Withdrawn',
+        sts.struct({
+            member: v9280.AccountId32,
+            poolId: sts.number(),
+            balance: sts.bigint(),
+            points: sts.bigint(),
+        })
+    ),
+}
+
 export const destroyed =  {
     name: 'NominationPools.Destroyed',
     /**
@@ -68,6 +89,20 @@ export const destroyed =  {
         'NominationPools.Destroyed',
         sts.struct({
             poolId: sts.number(),
+        })
+    ),
+}
+
+export const stateChanged =  {
+    name: 'NominationPools.StateChanged',
+    /**
+     * The state of a pool has changed
+     */
+    v9280: new EventType(
+        'NominationPools.StateChanged',
+        sts.struct({
+            poolId: sts.number(),
+            newState: v9280.PoolState,
         })
     ),
 }

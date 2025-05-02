@@ -1,15 +1,14 @@
-import { NominationPoolsBond, Pool, Staker } from '@/model';
+import { NominationPoolsPaidOut, Pool, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface BondData {
   id: string;
-  type: string;
-  amount: bigint;
+  payout: bigint;
   staker: () => Promise<Staker>;
   pool: () => Promise<Pool>;
 }
 
-export class NominationPoolsBondAction extends Action<BondData> {
+export class NominationPoolsPaidOutAction extends Action<BondData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const staker = await this.data.staker();
     const pool = await this.data.pool();
@@ -18,21 +17,16 @@ export class NominationPoolsBondAction extends Action<BondData> {
       return;
     }
 
-    const bond = new NominationPoolsBond({
+    const paidOut = new NominationPoolsPaidOut({
       id: this.composeId(this.data.id),
-      type: this.data.type,
-      timestamp: new Date(this.block.timestamp ?? 0),
       blockNumber: this.block.height,
       extrinsicHash: this.extrinsic?.hash,
-      amount: this.data.amount,
-      staker,
+      member: staker,
+      payout: this.data.payout,
       pool,
     });
 
-    pool.totalBonded += this.data.amount;
-    staker.pool = pool;
-
-    await ctx.store.upsert(bond);
+    await ctx.store.upsert(paidOut);
     await ctx.store.upsert(staker);
     await ctx.store.upsert(pool);
   }

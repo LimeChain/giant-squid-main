@@ -81,6 +81,33 @@ export interface Type_151_Standard {
     balance: bigint
 }
 
+export const Type_302: sts.Type<Type_302> = sts.closedEnum(() => {
+    return  {
+        Noop: sts.unit(),
+        Remove: sts.unit(),
+        Set: AccountId32,
+    }
+})
+
+export const AccountId32 = sts.bytes()
+
+export type Type_302 = Type_302_Noop | Type_302_Remove | Type_302_Set
+
+export interface Type_302_Noop {
+    __kind: 'Noop'
+}
+
+export interface Type_302_Remove {
+    __kind: 'Remove'
+}
+
+export interface Type_302_Set {
+    __kind: 'Set'
+    value: AccountId32
+}
+
+export type AccountId32 = Bytes
+
 export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
     return  {
         Address20: sts.bytes(),
@@ -90,8 +117,6 @@ export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
         Raw: sts.bytes(),
     }
 })
-
-export const AccountId32 = sts.bytes()
 
 export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
 
@@ -118,5 +143,3 @@ export interface MultiAddress_Raw {
     __kind: 'Raw'
     value: Bytes
 }
-
-export type AccountId32 = Bytes

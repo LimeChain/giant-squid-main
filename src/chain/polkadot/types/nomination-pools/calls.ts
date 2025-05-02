@@ -127,3 +127,43 @@ export const setMetadata =  {
         })
     ),
 }
+
+export const updateRoles =  {
+    name: 'NominationPools.update_roles',
+    /**
+     * Update the roles of the pool.
+     * 
+     * The root is the only entity that can change any of the roles, including itself,
+     * excluding the depositor, who can never change.
+     * 
+     * It emits an event, notifying UIs of the role change. This event is quite relevant to
+     * most pool members and they should be informed of changes to pool roles.
+     */
+    v9280: new CallType(
+        'NominationPools.update_roles',
+        sts.struct({
+            poolId: sts.number(),
+            newRoot: v9280.Type_372,
+            newNominator: v9280.Type_372,
+            newStateToggler: v9280.Type_372,
+        })
+    ),
+    /**
+     * Update the roles of the pool.
+     * 
+     * The root is the only entity that can change any of the roles, including itself,
+     * excluding the depositor, who can never change.
+     * 
+     * It emits an event, notifying UIs of the role change. This event is quite relevant to
+     * most pool members and they should be informed of changes to pool roles.
+     */
+    v9420: new CallType(
+        'NominationPools.update_roles',
+        sts.struct({
+            poolId: sts.number(),
+            newRoot: v9420.Type_302,
+            newNominator: v9420.Type_302,
+            newBouncer: v9420.Type_302,
+        })
+    ),
+}

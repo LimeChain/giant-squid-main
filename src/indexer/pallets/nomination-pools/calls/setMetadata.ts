@@ -1,29 +1,31 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsurePool } from '@/indexer/actions/nomination-pools/pool';
+import { Pool } from '@/model';
+import { UpdatePoolAction } from '@/indexer/actions';
 
-export interface ISetMetadataCallPalletDecoder
+export interface INominationPoolsSetMetadataCallPalletDecoder
   extends ICallPalletDecoder<{
-    id: number;
+    id: string;
     metadata: string;
   }> {}
 
-interface ISetMetadataCallPalletSetup extends IBasePalletSetup {
-  decoder: ISetMetadataCallPalletDecoder;
+interface INominationPoolsSetMetadataCallPalletSetup extends IBasePalletSetup {
+  decoder: INominationPoolsSetMetadataCallPalletDecoder;
 }
 
-export class SetMetadataCallPalletHandler extends CallPalletHandler<ISetMetadataCallPalletSetup> {
-  constructor(setup: ISetMetadataCallPalletSetup, options: IHandlerOptions) {
+export class NominationPoolsSetMetadataCallPalletHandler extends CallPalletHandler<INominationPoolsSetMetadataCallPalletSetup> {
+  constructor(setup: INominationPoolsSetMetadataCallPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
-  handle({ block, queue, item: call }: ICallHandlerParams) {
+  handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
     const data = this.decoder.decode(call);
+    const pool = ctx.store.defer(Pool, data.id);
 
     queue.push(
-      new EnsurePool(block.header, call.extrinsic, {
-        id: data.id.toString(),
+      new UpdatePoolAction(block.header, call.extrinsic, {
+        pool: () => pool.getOrFail(),
         name: data.metadata,
       })
     );
