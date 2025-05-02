@@ -1,15 +1,17 @@
-import { Account, PolkadotXcmTransfer, PolkadotXcmTransferCall } from '@/model';
+import { Account, PolkadotXcmTransfer } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface PolkadotXcmTransferActionData {
   id: string;
   account: () => Promise<Account>;
-  toChain: string;
-  to: string;
-  amount: bigint;
+  toChain: string | null;
+  to: string | null;
+  amount: bigint | null;
   feeAssetItem: number;
-  call: PolkadotXcmTransferCall;
+  call: string;
   weightLimit: bigint | null;
+  contractCalled: string | null;
+  contractInput: string | null;
 }
 
 export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionData> {
@@ -26,6 +28,8 @@ export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionD
       amount: this.data.amount,
       call: this.data.call,
       weightLimit: this.data.weightLimit,
+      contractCalled: this.data.contractCalled,
+      contractInput: this.data.contractInput,
     });
 
     await ctx.store.insert(xcmTransfer);

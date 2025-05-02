@@ -112,7 +112,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       'xcmpallet.transfer_assets',
       'xcmpallet.transfer_assets_using_type_and_then',
     ];
-    // XcmPallet
+    // XcmPallet for relay chains
     if (xcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(xcmTransferCalls[0])) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
@@ -121,13 +121,14 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     }
 
     const polkadotXcmTransferCalls = [
+      'polkadotxcm.sent',
       'polkadotxcm.limited_reserve_transfer_assets',
       'polkadotxcm.limited_teleport_assets',
       'polkadotxcm.reserve_transfer_assets',
       'polkadotxcm.transfer_assets',
       'polkadotxcm.transfer_assets_using_type_and_then',
     ];
-    // PolkadotXcm
+    // PolkadotXcm for parachains
     if (polkadotXcmTransferCalls.includes(lowerCaseKey) && !appendedSchemaParts.has(polkadotXcmTransferCalls[0])) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'polkadotXcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');

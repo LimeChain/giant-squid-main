@@ -1,7 +1,6 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
-import {PolkadotXcmTransferCall} from "./_polkadotXcmTransferCall"
 
 @Entity_()
 export class PolkadotXcmTransfer {
@@ -32,19 +31,27 @@ export class PolkadotXcmTransfer {
     @ManyToOne_(() => Account, {nullable: true})
     account!: Account
 
-    @Column_("text", {nullable: false})
-    to!: string
+    @Column_("text", {nullable: true})
+    to!: string | undefined | null
 
     @Index_()
-    @Column_("text", {nullable: false})
-    toChain!: string
+    @Column_("text", {nullable: true})
+    toChain!: string | undefined | null
 
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    amount!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+    amount!: bigint | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     weightLimit!: bigint | undefined | null
 
-    @Column_("varchar", {length: 30, nullable: false})
-    call!: PolkadotXcmTransferCall
+    @Index_()
+    @Column_("text", {nullable: false})
+    call!: string
+
+    @Index_()
+    @Column_("text", {nullable: true})
+    contractCalled!: string | undefined | null
+
+    @Column_("text", {nullable: true})
+    contractInput!: string | undefined | null
 }

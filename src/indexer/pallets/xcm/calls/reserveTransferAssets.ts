@@ -1,6 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { Account, Parachain, XcmTransferCall } from '@/model';
+import { Account, Parachain } from '@/model';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
@@ -49,7 +49,7 @@ export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReser
           amount,
           to,
           toChain: () => parachain.get(),
-          call: XcmTransferCall.ReserveTransferAssets,
+          call: call.name,
           weightLimit: null,
         })
       );

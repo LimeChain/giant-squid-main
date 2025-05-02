@@ -69,6 +69,10 @@ export function decodeV1ToV3Dest(
     parachainDestination = dest.value.interior.value.value.toString();
   }
 
+  if (dest.value.interior.__kind === 'Here') {
+    parachainDestination = 'Here';
+  }
+
   return { parachainDestination };
 }
 
@@ -78,6 +82,10 @@ export function decodeV4Dest(dest: VersionedLocation_V4_V2901 | VersionedLocatio
   // most common occuranace of V4 type calls = X1 + Parachain
   if (dest.value.interior.__kind === 'X1' && dest.value.interior.value[0].__kind === 'Parachain') {
     parachainDestination = dest.value.interior.value[0].value.toString();
+  }
+
+  if (dest.value.interior.__kind === 'Here') {
+    parachainDestination = 'Here';
   }
 
   return { parachainDestination };

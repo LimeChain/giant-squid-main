@@ -1,4 +1,4 @@
-import { Account, Parachain, XcmTransfer, XcmTransferCall } from '@/model';
+import { Account, Parachain, XcmTransfer } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XcmTransferActionData {
@@ -8,7 +8,7 @@ interface XcmTransferActionData {
   to: string;
   amount: bigint;
   feeAssetItem: number;
-  call: XcmTransferCall;
+  call: string;
   weightLimit: bigint | null;
 }
 

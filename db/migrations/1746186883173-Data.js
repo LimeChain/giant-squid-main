@@ -1,5 +1,5 @@
-module.exports = class Data1745499194854 {
-    name = 'Data1745499194854'
+module.exports = class Data1746186883173 {
+    name = 'Data1746186883173'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -29,20 +29,23 @@ module.exports = class Data1745499194854 {
         await db.query(`CREATE INDEX "IDX_9ac63742f246bfbc1b88a6545a" ON "staking_reward" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_a13699fe2651c6c2717a7076f5" ON "staking_reward" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_64fe4e1309be60aee5ff677a87" ON "staking_reward" ("staker_id") `)
-        await db.query(`CREATE TABLE "xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text NOT NULL, "amount" numeric NOT NULL, "weight_limit" numeric, "call" character varying(30) NOT NULL, "account_id" character varying, "to_chain_id" character varying, CONSTRAINT "PK_51dd82383f8ec7d2358b8df0859" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text NOT NULL, "amount" numeric NOT NULL, "weight_limit" numeric, "call" text NOT NULL, "account_id" character varying, "to_chain_id" character varying, CONSTRAINT "PK_51dd82383f8ec7d2358b8df0859" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_766473f200d8c26e84ac2252d3" ON "xcm_transfer" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_28960d1f2cb3af26dab8d6c1a9" ON "xcm_transfer" ("timestamp") `)
         await db.query(`CREATE INDEX "IDX_40a2a3aa9f698a22c3d53ba555" ON "xcm_transfer" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_7693f197d47632f0dd8f1ad63a" ON "xcm_transfer" ("fee_asset_item") `)
         await db.query(`CREATE INDEX "IDX_ecfa5b9d1f4769e9bcfef024c7" ON "xcm_transfer" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_d01f8562905a30cca9efe5edd3" ON "xcm_transfer" ("to_chain_id") `)
-        await db.query(`CREATE TABLE "polkadot_xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text NOT NULL, "to_chain" text NOT NULL, "amount" numeric NOT NULL, "weight_limit" numeric, "call" character varying(30) NOT NULL, "account_id" character varying, CONSTRAINT "PK_236945fcab49fc913bbd797ef12" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_a59eaa4e470e5d407f3501c25b" ON "xcm_transfer" ("call") `)
+        await db.query(`CREATE TABLE "polkadot_xcm_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "fee_asset_item" integer NOT NULL, "to" text, "to_chain" text, "amount" numeric, "weight_limit" numeric, "call" text NOT NULL, "contract_called" text, "contract_input" text, "account_id" character varying, CONSTRAINT "PK_236945fcab49fc913bbd797ef12" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_93657cecd30fdb463c2d6f83d5" ON "polkadot_xcm_transfer" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_33c73596b807e3b66b6e862d4b" ON "polkadot_xcm_transfer" ("timestamp") `)
         await db.query(`CREATE INDEX "IDX_c1f930cffdc4e67ececb3ada1f" ON "polkadot_xcm_transfer" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_ee88ac6e12c6b36cfcd97237eb" ON "polkadot_xcm_transfer" ("fee_asset_item") `)
         await db.query(`CREATE INDEX "IDX_4126769d834219cb7e4c2349ba" ON "polkadot_xcm_transfer" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_d19d8b024e95954b94d2d4755e" ON "polkadot_xcm_transfer" ("to_chain") `)
+        await db.query(`CREATE INDEX "IDX_d7fd8bd99c3b7d5390da44eac0" ON "polkadot_xcm_transfer" ("call") `)
+        await db.query(`CREATE INDEX "IDX_bc0d4fe56e2d0727bb5f9b72be" ON "polkadot_xcm_transfer" ("contract_called") `)
         await db.query(`CREATE TABLE "account" ("id" character varying NOT NULL, "public_key" text NOT NULL, CONSTRAINT "PK_54115ee388cdb6d86bb4bf5b2ea" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_34e5683537bbd7627b0e9469b8" ON "account" ("public_key") `)
         await db.query(`CREATE TABLE "crowdloan_reimbursement" ("id" character varying NOT NULL, "type" character varying(8) NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "crowdloan_id" character varying, "contributor_id" character varying, CONSTRAINT "PK_d1b5973aaff1feb561e26786316" PRIMARY KEY ("id"))`)
@@ -215,6 +218,7 @@ module.exports = class Data1745499194854 {
         await db.query(`DROP INDEX "public"."IDX_7693f197d47632f0dd8f1ad63a"`)
         await db.query(`DROP INDEX "public"."IDX_ecfa5b9d1f4769e9bcfef024c7"`)
         await db.query(`DROP INDEX "public"."IDX_d01f8562905a30cca9efe5edd3"`)
+        await db.query(`DROP INDEX "public"."IDX_a59eaa4e470e5d407f3501c25b"`)
         await db.query(`DROP TABLE "polkadot_xcm_transfer"`)
         await db.query(`DROP INDEX "public"."IDX_93657cecd30fdb463c2d6f83d5"`)
         await db.query(`DROP INDEX "public"."IDX_33c73596b807e3b66b6e862d4b"`)
@@ -222,6 +226,8 @@ module.exports = class Data1745499194854 {
         await db.query(`DROP INDEX "public"."IDX_ee88ac6e12c6b36cfcd97237eb"`)
         await db.query(`DROP INDEX "public"."IDX_4126769d834219cb7e4c2349ba"`)
         await db.query(`DROP INDEX "public"."IDX_d19d8b024e95954b94d2d4755e"`)
+        await db.query(`DROP INDEX "public"."IDX_d7fd8bd99c3b7d5390da44eac0"`)
+        await db.query(`DROP INDEX "public"."IDX_bc0d4fe56e2d0727bb5f9b72be"`)
         await db.query(`DROP TABLE "account"`)
         await db.query(`DROP INDEX "public"."IDX_34e5683537bbd7627b0e9469b8"`)
         await db.query(`DROP TABLE "crowdloan_reimbursement"`)

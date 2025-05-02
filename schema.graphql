@@ -289,14 +289,6 @@ type ParachainStakingCandidatesUnbonded @entity {
   amount: BigInt!
 }
 
-enum PolkadotXcmTransferCall {
-  LimitedReserveTransferAssets
-  LimitedTeleportAssets
-  ReserveTransferAssets
-  TransferAssetsUsingTypeAndThen
-  TransferAssets
-}
-
 type PolkadotXcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -304,11 +296,13 @@ type PolkadotXcmTransfer @entity {
   extrinsicHash: String @index
   feeAssetItem: Int! @index
   account: Account!
-  to: String!
-  toChain: String! @index
-  amount: BigInt!
+  to: String
+  toChain: String @index
+  amount: BigInt
   weightLimit: BigInt
-  call: PolkadotXcmTransferCall!
+  call: String! @index
+  contractCalled: String @index
+  contractInput: String
 }
 
 type QueryLogs @entity {
@@ -343,14 +337,6 @@ type NativeTransfer @entity {
   success: Boolean!
 }
 
-enum XcmTransferCall {
-  LimitedReserveTransferAssets
-  LimitedTeleportAssets
-  ReserveTransferAssets
-  TransferAssetsUsingTypeAndThen
-  TransferAssets
-}
-
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -362,7 +348,7 @@ type XcmTransfer @entity {
   toChain: Parachain
   amount: BigInt!
   weightLimit: BigInt
-  call: XcmTransferCall!
+  call: String! @index
 }
 
 type Account @entity {

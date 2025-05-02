@@ -1,11 +1,3 @@
-enum PolkadotXcmTransferCall {
-  LimitedReserveTransferAssets
-  LimitedTeleportAssets
-  ReserveTransferAssets
-  TransferAssetsUsingTypeAndThen
-  TransferAssets
-}
-
 type PolkadotXcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
@@ -13,9 +5,11 @@ type PolkadotXcmTransfer @entity {
   extrinsicHash: String @index
   feeAssetItem: Int! @index
   account: Account!
-  to: String!
-  toChain: String! @index
-  amount: BigInt!
+  to: String
+  toChain: String @index
+  amount: BigInt
   weightLimit: BigInt
-  call: PolkadotXcmTransferCall!
+  call: String! @index
+  contractCalled: String @index
+  contractInput: String
 }

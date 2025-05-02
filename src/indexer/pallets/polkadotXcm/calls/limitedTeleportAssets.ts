@@ -1,6 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { Account, PolkadotXcmTransferCall } from '@/model';
+import { Account } from '@/model';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
@@ -54,8 +54,10 @@ export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimit
           amount,
           to,
           toChain,
-          call: PolkadotXcmTransferCall.LimitedTeleportAssets,
+          call: call.name,
           weightLimit,
+          contractCalled: null,
+          contractInput: null,
         })
       );
     }
