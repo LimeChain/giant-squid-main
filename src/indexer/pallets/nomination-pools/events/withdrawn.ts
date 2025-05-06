@@ -5,7 +5,8 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { WithdrawnPoolAction } from '@/indexer/actions/nomination-pools/withdrawn';
 
-export interface INominationPoolsWithdrawnEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: string; balance: bigint; points: bigint }> {}
+export interface INominationPoolsWithdrawnEventPalletDecoder
+  extends IEventPalletDecoder<{ member: string; poolId: string; balance: bigint; points?: bigint }> {}
 
 interface INominationPoolsWithdrawnEventPalletSetup extends IBasePalletSetup {
   decoder: INominationPoolsWithdrawnEventPalletDecoder;

@@ -1,9 +1,6 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { CreatePoolAction } from '@/indexer/actions/nomination-pools/pool';
-import { getOriginAccountId } from '@/utils';
-import { Account, Pool, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { Pool } from '@/model';
 import { NominatePoolAction } from '@/indexer/actions/nomination-pools/nominate';
 
 export interface INominationPoolsNominateCallPalletDecoder

@@ -30,6 +30,11 @@ export class NominationPoolsBondAction extends Action<BondData> {
     });
 
     pool.totalBonded += this.data.amount;
+
+    if (!pool.members?.includes(staker.id)) {
+      pool.members.push(staker.id);
+    }
+
     staker.pool = pool;
 
     await ctx.store.upsert(bond);

@@ -41,8 +41,8 @@ export class Pool {
     @Column_("varchar", {length: 10, nullable: false})
     status!: PoolStatus
 
-    @OneToMany_(() => Staker, e => e.pool)
-    members!: Staker[]
+    @Column_("text", {array: true, nullable: false})
+    members!: (string | undefined | null)[]
 
     @OneToMany_(() => NominationPoolsNominate, e => e.pool)
     nominations!: NominationPoolsNominate[]

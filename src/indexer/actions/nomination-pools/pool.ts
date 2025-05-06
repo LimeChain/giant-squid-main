@@ -36,6 +36,7 @@ export class CreatePoolAction extends Action<CreatePoolData> {
       toggler,
       status: PoolStatus.Open,
       totalBonded: this.data.totalBonded,
+      members: [],
     });
 
     await ctx.store.insert(pool);

@@ -24,14 +24,14 @@ export class NominationPoolsUnbound {
     @ManyToOne_(() => Pool, {nullable: true})
     pool!: Pool
 
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    balance!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+    balance!: bigint | undefined | null
 
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    points!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+    points!: bigint | undefined | null
 
-    @Column_("int4", {nullable: false})
-    era!: number
+    @Column_("int4", {nullable: true})
+    era!: number | undefined | null
 
     @Index_()
     @ManyToOne_(() => Staker, {nullable: true})

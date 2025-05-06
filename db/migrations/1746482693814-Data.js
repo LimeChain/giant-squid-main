@@ -1,5 +1,5 @@
-module.exports = class Data1746175531456 {
-    name = 'Data1746175531456'
+module.exports = class Data1746482693814 {
+    name = 'Data1746482693814'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -30,7 +30,7 @@ module.exports = class Data1746175531456 {
         await db.query(`CREATE INDEX "IDX_e2b02269e5d78ad7d11e32d8ce" ON "nomination_pools_nominate" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_62042a576c5c44a00fd5fa60c3" ON "nomination_pools_nominate" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_c04c5431c842f1cf5da2b329b7" ON "nomination_pools_nominate" ("pool_id") `)
-        await db.query(`CREATE TABLE "nomination_pools_unbound" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "balance" numeric NOT NULL, "points" numeric NOT NULL, "era" integer NOT NULL, "pool_id" character varying, "staker_id" character varying, CONSTRAINT "PK_fdf22f17045d14a48bd31b2731a" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "nomination_pools_unbound" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "balance" numeric, "points" numeric, "era" integer, "pool_id" character varying, "staker_id" character varying, CONSTRAINT "PK_fdf22f17045d14a48bd31b2731a" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_be59c6ad322a103ed852eb0248" ON "nomination_pools_unbound" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_8894c2301147c530f2f9704a11" ON "nomination_pools_unbound" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_d1ec5327b9c87541ec1bcaf2c0" ON "nomination_pools_unbound" ("pool_id") `)
@@ -46,7 +46,7 @@ module.exports = class Data1746175531456 {
         await db.query(`CREATE INDEX "IDX_a83e36742f95312fdbd1f7a554" ON "nomination_pools_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_285e32c34d54365030b7771cfa" ON "nomination_pools_bond" ("pool_id") `)
         await db.query(`CREATE INDEX "IDX_402cd9f12cbe2370ae8fdc16cc" ON "nomination_pools_bond" ("staker_id") `)
-        await db.query(`CREATE TABLE "pool" ("id" character varying NOT NULL, "name" text, "total_bonded" numeric NOT NULL, "status" character varying(10) NOT NULL, "creator_id" character varying, "root_id" character varying, "nominator_id" character varying, "toggler_id" character varying, CONSTRAINT "PK_db1bfe411e1516c01120b85f8fe" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "pool" ("id" character varying NOT NULL, "name" text, "total_bonded" numeric NOT NULL, "status" character varying(10) NOT NULL, "members" text array NOT NULL, "creator_id" character varying, "root_id" character varying, "nominator_id" character varying, "toggler_id" character varying, CONSTRAINT "PK_db1bfe411e1516c01120b85f8fe" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_aba684bf454eab655766c63d70" ON "pool" ("creator_id") `)
         await db.query(`CREATE INDEX "IDX_22cbf8f13d222d93985304bba4" ON "pool" ("root_id") `)
         await db.query(`CREATE INDEX "IDX_cd0b1b8347b57c5011a300adb7" ON "pool" ("nominator_id") `)
@@ -111,7 +111,7 @@ module.exports = class Data1746175531456 {
         await db.query(`CREATE UNIQUE INDEX "IDX_20df08516f386a2d403fe66150" ON "identity_sub" ("account_id") `)
         await db.query(`CREATE TABLE "identity" ("id" character varying NOT NULL, "judgement" character varying(10) NOT NULL, "additional" jsonb, "display" text, "legal" text, "web" text, "riot" text, "email" text, "pgp_fingerprint" text, "image" text, "twitter" text, "is_killed" boolean NOT NULL, "account_id" character varying, CONSTRAINT "REL_bafa9e6c71c3f69cef6602a809" UNIQUE ("account_id"), CONSTRAINT "PK_ff16a44186b286d5e626178f726" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_bafa9e6c71c3f69cef6602a809" ON "identity" ("account_id") `)
-        await db.query(`CREATE TABLE "nomination_pools_withdrawn" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "balance" numeric NOT NULL, "points" numeric NOT NULL, "pool_id" character varying, "member_id" character varying, CONSTRAINT "PK_f76b2201c0670be7a1addb6c12e" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "nomination_pools_withdrawn" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "balance" numeric NOT NULL, "points" numeric, "pool_id" character varying, "member_id" character varying, CONSTRAINT "PK_f76b2201c0670be7a1addb6c12e" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_7fe4f4cc0cc17d63c95428bb2f" ON "nomination_pools_withdrawn" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_934b46b0a26f998007587b51a2" ON "nomination_pools_withdrawn" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_1b9e709958b90e797de3ab8714" ON "nomination_pools_withdrawn" ("pool_id") `)

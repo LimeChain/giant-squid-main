@@ -5,7 +5,7 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { EnsureAccount, EnsureStaker, UnbondPoolAction } from '@/indexer/actions';
 
 export interface INominationPoolsUnbondedEventPalletDecoder
-  extends IEventPalletDecoder<{ member: string; poolId: string; balance: bigint; points: bigint; era: number }> {}
+  extends IEventPalletDecoder<{ member: string; poolId: string; balance?: bigint; points?: any; era?: number }> {}
 
 interface INominationPoolsUnbondedEventPalletSetup extends IBasePalletSetup {
   decoder: INominationPoolsUnbondedEventPalletDecoder;

@@ -3,9 +3,9 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UnbondPoolData {
   id: string;
-  balance: bigint;
-  points: bigint;
-  era: number;
+  balance?: bigint;
+  points?: bigint;
+  era?: number;
   pool: () => Promise<Pool>;
   staker: () => Promise<Staker>;
 }
@@ -26,9 +26,12 @@ export class UnbondPoolAction extends Action<UnbondPoolData> {
       pool,
     });
 
-    staker.activeBonded -= this.data.balance;
-    staker.totalUnbonded += this.data.balance;
-    pool.totalBonded -= this.data.balance;
+    if (this.data.balance !== undefined && staker && pool) {
+      staker.activeBonded -= this.data.balance;
+      staker.totalUnbonded += this.data.balance; // Ensure "Unbonded" is correct as per your domain model
+      pool.totalBonded -= this.data.balance;
+    }
+    pool.members = pool.members.filter((member) => member !== staker.id);
 
     await ctx.store.insert(unbonded);
     await ctx.store.upsert(staker);

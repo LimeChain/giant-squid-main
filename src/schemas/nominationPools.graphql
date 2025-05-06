@@ -6,6 +6,29 @@ enum NominationBondingType {
   Bond_Extra_Other
 }
 
+enum PoolStatus {
+  Open
+  Blocked
+  Destroying
+  Destroyed
+}
+
+type Pool @entity {
+  id: ID!
+  name: String
+  creator: Staker
+  root: Staker!
+  nominator: Staker!
+  toggler: Staker!
+  totalBonded: BigInt!
+  status: PoolStatus!
+  members: [String]! @derivedFrom(field: "pool")
+  nominations: [NominationPoolsNominate!] @derivedFrom(field: "pool")
+  unbondings: [NominationPoolsUnbound!] @derivedFrom(field: "pool")
+  payouts: [NominationPoolsPaidOut!] @derivedFrom(field: "pool")
+  bonds: [NominationPoolsBond!] @derivedFrom(field: "pool")
+}
+
 type NominationPoolsBond @entity {
   id: ID!
   type: String! @index
@@ -22,9 +45,9 @@ type NominationPoolsUnbound @entity {
   blockNumber: Int! @index
   extrinsicHash: String @index
   pool: Pool! @index
-  balance: BigInt!
-  points: BigInt!
-  era: Int!
+  balance: BigInt
+  points: BigInt
+  era: Int
   staker: Staker!
 }
 
@@ -34,7 +57,7 @@ type NominationPoolsWithdrawn @entity {
   extrinsicHash: String @index
   pool: Pool! @index
   balance: BigInt!
-  points: BigInt!
+  points: BigInt
   member: Staker!
 }
 
@@ -53,27 +76,4 @@ type NominationPoolsNominate @entity {
   extrinsicHash: String @index
   pool: Pool! @index
   validators: [String]
-}
-
-enum PoolStatus {
-  Open
-  Blocked
-  Destroying
-  Destroyed
-}
-
-type Pool @entity {
-  id: ID!
-  name: String
-  creator: Staker
-  root: Staker!
-  nominator: Staker!
-  toggler: Staker!
-  totalBonded: BigInt!
-  status: PoolStatus!
-  members: [Staker!] @derivedFrom(field: "pool")
-  nominations: [NominationPoolsNominate!] @derivedFrom(field: "pool")
-  unbondings: [NominationPoolsUnbound!] @derivedFrom(field: "pool")
-  payouts: [NominationPoolsPaidOut!] @derivedFrom(field: "pool")
-  bonds: [NominationPoolsBond!] @derivedFrom(field: "pool")
 }

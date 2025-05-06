@@ -4,7 +4,7 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 interface WithdrawnPoolData {
   id: string;
   balance: bigint;
-  points: bigint;
+  points?: bigint;
   pool: () => Promise<Pool>;
   staker: () => Promise<Staker>;
 }
