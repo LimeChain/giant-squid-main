@@ -16,7 +16,7 @@ export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEv
         from: sender,
         toChain: getDestinationV4(dest),
         amount: getAssetAmounts(assets),
-        assets: getAssetIds(assets, event.extrinsic?.hash),
+        assets: getAssetIds(assets),
         to: getTo(dest),
       };
     }
@@ -65,7 +65,7 @@ function getAssetAmounts(assets: V4Asset[]) {
   return assets.map((asset) => (asset.fun.__kind === 'Fungible' ? asset.fun.value.toString() : undefined));
 }
 
-function getAssetIds(assets: V4Asset[], hash?: string) {
+function getAssetIds(assets: V4Asset[]) {
   return assets.map((asset) => {
     switch (asset.id.interior.__kind) {
       case 'Here':
@@ -86,9 +86,8 @@ function getAssetIds(assets: V4Asset[], hash?: string) {
         const target = asset.id.interior.value.at(-1);
         return target?.__kind === 'GeneralIndex' ? target.value.toString() : undefined;
       }
-      default:
-        console.log({ diff_kind: hash });
-        return;
     }
+
+    return;
   });
 }
