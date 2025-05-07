@@ -2,30 +2,28 @@
 import { Account } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
+import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
 
-export interface ISentEventPalletDecoder
+export interface ITransferredAssetsEventPalletDecoder
   extends IEventPalletDecoder<
     | {
         from?: string;
         to?: string;
         toChain?: string;
-        amount?: bigint;
-        weightLimit?: bigint;
-        contractCalled?: string;
-        contractInput?: string;
+        assets?: (string | undefined)[];
+        amount?: (string | undefined)[];
       }
     | undefined
   > {}
 
-interface ISentEventPalletSetup extends IBasePalletSetup {
-  decoder: ISentEventPalletDecoder;
+interface ITransferredAssetsEventPalletSetup extends IBasePalletSetup {
+  decoder: ITransferredAssetsEventPalletDecoder;
 }
 
-export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletSetup> {
-  constructor(setup: ISentEventPalletSetup, options: IHandlerOptions) {
+export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITransferredAssetsEventPalletSetup> {
+  constructor(setup: ITransferredAssetsEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -37,7 +35,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     // Return on unsupported event types
     if (!data) return;
 
-    const { amount, weightLimit, to, toChain, from, contractCalled, contractInput } = data;
+    const { amount, to, toChain, from, assets } = data;
     assert(from, 'Caller Pubkey is undefined');
 
     const fromPubKey = this.encodeAddress(from);
@@ -49,16 +47,14 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
         id: fromPubKey,
         pk: this.decodeAddress(fromPubKey),
       }),
-      new PolkadotXcmTransferAction(block.header, event.extrinsic, {
+      new XTokensTransferAction(block.header, event.extrinsic, {
         id: event.id,
         account: () => account.getOrFail(),
         amount,
         to,
         toChain,
         call: event.call.name,
-        weightLimit,
-        contractCalled,
-        contractInput,
+        assets,
       })
     );
   }

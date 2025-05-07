@@ -15,125 +15,77 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
     const sent = events.polkadotXcm.sent;
 
     if (sent.v932.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const [origin, destination, message] = sent.v932.decode(event);
-          const from = getOriginCaller(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V2Instruction_BuyExecution;
+      const [origin, destination, message] = sent.v932.decode(event);
+      const from = getOriginCaller(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V2Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestination(destination),
-            amount: getAmount(message[0]),
-            to: getTarget(message.at(-1)!, from),
-            weightLimit: getWeightLimit(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestination(destination),
+        amount: getAmount(message[0]),
+        to: getTarget(message.at(-1)!, from),
+        weightLimit: getWeightLimit(weightLimitMsg),
+      };
     } else if (sent.v970.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const [origin, destination, message] = sent.v970.decode(event);
-          const from = getOriginCaller(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V2Instruction_BuyExecution;
+      const [origin, destination, message] = sent.v970.decode(event);
+      const from = getOriginCaller(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V2Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestination(destination),
-            amount: getAmount(message[0]),
-            to: getTarget(message.at(-1)!, from),
-            weightLimit: getWeightLimit(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestination(destination),
+        amount: getAmount(message[0]),
+        to: getTarget(message.at(-1)!, from),
+        weightLimit: getWeightLimit(weightLimitMsg),
+      };
     } else if (sent.v972.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const [origin, destination, message] = sent.v972.decode(event);
-          const from = getOriginCaller(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
+      const [origin, destination, message] = sent.v972.decode(event);
+      const from = getOriginCaller(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestination(destination),
-            amount: getAmount(message[0]),
-            to: getTarget(message.at(-1)!, from),
-            weightLimit: getWeightLimitV3V4(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestination(destination),
+        amount: getAmount(message[0]),
+        to: getTarget(message.at(-1)!, from),
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+      };
     } else if (sent.v990.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const { origin, destination, message, messageId } = sent.v990.decode(event);
-          const from = getOriginCaller(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
+      const { origin, destination, message, messageId } = sent.v990.decode(event);
+      const from = getOriginCaller(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestination(destination),
-            amount: getAmount(message[0]),
-            to: getTarget(message.at(-1)!, from),
-            weightLimit: getWeightLimitV3V4(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestination(destination),
+        amount: getAmount(message[0]),
+        to: getTarget(message.at(-1)!, from),
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+      };
     } else if (sent.v10000.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const { origin, destination, message, messageId } = sent.v10000.decode(event);
-          const from = getOriginCaller(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
+      const { origin, destination, message, messageId } = sent.v10000.decode(event);
+      const from = getOriginCaller(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestination(destination),
-            amount: getAmount(message[0]),
-            to: getTarget(message.at(-1)!, from),
-            weightLimit: getWeightLimitV3V4(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestination(destination),
+        amount: getAmount(message[0]),
+        to: getTarget(message.at(-1)!, from),
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+      };
     } else if (sent.v11000.is(event)) {
-      switch (event.call.name) {
-        case 'PolkadotXcm.transfer_assets':
-        case 'PolkadotXcm.transfer_assets_using_type_and_then':
-          const { origin, destination, message, messageId } = sent.v11000.decode(event);
-          const from = getOriginCallerV4(origin);
-          const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V4Instruction_BuyExecution;
+      const { origin, destination, message, messageId } = sent.v11000.decode(event);
+      const from = getOriginCallerV4(origin);
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V4Instruction_BuyExecution;
 
-          return {
-            from,
-            toChain: getDestinationV4(destination),
-            amount: getAmount(message[0]),
-            to: getTargetV4(message.at(-1)!, from),
-            weightLimit: getWeightLimitV3V4(weightLimitMsg),
-          };
-
-        default:
-          console.log({ name: event.call.name });
-          return;
-      }
+      return {
+        from,
+        toChain: getDestinationV4(destination),
+        amount: getAmount(message[0]),
+        to: getTargetV4(message.at(-1)!, from),
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+      };
     }
 
     throw new UnknownVersionError(sent);
@@ -167,20 +119,38 @@ function getOriginCallerV4(origin: V4Location) {
 }
 
 function getDestination(destination: V1MultiLocation | V3MultiLocation | V3MultiLocationV10000 | V1MultiLocationV970) {
-  if (destination.interior.__kind === 'X1' && destination.interior.value.__kind === 'Parachain') {
-    return destination.interior.value.value.toString();
+  if (destination.interior.__kind === 'X1') {
+    switch (destination.interior.value.__kind) {
+      case 'Parachain':
+        return destination.interior.value.value.toString();
+      case 'AccountId32':
+        return destination.interior.value.id;
+      case 'AccountKey20':
+        return destination.interior.value.key;
+    }
+
+    return;
   } else if (destination.interior.__kind === 'Here') {
-    return 'Here';
+    return destination.interior.__kind;
   }
 
   return;
 }
 
 function getDestinationV4(destination: V4Location) {
-  if (destination.interior.__kind === 'X1' && destination.interior.value[0].__kind === 'Parachain') {
-    return destination.interior.value[0].value.toString();
+  if (destination.interior.__kind === 'X1') {
+    switch (destination.interior.value[0].__kind) {
+      case 'Parachain':
+        return destination.interior.value[0].value.toString();
+      case 'AccountId32':
+        return destination.interior.value[0].id;
+      case 'AccountKey20':
+        return destination.interior.value[0].key;
+    }
+
+    return;
   } else if (destination.interior.__kind === 'Here') {
-    return 'Here';
+    return destination.interior.__kind;
   }
 
   return;

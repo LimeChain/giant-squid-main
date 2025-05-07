@@ -14,14 +14,14 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
-      // 'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
+      'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
     },
     calls: {
-      // 'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
-      // 'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
-      // 'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
+      'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
+      'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
+      'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
     },
   },
 });

@@ -121,19 +121,19 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     }
 
     // PolkadotXcm for parachains
-    if (
-      (lowerCaseKey === 'polkadotxcm.sent' ||
-        lowerCaseKey === 'polkadotxcm.limited_reserve_transfer_assets' ||
-        lowerCaseKey === 'polkadotxcm.limited_teleport_assets' ||
-        lowerCaseKey === 'polkadotxcm.reserve_transfer_assets' ||
-        lowerCaseKey === 'polkadotxcm.transfer_assets' ||
-        lowerCaseKey === 'polkadotxcm.transfer_assets_using_type_and_then') &&
-      !appendedSchemaParts.has('polkadotxcm')
-    ) {
+    if (lowerCaseKey === 'polkadotxcm.sent' && !appendedSchemaParts.has('polkadotxcm')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'polkadotXcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       accountSchema.push(`polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")\n`);
       appendedSchemaParts.add('polkadotxcm');
+    }
+
+    // XTokens for parachains
+    if (lowerCaseKey === 'xtokens.transferredassets' && !appendedSchemaParts.has('xtokens')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'XTokensTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`xTokenTransfers: [XTokensTransfer!] @derivedFrom(field: "account")\n`);
+      appendedSchemaParts.add('xtokens');
     }
 
     // Conviction Voting pallet
