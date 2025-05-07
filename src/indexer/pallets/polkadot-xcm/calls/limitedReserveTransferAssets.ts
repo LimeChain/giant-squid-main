@@ -4,7 +4,7 @@ import { Account } from '@/model';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadotXcm/transfer';
+import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 
 export interface ILimitedReserveTransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
@@ -50,14 +50,11 @@ export class LimitedReserveTransferAssetsPalletHandler extends CallPalletHandler
         new PolkadotXcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain,
           call: call.name,
           weightLimit,
-          contractCalled: null,
-          contractInput: null,
         })
       );
     }

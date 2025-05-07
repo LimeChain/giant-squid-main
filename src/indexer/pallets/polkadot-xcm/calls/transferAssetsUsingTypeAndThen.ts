@@ -4,32 +4,33 @@ import { Account } from '@/model';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadotXcm/transfer';
+import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 
-export interface IReserveTransferAssetsPalletDecoder
+export interface ITransferAssetsUsingTypeAndThenPalletDecoder
   extends ICallPalletDecoder<{
     to: string;
     toChain: string;
     amount: bigint;
     feeAssetItem: number;
+    weightLimit: bigint | null;
   }> {}
 
-interface IReserveTransferAssetsPalletSetup extends IBasePalletSetup {
-  decoder: IReserveTransferAssetsPalletDecoder;
+interface ITransferAssetsUsingTypeAndThenPalletSetup extends IBasePalletSetup {
+  decoder: ITransferAssetsUsingTypeAndThenPalletDecoder;
   isEvmCompatable?: boolean;
 }
 
-export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReserveTransferAssetsPalletSetup> {
+export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandler<ITransferAssetsUsingTypeAndThenPalletSetup> {
   isEvmCompatable: boolean;
 
-  constructor(setup: IReserveTransferAssetsPalletSetup, options: IHandlerOptions) {
+  constructor(setup: ITransferAssetsUsingTypeAndThenPalletSetup, options: IHandlerOptions) {
     super(setup, options);
     this.isEvmCompatable = setup.isEvmCompatable || false;
   }
 
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { to, feeAssetItem, amount, toChain } = this.decoder.decode(call);
+    const { to, feeAssetItem, amount, toChain, weightLimit } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (toChain) {
@@ -49,14 +50,11 @@ export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReser
         new PolkadotXcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain,
           call: call.name,
-          weightLimit: null,
-          contractCalled: null,
-          contractInput: null,
+          weightLimit,
         })
       );
     }

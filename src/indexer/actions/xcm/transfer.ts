@@ -7,7 +7,6 @@ interface XcmTransferActionData {
   toChain: () => Promise<Parachain | undefined>;
   to: string;
   amount: bigint;
-  feeAssetItem: number;
   call: string;
   weightLimit: bigint | null;
 }
@@ -19,7 +18,6 @@ export class XcmTransferAction extends Action<XcmTransferActionData> {
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
-      feeAssetItem: this.data.feeAssetItem,
       account: await this.data.account(),
       to: this.data.to,
       toChain: await this.data.toChain(),

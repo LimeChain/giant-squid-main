@@ -43,10 +43,11 @@ export { IParachainCandidateLeftEventDecoder } from '@/indexer/pallets/parachain
 export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 export { IReserveTransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
-export { ISentEventPalletDecoder } from '@/indexer/pallets/polkadotXcm/events/sent';
+export { ISentEventPalletDecoder } from '@/indexer/pallets/polkadot-xcm/events/sent';
 export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
 export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/vote';
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
 export { IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 export { IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+export { ITransferredAssetsEventPalletDecoder } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 export { Indexer, setupPallet } from '@/indexer/main';

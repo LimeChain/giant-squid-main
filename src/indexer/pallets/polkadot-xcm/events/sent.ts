@@ -2,21 +2,23 @@
 import { Account } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadotXcm/transfer';
+import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 
 export interface ISentEventPalletDecoder
-  extends IEventPalletDecoder<{
-    from: string | null;
-    to: string | null;
-    toChain: string | null;
-    amount: bigint | null;
-    feeAssetItem: number;
-    weightLimit: bigint | null;
-    contractCalled: string | null;
-    contractInput: string | null;
-  } | null> {}
+  extends IEventPalletDecoder<
+    | {
+        from?: string;
+        to?: string;
+        toChain?: string;
+        amount?: bigint;
+        weightLimit?: bigint;
+        contractCalled?: string;
+        contractInput?: string;
+      }
+    | undefined
+  > {}
 
 interface ISentEventPalletSetup extends IBasePalletSetup {
   decoder: ISentEventPalletDecoder;
@@ -35,8 +37,21 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     // Return on unsupported event types
     if (!data) return;
 
-    const { amount, feeAssetItem, weightLimit, to, toChain, from, contractCalled, contractInput } = data;
+    const { amount, weightLimit, to, toChain, from, contractCalled, contractInput } = data;
     assert(from, 'Caller Pubkey is undefined');
+
+    if (!amount) {
+      console.log({ amount, hash: event.extrinsic?.hash });
+    }
+    if (!to) {
+      console.log({ to, hash: event.extrinsic?.hash });
+    }
+    if (!from) {
+      console.log({ from, hash: event.extrinsic?.hash });
+    }
+    if (!amount) {
+      console.log({ amount, hash: event.extrinsic?.hash });
+    }
 
     const fromPubKey = this.encodeAddress(from);
     const account = ctx.store.defer(Account, fromPubKey);
@@ -50,7 +65,6 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
       new PolkadotXcmTransferAction(block.header, event.extrinsic, {
         id: event.id,
         account: () => account.getOrFail(),
-        feeAssetItem,
         amount,
         to,
         toChain,

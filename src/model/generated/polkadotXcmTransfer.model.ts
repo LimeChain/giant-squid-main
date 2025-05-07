@@ -24,10 +24,6 @@ export class PolkadotXcmTransfer {
     extrinsicHash!: string | undefined | null
 
     @Index_()
-    @Column_("int4", {nullable: false})
-    feeAssetItem!: number
-
-    @Index_()
     @ManyToOne_(() => Account, {nullable: true})
     account!: Account
 

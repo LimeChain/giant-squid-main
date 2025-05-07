@@ -4,33 +4,32 @@ import { Account } from '@/model';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadotXcm/transfer';
+import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 
-export interface ITransferAssetsPalletDecoder
+export interface IReserveTransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
     to: string;
     toChain: string;
     amount: bigint;
     feeAssetItem: number;
-    weightLimit: bigint | null;
   }> {}
 
-interface ITransferAssetsPalletSetup extends IBasePalletSetup {
-  decoder: ITransferAssetsPalletDecoder;
+interface IReserveTransferAssetsPalletSetup extends IBasePalletSetup {
+  decoder: IReserveTransferAssetsPalletDecoder;
   isEvmCompatable?: boolean;
 }
 
-export class TransferAssetsPalletHandler extends CallPalletHandler<ITransferAssetsPalletSetup> {
+export class ReserveTransferAssetsPalletHandler extends CallPalletHandler<IReserveTransferAssetsPalletSetup> {
   isEvmCompatable: boolean;
 
-  constructor(setup: ITransferAssetsPalletSetup, options: IHandlerOptions) {
+  constructor(setup: IReserveTransferAssetsPalletSetup, options: IHandlerOptions) {
     super(setup, options);
     this.isEvmCompatable = setup.isEvmCompatable || false;
   }
 
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { to, feeAssetItem, amount, toChain, weightLimit } = this.decoder.decode(call);
+    const { to, feeAssetItem, amount, toChain } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (toChain) {
@@ -50,14 +49,10 @@ export class TransferAssetsPalletHandler extends CallPalletHandler<ITransferAsse
         new PolkadotXcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain,
           call: call.name,
-          weightLimit,
-          contractCalled: null,
-          contractInput: null,
         })
       );
     }

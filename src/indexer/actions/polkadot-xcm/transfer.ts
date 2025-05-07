@@ -4,14 +4,13 @@ import { Action, ActionContext } from '@/indexer/actions/base';
 interface PolkadotXcmTransferActionData {
   id: string;
   account: () => Promise<Account>;
-  toChain: string | null;
-  to: string | null;
-  amount: bigint | null;
-  feeAssetItem: number;
+  toChain?: string | null;
+  to?: string | null;
+  amount?: bigint | null;
   call: string;
-  weightLimit: bigint | null;
-  contractCalled: string | null;
-  contractInput: string | null;
+  weightLimit?: bigint | null;
+  contractCalled?: string | null;
+  contractInput?: string | null;
 }
 
 export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionData> {
@@ -21,7 +20,6 @@ export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionD
       blockNumber: this.block.height,
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
-      feeAssetItem: this.data.feeAssetItem,
       account: await this.data.account(),
       to: this.data.to,
       toChain: this.data.toChain,

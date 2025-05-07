@@ -25,7 +25,7 @@ export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandl
   }
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { to, feeAssetItem, amount, toChain, weightLimit } = this.decoder.decode(call);
+    const { to, amount, toChain, weightLimit } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (toChain) {
@@ -46,7 +46,6 @@ export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandl
         new XcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain: () => parachain.get(),

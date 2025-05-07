@@ -46,7 +46,6 @@ export class LimitedReserveTransferAssetsPalletHandler extends CallPalletHandler
         new XcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain: () => parachain.get(),

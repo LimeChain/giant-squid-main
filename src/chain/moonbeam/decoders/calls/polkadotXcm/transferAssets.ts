@@ -10,7 +10,7 @@ import {
   decodeV4Beneficiary,
   decodeV4Dest,
 } from './transfer';
-import { ITransferAssetsPalletDecoder } from '@/indexer/pallets/polkadotXcm/calls/transferAssets';
+import { ITransferAssetsPalletDecoder } from '@/indexer/pallets/polkadot-xcm/calls/transferAssets';
 
 export class TransferAssetsCallDecoder implements ITransferAssetsPalletDecoder {
   decode(call: Call) {

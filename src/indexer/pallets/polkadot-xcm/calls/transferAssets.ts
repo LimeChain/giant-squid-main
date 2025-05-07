@@ -4,9 +4,9 @@ import { Account } from '@/model';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadotXcm/transfer';
+import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 
-export interface ITransferAssetsUsingTypeAndThenPalletDecoder
+export interface ITransferAssetsPalletDecoder
   extends ICallPalletDecoder<{
     to: string;
     toChain: string;
@@ -15,15 +15,15 @@ export interface ITransferAssetsUsingTypeAndThenPalletDecoder
     weightLimit: bigint | null;
   }> {}
 
-interface ITransferAssetsUsingTypeAndThenPalletSetup extends IBasePalletSetup {
-  decoder: ITransferAssetsUsingTypeAndThenPalletDecoder;
+interface ITransferAssetsPalletSetup extends IBasePalletSetup {
+  decoder: ITransferAssetsPalletDecoder;
   isEvmCompatable?: boolean;
 }
 
-export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandler<ITransferAssetsUsingTypeAndThenPalletSetup> {
+export class TransferAssetsPalletHandler extends CallPalletHandler<ITransferAssetsPalletSetup> {
   isEvmCompatable: boolean;
 
-  constructor(setup: ITransferAssetsUsingTypeAndThenPalletSetup, options: IHandlerOptions) {
+  constructor(setup: ITransferAssetsPalletSetup, options: IHandlerOptions) {
     super(setup, options);
     this.isEvmCompatable = setup.isEvmCompatable || false;
   }
@@ -50,14 +50,11 @@ export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandl
         new PolkadotXcmTransferAction(block.header, call.extrinsic, {
           id: call.id,
           account: () => account.getOrFail(),
-          feeAssetItem: feeAssetItem,
           amount,
           to,
           toChain,
           call: call.name,
           weightLimit,
-          contractCalled: null,
-          contractInput: null,
         })
       );
     }
