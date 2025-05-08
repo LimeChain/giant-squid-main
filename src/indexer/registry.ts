@@ -39,10 +39,12 @@ import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/para
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
+import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from './pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
 import { TransferAssetsPalletHandler } from './pallets/xcm/calls/transferAssets';
 import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedTeleportAssets';
 import { TransferAssetsUsingTypeAndThenPalletHandler } from './pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
+import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from './pallets/polkadot-xcm/calls/reserveTransferAssets';
 import { SentEventPalletHandler } from './pallets/polkadot-xcm/events/sent';
 import { TransferredAssetsEventPalletHandler } from './pallets/x-tokens/events/transferredAssets';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
@@ -105,6 +107,8 @@ export const registry = {
     'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
     'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
     'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
+    'PolkadotXcm.reserve_transfer_assets': ReserveTransferAssetsPalletHandlerPolkadotXcm,
+    'PolkadotXcm.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandlerPolkadotXcm,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
     'ConvictionVoting.delegate': DelegateCallPalletHandler,
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,

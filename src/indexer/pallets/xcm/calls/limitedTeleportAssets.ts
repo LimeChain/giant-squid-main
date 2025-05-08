@@ -30,7 +30,7 @@ export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimit
     // a supported call has been successfully decoded
     if (toChain) {
       const origin = getOriginAccountId(call.origin);
-      assert(origin, 'Caller Pubkey is undefined');
+      assert(origin, `Caller Pubkey is undefined at ${call.extrinsic?.hash}`);
 
       const fromPubKey = this.encodeAddress(origin);
 

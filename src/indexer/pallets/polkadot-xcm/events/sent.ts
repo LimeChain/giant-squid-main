@@ -38,7 +38,11 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     if (!data) return;
 
     const { amount, weightLimit, to, toChain, from, contractCalled, contractInput } = data;
-    assert(from, 'Caller Pubkey is undefined');
+    assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
+
+    if (!amount) console.log({ amount, hash: event.extrinsic?.hash });
+    if (!to) console.log({ to, hash: event.extrinsic?.hash });
+    if (!toChain) console.log({ toChain, hash: event.extrinsic?.hash });
 
     const fromPubKey = this.encodeAddress(from);
     const account = ctx.store.defer(Account, fromPubKey);
