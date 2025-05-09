@@ -7,7 +7,7 @@ import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
 import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
 import {StakingBond} from "./stakingBond.model"
-import {Pool} from "./pool.model"
+import {EraDetail} from "./_eraDetail"
 
 @Entity_()
 export class Staker {
@@ -67,7 +67,6 @@ export class Staker {
     @OneToMany_(() => StakingBond, e => e.staker)
     bonds!: StakingBond[]
 
-    @Index_()
-    @ManyToOne_(() => Pool, {nullable: true})
-    pool!: Pool | undefined | null
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.map((val: any) => val.toJSON()), from: obj => obj == null ? undefined : marshal.fromList(obj, val => new EraDetail(undefined, marshal.nonNull(val)))}, nullable: true})
+    eraRewards!: (EraDetail)[] | undefined | null
 }
