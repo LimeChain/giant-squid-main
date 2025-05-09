@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Account, Staker, StakingReward } from '@/model';
+import { Account, EraDetail, Staker, StakingReward } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface RewardData {
@@ -11,10 +11,40 @@ interface RewardData {
   validatorId?: string;
 }
 
+function calculateEraReturn(reward: bigint, bondedAmount: bigint): string {
+  if (bondedAmount === 0n) {
+    return '0.00%';
+  }
+
+  const rewardNumber = Number(reward);
+  const bondedNumber = Number(bondedAmount);
+
+  const eraReturn = (rewardNumber / bondedNumber) * 100;
+
+  return `${eraReturn.toFixed(2)}%`;
+}
+
 export class RewardAction extends Action<RewardData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const account = await this.data.account();
     const staker = await this.data.staker();
+
+    if (this.data.era && staker.activeBonded) {
+      const eraDetail = staker.eraRewards?.find((eraDetail) => eraDetail.era === this.data.era);
+      if (eraDetail) {
+        eraDetail.totalRewarded += this.data.amount;
+        eraDetail.returnPercentage = calculateEraReturn(eraDetail.totalRewarded, staker.activeBonded);
+      } else {
+        staker.eraRewards = staker.eraRewards || [];
+        staker.eraRewards.push(
+          new EraDetail({
+            era: this.data.era,
+            totalRewarded: this.data.amount,
+            returnPercentage: calculateEraReturn(this.data.amount, staker.activeBonded),
+          })
+        );
+      }
+    }
 
     let reward = new StakingReward({
       id: this.data.id,
