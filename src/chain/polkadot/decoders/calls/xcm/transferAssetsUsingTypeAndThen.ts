@@ -1,6 +1,7 @@
 import { calls } from '@/chain/polkadot/types';
 import { Call } from '@/indexer';
 import { UnknownVersionError } from '@/utils';
+import { ITransferAssetsUsingTypeAndThenPalletDecoder } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 import {
   decodeV1ToV3Assets,
   decodeV1ToV3CustomXcmOnDest,
@@ -10,7 +11,6 @@ import {
   decodeV4CustomXcmOnDest,
   decodeV4Dest,
 } from './transfer';
-import { ITransferAssetsUsingTypeAndThenPalletDecoder } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
 
 export class TransferAssetsUsingTypeAndThenCallDecoder implements ITransferAssetsUsingTypeAndThenPalletDecoder {
   decode(call: Call) {

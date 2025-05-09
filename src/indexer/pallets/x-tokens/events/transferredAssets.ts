@@ -46,8 +46,6 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
     const fromPubKey = this.encodeAddress(from);
     const account = ctx.store.defer(Account, fromPubKey);
 
-    console.log({ hash: event.extrinsic?.hash });
-
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => account.get(),

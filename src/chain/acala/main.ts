@@ -1,6 +1,7 @@
 import { ensureEnvVariable } from '@/utils/misc';
 import { Indexer, setupPallet } from '@/indexer';
 import { TransferEventPalletDecoder } from '@/chain/acala/decoders/events/balances/transfer';
+import { TransferredAssetsEventPalletDecoder } from '@/chain/acala/decoders/events/xTokens/transferredAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -10,6 +11,7 @@ export const indexer = new Indexer({
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
     },
   },
 });
