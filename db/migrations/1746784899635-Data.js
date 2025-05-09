@@ -1,5 +1,5 @@
-module.exports = class Data1744223955616 {
-    name = 'Data1744223955616'
+module.exports = class Data1746784899635 {
+    name = 'Data1746784899635'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -26,7 +26,7 @@ module.exports = class Data1744223955616 {
         await db.query(`CREATE INDEX "IDX_b38d17ce3a94eb771435464c20" ON "staking_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_cf2a5fc4d501da37ec2c60b339" ON "staking_bond" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_6dfbe050a4ef9c6b586906015e" ON "staking_bond" ("staker_id") `)
-        await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "active_bonded" numeric NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "total_rewarded" numeric NOT NULL, "stash_id" character varying, "controller_id" character varying, "payee_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "active_bonded" numeric NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "total_rewarded" numeric NOT NULL, "era_rewards" jsonb, "stash_id" character varying, "controller_id" character varying, "payee_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
         await db.query(`CREATE UNIQUE INDEX "IDX_828b14269265a736e4fef52ce2" ON "staker" ("stash_id") `)
         await db.query(`CREATE INDEX "IDX_15b7e74748f940d0ccfbf21f1c" ON "staker" ("controller_id") `)
         await db.query(`CREATE INDEX "IDX_1df4573c718e95292cd00f49c3" ON "staker" ("payee_id") `)
