@@ -84,3 +84,34 @@ export function unwrapData(data: { __kind: string; value?: string }) {
 export function ensureEnvVariable(name: string): string {
   return assertNotNull(process.env[name], `Missing env variable ${name}`);
 }
+
+/**
+ * Decodes a hexadecimal string into a UTF-8 string.
+ *
+ * @param hexString - The hexadecimal string to decode. It may optionally start with the '0x' prefix.
+ * @returns The decoded UTF-8 string.
+ *
+ * @remarks
+ * This function removes the '0x' prefix from the input string if present, converts the hexadecimal
+ * string into a byte array, and then decodes it into a UTF-8 string using the `TextDecoder` API.
+ *
+ * @example
+ * ```typescript
+ * const result = decodeHexToUTF8('48656c6c6f');
+ * console.log(result); // Output: "Hello"
+ * ```
+ */
+export function decodeHexToUTF8(hexString: ss58.Bytes) {
+  // Remove '0x' prefix if present
+  if (hexString.startsWith('0x')) {
+    hexString = hexString.slice(2);
+  }
+
+  // Convert hex to bytes and then to UTF-8 string
+  const bytes = [];
+  for (let i = 0; i < hexString.length; i += 2) {
+    bytes.push(parseInt(hexString.substring(i, i + 2), 16));
+  }
+
+  return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+}

@@ -22,3 +22,8 @@ export * from './conviction-voting/undelegate';
 export * from './conviction-voting/unlock';
 export * from './conviction-voting/vote';
 export * from './conviction-voting/removeVote';
+export * from './nomination-pools/bonded';
+export * from './nomination-pools/unbonded';
+export * from './nomination-pools/pool';
+export * from './nomination-pools/paidOut';
+export * from './nomination-pools/withdrawn';

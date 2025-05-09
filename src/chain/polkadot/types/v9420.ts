@@ -42,46 +42,6 @@ export interface Type_153_None {
     __kind: 'None'
 }
 
-export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
-    return  {
-        Address20: sts.bytes(),
-        Address32: sts.bytes(),
-        Id: AccountId32,
-        Index: sts.unit(),
-        Raw: sts.bytes(),
-    }
-})
-
-export const AccountId32 = sts.bytes()
-
-export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
-
-export interface MultiAddress_Address20 {
-    __kind: 'Address20'
-    value: Bytes
-}
-
-export interface MultiAddress_Address32 {
-    __kind: 'Address32'
-    value: Bytes
-}
-
-export interface MultiAddress_Id {
-    __kind: 'Id'
-    value: AccountId32
-}
-
-export interface MultiAddress_Index {
-    __kind: 'Index'
-}
-
-export interface MultiAddress_Raw {
-    __kind: 'Raw'
-    value: Bytes
-}
-
-export type AccountId32 = Bytes
-
 export const Type_151: sts.Type<Type_151> = sts.closedEnum(() => {
     return  {
         Split: sts.enumStruct({
@@ -119,4 +79,67 @@ export interface Type_151_Standard {
     __kind: 'Standard'
     vote: number
     balance: bigint
+}
+
+export const Type_302: sts.Type<Type_302> = sts.closedEnum(() => {
+    return  {
+        Noop: sts.unit(),
+        Remove: sts.unit(),
+        Set: AccountId32,
+    }
+})
+
+export const AccountId32 = sts.bytes()
+
+export type Type_302 = Type_302_Noop | Type_302_Remove | Type_302_Set
+
+export interface Type_302_Noop {
+    __kind: 'Noop'
+}
+
+export interface Type_302_Remove {
+    __kind: 'Remove'
+}
+
+export interface Type_302_Set {
+    __kind: 'Set'
+    value: AccountId32
+}
+
+export type AccountId32 = Bytes
+
+export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
+    return  {
+        Address20: sts.bytes(),
+        Address32: sts.bytes(),
+        Id: AccountId32,
+        Index: sts.unit(),
+        Raw: sts.bytes(),
+    }
+})
+
+export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
+
+export interface MultiAddress_Address20 {
+    __kind: 'Address20'
+    value: Bytes
+}
+
+export interface MultiAddress_Address32 {
+    __kind: 'Address32'
+    value: Bytes
+}
+
+export interface MultiAddress_Id {
+    __kind: 'Id'
+    value: AccountId32
+}
+
+export interface MultiAddress_Index {
+    __kind: 'Index'
+}
+
+export interface MultiAddress_Raw {
+    __kind: 'Raw'
+    value: Bytes
 }

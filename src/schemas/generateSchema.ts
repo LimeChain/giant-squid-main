@@ -117,6 +117,13 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       appendedSchemaParts.add('convictionvoting');
     }
+
+    // Nomination pool pallet
+    if (lowerCaseKey === 'nominationpools.bonded' && !appendedSchemaParts.has('nominationpools')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'nominationPools.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('nominationpools');
+    }
   }
 
   accountSchema.push(`\n}\n`);
