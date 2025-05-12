@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Account, EraDetail, Staker, StakingReward } from '@/model';
+import { Account, Staker, StakingReward } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface RewardData {
@@ -9,19 +9,6 @@ interface RewardData {
   staker: () => Promise<Staker>;
   era?: number;
   validatorId?: string;
-}
-
-function calculateEraReturn(reward: bigint, bondedAmount: bigint): string {
-  if (bondedAmount === 0n) {
-    return '0.00%';
-  }
-
-  const rewardNumber = Number(reward);
-  const bondedNumber = Number(bondedAmount);
-
-  const eraReturn = (rewardNumber / bondedNumber) * 100;
-
-  return `${eraReturn.toFixed(2)}%`;
 }
 
 export class RewardAction extends Action<RewardData> {
