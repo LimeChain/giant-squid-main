@@ -1,4 +1,4 @@
-import { Account, PolkadotXcmTransfer, XTokensTransfer } from '@/model';
+import { Account, XTokensTransfer } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XTokensTransferActionData {
@@ -7,7 +7,7 @@ interface XTokensTransferActionData {
   call: string;
   to?: string;
   toChain?: string;
-  assets?: (string | undefined)[];
+  assets?: (string | undefined)[][];
   amount?: (string | undefined)[];
 }
 

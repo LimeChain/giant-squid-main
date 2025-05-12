@@ -6,7 +6,7 @@
       "events": ["Transfer"]
     },
     "XTokens": {
-      "events": ["TransferredAssets"]
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

@@ -38,21 +38,21 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { LimitedReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/limitedReserveTransferAssets';
-import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from './pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
-import { TransferAssetsPalletHandler } from './pallets/xcm/calls/transferAssets';
-import { LimitedTeleportAssetsPalletHandler } from './pallets/xcm/calls/limitedTeleportAssets';
-import { TransferAssetsUsingTypeAndThenPalletHandler } from './pallets/xcm/calls/transferAssetsUsingTypeAndThen';
-import { ReserveTransferAssetsPalletHandler } from './pallets/xcm/calls/reserveTransferAssets';
-import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from './pallets/polkadot-xcm/calls/reserveTransferAssets';
-import { SentEventPalletHandler } from './pallets/polkadot-xcm/events/sent';
-import { TransferredAssetsEventPalletHandler } from './pallets/x-tokens/events/transferredAssets';
+import { LimitedReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedReserveTransferAssets';
+import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
+import { TransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssets';
+import { LimitedTeleportAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
+import { ReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
+import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/reserveTransferAssets';
+import { SentEventPalletHandler } from '@/indexer/pallets/polkadot-xcm/events/sent';
+import { TransferredAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
 import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
 import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
-import { TransferredAssetsEventPalletDecoder } from '@/chain/bifrost-polkadot/decoders/events/xTokens/transferredAssets';
+import { TransferredMultiAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredMultiAssets';
 
 export const registry = {
   events: {
@@ -86,6 +86,7 @@ export const registry = {
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
     'PolkadotXcm.Sent': SentEventPalletHandler,
     'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,

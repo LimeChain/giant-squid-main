@@ -1,4 +1,5 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
+import * as marshal from "./marshal"
 import {Account} from "./account.model"
 
 @Entity_()
@@ -32,8 +33,8 @@ export class XTokensTransfer {
     @Column_("text", {nullable: true})
     toChain!: string | undefined | null
 
-    @Column_("text", {array: true, nullable: true})
-    assets!: (string | undefined | null)[] | undefined | null
+    @Column_("jsonb", {transformer: {to: obj => obj, from: obj => obj == null ? undefined : marshal.fromList(obj, val => val == null ? undefined : marshal.fromList(val, val => val == null ? undefined : marshal.string.fromJSON(val)))}, nullable: true})
+    assets!: ((string | undefined | null)[] | undefined | null)[] | undefined | null
 
     @Column_("text", {array: true, nullable: true})
     amount!: (string | undefined | null)[] | undefined | null

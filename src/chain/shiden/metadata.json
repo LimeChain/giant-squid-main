@@ -9,7 +9,7 @@
       "calls": ["limited_reserve_transfer_assets", "reserve_transfer_assets"]
     },
     "XTokens": {
-      "events": ["TransferredAssets"]
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

@@ -19,7 +19,7 @@
       "events": ["Sent"]
     },
     "XTokens": {
-      "events": ["TransferredAssets"]
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

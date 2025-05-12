@@ -129,7 +129,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     }
 
     // XTokens for parachains
-    if (lowerCaseKey === 'xtokens.transferredassets' && !appendedSchemaParts.has('xtokens')) {
+    if ((lowerCaseKey === 'xtokens.transferredassets' || lowerCaseKey === 'xtokens.transferredmultiassets') && !appendedSchemaParts.has('xtokens')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'XTokensTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       accountSchema.push(`xTokenTransfers: [XTokensTransfer!] @derivedFrom(field: "account")\n`);
