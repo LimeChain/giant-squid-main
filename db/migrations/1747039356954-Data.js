@@ -1,10 +1,5 @@
-<<<<<<<< HEAD:db/migrations/1746482693814-Data.js
-module.exports = class Data1746482693814 {
-    name = 'Data1746482693814'
-========
-module.exports = class Data1746784899635 {
-    name = 'Data1746784899635'
->>>>>>>> 973d6d8 (Index era return for staking rewards):db/migrations/1746784899635-Data.js
+module.exports = class Data1747039356954 {
+    name = 'Data1747039356954'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -31,7 +26,6 @@ module.exports = class Data1746784899635 {
         await db.query(`CREATE INDEX "IDX_b38d17ce3a94eb771435464c20" ON "staking_bond" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_cf2a5fc4d501da37ec2c60b339" ON "staking_bond" ("account_id") `)
         await db.query(`CREATE INDEX "IDX_6dfbe050a4ef9c6b586906015e" ON "staking_bond" ("staker_id") `)
-<<<<<<<< HEAD:db/migrations/1746482693814-Data.js
         await db.query(`CREATE TABLE "nomination_pools_nominate" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "extrinsic_hash" text, "validators" text array, "pool_id" character varying, CONSTRAINT "PK_cce8c7cf80915c665c6c77951ae" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_e2b02269e5d78ad7d11e32d8ce" ON "nomination_pools_nominate" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_62042a576c5c44a00fd5fa60c3" ON "nomination_pools_nominate" ("extrinsic_hash") `)
@@ -57,10 +51,9 @@ module.exports = class Data1746784899635 {
         await db.query(`CREATE INDEX "IDX_22cbf8f13d222d93985304bba4" ON "pool" ("root_id") `)
         await db.query(`CREATE INDEX "IDX_cd0b1b8347b57c5011a300adb7" ON "pool" ("nominator_id") `)
         await db.query(`CREATE INDEX "IDX_24e2e10ab122bc5c4d6f4746aa" ON "pool" ("toggler_id") `)
+        await db.query(`CREATE TABLE "staking_era_reward" ("id" character varying NOT NULL, "era" integer NOT NULL, "total_rewarded" numeric NOT NULL, "return_percentage" text NOT NULL, "staker_id" character varying, CONSTRAINT "PK_c7a389961668bfd8b6752b71989" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_f2d0ccefb3ea1e30f9209e7f7d" ON "staking_era_reward" ("staker_id") `)
         await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "active_bonded" numeric NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "total_rewarded" numeric NOT NULL, "stash_id" character varying, "controller_id" character varying, "payee_id" character varying, "pool_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
-========
-        await db.query(`CREATE TABLE "staker" ("id" character varying NOT NULL, "active_bonded" numeric NOT NULL, "total_bonded" numeric NOT NULL, "total_unbonded" numeric NOT NULL, "total_withdrawn" numeric NOT NULL, "total_slashed" numeric NOT NULL, "total_rewarded" numeric NOT NULL, "era_rewards" jsonb, "stash_id" character varying, "controller_id" character varying, "payee_id" character varying, CONSTRAINT "REL_828b14269265a736e4fef52ce2" UNIQUE ("stash_id"), CONSTRAINT "PK_13561f691b22038cfa606fe1161" PRIMARY KEY ("id"))`)
->>>>>>>> 973d6d8 (Index era return for staking rewards):db/migrations/1746784899635-Data.js
         await db.query(`CREATE UNIQUE INDEX "IDX_828b14269265a736e4fef52ce2" ON "staker" ("stash_id") `)
         await db.query(`CREATE INDEX "IDX_15b7e74748f940d0ccfbf21f1c" ON "staker" ("controller_id") `)
         await db.query(`CREATE INDEX "IDX_1df4573c718e95292cd00f49c3" ON "staker" ("payee_id") `)
@@ -145,6 +138,7 @@ module.exports = class Data1746784899635 {
         await db.query(`ALTER TABLE "pool" ADD CONSTRAINT "FK_22cbf8f13d222d93985304bba42" FOREIGN KEY ("root_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "pool" ADD CONSTRAINT "FK_cd0b1b8347b57c5011a300adb75" FOREIGN KEY ("nominator_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "pool" ADD CONSTRAINT "FK_24e2e10ab122bc5c4d6f4746aa5" FOREIGN KEY ("toggler_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "staking_era_reward" ADD CONSTRAINT "FK_f2d0ccefb3ea1e30f9209e7f7d3" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staker" ADD CONSTRAINT "FK_828b14269265a736e4fef52ce26" FOREIGN KEY ("stash_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staker" ADD CONSTRAINT "FK_15b7e74748f940d0ccfbf21f1c0" FOREIGN KEY ("controller_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staker" ADD CONSTRAINT "FK_1df4573c718e95292cd00f49c35" FOREIGN KEY ("payee_id") REFERENCES "staking_payee"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -225,6 +219,8 @@ module.exports = class Data1746784899635 {
         await db.query(`DROP INDEX "public"."IDX_22cbf8f13d222d93985304bba4"`)
         await db.query(`DROP INDEX "public"."IDX_cd0b1b8347b57c5011a300adb7"`)
         await db.query(`DROP INDEX "public"."IDX_24e2e10ab122bc5c4d6f4746aa"`)
+        await db.query(`DROP TABLE "staking_era_reward"`)
+        await db.query(`DROP INDEX "public"."IDX_f2d0ccefb3ea1e30f9209e7f7d"`)
         await db.query(`DROP TABLE "staker"`)
         await db.query(`DROP INDEX "public"."IDX_828b14269265a736e4fef52ce2"`)
         await db.query(`DROP INDEX "public"."IDX_15b7e74748f940d0ccfbf21f1c"`)
@@ -310,6 +306,7 @@ module.exports = class Data1746784899635 {
         await db.query(`ALTER TABLE "pool" DROP CONSTRAINT "FK_22cbf8f13d222d93985304bba42"`)
         await db.query(`ALTER TABLE "pool" DROP CONSTRAINT "FK_cd0b1b8347b57c5011a300adb75"`)
         await db.query(`ALTER TABLE "pool" DROP CONSTRAINT "FK_24e2e10ab122bc5c4d6f4746aa5"`)
+        await db.query(`ALTER TABLE "staking_era_reward" DROP CONSTRAINT "FK_f2d0ccefb3ea1e30f9209e7f7d3"`)
         await db.query(`ALTER TABLE "staker" DROP CONSTRAINT "FK_828b14269265a736e4fef52ce26"`)
         await db.query(`ALTER TABLE "staker" DROP CONSTRAINT "FK_15b7e74748f940d0ccfbf21f1c0"`)
         await db.query(`ALTER TABLE "staker" DROP CONSTRAINT "FK_1df4573c718e95292cd00f49c35"`)

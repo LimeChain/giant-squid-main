@@ -29,23 +29,6 @@ export class RewardAction extends Action<RewardData> {
     const account = await this.data.account();
     const staker = await this.data.staker();
 
-    if (this.data.era && staker.activeBonded) {
-      const eraDetail = staker.eraRewards?.find((eraDetail) => eraDetail.era === this.data.era);
-      if (eraDetail) {
-        eraDetail.totalRewarded += this.data.amount;
-        eraDetail.returnPercentage = calculateEraReturn(eraDetail.totalRewarded, staker.activeBonded);
-      } else {
-        staker.eraRewards = staker.eraRewards || [];
-        staker.eraRewards.push(
-          new EraDetail({
-            era: this.data.era,
-            totalRewarded: this.data.amount,
-            returnPercentage: calculateEraReturn(this.data.amount, staker.activeBonded),
-          })
-        );
-      }
-    }
-
     let reward = new StakingReward({
       id: this.data.id,
       blockNumber: this.block.height,
@@ -57,8 +40,6 @@ export class RewardAction extends Action<RewardData> {
       era: this.data.era,
       validatorId: this.data.validatorId,
     });
-
-    staker.totalRewarded += this.data.amount;
 
     await ctx.store.insert(reward);
     await ctx.store.upsert(staker);

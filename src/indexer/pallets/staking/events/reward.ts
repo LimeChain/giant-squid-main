@@ -4,6 +4,7 @@ import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 import { Action, LazyAction } from '@/indexer/actions/base';
+import { EraRewardAction } from '@/indexer/actions/staking/era-rewards';
 
 export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
 export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
@@ -65,6 +66,13 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
           new RewardAction(block.header, event.extrinsic, {
             id: event.id,
             account: () => Promise.resolve(payee?.account || account),
+            staker: () => Promise.resolve(staker),
+            amount: data.amount,
+            era,
+            validatorId,
+          }),
+          new EraRewardAction(block.header, event.extrinsic, {
+            id: event.id,
             staker: () => Promise.resolve(staker),
             amount: data.amount,
             era,
