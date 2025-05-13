@@ -1,16 +1,16 @@
-import { events } from '@/chain/acala/types';
+import { events } from '@/chain/astar/types';
 import { Event, ITransferredAssetsEventPalletDecoder } from '@/indexer';
 import assert from 'assert';
 import { UnknownVersionError } from '@/utils';
-import { V4Asset, V4Location, V4Junction_Parachain } from '@/chain/acala/types/v2250';
+import { V4Asset, V4Location, V4Junction_Parachain } from '@/chain/astar/types/v91';
 
 export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
     const transferredAssets = events.xTokens.transferredAssets;
 
-    if (transferredAssets.v2250.is(event)) {
-      const { assets, dest, fee, sender } = transferredAssets.v2250.decode(event);
+    if (transferredAssets.v91.is(event)) {
+      const { assets, dest, fee, sender } = transferredAssets.v91.decode(event);
 
       return {
         from: sender,

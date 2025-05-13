@@ -60,7 +60,7 @@ function getDestination(destination: V1MultiLocation | V1MultiLocationV2040 | V3
     return 'Here';
   }
 
-  if (destination.interior.__kind === 'X2') {
+  if (destination.interior.__kind === 'X2' || destination.interior.__kind === 'X3') {
     const target = destination.interior.value.find((e) => e.__kind === 'Parachain') as V1Junction_Parachain;
 
     return target?.value?.toString();
@@ -80,7 +80,7 @@ function getTo(destination: V1MultiLocation | V1MultiLocationV2040) {
     }
   }
 
-  if (destination.interior.__kind === 'X2') {
+  if (destination.interior.__kind === 'X2' || destination.interior.__kind === 'X3') {
     const target = destination.interior.value.find((e) => e.__kind === 'AccountId32' || e.__kind === 'AccountKey20' || e.__kind === 'GeneralKey');
     switch (target?.__kind) {
       case 'AccountId32':
@@ -106,7 +106,7 @@ function getToV3(destination: V3MultiLocation | V3MultiLocationV2240) {
     }
   }
 
-  if (destination.interior.__kind === 'X2') {
+  if (destination.interior.__kind === 'X2' || destination.interior.__kind === 'X3') {
     const target = destination.interior.value.find((e) => e.__kind === 'AccountId32' || e.__kind === 'AccountKey20');
     switch (target?.__kind) {
       case 'AccountId32':
@@ -137,15 +137,11 @@ function getAssetIds(assets: V1MultiAssetV2040[]) {
               : [undefined, undefined];
           case 'X2': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
-            let assetId;
+            let assetId = DEFAULT_ASSET_ID;
 
             switch (asset.id.value.interior.value[1].__kind) {
               case 'GeneralKey':
                 assetId = asset.id.value.interior.value[1].value;
-                break;
-
-              default:
-                assetId = DEFAULT_ASSET_ID;
                 break;
             }
 
@@ -154,15 +150,11 @@ function getAssetIds(assets: V1MultiAssetV2040[]) {
 
           case 'X3': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
-            let assetId;
+            let assetId = DEFAULT_ASSET_ID;
 
             switch (asset.id.value.interior.value[2].__kind) {
               case 'GeneralIndex':
                 assetId = asset.id.value.interior.value[2].value.toString();
-                break;
-
-              default:
-                assetId = DEFAULT_ASSET_ID;
                 break;
             }
             return [assetChainId, assetId];
@@ -190,15 +182,11 @@ function getAssetIdsV3(assets: V3MultiAssetV2240[]) {
               : [undefined, undefined];
           case 'X2': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
-            let assetId;
+            let assetId = DEFAULT_ASSET_ID;
 
             switch (asset.id.value.interior.value[1].__kind) {
               case 'GeneralKey':
                 assetId = asset.id.value.interior.value[1].data;
-                break;
-
-              default:
-                assetId = DEFAULT_ASSET_ID;
                 break;
             }
 
@@ -207,15 +195,11 @@ function getAssetIdsV3(assets: V3MultiAssetV2240[]) {
 
           case 'X3': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
-            let assetId;
+            let assetId = DEFAULT_ASSET_ID;
 
             switch (asset.id.value.interior.value[2].__kind) {
               case 'GeneralIndex':
                 assetId = asset.id.value.interior.value[2].value.toString();
-                break;
-
-              default:
-                assetId = DEFAULT_ASSET_ID;
                 break;
             }
             return [assetChainId, assetId];

@@ -1,17 +1,17 @@
-import { events } from '@/chain/shiden/types';
+import { events } from '@/chain/astar/types';
 import { Event, ITransferredAssetsEventPalletDecoder } from '@/indexer';
 import assert from 'assert';
 import { UnknownVersionError } from '@/utils';
 
-import { V3MultiAsset, V3MultiLocation, V3Junction_Parachain } from '@/chain/shiden/types/v110';
+import { V3MultiAsset, V3MultiLocation, V3Junction_Parachain } from '@/chain/astar/types/v70';
 
 export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
     const transferredMultiAssets = events.xTokens.transferredMultiAssets;
 
-    if (transferredMultiAssets.v110.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v110.decode(event);
+    if (transferredMultiAssets.v70.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v70.decode(event);
       return {
         from: sender,
         to: getToV3(dest),
@@ -20,6 +20,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
         assets: getAssetIdsV3(assets),
       };
     }
+
     throw new UnknownVersionError(transferredMultiAssets);
   }
 }
@@ -31,7 +32,6 @@ function getDestination(destination: V3MultiLocation) {
 
   if (destination.interior.__kind === 'X2' || destination.interior.__kind === 'X3') {
     const target = destination.interior.value.find((e) => e.__kind === 'Parachain') as V3Junction_Parachain;
-
     return target?.value?.toString();
   }
 
