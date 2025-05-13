@@ -1,9 +1,8 @@
-import { Account, Pool, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { Account, HistoryElementType, Pool, Staker } from '@/model';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, NominationPoolsBondAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Call } from '@/indexer/processor';
-import { NominationPoolsBondAction } from '@/indexer/actions/nomination-pools/bonded';
 
 export interface INominationPoolsBondedEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: string; bonded: bigint; joined: boolean }> {}
 
@@ -64,6 +63,13 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
         amount: data.bonded,
         staker: () => staker.getOrFail(),
         pool: () => pool.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.bonded,
+        account: () => account.getOrFail(),
       })
     );
   }

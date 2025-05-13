@@ -1,5 +1,5 @@
-module.exports = class Data1747039356954 {
-    name = 'Data1747039356954'
+module.exports = class Data1747139383599 {
+    name = 'Data1747139383599'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -75,6 +75,12 @@ module.exports = class Data1747039356954 {
         await db.query(`CREATE TABLE "transfer" ("id" character varying NOT NULL, "direction" character varying(4), "transfer_id" character varying, "account_id" character varying, CONSTRAINT "PK_fd9ddbdd49a17afcbe014401295" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_7aa3769048ff14716eb5e0939e" ON "transfer" ("transfer_id") `)
         await db.query(`CREATE INDEX "IDX_bc8d11fdb46573269220c45af5" ON "transfer" ("account_id") `)
+        await db.query(`CREATE TABLE "history_element" ("id" character varying NOT NULL, "name" text NOT NULL, "entity_type" character varying(9) NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric, "account_id" character varying, CONSTRAINT "PK_b10b09ee684b794e1ca6dc2470c" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_557fb3de5b8667d1ce0c5e7903" ON "history_element" ("name") `)
+        await db.query(`CREATE INDEX "IDX_245d5180298c7bb6faa2aa3377" ON "history_element" ("block_number") `)
+        await db.query(`CREATE INDEX "IDX_3c504866f0a2d7387691e3ac14" ON "history_element" ("timestamp") `)
+        await db.query(`CREATE INDEX "IDX_00219ad7b2d4a5c6b3db15c2aa" ON "history_element" ("extrinsic_hash") `)
+        await db.query(`CREATE INDEX "IDX_bd4908fe6c1bfe401b57c27ef6" ON "history_element" ("account_id") `)
         await db.query(`CREATE TABLE "conviction_delegate" ("id" character varying NOT NULL, "extrinsic_hash" text, "class" integer NOT NULL, "conviction" text NOT NULL, "balance" numeric NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_22678907b742407649c70245299" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_2271e2cbc919bb4ef7cca53de2" ON "conviction_delegate" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_506e865e5aa82601868d766f4f" ON "conviction_delegate" ("from_id") `)
@@ -149,6 +155,7 @@ module.exports = class Data1747039356954 {
         await db.query(`ALTER TABLE "native_transfer" ADD CONSTRAINT "FK_08861105fb579f4171e2e1d21d6" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1" FOREIGN KEY ("transfer_id") REFERENCES "native_transfer"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "transfer" ADD CONSTRAINT "FK_bc8d11fdb46573269220c45af52" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "history_element" ADD CONSTRAINT "FK_bd4908fe6c1bfe401b57c27ef62" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_delegate" ADD CONSTRAINT "FK_506e865e5aa82601868d766f4ff" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_delegate" ADD CONSTRAINT "FK_fbf46d1687e23fd4579523a5d1f" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_undelegate" ADD CONSTRAINT "FK_11162c51c9dcef3b16519b6dfae" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -243,6 +250,12 @@ module.exports = class Data1747039356954 {
         await db.query(`DROP TABLE "transfer"`)
         await db.query(`DROP INDEX "public"."IDX_7aa3769048ff14716eb5e0939e"`)
         await db.query(`DROP INDEX "public"."IDX_bc8d11fdb46573269220c45af5"`)
+        await db.query(`DROP TABLE "history_element"`)
+        await db.query(`DROP INDEX "public"."IDX_557fb3de5b8667d1ce0c5e7903"`)
+        await db.query(`DROP INDEX "public"."IDX_245d5180298c7bb6faa2aa3377"`)
+        await db.query(`DROP INDEX "public"."IDX_3c504866f0a2d7387691e3ac14"`)
+        await db.query(`DROP INDEX "public"."IDX_00219ad7b2d4a5c6b3db15c2aa"`)
+        await db.query(`DROP INDEX "public"."IDX_bd4908fe6c1bfe401b57c27ef6"`)
         await db.query(`DROP TABLE "conviction_delegate"`)
         await db.query(`DROP INDEX "public"."IDX_2271e2cbc919bb4ef7cca53de2"`)
         await db.query(`DROP INDEX "public"."IDX_506e865e5aa82601868d766f4f"`)
@@ -317,6 +330,7 @@ module.exports = class Data1747039356954 {
         await db.query(`ALTER TABLE "native_transfer" DROP CONSTRAINT "FK_08861105fb579f4171e2e1d21d6"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_7aa3769048ff14716eb5e0939e1"`)
         await db.query(`ALTER TABLE "transfer" DROP CONSTRAINT "FK_bc8d11fdb46573269220c45af52"`)
+        await db.query(`ALTER TABLE "history_element" DROP CONSTRAINT "FK_bd4908fe6c1bfe401b57c27ef62"`)
         await db.query(`ALTER TABLE "conviction_delegate" DROP CONSTRAINT "FK_506e865e5aa82601868d766f4ff"`)
         await db.query(`ALTER TABLE "conviction_delegate" DROP CONSTRAINT "FK_fbf46d1687e23fd4579523a5d1f"`)
         await db.query(`ALTER TABLE "conviction_undelegate" DROP CONSTRAINT "FK_11162c51c9dcef3b16519b6dfae"`)

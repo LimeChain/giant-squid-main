@@ -124,6 +124,12 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       appendedSchemaParts.add('nominationpools');
     }
+
+    if (!appendedSchemaParts.has('historyelements')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'historyElements.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('historyelements');
+    }
   }
 
   accountSchema.push(`\n}\n`);
