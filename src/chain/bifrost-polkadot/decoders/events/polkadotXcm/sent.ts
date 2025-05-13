@@ -136,7 +136,9 @@ function getDestination(destination: V1MultiLocation | V3MultiLocation | V3Multi
     }
 
     return;
-  } else if (destination.interior.__kind === 'Here') {
+  }
+  // Destination is the relay chain
+  else if (destination.interior.__kind === 'Here') {
     return destination.interior.__kind;
   }
 
@@ -155,7 +157,9 @@ function getDestinationV4(destination: V4Location) {
     }
 
     return;
-  } else if (destination.interior.__kind === 'Here') {
+  }
+  // Destination is the relay chain
+  else if (destination.interior.__kind === 'Here') {
     return destination.interior.__kind;
   }
 

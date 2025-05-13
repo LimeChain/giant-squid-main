@@ -2,21 +2,28 @@ import {sts, Result, Option, Bytes, BitSequence} from './support'
 
 export const Weight = sts.bigint()
 
-export const MultiLocation: sts.Type<MultiLocation> = sts.closedEnum(() => {
+export const MultiLocation: sts.Type<MultiLocation> = sts.struct(() => {
     return  {
-        Here: sts.unit(),
-        X1: JunctionV0,
-        X2: sts.tuple(() => [JunctionV0, JunctionV0]),
-        X3: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0]),
-        X4: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0, JunctionV0]),
-        X5: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]),
-        X6: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]),
-        X7: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]),
-        X8: sts.tuple(() => [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]),
+        parents: sts.number(),
+        interior: JunctionsV1,
     }
 })
 
-export const JunctionV0: sts.Type<JunctionV0> = sts.closedEnum(() => {
+export const JunctionsV1: sts.Type<JunctionsV1> = sts.closedEnum(() => {
+    return  {
+        Here: sts.unit(),
+        X1: JunctionV1,
+        X2: sts.tuple(() => [JunctionV1, JunctionV1]),
+        X3: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1]),
+        X4: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X5: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X6: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X7: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X8: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+    }
+})
+
+export const JunctionV1: sts.Type<JunctionV1> = sts.closedEnum(() => {
     return  {
         AccountId32: sts.enumStruct({
             network: NetworkId,
@@ -35,7 +42,6 @@ export const JunctionV0: sts.Type<JunctionV0> = sts.closedEnum(() => {
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
-        Parent: sts.unit(),
         Plurality: sts.enumStruct({
             id: BodyId,
             part: BodyPart,
@@ -135,6 +141,8 @@ export interface BodyId_Unit {
     __kind: 'Unit'
 }
 
+export const AccountId = sts.bytes()
+
 export const NetworkId: sts.Type<NetworkId> = sts.closedEnum(() => {
     return  {
         Any: sts.unit(),
@@ -163,55 +171,51 @@ export interface NetworkId_Polkadot {
     __kind: 'Polkadot'
 }
 
-export type JunctionV0 = JunctionV0_AccountId32 | JunctionV0_AccountIndex64 | JunctionV0_AccountKey20 | JunctionV0_GeneralIndex | JunctionV0_GeneralKey | JunctionV0_OnlyChild | JunctionV0_PalletInstance | JunctionV0_Parachain | JunctionV0_Parent | JunctionV0_Plurality
+export type JunctionV1 = JunctionV1_AccountId32 | JunctionV1_AccountIndex64 | JunctionV1_AccountKey20 | JunctionV1_GeneralIndex | JunctionV1_GeneralKey | JunctionV1_OnlyChild | JunctionV1_PalletInstance | JunctionV1_Parachain | JunctionV1_Plurality
 
-export interface JunctionV0_AccountId32 {
+export interface JunctionV1_AccountId32 {
     __kind: 'AccountId32'
     network: NetworkId
     id: AccountId
 }
 
-export interface JunctionV0_AccountIndex64 {
+export interface JunctionV1_AccountIndex64 {
     __kind: 'AccountIndex64'
     network: NetworkId
     index: bigint
 }
 
-export interface JunctionV0_AccountKey20 {
+export interface JunctionV1_AccountKey20 {
     __kind: 'AccountKey20'
     network: NetworkId
     key: Bytes
 }
 
-export interface JunctionV0_GeneralIndex {
+export interface JunctionV1_GeneralIndex {
     __kind: 'GeneralIndex'
     value: bigint
 }
 
-export interface JunctionV0_GeneralKey {
+export interface JunctionV1_GeneralKey {
     __kind: 'GeneralKey'
     value: Bytes
 }
 
-export interface JunctionV0_OnlyChild {
+export interface JunctionV1_OnlyChild {
     __kind: 'OnlyChild'
 }
 
-export interface JunctionV0_PalletInstance {
+export interface JunctionV1_PalletInstance {
     __kind: 'PalletInstance'
     value: number
 }
 
-export interface JunctionV0_Parachain {
+export interface JunctionV1_Parachain {
     __kind: 'Parachain'
     value: number
 }
 
-export interface JunctionV0_Parent {
-    __kind: 'Parent'
-}
-
-export interface JunctionV0_Plurality {
+export interface JunctionV1_Plurality {
     __kind: 'Plurality'
     id: BodyId
     part: BodyPart
@@ -219,54 +223,57 @@ export interface JunctionV0_Plurality {
 
 export type AccountId = Bytes
 
-export type MultiLocation = MultiLocation_Here | MultiLocation_X1 | MultiLocation_X2 | MultiLocation_X3 | MultiLocation_X4 | MultiLocation_X5 | MultiLocation_X6 | MultiLocation_X7 | MultiLocation_X8
+export type JunctionsV1 = JunctionsV1_Here | JunctionsV1_X1 | JunctionsV1_X2 | JunctionsV1_X3 | JunctionsV1_X4 | JunctionsV1_X5 | JunctionsV1_X6 | JunctionsV1_X7 | JunctionsV1_X8
 
-export interface MultiLocation_Here {
+export interface JunctionsV1_Here {
     __kind: 'Here'
 }
 
-export interface MultiLocation_X1 {
+export interface JunctionsV1_X1 {
     __kind: 'X1'
-    value: JunctionV0
+    value: JunctionV1
 }
 
-export interface MultiLocation_X2 {
+export interface JunctionsV1_X2 {
     __kind: 'X2'
-    value: [JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X3 {
+export interface JunctionsV1_X3 {
     __kind: 'X3'
-    value: [JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X4 {
+export interface JunctionsV1_X4 {
     __kind: 'X4'
-    value: [JunctionV0, JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X5 {
+export interface JunctionsV1_X5 {
     __kind: 'X5'
-    value: [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X6 {
+export interface JunctionsV1_X6 {
     __kind: 'X6'
-    value: [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X7 {
+export interface JunctionsV1_X7 {
     __kind: 'X7'
-    value: [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
 }
 
-export interface MultiLocation_X8 {
+export interface JunctionsV1_X8 {
     __kind: 'X8'
-    value: [JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0]
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
 }
 
-export const CurrencyId = sts.number()
+export interface MultiLocation {
+    parents: number
+    interior: JunctionsV1
+}
 
 export const Balance = sts.bigint()
 
-export const AccountId = sts.bytes()
+export const CurrencyId = sts.number()

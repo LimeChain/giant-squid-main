@@ -14,7 +14,7 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
       'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
       'XTokens.TransferredMultiAssets': setupPallet({ decoder: new TransferredMultiAssetsEventPalletDecoder() }),
