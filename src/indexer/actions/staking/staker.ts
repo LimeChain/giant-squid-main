@@ -27,6 +27,7 @@ export class EnsureStaker extends Action<StakerData> {
       totalWithdrawn: 0n,
       totalSlashed: 0n,
       totalRewarded: 0n,
+      eraRewards: [],
     });
 
     await ctx.store.insert(staker);

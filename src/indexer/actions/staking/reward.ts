@@ -28,8 +28,6 @@ export class RewardAction extends Action<RewardData> {
       validatorId: this.data.validatorId,
     });
 
-    staker.totalRewarded += this.data.amount;
-
     await ctx.store.insert(reward);
     await ctx.store.upsert(staker);
   }

@@ -19,6 +19,15 @@ type Staker @entity {
   slashes: [StakingSlash!] @derivedFrom(field: "staker")
   bonds: [StakingBond!] @derivedFrom(field: "staker")
   pool: Pool
+  eraRewards: [StakingEraReward!] @derivedFrom(field: "staker")
+}
+
+type StakingEraReward @entity {
+  id: ID!
+  staker: Staker!
+  era: Int!
+  totalRewarded: BigInt!
+  returnPercentage: String!
 }
 
 type StakingReward @entity {

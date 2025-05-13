@@ -115,3 +115,23 @@ export function decodeHexToUTF8(hexString: ss58.Bytes) {
 
   return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
 }
+
+/**
+ * Calculates the era return as a percentage based on the reward and bonded amount.
+ *
+ * @param reward - The reward amount as a bigint.
+ * @param bondedAmount - The bonded amount as a bigint.
+ * @returns The era return as a string formatted with two decimal places followed by a '%' symbol,
+ *          or `null` if the bonded amount is zero.
+ */
+export function calculateEraReturn(reward: bigint, bondedAmount: bigint): string | null {
+  if (bondedAmount === 0n) {
+    return null;
+  }
+
+  const rewardNumber = Number(reward);
+  const bondedNumber = Number(bondedAmount);
+  const eraReturn = (rewardNumber / bondedNumber) * 100;
+
+  return `${eraReturn.toFixed(2)}%`;
+}
