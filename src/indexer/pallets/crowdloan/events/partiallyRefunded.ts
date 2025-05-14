@@ -1,5 +1,5 @@
 // @ts-ignore
-import { CrowdloanContributor, CrowdloanReimbursementType, Parachain } from '@/model';
+import { Account, CrowdloanContributor, CrowdloanReimbursementType, HistoryElementType, Parachain } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
@@ -7,6 +7,8 @@ import { IRemoveKeysLimitConstantGetter } from '../constants';
 import { MarkCrowdloanContributorAsReimbursedAction } from '@/indexer/actions/crowdloan/contributor';
 import { ReimburseCrowdloanAction } from '@/indexer/actions/crowdloan/reimburse';
 import { getActiveCrowdloan } from '../utils';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
+import { getOriginAccountId } from '@/utils';
 
 export interface IPartiallyRefundedEventPalletDecoder extends IEventPalletDecoder<{ paraId: number }> {}
 
@@ -53,7 +55,15 @@ export class PartiallyRefundedEventPalletHandler extends EventPalletHandler<IPar
           const contributorDef = ctx.store.defer(CrowdloanContributor, contributorId);
           const contributor = await contributorDef.getOrFail();
 
+          const origin = getOriginAccountId(event.call?.origin);
+
+          if (!origin) return [];
+
+          const accountId = this.encodeAddress(origin);
+          const account = ctx.store.defer(Account, accountId);
+
           queue.push(
+            new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: accountId, pk: this.decodeAddress(accountId) }),
             new MarkCrowdloanContributorAsReimbursedAction(block.header, event.extrinsic, {
               contributor: () => Promise.resolve(contributor),
             }),
@@ -63,6 +73,13 @@ export class PartiallyRefundedEventPalletHandler extends EventPalletHandler<IPar
               type: CrowdloanReimbursementType.Refund,
               contributor: () => Promise.resolve(contributor),
               crowdloan: () => Promise.resolve(crowdloan),
+            }),
+            new HistoryElementAction(block.header, event.extrinsic, {
+              id: event.id,
+              name: event.name,
+              amount: contributor.totalContributed,
+              type: HistoryElementType.Event,
+              account: () => account.getOrFail(),
             })
           );
         }

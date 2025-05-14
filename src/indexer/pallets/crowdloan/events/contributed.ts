@@ -2,11 +2,12 @@ import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 // @ts-ignore
-import { Account, CrowdloanContributor, Parachain } from '@/model';
-import { EnsureAccount } from '@/indexer/actions';
+import { Account, CrowdloanContributor, HistoryElementType, Parachain } from '@/model';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import { ContributeCrowdloanAction } from '@/indexer/actions/crowdloan/contribute';
 import { EnsureCrowdloanContributorAction } from '@/indexer/actions/crowdloan/contributor';
 import { buildContributorId, getActiveCrowdloan } from '../utils';
+import { getOriginAccountId } from '@/utils';
 
 export interface IContributedEventPalletDecoder extends IEventPalletDecoder<{ paraId: number; account: string; amount: bigint }> {}
 
@@ -23,7 +24,6 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
     const contributed = this.decoder.decode(event);
 
     const accountId = this.encodeAddress(contributed.account);
-
     const accountDef = ctx.store.defer(Account, accountId);
     const parachainDef = ctx.store.defer(Parachain, { id: contributed.paraId.toString(), relations: { crowdloans: true } });
 
@@ -35,6 +35,13 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
         const crowdloan = getActiveCrowdloan(parachain.crowdloans);
 
         if (!crowdloan) return [];
+
+        const origin = getOriginAccountId(event.call?.origin);
+
+        if (!origin) return [];
+
+        const accountId = this.encodeAddress(origin);
+        const account = ctx.store.defer(Account, accountId);
 
         const contributorId = buildContributorId(accountId, crowdloan.id);
         const contributorDef = ctx.store.defer(CrowdloanContributor, contributorId);
@@ -56,6 +63,13 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
             amount: contributed.amount,
             contributor: () => contributorDef.getOrFail(),
             crowdloan: () => Promise.resolve(crowdloan),
+          }),
+          new HistoryElementAction(block.header, event.extrinsic, {
+            id: event.id,
+            name: event.name,
+            amount: contributed.amount,
+            type: HistoryElementType.Event,
+            account: () => account.getOrFail(),
           })
         );
 
