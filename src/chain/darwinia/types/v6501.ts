@@ -444,22 +444,26 @@ export const V3Response: sts.Type<V3Response> = sts.closedEnum(() => {
 export const V3PalletInfo: sts.Type<V3PalletInfo> = sts.struct(() => {
     return  {
         index: sts.number(),
-        name: sts.bytes(),
-        moduleName: sts.bytes(),
+        name: BoundedVec,
+        moduleName: BoundedVec,
         major: sts.number(),
         minor: sts.number(),
         patch: sts.number(),
     }
 })
 
+export const BoundedVec = sts.bytes()
+
 export interface V3PalletInfo {
     index: number
-    name: Bytes
-    moduleName: Bytes
+    name: BoundedVec
+    moduleName: BoundedVec
     major: number
     minor: number
     patch: number
 }
+
+export type BoundedVec = Bytes
 
 export type V3Response = V3Response_Assets | V3Response_DispatchResult | V3Response_ExecutionResult | V3Response_Null | V3Response_PalletsInfo | V3Response_Version
 
@@ -1289,5 +1293,3 @@ export const V3MultiLocation: sts.Type<V3MultiLocation> = sts.struct(() => {
         interior: V3Junctions,
     }
 })
-
-export const AccountId20 = sts.bytes()

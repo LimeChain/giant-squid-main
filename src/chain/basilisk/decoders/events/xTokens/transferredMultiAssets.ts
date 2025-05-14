@@ -71,7 +71,6 @@ function getDestination(destination: V1MultiLocation | V3MultiLocation) {
 function getToV3(destination: V1MultiLocation | V3MultiLocation, call: any) {
   // return the target from the call args
   if (destination.interior.__kind === 'Here') {
-    // console.dir({ here: '', hash: call.extrinsic?.hash, dest: call?.args?.dest }, { depth: null });
     const call_dest = call?.args?.dest?.value?.interior?.__kind;
     switch (call_dest) {
       case 'X1':
@@ -98,7 +97,6 @@ function getToV3(destination: V1MultiLocation | V3MultiLocation, call: any) {
         return target.key;
 
       default:
-        // console.dir({ x1: '', hash: call.extrinsic?.hash, dest: call?.args?.dest }, { depth: null });
         const call_dest = call?.args?.dest?.value?.interior?.__kind;
         switch (call_dest) {
           case 'X1':
