@@ -11,8 +11,8 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
-      // 'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
-      // 'ParachainStaking.Rewarded': setupPallet({ decoder: new ParachainStakingRewardEventPalletDecoder() }),
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'ParachainStaking.Rewarded': setupPallet({ decoder: new ParachainStakingRewardEventPalletDecoder() }),
       'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
     },
   },
