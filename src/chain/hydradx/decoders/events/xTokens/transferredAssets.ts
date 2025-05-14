@@ -1,16 +1,16 @@
-import { events } from '@/chain/astar/types';
+import { events } from '@/chain/hydradx/types';
 import { Event, ITransferredAssetsEventPalletDecoder } from '@/indexer';
 import assert from 'assert';
 import { UnknownVersionError } from '@/utils';
-import { V4Asset, V4Location, V4Junction_Parachain } from '@/chain/astar/types/v91';
+import { V4Asset, V4Junction_Parachain, V4Location } from '@/chain/hydradx/types/v244';
 
 export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
     const transferredAssets = events.xTokens.transferredAssets;
 
-    if (transferredAssets.v91.is(event)) {
-      const { assets, dest, fee, sender } = transferredAssets.v91.decode(event);
+    if (transferredAssets.v244.is(event)) {
+      const { assets, dest, fee, sender } = transferredAssets.v244.decode(event);
 
       return {
         from: sender,
@@ -98,6 +98,7 @@ function getAssetIds(assets: V4Asset[]) {
       }
 
       default:
+        console.dir({ asset }, { depth: null });
         throw new UnknownVersionError(asset.id.interior.__kind);
     }
   });

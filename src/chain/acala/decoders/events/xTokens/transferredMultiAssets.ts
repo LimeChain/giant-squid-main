@@ -148,7 +148,9 @@ function getAssetIds(assets: V1MultiAssetV2040[]) {
             return [assetChainId, assetId];
           }
 
-          case 'X3': {
+          case 'X3':
+          case 'X4':
+          case 'X5': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
 
@@ -193,7 +195,9 @@ function getAssetIdsV3(assets: V3MultiAssetV2240[]) {
             return [assetChainId, assetId];
           }
 
-          case 'X3': {
+          case 'X3':
+          case 'X4':
+          case 'X5': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
 

@@ -1,20 +1,18 @@
-import { events } from '@/chain/bifrost-polkadot/types';
+import { events } from '@/chain/hydradx/types';
 import { Event, ITransferredAssetsEventPalletDecoder } from '@/indexer';
 import assert from 'assert';
 import { UnknownVersionError } from '@/utils';
 
-import { V1Junction_Parachain, V1MultiAsset, V1MultiLocation } from '@/chain/bifrost-polkadot/types/v952';
-import { V1MultiAsset as V1MultiAssetV2040, V1MultiLocation as V1MultiLocationV2040 } from '@/chain/bifrost-polkadot/types/v970';
-import { V3MultiAsset, V3MultiLocation } from '@/chain/bifrost-polkadot/types/v972';
-import { V3MultiAsset as V3MultiAssetV2240, V3MultiLocation as V3MultiLocationV2240 } from '@/chain/bifrost-polkadot/types/v10000';
+import { V1Junction_Parachain, V1MultiAsset, V1MultiLocation } from '@/chain/hydradx/types/v108';
+import { V3MultiAsset as V3MultiAssetV2240, V3MultiLocation as V3MultiLocationV2240 } from '@/chain/hydradx/types/v160';
 
 export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
     const transferredMultiAssets = events.xTokens.transferredMultiAssets;
 
-    if (transferredMultiAssets.v952.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v952.decode(event);
+    if (transferredMultiAssets.v108.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v108.decode(event);
       return {
         from: sender,
         to: getTo(dest),
@@ -22,8 +20,8 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
         amount: getAssetAmounts(assets),
         assets: getAssetIds(assets),
       };
-    } else if (transferredMultiAssets.v970.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v970.decode(event);
+    } else if (transferredMultiAssets.v115.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v115.decode(event);
       return {
         from: sender,
         to: getTo(dest),
@@ -31,17 +29,8 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
         amount: getAssetAmounts(assets),
         assets: getAssetIds(assets),
       };
-    } else if (transferredMultiAssets.v972.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v972.decode(event);
-      return {
-        from: sender,
-        to: getToV3(dest),
-        toChain: getDestination(dest),
-        amount: getAssetAmounts(assets),
-        assets: getAssetIdsV3(assets),
-      };
-    } else if (transferredMultiAssets.v10000.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v10000.decode(event);
+    } else if (transferredMultiAssets.v160.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v160.decode(event);
       return {
         from: sender,
         to: getToV3(dest),
@@ -55,7 +44,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
   }
 }
 
-function getDestination(destination: V1MultiLocation | V1MultiLocationV2040 | V3MultiLocation | V3MultiLocationV2240) {
+function getDestination(destination: V1MultiLocation | V3MultiLocationV2240) {
   if (destination.interior.__kind === 'X1') {
     return 'Here';
   }
@@ -69,7 +58,7 @@ function getDestination(destination: V1MultiLocation | V1MultiLocationV2040 | V3
   return;
 }
 
-function getTo(destination: V1MultiLocation | V1MultiLocationV2040) {
+function getTo(destination: V1MultiLocation) {
   if (destination.interior.__kind === 'X1') {
     const target = destination.interior.value;
     switch (target?.__kind) {
@@ -95,7 +84,7 @@ function getTo(destination: V1MultiLocation | V1MultiLocationV2040) {
   return;
 }
 
-function getToV3(destination: V3MultiLocation | V3MultiLocationV2240) {
+function getToV3(destination: V3MultiLocationV2240) {
   if (destination.interior.__kind === 'X1') {
     const target = destination.interior.value;
     switch (target?.__kind) {
@@ -119,12 +108,12 @@ function getToV3(destination: V3MultiLocation | V3MultiLocationV2240) {
   return;
 }
 
-function getAssetAmounts(assets: (V1MultiAsset | V3MultiAsset | V3MultiAssetV2240 | V1MultiAssetV2040)[]) {
+function getAssetAmounts(assets: (V1MultiAsset | V3MultiAssetV2240)[]) {
   return assets.map((asset) => (asset.fun.__kind === 'Fungible' ? asset.fun.value.toString() : undefined));
 }
 
 const DEFAULT_ASSET_ID = '0x0000';
-function getAssetIds(assets: V1MultiAssetV2040[]) {
+function getAssetIds(assets: V1MultiAsset[]) {
   return assets.map((asset) => {
     switch (asset.id.__kind) {
       case 'Concrete':
@@ -148,9 +137,7 @@ function getAssetIds(assets: V1MultiAssetV2040[]) {
             return [assetChainId, assetId];
           }
 
-          case 'X3':
-          case 'X4':
-          case 'X5': {
+          case 'X3': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
 
