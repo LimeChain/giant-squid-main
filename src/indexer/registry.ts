@@ -87,6 +87,8 @@ export const registry = {
     'PolkadotXcm.Sent': SentEventPalletHandler,
     'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
     'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
