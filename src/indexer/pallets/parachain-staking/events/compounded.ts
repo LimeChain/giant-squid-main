@@ -1,9 +1,10 @@
-import { EnsureAccount, EnsureStaker, ParachainCompoundAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, ParachainCompoundAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { buildParachainStakingExtrinsicHash } from '@/indexer/pallets/parachain-staking/utils';
 import { IEventPalletDecoder } from '@/indexer/types';
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, HistoryElementType, Staker } from '@/model';
+import { getOriginAccountId } from '@/utils';
 
 export interface IParachainCompoundEventDecoder extends IEventPalletDecoder<{ stash: string; delegator: string; amount: bigint }> {}
 
@@ -18,17 +19,21 @@ export class ParachainCompoundEventPalletHandler extends EventPalletHandler<ICom
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
+    const origin = getOriginAccountId(event.call?.origin);
 
-    if (!data) return;
+    if (!origin || !data) return;
 
+    const accountId = this.encodeAddress(origin);
     const stakerId = this.encodeAddress(data.stash);
     const delegatorId = this.encodeAddress(data.delegator);
 
+    const originAccount = ctx.store.defer(Account, accountId);
     const accountDef = ctx.store.defer(Account, stakerId);
     const delegatorDef = ctx.store.defer(Account, delegatorId);
     const stakerDef = ctx.store.defer(Staker, { id: stakerId });
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => accountDef.get(),
         id: stakerId,
@@ -51,6 +56,13 @@ export class ParachainCompoundEventPalletHandler extends EventPalletHandler<ICom
         delegator: () => delegatorDef.getOrFail(),
         amount: data.amount,
         extrinsicHash: buildParachainStakingExtrinsicHash(block.header.height, event.index, event.extrinsicIndex),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.amount,
+        account: () => originAccount.getOrFail(),
       })
     );
   }

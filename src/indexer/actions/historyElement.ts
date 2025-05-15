@@ -14,7 +14,7 @@ export class HistoryElementAction extends Action<HistoryElementData> {
     const account = await this.data.account();
 
     const bond = new HistoryElement({
-      id: this.data.id,
+      id: this.composeId(this.data.id, this.block.height),
       name: this.data.name,
       entityType: this.data.type,
       blockNumber: this.block.height,
@@ -24,6 +24,6 @@ export class HistoryElementAction extends Action<HistoryElementData> {
       amount: this.data.amount,
     });
 
-    await ctx.store.insert(bond);
+    await ctx.store.upsert(bond);
   }
 }
