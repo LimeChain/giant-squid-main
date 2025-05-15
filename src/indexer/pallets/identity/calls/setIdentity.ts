@@ -1,6 +1,6 @@
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, Identity, Judgement } from '@/model';
+import { Account, HistoryElementType, Identity, Judgement } from '@/model';
 import { getOriginAccountId, unwrapData } from '@/utils';
 import { ICallHandlerParams, IHandlerOptions, CallPalletHandler } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IdentityInfoData, WrappedData } from '@/indexer/types';
@@ -57,6 +57,12 @@ export class SetIdentityCallPalletHandler extends CallPalletHandler<ISetIdentity
           name: unwrapData(a[0])!,
           value: unwrapData(a[1]),
         })),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => account.getOrFail(),
       })
     );
   }

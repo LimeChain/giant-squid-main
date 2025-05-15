@@ -1,10 +1,11 @@
 // @ts-ignore
-import { Account, BondingType, Staker, StakingUnlockChunk } from '@/model';
-import { EnsureAccount, EnsureStaker, SlashAction, SlashBondAction } from '@/indexer/actions';
+import { Account, BondingType, HistoryElementType, Staker, StakingUnlockChunk } from '@/model';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, SlashAction, SlashBondAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { DecreaseUnlockChunkAction } from '@/indexer/actions/staking/unlock-chunk';
+import { getOriginAccountId } from '@/utils';
 
 export interface ISlashEventPalletDecoder extends IEventPalletDecoder<{ staker: string; amount: bigint }> {}
 
@@ -42,13 +43,19 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
+    const origin = getOriginAccountId(event.call?.origin);
 
+    if (!origin) return;
+
+    const accountId = this.encodeAddress(origin);
     const stakerId = this.encodeAddress(data.staker);
 
+    const originAccount = ctx.store.defer(Account, accountId);
     const accountDef = ctx.store.defer(Account, stakerId);
     const stakerDef = ctx.store.defer(Staker, stakerId);
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountDef.get(), id: stakerId, pk: data.staker }),
       new EnsureStaker(block.header, event.extrinsic, { id: stakerId, account: () => accountDef.getOrFail(), staker: () => stakerDef.get() }),
       new SlashAction(block.header, event.extrinsic, {
@@ -103,6 +110,13 @@ export class SlashEventPalletHandler extends EventPalletHandler<ISlashEventPalle
         }
 
         return queue;
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.amount,
+        account: () => originAccount.getOrFail(),
       })
     );
   }

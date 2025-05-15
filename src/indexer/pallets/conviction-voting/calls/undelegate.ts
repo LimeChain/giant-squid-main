@@ -1,8 +1,8 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureAccount, UndelegateConvictionVotingAction } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction, UndelegateConvictionVotingAction } from '@/indexer/actions';
 import { getOriginAccountId } from '@/utils';
-import { Account } from '@/model';
+import { Account, HistoryElementType } from '@/model';
 
 export interface IUndelegateCallPalletDecoder
   extends ICallPalletDecoder<{
@@ -47,6 +47,12 @@ export class UndelegateCallPalletHandler extends CallPalletHandler<IUndelegateCa
         extrinsicHash: call.extrinsic?.hash,
         account: () => account.getOrFail(),
         class: data.class,
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => account.getOrFail(),
       })
     );
   }

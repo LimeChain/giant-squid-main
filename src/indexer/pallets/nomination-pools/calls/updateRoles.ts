@@ -2,8 +2,8 @@ import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { UpdatePoolAction } from '@/indexer/actions/nomination-pools/pool';
 import { getOriginAccountId } from '@/utils';
-import { Account, Pool, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { Account, HistoryElementType, Pool, Staker } from '@/model';
+import { EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 
 export interface INominationPoolsUpdateRolesCallPalletDecoder
   extends ICallPalletDecoder<{
@@ -26,10 +26,12 @@ export class NominationPoolsUpdateRolesCallPalletHandler extends CallPalletHandl
     if (call.success === false) return;
 
     const data = this.decoder.decode(call);
+    const origin = getOriginAccountId(call.origin);
 
-    if (!data.root || !data.nominator || !data.toggler) {
-      return;
-    }
+    if (!data.root || !data.nominator || !data.toggler || !origin) return;
+
+    const originId = this.encodeAddress(origin);
+    const originAccount = ctx.store.defer(Account, originId);
 
     const pool = ctx.store.defer(Pool, data.poolId.toString());
 
@@ -46,6 +48,7 @@ export class NominationPoolsUpdateRolesCallPalletHandler extends CallPalletHandl
     const togglerStaker = ctx.store.defer(Staker, togglerAccountId);
 
     queue.push(
+      new EnsureAccount(block.header, call.extrinsic, { account: () => originAccount.get(), id: originId, pk: this.decodeAddress(originId) }),
       new EnsureAccount(block.header, call.extrinsic, { account: () => rootAccount.get(), id: rootAccountId, pk: this.decodeAddress(rootAccountId) }),
       new EnsureStaker(block.header, call.extrinsic, { id: rootAccountId, account: () => rootAccount.getOrFail(), staker: () => rootStaker.get() }),
       new EnsureAccount(block.header, call.extrinsic, {
@@ -65,6 +68,12 @@ export class NominationPoolsUpdateRolesCallPalletHandler extends CallPalletHandl
         root: () => rootStaker.getOrFail(),
         nominator: () => nominatorStaker.getOrFail(),
         toggler: () => togglerStaker.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => originAccount.getOrFail(),
       })
     );
   }

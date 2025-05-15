@@ -1,10 +1,11 @@
 import { IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams } from '@/indexer/pallets/handler';
-import { EnsureAccount, AddPayeeAction } from '@/indexer/actions';
+import { EnsureAccount, AddPayeeAction, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, Staker, RewardDestination } from '@/model';
+import { Account, Staker, RewardDestination, HistoryElementType } from '@/model';
 import { DeferredEntity } from '@belopash/typeorm-store/lib/store';
 import { ISetPayeeCallPalletData } from '@/indexer/pallets/staking/calls/setPayee';
+import { getOriginAccountId } from '@/utils';
 
 export abstract class BasePayeeCallPallet<T extends IBasePalletSetup> extends CallPalletHandler<T> {
   protected addPayee({
@@ -19,6 +20,13 @@ export abstract class BasePayeeCallPallet<T extends IBasePalletSetup> extends Ca
     let payeeId: string | undefined;
     let payee: DeferredEntity<Account> | undefined;
     let type = RewardDestination.None;
+
+    const origin = getOriginAccountId(call.origin);
+
+    if (!origin) return;
+
+    const stashId = this.encodeAddress(origin);
+    const account = ctx.store.defer(Account, stashId);
 
     switch (data.payee.type) {
       case 'Staked':
@@ -50,6 +58,7 @@ export abstract class BasePayeeCallPallet<T extends IBasePalletSetup> extends Ca
     }
 
     queue.push(
+      new EnsureAccount(block.header, call.extrinsic, { account: () => account.get(), id: stashId, pk: this.decodeAddress(stashId) }),
       new AddPayeeAction(block.header, call.extrinsic, {
         id: call.id,
         type: type,

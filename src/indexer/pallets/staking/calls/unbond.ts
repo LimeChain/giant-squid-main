@@ -1,9 +1,9 @@
 import { toHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, HistoryElementType, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { EnsureAccount, EnsureStaker, UnBondAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, UnBondAction } from '@/indexer/actions';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { IBondingDurationConstantGetter, ICurrentEraStorageLoader, ILedgerStorageLoader } from '@/indexer';
@@ -87,6 +87,12 @@ export class UnbondCallPalletHandler extends CallPalletHandler<IUnbondCallPallet
                 amount: data.amount,
                 lockedUntilEra: currentEra + bondingDuration,
                 staker: () => stakerDeferred.getOrFail(),
+              }),
+              new HistoryElementAction(block.header, call.extrinsic, {
+                id: call.id,
+                name: call.name,
+                type: HistoryElementType.Extrinsic,
+                account: () => controllerDeferred.getOrFail(),
               })
             );
             return queue;

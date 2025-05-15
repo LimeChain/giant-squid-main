@@ -1,9 +1,10 @@
-import { EnsureAccount, EnsureStaker, ParachainCandidateLeftAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, ParachainCandidateLeftAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IEventPalletDecoder } from '@/indexer/types';
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, HistoryElementType, Staker } from '@/model';
 import { buildParachainStakingExtrinsicHash } from '../utils';
+import { getOriginAccountId } from '@/utils';
 
 export interface IParachainCandidateLeftEventDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint }> {}
 
@@ -18,15 +19,19 @@ export class ParachainCandidateLeftEventPalletHandler extends EventPalletHandler
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
+    const origin = getOriginAccountId(event.call?.origin);
 
-    if (!data) return;
+    if (!origin || !data) return;
 
+    const accountId = this.encodeAddress(origin);
     const stakerId = this.encodeAddress(data.stash);
 
+    const originAccount = ctx.store.defer(Account, accountId);
     const accountDef = ctx.store.defer(Account, stakerId);
     const stakerDef = ctx.store.defer(Staker, stakerId);
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => accountDef.get(),
         id: stakerId,
@@ -43,6 +48,13 @@ export class ParachainCandidateLeftEventPalletHandler extends EventPalletHandler
         staker: () => stakerDef.getOrFail(),
         amount: data.amount,
         extrinsicHash: buildParachainStakingExtrinsicHash(block.header.height, event.index, event.extrinsicIndex),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.amount,
+        account: () => originAccount.getOrFail(),
       })
     );
   }

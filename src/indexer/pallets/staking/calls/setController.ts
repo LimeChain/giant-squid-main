@@ -1,9 +1,9 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, HistoryElementType, Staker } from '@/model';
 import { AddControllerAction } from '@/indexer/actions/staking/controller';
 
 export interface ISetControllerCallPalletDecoder extends ICallPalletDecoder<string | undefined> {}
@@ -40,6 +40,12 @@ export class SetControllerCallPalletHandler extends CallPalletHandler<ISetContro
         id: call.id,
         controller: () => controller.getOrFail(),
         staker: () => staker.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => account.getOrFail(),
       })
     );
   }

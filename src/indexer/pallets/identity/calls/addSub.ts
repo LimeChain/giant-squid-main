@@ -1,6 +1,6 @@
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Identity, Account, IdentitySub } from '@/model';
+import { Identity, Account, IdentitySub, HistoryElementType } from '@/model';
 import { getOriginAccountId, unwrapData } from '@/utils';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
@@ -29,10 +29,16 @@ export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSet
     const subId = this.encodeAddress(subAddedCallData.sub);
 
     const identity = ctx.store.defer(Identity, identityId);
+    const identityAccount = ctx.store.defer(Account, identityId);
     const subIdentityAccount = ctx.store.defer(Account, subId);
     const subIdentity = ctx.store.defer(IdentitySub, subId);
 
     queue.push(
+      new EnsureAccount(block.header, call.extrinsic, {
+        account: () => identityAccount.get(),
+        id: identityId,
+        pk: identityId,
+      }),
       new EnsureAccount(block.header, call.extrinsic, {
         account: () => subIdentityAccount.get(),
         id: subId,
@@ -50,6 +56,12 @@ export class AddSubCallPalletHandler extends CallPalletHandler<ISubCallPalletSet
       new RenameSubAction(block.header, call.extrinsic, {
         sub: () => subIdentity.getOrFail(),
         name: unwrapData(subAddedCallData.data),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => identityAccount.getOrFail(),
       })
     );
   }

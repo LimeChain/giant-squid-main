@@ -1,7 +1,7 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureAccount, VoteConvictionVotingAction } from '@/indexer/actions';
-import { Account } from '@/model';
+import { EnsureAccount, HistoryElementAction, VoteConvictionVotingAction } from '@/indexer/actions';
+import { Account, HistoryElementType } from '@/model';
 import { getOriginAccountId } from '@/utils';
 
 export interface IVoteCallPalletDecoder
@@ -56,6 +56,12 @@ export class VoteCallPalletHandler extends CallPalletHandler<IVoteCallPalletSetu
         who: () => whoAccount.getOrFail(),
         pollIndex: data.pollIndex,
         vote: data.vote,
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => whoAccount.getOrFail(),
       })
     );
   }

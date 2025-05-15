@@ -4,6 +4,7 @@ import { EnsureAccount } from '@/indexer/actions';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { ChangeParachainStatusAction, CreateParachainAction } from '@/indexer/actions/crowdloan/parachain';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { getOriginAccountId } from '@/utils';
 
 export interface IReservedParachainEventPalletDecoder extends IEventPalletDecoder<{ paraId: number; owner: string }> {}
 
@@ -19,12 +20,20 @@ export class ReservedParachainEventPalletHandler extends EventPalletHandler<IRes
   handle({ ctx, block, queue, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
 
-    const accountId = this.encodeAddress(data.owner);
+    const origin = getOriginAccountId(event.call?.origin);
 
+    if (!origin) return;
+
+    const originId = this.encodeAddress(origin);
+    const originAccount = ctx.store.defer(Account, originId);
+
+    const accountId = this.encodeAddress(data.owner);
     const account = ctx.store.defer(Account, accountId);
     const parachain = ctx.store.defer(Parachain, data.paraId.toString());
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: originId, pk: this.decodeAddress(originId) }),
+
       new EnsureAccount(block.header, event.extrinsic, {
         id: accountId,
         pk: data.owner,

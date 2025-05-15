@@ -34,6 +34,22 @@ type NativeTransfer @entity {
   success: Boolean!
 }
 
+enum HistoryElementType {
+  Event
+  Extrinsic
+}
+
+type HistoryElement @entity {
+  id: ID!
+  name: String! @index
+  entityType: HistoryElementType!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account
+  amount: BigInt
+}
+
 type ConvictionDelegate @entity {
   id: ID!
   extrinsicHash: String @index

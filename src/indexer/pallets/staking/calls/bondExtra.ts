@@ -1,9 +1,9 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
-import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { BondAction, EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, BondingType, Staker } from '@/model';
+import { Account, BondingType, HistoryElementType, Staker } from '@/model';
 
 export interface IBondExtraCallPalletDecoder extends ICallPalletDecoder<{ amount: bigint }> {}
 
@@ -38,6 +38,13 @@ export class BondExtraCallPalletHandler extends CallPalletHandler<IBondExtraCall
         amount: data.amount,
         account: () => stash.getOrFail(),
         staker: () => staker.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        amount: data.amount,
+        type: HistoryElementType.Extrinsic,
+        account: () => stash.getOrFail(),
       })
     );
   }

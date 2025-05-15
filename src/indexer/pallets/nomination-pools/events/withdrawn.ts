@@ -1,9 +1,7 @@
-import { Account, Pool, Staker } from '@/model';
+import { Account, HistoryElementType, Pool, Staker } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
-import { WithdrawnPoolAction } from '@/indexer/actions/nomination-pools/withdrawn';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, WithdrawnPoolAction } from '@/indexer/actions';
 
 export interface INominationPoolsWithdrawnEventPalletDecoder
   extends IEventPalletDecoder<{ member: string; poolId: string; balance: bigint; points?: bigint }> {}
@@ -36,6 +34,13 @@ export class NominationPoolsWithdrawnEventPalletHandler extends EventPalletHandl
         points: data.points,
         staker: () => staker.getOrFail(),
         pool: () => pool.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.balance,
+        account: () => account.getOrFail(),
       })
     );
   }

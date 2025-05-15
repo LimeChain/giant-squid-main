@@ -1,5 +1,5 @@
-import { Account } from '@/model';
-import { EnsureAccount, TransferAction } from '@/indexer/actions';
+import { Account, HistoryElementType } from '@/model';
+import { EnsureAccount, HistoryElementAction, TransferAction } from '@/indexer/actions';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 
@@ -39,6 +39,13 @@ export class TransferEventPalletHandler extends EventPalletHandler<ITransferEven
         to: () => toAccount.getOrFail(),
         amount: amount,
         success: true,
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount,
+        account: () => fromAccount.getOrFail(),
       })
     );
   }

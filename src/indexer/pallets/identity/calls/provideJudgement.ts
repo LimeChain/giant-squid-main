@@ -1,7 +1,7 @@
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import { Action, LazyAction } from '@/indexer/actions/base';
 // @ts-ignore
-import { Judgement, Account, Identity } from '@/model';
+import { Judgement, Account, Identity, HistoryElementType } from '@/model';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, JudgementData } from '@/indexer/types';
 import { EnsureIdentityAction, GiveJudgementAction } from '@/indexer/actions/identity';
@@ -53,12 +53,23 @@ export class ProvideJudgementCallPalletHandler extends CallPalletHandler<IProvid
             new EnsureAccount(block.header, call.extrinsic, {
               account: () => account.get(),
               id: identityId,
+              pk: identityId,
+            }),
+            new EnsureAccount(block.header, call.extrinsic, {
+              account: () => account.get(),
+              id: identityId,
               pk: judgementGivenData.target,
             }),
             new EnsureIdentityAction(block.header, call.extrinsic, {
               identity: () => identity.get(),
               account: () => account.getOrFail(),
               id: identityId,
+            }),
+            new HistoryElementAction(block.header, call.extrinsic, {
+              id: call.id,
+              name: call.name,
+              type: HistoryElementType.Extrinsic,
+              account: () => account.getOrFail(),
             })
           );
         }

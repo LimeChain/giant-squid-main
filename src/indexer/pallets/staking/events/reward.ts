@@ -1,10 +1,11 @@
 // @ts-ignore
-import { Account, BondingType, RewardDestination, Staker } from '@/model';
-import { BondAction, EnsureAccount, EnsureStaker, RewardAction } from '@/indexer/actions';
+import { Account, BondingType, HistoryElementType, RewardDestination, Staker } from '@/model';
+import { BondAction, EnsureAccount, EnsureStaker, HistoryElementAction, RewardAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, IEventPalletDecoder } from '@/indexer/types';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { EraRewardAction } from '@/indexer/actions/staking/era-rewards';
+import { getOriginAccountId } from '@/utils';
 
 export interface IPayoutStakersCallPalletDecoder extends ICallPalletDecoder<{ validatorStash: string; era: number }> {}
 export interface IRewardEventPalletDecoder extends IEventPalletDecoder<{ stash: string; amount: bigint } | undefined> {}
@@ -40,10 +41,18 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
       era = callData.era;
     }
 
+    const origin = getOriginAccountId(event.call?.origin);
+
+    if (!origin) return;
+
+    const accountId = this.encodeAddress(origin);
+    const originAccount = ctx.store.defer(Account, accountId);
+
     const accountDef = ctx.store.defer(Account, stakerId);
     const stakerDef = ctx.store.defer(Staker, { id: stakerId, relations: { payee: true } });
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => accountDef.get(),
         id: stakerId,
@@ -90,6 +99,13 @@ export class RewardEventPalletHandler extends EventPalletHandler<IRewardEventPal
               amount: data.amount,
               account: () => Promise.resolve(payee?.account || account),
               staker: () => Promise.resolve(staker),
+            }),
+            new HistoryElementAction(block.header, event.extrinsic, {
+              id: event.id,
+              name: event.name,
+              type: HistoryElementType.Event,
+              amount: data.amount,
+              account: () => originAccount.getOrFail(),
             })
           );
         }

@@ -1,7 +1,7 @@
-import { Account, Pool, PoolStatus, Staker } from '@/model';
+import { Account, HistoryElementType, Pool, Staker } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureAccount, EnsureStaker, NominationPoolsBondAction, NominationPoolsPaidOutAction } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, NominationPoolsPaidOutAction } from '@/indexer/actions';
 
 export interface INominationPoolsPaidOutEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: string; payout: bigint }> {}
 
@@ -29,6 +29,13 @@ export class NominationPoolsPaidOutEventPalletHandler extends EventPalletHandler
         payout: data.payout,
         staker: () => staker.getOrFail(),
         pool: () => pool.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.payout,
+        account: () => account.getOrFail(),
       })
     );
   }

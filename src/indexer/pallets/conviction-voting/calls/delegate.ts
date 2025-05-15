@@ -1,8 +1,8 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { DelegateConvictionVotingAction, EnsureAccount } from '@/indexer/actions';
+import { DelegateConvictionVotingAction, EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import { getOriginAccountId } from '@/utils';
-import { Account } from '@/model';
+import { Account, HistoryElementType } from '@/model';
 import { DeferredEntity } from '@belopash/typeorm-store/lib/store';
 
 export interface IDelegateCallPalletDecoder
@@ -76,6 +76,13 @@ export class DelegateCallPalletHandler extends CallPalletHandler<IDelegateCallPa
         class: data.class,
         conviction: data.conviction,
         balance: data.balance,
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        amount: data.balance,
+        account: () => fromAccount.getOrFail(),
       })
     );
   }
