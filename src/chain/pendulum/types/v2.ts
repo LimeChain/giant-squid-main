@@ -223,7 +223,15 @@ export interface V0BodyPart_Voice {
     __kind: 'Voice'
 }
 
-export type V0BodyId = V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Unit
+export type V0BodyId = V0BodyId_Administration | V0BodyId_Defense | V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Treasury | V0BodyId_Unit
+
+export interface V0BodyId_Administration {
+    __kind: 'Administration'
+}
+
+export interface V0BodyId_Defense {
+    __kind: 'Defense'
+}
 
 export interface V0BodyId_Executive {
     __kind: 'Executive'
@@ -249,6 +257,10 @@ export interface V0BodyId_Named {
 
 export interface V0BodyId_Technical {
     __kind: 'Technical'
+}
+
+export interface V0BodyId_Treasury {
+    __kind: 'Treasury'
 }
 
 export interface V0BodyId_Unit {
@@ -280,6 +292,8 @@ export interface V1MultiAsset {
     id: V1AssetId
     fun: V1Fungibility
 }
+
+export const AccountId32 = sts.bytes()
 
 export const V2Instruction: sts.Type<V2Instruction> = sts.closedEnum(() => {
     return  {
@@ -646,12 +660,15 @@ export const V0BodyPart: sts.Type<V0BodyPart> = sts.closedEnum(() => {
 
 export const V0BodyId: sts.Type<V0BodyId> = sts.closedEnum(() => {
     return  {
+        Administration: sts.unit(),
+        Defense: sts.unit(),
         Executive: sts.unit(),
         Index: sts.number(),
         Judicial: sts.unit(),
         Legislative: sts.unit(),
         Named: WeakBoundedVec,
         Technical: sts.unit(),
+        Treasury: sts.unit(),
         Unit: sts.unit(),
     }
 })
@@ -916,5 +933,3 @@ export const V1MultiLocation: sts.Type<V1MultiLocation> = sts.struct(() => {
         interior: V1Junctions,
     }
 })
-
-export const AccountId32 = sts.bytes()

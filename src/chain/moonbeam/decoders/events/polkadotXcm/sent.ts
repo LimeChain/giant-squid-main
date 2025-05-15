@@ -189,6 +189,8 @@ function getAmount(message: V2Instruction | V2InstructionV1300 | V2InstructionV2
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
       return message.value[0].fun.__kind === 'Fungible' ? message.value[0].fun.value : undefined;
+    case 'TransferReserveAsset':
+      return message.assets[0].fun.__kind === 'Fungible' ? message.assets[0].fun.value : undefined;
     default:
       return;
   }
