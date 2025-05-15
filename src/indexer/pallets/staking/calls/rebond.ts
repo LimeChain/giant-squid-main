@@ -1,9 +1,9 @@
 import { toHex } from '@subsquid/substrate-processor';
 import { getOriginAccountId } from '@/utils';
 // @ts-ignore
-import { Account, BondingType, Staker } from '@/model';
+import { Account, BondingType, HistoryElementType, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { BondAction, EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { ILedgerStorageLoader } from '@/indexer';
@@ -49,7 +49,6 @@ export class RebondCallPalletHandler extends CallPalletHandler<IRebondCallPallet
 
         const stash = ctx.store.defer(Account, stashId);
         const staker = ctx.store.defer(Staker, { id: stashId });
-
         queue.push(
           new EnsureAccount(block.header, call.extrinsic, { account: () => controller.get(), id: controllerId, pk: this.decodeAddress(controllerId) }),
           new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),
@@ -60,6 +59,13 @@ export class RebondCallPalletHandler extends CallPalletHandler<IRebondCallPallet
             amount: data.amount,
             account: () => controller.getOrFail(),
             staker: () => staker.getOrFail(),
+          }),
+          new HistoryElementAction(block.header, call.extrinsic, {
+            id: call.id,
+            name: call.name,
+            amount: data.amount,
+            type: HistoryElementType.Extrinsic,
+            account: () => controller.getOrFail(),
           })
         );
 

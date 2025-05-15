@@ -21,10 +21,7 @@ export class NominationPoolsDestroyedEventPalletHandler extends EventPalletHandl
     const pool = ctx.store.defer(Pool, data.poolId);
     const origin = getOriginAccountId(event.call?.origin);
 
-    if (!origin || !pool) {
-      console.log('Invalid data or origin account ID');
-      return;
-    }
+    if (!origin || !pool) return;
 
     const accountId = this.encodeAddress(origin);
     const account = ctx.store.defer(Account, accountId);
