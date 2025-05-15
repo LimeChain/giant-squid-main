@@ -36,6 +36,11 @@ import { UndelegateCallPalletDecoder } from '@/chain/kusama/decoders/calls/convi
 import { VoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/vote';
 import { RemoveVoteCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/removeVote';
 import { UnlockCallPalletDecoder } from '@/chain/kusama/decoders/calls/conviction-voting/unlock';
+import { LimitedReserveTransferAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/limitedReserveTransferAssets';
+import { ReserveTransferAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/reserveTransferAssets';
+import { TransferAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/transferAssets';
+import { LimitedTeleportAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenCallDecoder } from '@/chain/kusama/decoders/calls/xcm/transferAssetsUsingTypeAndThen';
 
 export const indexer = new Indexer({
   config: {
@@ -104,6 +109,11 @@ export const indexer = new Indexer({
       'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
       'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
       'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
+      'XcmPallet.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder() }),
+      'XcmPallet.limited_reserve_transfer_assets': setupPallet({ decoder: new LimitedReserveTransferAssetsCallDecoder() }),
+      'XcmPallet.transfer_assets': setupPallet({ decoder: new TransferAssetsCallDecoder() }),
+      'XcmPallet.limited_teleport_assets': setupPallet({ decoder: new LimitedTeleportAssetsCallDecoder() }),
+      'XcmPallet.transfer_assets_using_type_and_then': setupPallet({ decoder: new TransferAssetsUsingTypeAndThenCallDecoder() }),
     },
   },
 });

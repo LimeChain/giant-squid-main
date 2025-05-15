@@ -85,6 +85,7 @@ export const registry = {
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
     'PolkadotXcm.Sent': SentEventPalletHandler,
+    'XcmPallet.Sent': SentEventPalletHandler,
     'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
     'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
     'OrmlXTokens.TransferredAssets': TransferredAssetsEventPalletHandler,

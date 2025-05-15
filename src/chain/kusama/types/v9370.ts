@@ -1,5 +1,23 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
+export const V2WeightLimit: sts.Type<V2WeightLimit> = sts.closedEnum(() => {
+    return  {
+        Limited: sts.bigint(),
+        Unlimited: sts.unit(),
+    }
+})
+
+export type V2WeightLimit = V2WeightLimit_Limited | V2WeightLimit_Unlimited
+
+export interface V2WeightLimit_Limited {
+    __kind: 'Limited'
+    value: bigint
+}
+
+export interface V2WeightLimit_Unlimited {
+    __kind: 'Unlimited'
+}
+
 export const VersionedMultiAssets: sts.Type<VersionedMultiAssets> = sts.closedEnum(() => {
     return  {
         V0: sts.array(() => V0MultiAsset),
@@ -178,7 +196,7 @@ export interface V1Junction_GeneralIndex {
 
 export interface V1Junction_GeneralKey {
     __kind: 'GeneralKey'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V1Junction_OnlyChild {
@@ -230,7 +248,15 @@ export interface V0BodyPart_Voice {
     __kind: 'Voice'
 }
 
-export type V0BodyId = V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Unit
+export type V0BodyId = V0BodyId_Administration | V0BodyId_Defense | V0BodyId_Executive | V0BodyId_Index | V0BodyId_Judicial | V0BodyId_Legislative | V0BodyId_Named | V0BodyId_Technical | V0BodyId_Treasury | V0BodyId_Unit
+
+export interface V0BodyId_Administration {
+    __kind: 'Administration'
+}
+
+export interface V0BodyId_Defense {
+    __kind: 'Defense'
+}
 
 export interface V0BodyId_Executive {
     __kind: 'Executive'
@@ -251,16 +277,22 @@ export interface V0BodyId_Legislative {
 
 export interface V0BodyId_Named {
     __kind: 'Named'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0BodyId_Technical {
     __kind: 'Technical'
 }
 
+export interface V0BodyId_Treasury {
+    __kind: 'Treasury'
+}
+
 export interface V0BodyId_Unit {
     __kind: 'Unit'
 }
+
+export type WeakBoundedVec = Bytes
 
 export type V0NetworkId = V0NetworkId_Any | V0NetworkId_Kusama | V0NetworkId_Named | V0NetworkId_Polkadot
 
@@ -274,7 +306,7 @@ export interface V0NetworkId_Kusama {
 
 export interface V0NetworkId_Named {
     __kind: 'Named'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0NetworkId_Polkadot {
@@ -352,7 +384,7 @@ export const V0Junction: sts.Type<V0Junction> = sts.closedEnum(() => {
             key: sts.bytes(),
         }),
         GeneralIndex: sts.bigint(),
-        GeneralKey: sts.bytes(),
+        GeneralKey: WeakBoundedVec,
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
@@ -387,21 +419,26 @@ export const V0BodyPart: sts.Type<V0BodyPart> = sts.closedEnum(() => {
 
 export const V0BodyId: sts.Type<V0BodyId> = sts.closedEnum(() => {
     return  {
+        Administration: sts.unit(),
+        Defense: sts.unit(),
         Executive: sts.unit(),
         Index: sts.number(),
         Judicial: sts.unit(),
         Legislative: sts.unit(),
-        Named: sts.bytes(),
+        Named: WeakBoundedVec,
         Technical: sts.unit(),
+        Treasury: sts.unit(),
         Unit: sts.unit(),
     }
 })
+
+export const WeakBoundedVec = sts.bytes()
 
 export const V0NetworkId: sts.Type<V0NetworkId> = sts.closedEnum(() => {
     return  {
         Any: sts.unit(),
         Kusama: sts.unit(),
-        Named: sts.bytes(),
+        Named: WeakBoundedVec,
         Polkadot: sts.unit(),
     }
 })
@@ -433,7 +470,7 @@ export interface V0Junction_GeneralIndex {
 
 export interface V0Junction_GeneralKey {
     __kind: 'GeneralKey'
-    value: Bytes
+    value: WeakBoundedVec
 }
 
 export interface V0Junction_OnlyChild {
@@ -599,356 +636,6 @@ export interface VersionedMultiLocation_V1 {
     value: V1MultiLocation
 }
 
-export const Data: sts.Type<Data> = sts.closedEnum(() => {
-    return  {
-        BlakeTwo256: sts.bytes(),
-        Keccak256: sts.bytes(),
-        None: sts.unit(),
-        Raw0: sts.bytes(),
-        Raw1: sts.bytes(),
-        Raw10: sts.bytes(),
-        Raw11: sts.bytes(),
-        Raw12: sts.bytes(),
-        Raw13: sts.bytes(),
-        Raw14: sts.bytes(),
-        Raw15: sts.bytes(),
-        Raw16: sts.bytes(),
-        Raw17: sts.bytes(),
-        Raw18: sts.bytes(),
-        Raw19: sts.bytes(),
-        Raw2: sts.bytes(),
-        Raw20: sts.bytes(),
-        Raw21: sts.bytes(),
-        Raw22: sts.bytes(),
-        Raw23: sts.bytes(),
-        Raw24: sts.bytes(),
-        Raw25: sts.bytes(),
-        Raw26: sts.bytes(),
-        Raw27: sts.bytes(),
-        Raw28: sts.bytes(),
-        Raw29: sts.bytes(),
-        Raw3: sts.bytes(),
-        Raw30: sts.bytes(),
-        Raw31: sts.bytes(),
-        Raw32: sts.bytes(),
-        Raw4: sts.bytes(),
-        Raw5: sts.bytes(),
-        Raw6: sts.bytes(),
-        Raw7: sts.bytes(),
-        Raw8: sts.bytes(),
-        Raw9: sts.bytes(),
-        Sha256: sts.bytes(),
-        ShaThree256: sts.bytes(),
-    }
-})
-
-export type Data = Data_BlakeTwo256 | Data_Keccak256 | Data_None | Data_Raw0 | Data_Raw1 | Data_Raw10 | Data_Raw11 | Data_Raw12 | Data_Raw13 | Data_Raw14 | Data_Raw15 | Data_Raw16 | Data_Raw17 | Data_Raw18 | Data_Raw19 | Data_Raw2 | Data_Raw20 | Data_Raw21 | Data_Raw22 | Data_Raw23 | Data_Raw24 | Data_Raw25 | Data_Raw26 | Data_Raw27 | Data_Raw28 | Data_Raw29 | Data_Raw3 | Data_Raw30 | Data_Raw31 | Data_Raw32 | Data_Raw4 | Data_Raw5 | Data_Raw6 | Data_Raw7 | Data_Raw8 | Data_Raw9 | Data_Sha256 | Data_ShaThree256
-
-export interface Data_BlakeTwo256 {
-    __kind: 'BlakeTwo256'
-    value: Bytes
-}
-
-export interface Data_Keccak256 {
-    __kind: 'Keccak256'
-    value: Bytes
-}
-
-export interface Data_None {
-    __kind: 'None'
-}
-
-export interface Data_Raw0 {
-    __kind: 'Raw0'
-    value: Bytes
-}
-
-export interface Data_Raw1 {
-    __kind: 'Raw1'
-    value: Bytes
-}
-
-export interface Data_Raw10 {
-    __kind: 'Raw10'
-    value: Bytes
-}
-
-export interface Data_Raw11 {
-    __kind: 'Raw11'
-    value: Bytes
-}
-
-export interface Data_Raw12 {
-    __kind: 'Raw12'
-    value: Bytes
-}
-
-export interface Data_Raw13 {
-    __kind: 'Raw13'
-    value: Bytes
-}
-
-export interface Data_Raw14 {
-    __kind: 'Raw14'
-    value: Bytes
-}
-
-export interface Data_Raw15 {
-    __kind: 'Raw15'
-    value: Bytes
-}
-
-export interface Data_Raw16 {
-    __kind: 'Raw16'
-    value: Bytes
-}
-
-export interface Data_Raw17 {
-    __kind: 'Raw17'
-    value: Bytes
-}
-
-export interface Data_Raw18 {
-    __kind: 'Raw18'
-    value: Bytes
-}
-
-export interface Data_Raw19 {
-    __kind: 'Raw19'
-    value: Bytes
-}
-
-export interface Data_Raw2 {
-    __kind: 'Raw2'
-    value: Bytes
-}
-
-export interface Data_Raw20 {
-    __kind: 'Raw20'
-    value: Bytes
-}
-
-export interface Data_Raw21 {
-    __kind: 'Raw21'
-    value: Bytes
-}
-
-export interface Data_Raw22 {
-    __kind: 'Raw22'
-    value: Bytes
-}
-
-export interface Data_Raw23 {
-    __kind: 'Raw23'
-    value: Bytes
-}
-
-export interface Data_Raw24 {
-    __kind: 'Raw24'
-    value: Bytes
-}
-
-export interface Data_Raw25 {
-    __kind: 'Raw25'
-    value: Bytes
-}
-
-export interface Data_Raw26 {
-    __kind: 'Raw26'
-    value: Bytes
-}
-
-export interface Data_Raw27 {
-    __kind: 'Raw27'
-    value: Bytes
-}
-
-export interface Data_Raw28 {
-    __kind: 'Raw28'
-    value: Bytes
-}
-
-export interface Data_Raw29 {
-    __kind: 'Raw29'
-    value: Bytes
-}
-
-export interface Data_Raw3 {
-    __kind: 'Raw3'
-    value: Bytes
-}
-
-export interface Data_Raw30 {
-    __kind: 'Raw30'
-    value: Bytes
-}
-
-export interface Data_Raw31 {
-    __kind: 'Raw31'
-    value: Bytes
-}
-
-export interface Data_Raw32 {
-    __kind: 'Raw32'
-    value: Bytes
-}
-
-export interface Data_Raw4 {
-    __kind: 'Raw4'
-    value: Bytes
-}
-
-export interface Data_Raw5 {
-    __kind: 'Raw5'
-    value: Bytes
-}
-
-export interface Data_Raw6 {
-    __kind: 'Raw6'
-    value: Bytes
-}
-
-export interface Data_Raw7 {
-    __kind: 'Raw7'
-    value: Bytes
-}
-
-export interface Data_Raw8 {
-    __kind: 'Raw8'
-    value: Bytes
-}
-
-export interface Data_Raw9 {
-    __kind: 'Raw9'
-    value: Bytes
-}
-
-export interface Data_Sha256 {
-    __kind: 'Sha256'
-    value: Bytes
-}
-
-export interface Data_ShaThree256 {
-    __kind: 'ShaThree256'
-    value: Bytes
-}
-
-export const Judgement: sts.Type<Judgement> = sts.closedEnum(() => {
-    return  {
-        Erroneous: sts.unit(),
-        FeePaid: sts.bigint(),
-        KnownGood: sts.unit(),
-        LowQuality: sts.unit(),
-        OutOfDate: sts.unit(),
-        Reasonable: sts.unit(),
-        Unknown: sts.unit(),
-    }
-})
-
-export type Judgement = Judgement_Erroneous | Judgement_FeePaid | Judgement_KnownGood | Judgement_LowQuality | Judgement_OutOfDate | Judgement_Reasonable | Judgement_Unknown
-
-export interface Judgement_Erroneous {
-    __kind: 'Erroneous'
-}
-
-export interface Judgement_FeePaid {
-    __kind: 'FeePaid'
-    value: bigint
-}
-
-export interface Judgement_KnownGood {
-    __kind: 'KnownGood'
-}
-
-export interface Judgement_LowQuality {
-    __kind: 'LowQuality'
-}
-
-export interface Judgement_OutOfDate {
-    __kind: 'OutOfDate'
-}
-
-export interface Judgement_Reasonable {
-    __kind: 'Reasonable'
-}
-
-export interface Judgement_Unknown {
-    __kind: 'Unknown'
-}
-
-export const RewardDestination: sts.Type<RewardDestination> = sts.closedEnum(() => {
-    return  {
-        Account: AccountId32,
-        Controller: sts.unit(),
-        None: sts.unit(),
-        Staked: sts.unit(),
-        Stash: sts.unit(),
-    }
-})
-
-export const AccountId32 = sts.bytes()
-
-export type RewardDestination = RewardDestination_Account | RewardDestination_Controller | RewardDestination_None | RewardDestination_Staked | RewardDestination_Stash
-
-export interface RewardDestination_Account {
-    __kind: 'Account'
-    value: AccountId32
-}
-
-export interface RewardDestination_Controller {
-    __kind: 'Controller'
-}
-
-export interface RewardDestination_None {
-    __kind: 'None'
-}
-
-export interface RewardDestination_Staked {
-    __kind: 'Staked'
-}
-
-export interface RewardDestination_Stash {
-    __kind: 'Stash'
-}
-
-export type AccountId32 = Bytes
-
-export const MultiAddress: sts.Type<MultiAddress> = sts.closedEnum(() => {
-    return  {
-        Address20: sts.bytes(),
-        Address32: sts.bytes(),
-        Id: AccountId32,
-        Index: sts.unit(),
-        Raw: sts.bytes(),
-    }
-})
-
-export type MultiAddress = MultiAddress_Address20 | MultiAddress_Address32 | MultiAddress_Id | MultiAddress_Index | MultiAddress_Raw
-
-export interface MultiAddress_Address20 {
-    __kind: 'Address20'
-    value: Bytes
-}
-
-export interface MultiAddress_Address32 {
-    __kind: 'Address32'
-    value: Bytes
-}
-
-export interface MultiAddress_Id {
-    __kind: 'Id'
-    value: AccountId32
-}
-
-export interface MultiAddress_Index {
-    __kind: 'Index'
-}
-
-export interface MultiAddress_Raw {
-    __kind: 'Raw'
-    value: Bytes
-}
-
 export const V2Instruction: sts.Type<V2Instruction> = sts.closedEnum(() => {
     return  {
         BuyExecution: sts.enumStruct({
@@ -1102,13 +789,13 @@ export const V2Error: sts.Type<V2Error> = sts.closedEnum(() => {
         FailedToTransactAsset: sts.unit(),
         InvalidLocation: sts.unit(),
         LocationCannotHold: sts.unit(),
+        MaxWeightInvalid: sts.unit(),
         MultiLocationFull: sts.unit(),
         MultiLocationNotInvertible: sts.unit(),
         NotHoldingFees: sts.unit(),
         NotWithdrawable: sts.unit(),
         Overflow: sts.unit(),
         TooExpensive: sts.unit(),
-        TooMuchWeightRequired: sts.unit(),
         Transport: sts.unit(),
         Trap: sts.bigint(),
         UnhandledXcmVersion: sts.unit(),
@@ -1122,7 +809,7 @@ export const V2Error: sts.Type<V2Error> = sts.closedEnum(() => {
     }
 })
 
-export type V2Error = V2Error_AssetNotFound | V2Error_BadOrigin | V2Error_Barrier | V2Error_DestinationUnsupported | V2Error_ExceedsMaxMessageSize | V2Error_FailedToDecode | V2Error_FailedToTransactAsset | V2Error_InvalidLocation | V2Error_LocationCannotHold | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_NotHoldingFees | V2Error_NotWithdrawable | V2Error_Overflow | V2Error_TooExpensive | V2Error_TooMuchWeightRequired | V2Error_Transport | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_Unimplemented | V2Error_UnknownClaim | V2Error_Unroutable | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_WeightLimitReached | V2Error_WeightNotComputable
+export type V2Error = V2Error_AssetNotFound | V2Error_BadOrigin | V2Error_Barrier | V2Error_DestinationUnsupported | V2Error_ExceedsMaxMessageSize | V2Error_FailedToDecode | V2Error_FailedToTransactAsset | V2Error_InvalidLocation | V2Error_LocationCannotHold | V2Error_MaxWeightInvalid | V2Error_MultiLocationFull | V2Error_MultiLocationNotInvertible | V2Error_NotHoldingFees | V2Error_NotWithdrawable | V2Error_Overflow | V2Error_TooExpensive | V2Error_Transport | V2Error_Trap | V2Error_UnhandledXcmVersion | V2Error_Unimplemented | V2Error_UnknownClaim | V2Error_Unroutable | V2Error_UntrustedReserveLocation | V2Error_UntrustedTeleportLocation | V2Error_WeightLimitReached | V2Error_WeightNotComputable
 
 export interface V2Error_AssetNotFound {
     __kind: 'AssetNotFound'
@@ -1160,6 +847,10 @@ export interface V2Error_LocationCannotHold {
     __kind: 'LocationCannotHold'
 }
 
+export interface V2Error_MaxWeightInvalid {
+    __kind: 'MaxWeightInvalid'
+}
+
 export interface V2Error_MultiLocationFull {
     __kind: 'MultiLocationFull'
 }
@@ -1182,10 +873,6 @@ export interface V2Error_Overflow {
 
 export interface V2Error_TooExpensive {
     __kind: 'TooExpensive'
-}
-
-export interface V2Error_TooMuchWeightRequired {
-    __kind: 'TooMuchWeightRequired'
 }
 
 export interface V2Error_Transport {
@@ -1280,7 +967,7 @@ export const V1Junction: sts.Type<V1Junction> = sts.closedEnum(() => {
             key: sts.bytes(),
         }),
         GeneralIndex: sts.bigint(),
-        GeneralKey: sts.bytes(),
+        GeneralKey: WeakBoundedVec,
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
@@ -1347,24 +1034,6 @@ export interface V1MultiAssetFilter_Definite {
 export interface V1MultiAssetFilter_Wild {
     __kind: 'Wild'
     value: V1WildMultiAsset
-}
-
-export const V2WeightLimit: sts.Type<V2WeightLimit> = sts.closedEnum(() => {
-    return  {
-        Limited: sts.bigint(),
-        Unlimited: sts.unit(),
-    }
-})
-
-export type V2WeightLimit = V2WeightLimit_Limited | V2WeightLimit_Unlimited
-
-export interface V2WeightLimit_Limited {
-    __kind: 'Limited'
-    value: bigint
-}
-
-export interface V2WeightLimit_Unlimited {
-    __kind: 'Unlimited'
 }
 
 export type V2Instruction = V2Instruction_BuyExecution | V2Instruction_ClaimAsset | V2Instruction_ClearError | V2Instruction_ClearOrigin | V2Instruction_DepositAsset | V2Instruction_DepositReserveAsset | V2Instruction_DescendOrigin | V2Instruction_ExchangeAsset | V2Instruction_HrmpChannelAccepted | V2Instruction_HrmpChannelClosing | V2Instruction_HrmpNewChannelOpenRequest | V2Instruction_InitiateReserveWithdraw | V2Instruction_InitiateTeleport | V2Instruction_QueryHolding | V2Instruction_QueryResponse | V2Instruction_ReceiveTeleportedAsset | V2Instruction_RefundSurplus | V2Instruction_ReportError | V2Instruction_ReserveAssetDeposited | V2Instruction_SetAppendix | V2Instruction_SetErrorHandler | V2Instruction_SubscribeVersion | V2Instruction_Transact | V2Instruction_TransferAsset | V2Instruction_TransferReserveAsset | V2Instruction_Trap | V2Instruction_UnsubscribeVersion | V2Instruction_WithdrawAsset
