@@ -1,5 +1,5 @@
-module.exports = class Data1746452914212 {
-    name = 'Data1746452914212'
+module.exports = class Data1747396481728 {
+    name = 'Data1747396481728'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -78,6 +78,12 @@ module.exports = class Data1746452914212 {
         await db.query(`CREATE INDEX "IDX_d19d8b024e95954b94d2d4755e" ON "polkadot_xcm_transfer" ("to_chain") `)
         await db.query(`CREATE INDEX "IDX_d7fd8bd99c3b7d5390da44eac0" ON "polkadot_xcm_transfer" ("call") `)
         await db.query(`CREATE INDEX "IDX_bc0d4fe56e2d0727bb5f9b72be" ON "polkadot_xcm_transfer" ("contract_called") `)
+        await db.query(`CREATE TABLE "x_tokens_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "to" text, "to_chain" text, "assets" jsonb, "amount" text array, "call" text NOT NULL, "account_id" character varying, CONSTRAINT "PK_f4b6308d0e13fcf0434f48d7832" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_a8eafb6d6c14ae0900cb39f58e" ON "x_tokens_transfer" ("block_number") `)
+        await db.query(`CREATE INDEX "IDX_a80e193ae6490391fecf9fd508" ON "x_tokens_transfer" ("timestamp") `)
+        await db.query(`CREATE INDEX "IDX_354a1fcc98ad8e120e3424241b" ON "x_tokens_transfer" ("extrinsic_hash") `)
+        await db.query(`CREATE INDEX "IDX_1e3b593f2c112103eace603cc4" ON "x_tokens_transfer" ("account_id") `)
+        await db.query(`CREATE INDEX "IDX_9c6c78fbe4f92560ad686c5de4" ON "x_tokens_transfer" ("call") `)
         await db.query(`CREATE TABLE "account" ("id" character varying NOT NULL, "public_key" text NOT NULL, CONSTRAINT "PK_54115ee388cdb6d86bb4bf5b2ea" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_34e5683537bbd7627b0e9469b8" ON "account" ("public_key") `)
         await db.query(`CREATE TABLE "conviction_delegate" ("id" character varying NOT NULL, "extrinsic_hash" text, "class" integer NOT NULL, "conviction" text NOT NULL, "balance" numeric NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_22678907b742407649c70245299" PRIMARY KEY ("id"))`)
@@ -185,6 +191,7 @@ module.exports = class Data1746452914212 {
         await db.query(`ALTER TABLE "xcm_transfer" ADD CONSTRAINT "FK_ecfa5b9d1f4769e9bcfef024c72" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "xcm_transfer" ADD CONSTRAINT "FK_d01f8562905a30cca9efe5edd3d" FOREIGN KEY ("to_chain_id") REFERENCES "parachain"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "polkadot_xcm_transfer" ADD CONSTRAINT "FK_4126769d834219cb7e4c2349ba7" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "x_tokens_transfer" ADD CONSTRAINT "FK_1e3b593f2c112103eace603cc45" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_delegate" ADD CONSTRAINT "FK_506e865e5aa82601868d766f4ff" FOREIGN KEY ("from_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_delegate" ADD CONSTRAINT "FK_fbf46d1687e23fd4579523a5d1f" FOREIGN KEY ("to_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "conviction_undelegate" ADD CONSTRAINT "FK_11162c51c9dcef3b16519b6dfae" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -298,6 +305,12 @@ module.exports = class Data1746452914212 {
         await db.query(`DROP INDEX "public"."IDX_d19d8b024e95954b94d2d4755e"`)
         await db.query(`DROP INDEX "public"."IDX_d7fd8bd99c3b7d5390da44eac0"`)
         await db.query(`DROP INDEX "public"."IDX_bc0d4fe56e2d0727bb5f9b72be"`)
+        await db.query(`DROP TABLE "x_tokens_transfer"`)
+        await db.query(`DROP INDEX "public"."IDX_a8eafb6d6c14ae0900cb39f58e"`)
+        await db.query(`DROP INDEX "public"."IDX_a80e193ae6490391fecf9fd508"`)
+        await db.query(`DROP INDEX "public"."IDX_354a1fcc98ad8e120e3424241b"`)
+        await db.query(`DROP INDEX "public"."IDX_1e3b593f2c112103eace603cc4"`)
+        await db.query(`DROP INDEX "public"."IDX_9c6c78fbe4f92560ad686c5de4"`)
         await db.query(`DROP TABLE "account"`)
         await db.query(`DROP INDEX "public"."IDX_34e5683537bbd7627b0e9469b8"`)
         await db.query(`DROP TABLE "conviction_delegate"`)
@@ -405,6 +418,7 @@ module.exports = class Data1746452914212 {
         await db.query(`ALTER TABLE "xcm_transfer" DROP CONSTRAINT "FK_ecfa5b9d1f4769e9bcfef024c72"`)
         await db.query(`ALTER TABLE "xcm_transfer" DROP CONSTRAINT "FK_d01f8562905a30cca9efe5edd3d"`)
         await db.query(`ALTER TABLE "polkadot_xcm_transfer" DROP CONSTRAINT "FK_4126769d834219cb7e4c2349ba7"`)
+        await db.query(`ALTER TABLE "x_tokens_transfer" DROP CONSTRAINT "FK_1e3b593f2c112103eace603cc45"`)
         await db.query(`ALTER TABLE "conviction_delegate" DROP CONSTRAINT "FK_506e865e5aa82601868d766f4ff"`)
         await db.query(`ALTER TABLE "conviction_delegate" DROP CONSTRAINT "FK_fbf46d1687e23fd4579523a5d1f"`)
         await db.query(`ALTER TABLE "conviction_undelegate" DROP CONSTRAINT "FK_11162c51c9dcef3b16519b6dfae"`)

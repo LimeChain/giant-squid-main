@@ -13,6 +13,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
 
     if (sent.v200.is(event)) {
       const [origin, destination, message] = sent.v200.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -26,6 +28,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v10016.is(event)) {
       const [origin, destination, message] = sent.v10016.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 

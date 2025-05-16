@@ -462,4 +462,5 @@ type Account @entity {
   rewards: [StakingReward!] @derivedFrom(field: "account")
   xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")
   polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")
+  xTokenTransfers: [XTokensTransfer!] @derivedFrom(field: "account")
 }

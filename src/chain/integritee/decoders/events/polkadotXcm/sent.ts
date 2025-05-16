@@ -14,6 +14,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
 
     if (sent.integriteeParachainV14.is(event)) {
       const [origin, destination, message] = sent.integriteeParachainV14.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -27,6 +29,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.integriteeParachainV35.is(event)) {
       const [origin, destination, message] = sent.integriteeParachainV35.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -40,6 +44,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.integriteeParachainV42.is(event)) {
       const { origin, destination, message, messageId } = sent.integriteeParachainV42.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -53,6 +59,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.integriteeParachainV520.is(event)) {
       const { origin, destination, message, messageId } = sent.integriteeParachainV520.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCallerV4(origin);
       if (!from) return;
 

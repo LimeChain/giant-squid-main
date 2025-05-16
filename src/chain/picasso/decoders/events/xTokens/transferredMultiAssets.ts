@@ -6,31 +6,6 @@ import { UnknownVersionError } from '@/utils';
 import { V1Junction_Parachain, V1MultiAsset, V1MultiLocation } from '@/chain/picasso/types/v1000';
 import { V3MultiAsset, V3MultiLocation } from '@/chain/picasso/types/v10016';
 
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
-
-const WRITE = true;
-const filePath = path.join(os.homedir(), 'Desktop', 'picasso.json');
-const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
-process.on('beforeExit', () => fileStream.end());
-
-function write(data: object) {
-  fileStream.write(
-    JSON.stringify(
-      data,
-      (key, value) => {
-        if (typeof value === 'bigint') {
-          return value.toString();
-        }
-        return value;
-      },
-      2
-    )
-  );
-  fileStream.write(',\n');
-}
-
 export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
@@ -38,7 +13,6 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
 
     if (transferredMultiAssets.v1000.is(event)) {
       const { assets, dest, sender } = transferredMultiAssets.v1000.decode(event);
-      if (WRITE) write({ blockHash: event.extrinsic?.hash, data: { v1000: '', assets, dest, sender } });
 
       return {
         from: sender,
@@ -49,7 +23,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
       };
     } else if (transferredMultiAssets.v10016.is(event)) {
       const { assets, dest, sender } = transferredMultiAssets.v10016.decode(event);
-      if (WRITE) write({ blockHash: event.extrinsic?.hash, data: { v10016: '', assets, dest, sender } });
+
       return {
         from: sender,
         to: getToV3(dest),

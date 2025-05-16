@@ -16,6 +16,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
 
     if (sent.v1.is(event)) {
       const [origin, destination, message] = sent.v1.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -29,6 +31,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v2.is(event)) {
       const [origin, destination, message] = sent.v2.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -42,6 +46,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v9.is(event)) {
       const [origin, destination, message] = sent.v9.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -55,6 +61,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v19.is(event)) {
       const { origin, destination, message, messageId } = sent.v19.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -68,6 +76,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v20.is(event)) {
       const { origin, destination, message, messageId } = sent.v20.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -81,6 +91,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v20.is(event)) {
       const { origin, destination, message, messageId } = sent.v20.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 

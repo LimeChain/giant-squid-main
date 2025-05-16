@@ -18,6 +18,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
 
     if (sent.v9111.is(event)) {
       const [origin, destination, message] = sent.v9111.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -31,6 +33,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v9160.is(event)) {
       const [origin, destination, message] = sent.v9160.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -44,6 +48,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v9370.is(event)) {
       const [origin, destination, message] = sent.v9370.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -57,6 +63,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v9381.is(event)) {
       const [origin, destination, message] = sent.v9381.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -70,6 +78,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v1000000.is(event)) {
       const { origin, destination, message, messageId } = sent.v1000000.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCaller(origin);
       if (!from) return;
 
@@ -83,6 +93,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v1002000.is(event)) {
       const { origin, destination, message, messageId } = sent.v1002000.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCallerV4(origin);
       if (!from) return;
 
@@ -96,6 +108,8 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       };
     } else if (sent.v1005000.is(event)) {
       const { origin, destination, message, messageId } = sent.v1005000.decode(event);
+      if (message.length <= 1) return;
+
       const from = getOriginCallerV4(origin);
       if (!from) return;
 
