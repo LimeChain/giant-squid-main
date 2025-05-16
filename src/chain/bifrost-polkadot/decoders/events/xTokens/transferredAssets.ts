@@ -26,13 +26,18 @@ export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEv
 }
 
 function getDestinationV4(destination: V4Location) {
-  if (destination.interior.__kind === 'X1') {
-    return 'Here';
-  }
+  switch (destination.interior.__kind) {
+    case 'Here':
+    case 'X1':
+      return 'Here';
 
-  if (destination.interior.__kind === 'X2' || destination.interior.__kind === 'X3') {
-    const target = destination.interior.value.find((e) => e.__kind === 'Parachain') as V4Junction_Parachain;
-    return target?.value?.toString();
+    case 'X2':
+    case 'X3':
+    case 'X4':
+    case 'X5':
+      const target = destination.interior.value.find((e) => e.__kind === 'Parachain') as V4Junction_Parachain;
+
+      return target?.value?.toString();
   }
 
   return;
@@ -42,13 +47,17 @@ function getTo(destination: V4Location) {
   switch (destination.interior.__kind) {
     case 'X1':
     case 'X2':
-    case 'X3': {
-      const target = destination.interior.value.find((e) => e.__kind === 'AccountId32' || e.__kind === 'AccountKey20');
+    case 'X3':
+    case 'X4':
+    case 'X5': {
+      const target = destination.interior.value.find((e) => e.__kind === 'AccountId32' || e.__kind === 'AccountKey20' || e.__kind === 'GeneralKey');
       switch (target?.__kind) {
         case 'AccountId32':
           return target.id;
         case 'AccountKey20':
           return target.key;
+        case 'GeneralKey':
+          return target.data;
       }
     }
   }

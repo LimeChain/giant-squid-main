@@ -1,18 +1,45 @@
-import { events } from '@/chain/hydradx/types';
+import { events } from '@/chain/picasso/types';
 import { Event, ITransferredAssetsEventPalletDecoder } from '@/indexer';
 import assert from 'assert';
 import { UnknownVersionError } from '@/utils';
 
-import { V1Junction_Parachain, V1MultiAsset, V1MultiLocation } from '@/chain/hydradx/types/v108';
-import { V3MultiAsset as V3MultiAssetV2240, V3MultiLocation as V3MultiLocationV2240 } from '@/chain/hydradx/types/v160';
+import { V1Junction_Parachain, V1MultiAsset, V1MultiLocation } from '@/chain/picasso/types/v1000';
+import { V3MultiAsset, V3MultiLocation } from '@/chain/picasso/types/v10016';
+
+import path from 'path';
+import os from 'os';
+import fs from 'fs';
+
+const WRITE = true;
+const filePath = path.join(os.homedir(), 'Desktop', 'picasso.json');
+const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
+process.on('beforeExit', () => fileStream.end());
+
+function write(data: object) {
+  fileStream.write(
+    JSON.stringify(
+      data,
+      (key, value) => {
+        if (typeof value === 'bigint') {
+          return value.toString();
+        }
+        return value;
+      },
+      2
+    )
+  );
+  fileStream.write(',\n');
+}
 
 export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAssetsEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
     const transferredMultiAssets = events.xTokens.transferredMultiAssets;
 
-    if (transferredMultiAssets.v108.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v108.decode(event);
+    if (transferredMultiAssets.v1000.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v1000.decode(event);
+      if (WRITE) write({ blockHash: event.extrinsic?.hash, data: { v1000: '', assets, dest, sender } });
+
       return {
         from: sender,
         to: getTo(dest),
@@ -20,17 +47,9 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
         amount: getAssetAmounts(assets),
         assets: getAssetIds(assets),
       };
-    } else if (transferredMultiAssets.v115.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v115.decode(event);
-      return {
-        from: sender,
-        to: getTo(dest),
-        toChain: getDestination(dest),
-        amount: getAssetAmounts(assets),
-        assets: getAssetIds(assets),
-      };
-    } else if (transferredMultiAssets.v160.is(event)) {
-      const { assets, dest, sender } = transferredMultiAssets.v160.decode(event);
+    } else if (transferredMultiAssets.v10016.is(event)) {
+      const { assets, dest, sender } = transferredMultiAssets.v10016.decode(event);
+      if (WRITE) write({ blockHash: event.extrinsic?.hash, data: { v10016: '', assets, dest, sender } });
       return {
         from: sender,
         to: getToV3(dest),
@@ -44,7 +63,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
   }
 }
 
-function getDestination(destination: V1MultiLocation | V3MultiLocationV2240) {
+function getDestination(destination: V1MultiLocation | V3MultiLocation) {
   switch (destination.interior.__kind) {
     case 'Here':
     case 'X1':
@@ -90,7 +109,7 @@ function getTo(destination: V1MultiLocation) {
   return;
 }
 
-function getToV3(destination: V3MultiLocationV2240) {
+function getToV3(destination: V3MultiLocation) {
   switch (destination.interior.__kind) {
     case 'X1':
       switch (destination.interior.value.__kind) {
@@ -118,7 +137,7 @@ function getToV3(destination: V3MultiLocationV2240) {
   return;
 }
 
-function getAssetAmounts(assets: (V1MultiAsset | V3MultiAssetV2240)[]) {
+function getAssetAmounts(assets: (V1MultiAsset | V3MultiAsset)[]) {
   return assets.map((asset) => (asset.fun.__kind === 'Fungible' ? asset.fun.value.toString() : undefined));
 }
 
@@ -147,7 +166,9 @@ function getAssetIds(assets: V1MultiAsset[]) {
             return [assetChainId, assetId];
           }
 
-          case 'X3': {
+          case 'X3':
+          case 'X4':
+          case 'X5': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
 
@@ -168,7 +189,7 @@ function getAssetIds(assets: V1MultiAsset[]) {
   });
 }
 
-function getAssetIdsV3(assets: V3MultiAssetV2240[]) {
+function getAssetIdsV3(assets: V3MultiAsset[]) {
   return assets.map((asset) => {
     switch (asset.id.__kind) {
       case 'Concrete':
