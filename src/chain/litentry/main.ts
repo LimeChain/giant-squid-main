@@ -11,6 +11,8 @@ import { ParachainStakingDelegationIncreasedEventPalletDecoder } from '@/chain/l
 import { ParachainStakingDelegationKickedEventPalletDecoder } from '@/chain/litentry/decoders/events/parachain-staking/delegationKicked';
 import { ParachainStakingDelegationRevokedEventPalletDecoder } from '@/chain/litentry/decoders/events/parachain-staking/delegationRevoked';
 import { ParachainStakingRewardEventPalletDecoder } from '@/chain/litentry/decoders/events/parachain-staking/rewarded';
+import { SentEventPalletDecoder } from '@/chain/litentry/decoders/events/polkadotXcm/sent';
+import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/litentry/decoders/events/xTokens/transferredMultiAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -30,6 +32,8 @@ export const indexer = new Indexer({
       'ParachainStaking.CandidateLeft': setupPallet({ decoder: new ParachainStakingCandidateLeftEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedMore': setupPallet({ decoder: new ParachainStakingCandidateBondedMoreEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedLess': setupPallet({ decoder: new ParachainStakingCandidateBondedLessEventPalletDecoder() }),
+      'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
+      'XTokens.TransferredMultiAssets': setupPallet({ decoder: new TransferredMultiAssetsEventPalletDecoder() }),
     },
   },
 });

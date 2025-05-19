@@ -4,6 +4,9 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "XTokens": {
+      "events": ["TransferredMultiAssets"]
     }
   },
   "storage": []

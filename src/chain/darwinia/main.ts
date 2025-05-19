@@ -4,6 +4,7 @@ import { TransferEventPalletDecoder } from '@/chain/darwinia/decoders/events/bal
 import { UnlockCallPalletDecoder } from '@/chain/darwinia/decoders/calls/conviction-voting/unlock';
 import { VoteCallPalletDecoder } from '@/chain/darwinia/decoders/calls/conviction-voting/vote';
 import { RemoveVoteCallPalletDecoder } from '@/chain/darwinia/decoders/calls/conviction-voting/removeVote';
+import { SentEventPalletDecoder } from '@/chain/darwinia/decoders/events/polkadotXcm/sent';
 
 export const indexer = new Indexer({
   config: {
@@ -13,6 +14,7 @@ export const indexer = new Indexer({
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
     },
     calls: {
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),

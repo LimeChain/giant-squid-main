@@ -8,6 +8,15 @@
     "Staking": {
       "events": ["Rewarded"],
       "calls": ["payout_stakers"]
+    },
+    "PolkadotXcm": {
+      "events": ["Sent"]
+    },
+    "XTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
+    },
+    "OrmlXTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

@@ -1,2 +1,7 @@
 export * as integriteeParachainV3 from './integriteeParachainV3'
+export * as integriteeParachainV14 from './integriteeParachainV14'
+export * as integriteeParachainV35 from './integriteeParachainV35'
+export * as integriteeParachainV42 from './integriteeParachainV42'
+export * as integriteeParachainV520 from './integriteeParachainV520'
+export * as integriteeParachainV18 from './integriteeParachainV18'
 export * as events from './events'

@@ -4,6 +4,9 @@ import { TransferEventPalletDecoder } from '@/chain/bifrost-polkadot/decoders/ev
 import { RemoveVoteCallPalletDecoder } from '@/chain/bifrost-polkadot/decoders/calls/conviction-voting/removeVote';
 import { UnlockCallPalletDecoder } from '@/chain/bifrost-polkadot/decoders/calls/conviction-voting/unlock';
 import { VoteCallPalletDecoder } from '@/chain/bifrost-polkadot/decoders/calls/conviction-voting/vote';
+import { SentEventPalletDecoder } from '@/chain/bifrost-polkadot/decoders/events/polkadotXcm/sent';
+import { TransferredAssetsEventPalletDecoder } from '@/chain/bifrost-polkadot/decoders/events/xTokens/transferredAssets';
+import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/bifrost-polkadot/decoders/events/xTokens/transferredMultiAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -13,6 +16,9 @@ export const indexer = new Indexer({
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
+      'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
+      'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
+      'XTokens.TransferredMultiAssets': setupPallet({ decoder: new TransferredMultiAssetsEventPalletDecoder() }),
     },
     calls: {
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),

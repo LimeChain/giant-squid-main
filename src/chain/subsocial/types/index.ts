@@ -1,3 +1,7 @@
 export * as v1 from './v1'
 export * as v2 from './v2'
+export * as v5 from './v5'
+export * as v20 from './v20'
+export * as v32 from './v32'
+export * as v45 from './v45'
 export * as events from './events'

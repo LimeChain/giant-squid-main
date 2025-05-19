@@ -1,3 +1,8 @@
 export * as v1000 from './v1000'
 export * as v1002 from './v1002'
+export * as v1009 from './v1009'
+export * as v1019 from './v1019'
+export * as v1020 from './v1020'
+export * as v1024 from './v1024'
+export * as v1103 from './v1103'
 export * as events from './events'

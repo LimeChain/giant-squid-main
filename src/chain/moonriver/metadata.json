@@ -21,6 +21,15 @@
     },
     "ConvictionVoting": {
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
+    },
+    "PolkadotXcm": {
+      "events": ["Sent"]
+    },
+    "XTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
+    },
+    "OrmlXTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

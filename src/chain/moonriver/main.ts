@@ -17,6 +17,9 @@ import { RemoveVoteCallPalletDecoder } from '@/chain/moonriver/decoders/calls/co
 import { UndelegateCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/undelegate';
 import { UnlockCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/unlock';
 import { VoteCallPalletDecoder } from '@/chain/moonriver/decoders/calls/conviction-voting/vote';
+import { SentEventPalletDecoder } from '@/chain/moonriver/decoders/events/polkadotXcm/sent';
+import { TransferredAssetsEventPalletDecoder } from '@/chain/moonriver/decoders/events/xTokens/transferredAssets';
+import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/moonriver/decoders/events/xTokens/transferredMultiAssets';
 
 export const indexer = new Indexer({
   config: {
@@ -37,6 +40,9 @@ export const indexer = new Indexer({
       'ParachainStaking.CandidateLeft': setupPallet({ decoder: new ParachainStakingCandidateLeftEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedMore': setupPallet({ decoder: new ParachainStakingCandidateBondedMoreEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedLess': setupPallet({ decoder: new ParachainStakingCandidateBondedLessEventPalletDecoder() }),
+      'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
+      'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
+      'XTokens.TransferredMultiAssets': setupPallet({ decoder: new TransferredMultiAssetsEventPalletDecoder() }),
     },
     calls: {
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
