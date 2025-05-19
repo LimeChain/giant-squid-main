@@ -91,67 +91,173 @@ export const XcmAssetId: sts.Type<XcmAssetId> = sts.closedEnum(() => {
     }
 })
 
-export type XcmAssetId = XcmAssetId_Abstract | XcmAssetId_Concrete
+export const MultiLocation: sts.Type<MultiLocation> = sts.struct(() => {
+    return  {
+        parents: sts.number(),
+        interior: JunctionsV1,
+    }
+})
 
-export interface XcmAssetId_Abstract {
-    __kind: 'Abstract'
+export const JunctionsV1: sts.Type<JunctionsV1> = sts.closedEnum(() => {
+    return  {
+        Here: sts.unit(),
+        X1: JunctionV1,
+        X2: sts.tuple(() => [JunctionV1, JunctionV1]),
+        X3: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1]),
+        X4: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X5: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X6: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X7: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+        X8: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
+    }
+})
+
+export const JunctionV1: sts.Type<JunctionV1> = sts.closedEnum(() => {
+    return  {
+        AccountId32: sts.enumStruct({
+            network: NetworkId,
+            id: AccountId,
+        }),
+        AccountIndex64: sts.enumStruct({
+            network: NetworkId,
+            index: sts.bigint(),
+        }),
+        AccountKey20: sts.enumStruct({
+            network: NetworkId,
+            key: sts.bytes(),
+        }),
+        GeneralIndex: sts.bigint(),
+        GeneralKey: sts.bytes(),
+        OnlyChild: sts.unit(),
+        PalletInstance: sts.number(),
+        Parachain: sts.number(),
+        Plurality: sts.enumStruct({
+            id: BodyId,
+            part: BodyPart,
+        }),
+    }
+})
+
+export const BodyPart: sts.Type<BodyPart> = sts.closedEnum(() => {
+    return  {
+        AtLeastProportion: sts.enumStruct({
+            nom: sts.number(),
+            denom: sts.number(),
+        }),
+        Fraction: sts.enumStruct({
+            nom: sts.number(),
+            denom: sts.number(),
+        }),
+        Members: sts.number(),
+        MoreThanProportion: sts.enumStruct({
+            nom: sts.number(),
+            denom: sts.number(),
+        }),
+        Voice: sts.unit(),
+    }
+})
+
+export type BodyPart = BodyPart_AtLeastProportion | BodyPart_Fraction | BodyPart_Members | BodyPart_MoreThanProportion | BodyPart_Voice
+
+export interface BodyPart_AtLeastProportion {
+    __kind: 'AtLeastProportion'
+    nom: number
+    denom: number
+}
+
+export interface BodyPart_Fraction {
+    __kind: 'Fraction'
+    nom: number
+    denom: number
+}
+
+export interface BodyPart_Members {
+    __kind: 'Members'
+    value: number
+}
+
+export interface BodyPart_MoreThanProportion {
+    __kind: 'MoreThanProportion'
+    nom: number
+    denom: number
+}
+
+export interface BodyPart_Voice {
+    __kind: 'Voice'
+}
+
+export const BodyId: sts.Type<BodyId> = sts.closedEnum(() => {
+    return  {
+        Executive: sts.unit(),
+        Index: sts.number(),
+        Judicial: sts.unit(),
+        Legislative: sts.unit(),
+        Named: sts.bytes(),
+        Technical: sts.unit(),
+        Unit: sts.unit(),
+    }
+})
+
+export type BodyId = BodyId_Executive | BodyId_Index | BodyId_Judicial | BodyId_Legislative | BodyId_Named | BodyId_Technical | BodyId_Unit
+
+export interface BodyId_Executive {
+    __kind: 'Executive'
+}
+
+export interface BodyId_Index {
+    __kind: 'Index'
+    value: number
+}
+
+export interface BodyId_Judicial {
+    __kind: 'Judicial'
+}
+
+export interface BodyId_Legislative {
+    __kind: 'Legislative'
+}
+
+export interface BodyId_Named {
+    __kind: 'Named'
     value: Bytes
 }
 
-export interface XcmAssetId_Concrete {
-    __kind: 'Concrete'
-    value: MultiLocation
+export interface BodyId_Technical {
+    __kind: 'Technical'
 }
 
-export interface MultiLocation {
-    parents: number
-    interior: JunctionsV1
+export interface BodyId_Unit {
+    __kind: 'Unit'
 }
 
-export type JunctionsV1 = JunctionsV1_Here | JunctionsV1_X1 | JunctionsV1_X2 | JunctionsV1_X3 | JunctionsV1_X4 | JunctionsV1_X5 | JunctionsV1_X6 | JunctionsV1_X7 | JunctionsV1_X8
+export const AccountId = sts.bytes()
 
-export interface JunctionsV1_Here {
-    __kind: 'Here'
+export const NetworkId: sts.Type<NetworkId> = sts.closedEnum(() => {
+    return  {
+        Any: sts.unit(),
+        Kusama: sts.unit(),
+        Named: sts.bytes(),
+        Polkadot: sts.unit(),
+    }
+})
+
+export type NetworkId = NetworkId_Any | NetworkId_Kusama | NetworkId_Named | NetworkId_Polkadot
+
+export interface NetworkId_Any {
+    __kind: 'Any'
 }
 
-export interface JunctionsV1_X1 {
-    __kind: 'X1'
-    value: JunctionV1
+export interface NetworkId_Kusama {
+    __kind: 'Kusama'
 }
 
-export interface JunctionsV1_X2 {
-    __kind: 'X2'
-    value: [JunctionV1, JunctionV1]
+export interface NetworkId_Named {
+    __kind: 'Named'
+    value: Bytes
 }
 
-export interface JunctionsV1_X3 {
-    __kind: 'X3'
-    value: [JunctionV1, JunctionV1, JunctionV1]
-}
-
-export interface JunctionsV1_X4 {
-    __kind: 'X4'
-    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1]
-}
-
-export interface JunctionsV1_X5 {
-    __kind: 'X5'
-    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
-}
-
-export interface JunctionsV1_X6 {
-    __kind: 'X6'
-    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
-}
-
-export interface JunctionsV1_X7 {
-    __kind: 'X7'
-    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
-}
-
-export interface JunctionsV1_X8 {
-    __kind: 'X8'
-    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+export interface NetworkId_Polkadot {
+    __kind: 'Polkadot'
 }
 
 export type JunctionV1 = JunctionV1_AccountId32 | JunctionV1_AccountIndex64 | JunctionV1_AccountKey20 | JunctionV1_GeneralIndex | JunctionV1_GeneralKey | JunctionV1_OnlyChild | JunctionV1_PalletInstance | JunctionV1_Parachain | JunctionV1_Plurality
@@ -204,86 +310,69 @@ export interface JunctionV1_Plurality {
     part: BodyPart
 }
 
-export type BodyPart = BodyPart_AtLeastProportion | BodyPart_Fraction | BodyPart_Members | BodyPart_MoreThanProportion | BodyPart_Voice
-
-export interface BodyPart_AtLeastProportion {
-    __kind: 'AtLeastProportion'
-    nom: number
-    denom: number
-}
-
-export interface BodyPart_Fraction {
-    __kind: 'Fraction'
-    nom: number
-    denom: number
-}
-
-export interface BodyPart_Members {
-    __kind: 'Members'
-    value: number
-}
-
-export interface BodyPart_MoreThanProportion {
-    __kind: 'MoreThanProportion'
-    nom: number
-    denom: number
-}
-
-export interface BodyPart_Voice {
-    __kind: 'Voice'
-}
-
-export type BodyId = BodyId_Executive | BodyId_Index | BodyId_Judicial | BodyId_Legislative | BodyId_Named | BodyId_Technical | BodyId_Unit
-
-export interface BodyId_Executive {
-    __kind: 'Executive'
-}
-
-export interface BodyId_Index {
-    __kind: 'Index'
-    value: number
-}
-
-export interface BodyId_Judicial {
-    __kind: 'Judicial'
-}
-
-export interface BodyId_Legislative {
-    __kind: 'Legislative'
-}
-
-export interface BodyId_Named {
-    __kind: 'Named'
-    value: Bytes
-}
-
-export interface BodyId_Technical {
-    __kind: 'Technical'
-}
-
-export interface BodyId_Unit {
-    __kind: 'Unit'
-}
-
 export type AccountId = Bytes
 
-export type NetworkId = NetworkId_Any | NetworkId_Kusama | NetworkId_Named | NetworkId_Polkadot
+export type JunctionsV1 = JunctionsV1_Here | JunctionsV1_X1 | JunctionsV1_X2 | JunctionsV1_X3 | JunctionsV1_X4 | JunctionsV1_X5 | JunctionsV1_X6 | JunctionsV1_X7 | JunctionsV1_X8
 
-export interface NetworkId_Any {
-    __kind: 'Any'
+export interface JunctionsV1_Here {
+    __kind: 'Here'
 }
 
-export interface NetworkId_Kusama {
-    __kind: 'Kusama'
+export interface JunctionsV1_X1 {
+    __kind: 'X1'
+    value: JunctionV1
 }
 
-export interface NetworkId_Named {
-    __kind: 'Named'
+export interface JunctionsV1_X2 {
+    __kind: 'X2'
+    value: [JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X3 {
+    __kind: 'X3'
+    value: [JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X4 {
+    __kind: 'X4'
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X5 {
+    __kind: 'X5'
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X6 {
+    __kind: 'X6'
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X7 {
+    __kind: 'X7'
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface JunctionsV1_X8 {
+    __kind: 'X8'
+    value: [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]
+}
+
+export interface MultiLocation {
+    parents: number
+    interior: JunctionsV1
+}
+
+export type XcmAssetId = XcmAssetId_Abstract | XcmAssetId_Concrete
+
+export interface XcmAssetId_Abstract {
+    __kind: 'Abstract'
     value: Bytes
 }
 
-export interface NetworkId_Polkadot {
-    __kind: 'Polkadot'
+export interface XcmAssetId_Concrete {
+    __kind: 'Concrete'
+    value: MultiLocation
 }
 
 export interface MultiAssetV1 {
@@ -358,48 +447,6 @@ export const JunctionV0: sts.Type<JunctionV0> = sts.closedEnum(() => {
             id: BodyId,
             part: BodyPart,
         }),
-    }
-})
-
-export const BodyPart: sts.Type<BodyPart> = sts.closedEnum(() => {
-    return  {
-        AtLeastProportion: sts.enumStruct({
-            nom: sts.number(),
-            denom: sts.number(),
-        }),
-        Fraction: sts.enumStruct({
-            nom: sts.number(),
-            denom: sts.number(),
-        }),
-        Members: sts.number(),
-        MoreThanProportion: sts.enumStruct({
-            nom: sts.number(),
-            denom: sts.number(),
-        }),
-        Voice: sts.unit(),
-    }
-})
-
-export const BodyId: sts.Type<BodyId> = sts.closedEnum(() => {
-    return  {
-        Executive: sts.unit(),
-        Index: sts.number(),
-        Judicial: sts.unit(),
-        Legislative: sts.unit(),
-        Named: sts.bytes(),
-        Technical: sts.unit(),
-        Unit: sts.unit(),
-    }
-})
-
-export const AccountId = sts.bytes()
-
-export const NetworkId: sts.Type<NetworkId> = sts.closedEnum(() => {
-    return  {
-        Any: sts.unit(),
-        Kusama: sts.unit(),
-        Named: sts.bytes(),
-        Polkadot: sts.unit(),
     }
 })
 
@@ -669,46 +716,6 @@ export const MultiLocationV2: sts.Type<MultiLocationV2> = sts.struct(() => {
     }
 })
 
-export const JunctionsV1: sts.Type<JunctionsV1> = sts.closedEnum(() => {
-    return  {
-        Here: sts.unit(),
-        X1: JunctionV1,
-        X2: sts.tuple(() => [JunctionV1, JunctionV1]),
-        X3: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1]),
-        X4: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
-        X5: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
-        X6: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
-        X7: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
-        X8: sts.tuple(() => [JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1]),
-    }
-})
-
-export const JunctionV1: sts.Type<JunctionV1> = sts.closedEnum(() => {
-    return  {
-        AccountId32: sts.enumStruct({
-            network: NetworkId,
-            id: AccountId,
-        }),
-        AccountIndex64: sts.enumStruct({
-            network: NetworkId,
-            index: sts.bigint(),
-        }),
-        AccountKey20: sts.enumStruct({
-            network: NetworkId,
-            key: sts.bytes(),
-        }),
-        GeneralIndex: sts.bigint(),
-        GeneralKey: sts.bytes(),
-        OnlyChild: sts.unit(),
-        PalletInstance: sts.number(),
-        Parachain: sts.number(),
-        Plurality: sts.enumStruct({
-            id: BodyId,
-            part: BodyPart,
-        }),
-    }
-})
-
 export interface MultiLocationV2 {
     parents: number
     interior: JunctionsV1
@@ -742,464 +749,3 @@ export interface VersionedMultiLocation_V2 {
     __kind: 'V2'
     value: MultiLocationV2
 }
-
-export const Xcm: sts.Type<Xcm> = sts.closedEnum(() => {
-    return  {
-        HrmpChannelAccepted: sts.enumStruct({
-            recipient: sts.number(),
-        }),
-        HrmpChannelClosing: sts.enumStruct({
-            initiator: sts.number(),
-            sender: sts.number(),
-            recipient: sts.number(),
-        }),
-        HrmpNewChannelOpenRequest: sts.enumStruct({
-            sender: sts.number(),
-            maxMessageSize: sts.number(),
-            maxCapacity: sts.number(),
-        }),
-        QueryResponse: sts.enumStruct({
-            queryId: sts.bigint(),
-            response: ResponseV1,
-        }),
-        ReceiveTeleportedAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        RelayedFrom: sts.enumStruct({
-            who: MultiLocationV1,
-            message: XcmV1,
-        }),
-        ReserveAssetDeposit: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        Transact: sts.enumStruct({
-            originType: XcmOriginKind,
-            requireWeightAtMost: sts.bigint(),
-            call: DoubleEncodedCall,
-        }),
-        TransferAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            dest: MultiLocationV1,
-        }),
-        TransferReserveAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            dest: MultiLocationV1,
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        WithdrawAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-    }
-})
-
-export const DoubleEncodedCall: sts.Type<DoubleEncodedCall> = sts.struct(() => {
-    return  {
-        encoded: sts.bytes(),
-    }
-})
-
-export interface DoubleEncodedCall {
-    encoded: Bytes
-}
-
-export const XcmOriginKind: sts.Type<XcmOriginKind> = sts.closedEnum(() => {
-    return  {
-        Native: sts.unit(),
-        SovereignAccount: sts.unit(),
-        Superuser: sts.unit(),
-        Xcm: sts.unit(),
-    }
-})
-
-export type XcmOriginKind = XcmOriginKind_Native | XcmOriginKind_SovereignAccount | XcmOriginKind_Superuser | XcmOriginKind_Xcm
-
-export interface XcmOriginKind_Native {
-    __kind: 'Native'
-}
-
-export interface XcmOriginKind_SovereignAccount {
-    __kind: 'SovereignAccount'
-}
-
-export interface XcmOriginKind_Superuser {
-    __kind: 'Superuser'
-}
-
-export interface XcmOriginKind_Xcm {
-    __kind: 'Xcm'
-}
-
-export const XcmV1: sts.Type<XcmV1> = sts.closedEnum(() => {
-    return  {
-        HrmpChannelAccepted: sts.enumStruct({
-            recipient: sts.number(),
-        }),
-        HrmpChannelClosing: sts.enumStruct({
-            initiator: sts.number(),
-            sender: sts.number(),
-            recipient: sts.number(),
-        }),
-        HrmpNewChannelOpenRequest: sts.enumStruct({
-            sender: sts.number(),
-            maxMessageSize: sts.number(),
-            maxCapacity: sts.number(),
-        }),
-        QueryResponse: sts.enumStruct({
-            queryId: sts.bigint(),
-            response: ResponseV1,
-        }),
-        ReceiveTeleportedAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        RelayedFrom: sts.enumStruct({
-            who: MultiLocationV1,
-            message: XcmV1,
-        }),
-        ReserveAssetDeposit: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        Transact: sts.enumStruct({
-            originType: XcmOriginKind,
-            requireWeightAtMost: sts.bigint(),
-            call: DoubleEncodedCall,
-        }),
-        TransferAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            dest: MultiLocationV1,
-        }),
-        TransferReserveAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            dest: MultiLocationV1,
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        WithdrawAsset: sts.enumStruct({
-            assets: sts.array(() => MultiAssetV1),
-            effects: sts.array(() => XcmOrderV1),
-        }),
-    }
-})
-
-export type XcmV1 = XcmV1_HrmpChannelAccepted | XcmV1_HrmpChannelClosing | XcmV1_HrmpNewChannelOpenRequest | XcmV1_QueryResponse | XcmV1_ReceiveTeleportedAsset | XcmV1_RelayedFrom | XcmV1_ReserveAssetDeposit | XcmV1_Transact | XcmV1_TransferAsset | XcmV1_TransferReserveAsset | XcmV1_WithdrawAsset
-
-export interface XcmV1_HrmpChannelAccepted {
-    __kind: 'HrmpChannelAccepted'
-    recipient: number
-}
-
-export interface XcmV1_HrmpChannelClosing {
-    __kind: 'HrmpChannelClosing'
-    initiator: number
-    sender: number
-    recipient: number
-}
-
-export interface XcmV1_HrmpNewChannelOpenRequest {
-    __kind: 'HrmpNewChannelOpenRequest'
-    sender: number
-    maxMessageSize: number
-    maxCapacity: number
-}
-
-export interface XcmV1_QueryResponse {
-    __kind: 'QueryResponse'
-    queryId: bigint
-    response: ResponseV1
-}
-
-export interface XcmV1_ReceiveTeleportedAsset {
-    __kind: 'ReceiveTeleportedAsset'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export interface XcmV1_RelayedFrom {
-    __kind: 'RelayedFrom'
-    who: MultiLocationV1
-    message: XcmV1
-}
-
-export interface XcmV1_ReserveAssetDeposit {
-    __kind: 'ReserveAssetDeposit'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export interface XcmV1_Transact {
-    __kind: 'Transact'
-    originType: XcmOriginKind
-    requireWeightAtMost: bigint
-    call: DoubleEncodedCall
-}
-
-export interface XcmV1_TransferAsset {
-    __kind: 'TransferAsset'
-    assets: MultiAssetV1[]
-    dest: MultiLocationV1
-}
-
-export interface XcmV1_TransferReserveAsset {
-    __kind: 'TransferReserveAsset'
-    assets: MultiAssetV1[]
-    dest: MultiLocationV1
-    effects: XcmOrderV1[]
-}
-
-export interface XcmV1_WithdrawAsset {
-    __kind: 'WithdrawAsset'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export type XcmOrderV1 = XcmOrderV1_BuyExecution | XcmOrderV1_DepositAsset | XcmOrderV1_DepositReserveAsset | XcmOrderV1_ExchangeAsset | XcmOrderV1_InitiateReserveWithdraw | XcmOrderV1_InitiateTeleport | XcmOrderV1_Noop | XcmOrderV1_QueryHolding
-
-export interface XcmOrderV1_BuyExecution {
-    __kind: 'BuyExecution'
-    fees: MultiAssetV1
-    weight: bigint
-    debt: bigint
-    haltOnError: boolean
-    instructions: XcmV1[]
-}
-
-export interface XcmOrderV1_DepositAsset {
-    __kind: 'DepositAsset'
-    assets: MultiAssetFilterV1
-    maxAssets: number
-    beneficiary: MultiLocationV1
-}
-
-export interface XcmOrderV1_DepositReserveAsset {
-    __kind: 'DepositReserveAsset'
-    assets: MultiAssetFilterV1
-    maxAssets: number
-    dest: MultiLocationV1
-    effects: XcmOrderV1[]
-}
-
-export interface XcmOrderV1_ExchangeAsset {
-    __kind: 'ExchangeAsset'
-    give: MultiAssetFilterV1
-    receive: MultiAssetV1[]
-}
-
-export interface XcmOrderV1_InitiateReserveWithdraw {
-    __kind: 'InitiateReserveWithdraw'
-    assets: MultiAssetFilterV1
-    reserve: MultiLocationV1
-    effects: XcmOrderV1[]
-}
-
-export interface XcmOrderV1_InitiateTeleport {
-    __kind: 'InitiateTeleport'
-    assets: MultiAssetFilterV1
-    dest: MultiLocationV1
-    effects: XcmOrderV1[]
-}
-
-export interface XcmOrderV1_Noop {
-    __kind: 'Noop'
-}
-
-export interface XcmOrderV1_QueryHolding {
-    __kind: 'QueryHolding'
-    queryId: bigint
-    dest: MultiLocationV1
-    assets: MultiAssetFilterV1
-}
-
-export type MultiAssetFilterV1 = MultiAssetFilterV1_Definite | MultiAssetFilterV1_Wild
-
-export interface MultiAssetFilterV1_Definite {
-    __kind: 'Definite'
-    value: MultiAssetV1[]
-}
-
-export interface MultiAssetFilterV1_Wild {
-    __kind: 'Wild'
-    value: WildMultiAssetV1
-}
-
-export type WildMultiAssetV1 = WildMultiAssetV1_All | WildMultiAssetV1_AllOf
-
-export interface WildMultiAssetV1_All {
-    __kind: 'All'
-}
-
-export interface WildMultiAssetV1_AllOf {
-    __kind: 'AllOf'
-    id: XcmAssetId
-    fungibility: WildFungibilityV1
-}
-
-export type WildFungibilityV1 = WildFungibilityV1_Fungible | WildFungibilityV1_NonFungible
-
-export interface WildFungibilityV1_Fungible {
-    __kind: 'Fungible'
-}
-
-export interface WildFungibilityV1_NonFungible {
-    __kind: 'NonFungible'
-}
-
-export type ResponseV1 = ResponseV1_Assets
-
-export interface ResponseV1_Assets {
-    __kind: 'Assets'
-    value: MultiAssetV1[]
-}
-
-export const XcmOrderV1: sts.Type<XcmOrderV1> = sts.closedEnum(() => {
-    return  {
-        BuyExecution: sts.enumStruct({
-            fees: MultiAssetV1,
-            weight: sts.bigint(),
-            debt: sts.bigint(),
-            haltOnError: sts.boolean(),
-            instructions: sts.array(() => XcmV1),
-        }),
-        DepositAsset: sts.enumStruct({
-            assets: MultiAssetFilterV1,
-            maxAssets: sts.number(),
-            beneficiary: MultiLocationV1,
-        }),
-        DepositReserveAsset: sts.enumStruct({
-            assets: MultiAssetFilterV1,
-            maxAssets: sts.number(),
-            dest: MultiLocationV1,
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        ExchangeAsset: sts.enumStruct({
-            give: MultiAssetFilterV1,
-            receive: sts.array(() => MultiAssetV1),
-        }),
-        InitiateReserveWithdraw: sts.enumStruct({
-            assets: MultiAssetFilterV1,
-            reserve: MultiLocationV1,
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        InitiateTeleport: sts.enumStruct({
-            assets: MultiAssetFilterV1,
-            dest: MultiLocationV1,
-            effects: sts.array(() => XcmOrderV1),
-        }),
-        Noop: sts.unit(),
-        QueryHolding: sts.enumStruct({
-            queryId: sts.bigint(),
-            dest: MultiLocationV1,
-            assets: MultiAssetFilterV1,
-        }),
-    }
-})
-
-export const MultiAssetFilterV1: sts.Type<MultiAssetFilterV1> = sts.closedEnum(() => {
-    return  {
-        Definite: sts.array(() => MultiAssetV1),
-        Wild: WildMultiAssetV1,
-    }
-})
-
-export const WildMultiAssetV1: sts.Type<WildMultiAssetV1> = sts.closedEnum(() => {
-    return  {
-        All: sts.unit(),
-        AllOf: sts.enumStruct({
-            id: XcmAssetId,
-            fungibility: WildFungibilityV1,
-        }),
-    }
-})
-
-export const WildFungibilityV1: sts.Type<WildFungibilityV1> = sts.closedEnum(() => {
-    return  {
-        Fungible: sts.unit(),
-        NonFungible: sts.unit(),
-    }
-})
-
-export const ResponseV1: sts.Type<ResponseV1> = sts.closedEnum(() => {
-    return  {
-        Assets: sts.array(() => MultiAssetV1),
-    }
-})
-
-export type Xcm = Xcm_HrmpChannelAccepted | Xcm_HrmpChannelClosing | Xcm_HrmpNewChannelOpenRequest | Xcm_QueryResponse | Xcm_ReceiveTeleportedAsset | Xcm_RelayedFrom | Xcm_ReserveAssetDeposit | Xcm_Transact | Xcm_TransferAsset | Xcm_TransferReserveAsset | Xcm_WithdrawAsset
-
-export interface Xcm_HrmpChannelAccepted {
-    __kind: 'HrmpChannelAccepted'
-    recipient: number
-}
-
-export interface Xcm_HrmpChannelClosing {
-    __kind: 'HrmpChannelClosing'
-    initiator: number
-    sender: number
-    recipient: number
-}
-
-export interface Xcm_HrmpNewChannelOpenRequest {
-    __kind: 'HrmpNewChannelOpenRequest'
-    sender: number
-    maxMessageSize: number
-    maxCapacity: number
-}
-
-export interface Xcm_QueryResponse {
-    __kind: 'QueryResponse'
-    queryId: bigint
-    response: ResponseV1
-}
-
-export interface Xcm_ReceiveTeleportedAsset {
-    __kind: 'ReceiveTeleportedAsset'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export interface Xcm_RelayedFrom {
-    __kind: 'RelayedFrom'
-    who: MultiLocationV1
-    message: XcmV1
-}
-
-export interface Xcm_ReserveAssetDeposit {
-    __kind: 'ReserveAssetDeposit'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export interface Xcm_Transact {
-    __kind: 'Transact'
-    originType: XcmOriginKind
-    requireWeightAtMost: bigint
-    call: DoubleEncodedCall
-}
-
-export interface Xcm_TransferAsset {
-    __kind: 'TransferAsset'
-    assets: MultiAssetV1[]
-    dest: MultiLocationV1
-}
-
-export interface Xcm_TransferReserveAsset {
-    __kind: 'TransferReserveAsset'
-    assets: MultiAssetV1[]
-    dest: MultiLocationV1
-    effects: XcmOrderV1[]
-}
-
-export interface Xcm_WithdrawAsset {
-    __kind: 'WithdrawAsset'
-    assets: MultiAssetV1[]
-    effects: XcmOrderV1[]
-}
-
-export const MultiLocation: sts.Type<MultiLocation> = sts.struct(() => {
-    return  {
-        parents: sts.number(),
-        interior: JunctionsV1,
-    }
-})

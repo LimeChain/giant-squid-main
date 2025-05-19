@@ -41,6 +41,16 @@ import { UnlockCallPalletDecoder } from '@/chain/polkadot/decoders/calls/convict
 import { VoteCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/vote';
 import { UndelegateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/undelegate';
 import { RemoveVoteCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/removeVote';
+import { NominationPoolsBondedEventPalletDecoder } from '@/chain/polkadot/decoders/events/nomination-pools/bonded';
+import { CreatePoolCallPalletDecoder } from '@/chain/polkadot/decoders/calls/nomination-pools/create';
+import { SetMetadataCallPalletDecoder } from '@/chain/polkadot/decoders/calls/nomination-pools/setMetadata';
+import { NominationPoolsDestroyedEventPalletDecoder } from './decoders/events/nomination-pools/destroyed';
+import { NominationPoolsUnbondedEventPalletDecoder } from './decoders/events/nomination-pools/unbonded';
+import { NominationPoolsStateChangedEventPalletDecoder } from './decoders/events/nomination-pools/stateChanged';
+import { UpdateRolesCallPalletDecoder } from './decoders/calls/nomination-pools/updateRoles';
+import { NominationPoolsPaidOutEventPalletDecoder } from './decoders/events/nomination-pools/paidOut';
+import { NominationPoolsWithdrawnEventPalletDecoder } from './decoders/events/nomination-pools/withdrawn';
+import { NominateCallPalletDecoder } from './decoders/calls/nomination-pools/nominate';
 
 export const indexer = new Indexer({
   config: {
@@ -85,6 +95,12 @@ export const indexer = new Indexer({
       'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
       'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
       'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      'NominationPools.Bonded': setupPallet({ decoder: new NominationPoolsBondedEventPalletDecoder() }),
+      'NominationPools.Destroyed': setupPallet({ decoder: new NominationPoolsDestroyedEventPalletDecoder() }),
+      'NominationPools.Unbonded': setupPallet({ decoder: new NominationPoolsUnbondedEventPalletDecoder() }),
+      'NominationPools.StateChanged': setupPallet({ decoder: new NominationPoolsStateChangedEventPalletDecoder() }),
+      'NominationPools.PaidOut': setupPallet({ decoder: new NominationPoolsPaidOutEventPalletDecoder() }),
+      'NominationPools.Withdrawn': setupPallet({ decoder: new NominationPoolsWithdrawnEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -115,6 +131,10 @@ export const indexer = new Indexer({
       'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),
       'ConvictionVoting.vote': setupPallet({ decoder: new VoteCallPalletDecoder() }),
       'ConvictionVoting.remove_vote': setupPallet({ decoder: new RemoveVoteCallPalletDecoder() }),
+      'NominationPools.create': setupPallet({ decoder: new CreatePoolCallPalletDecoder() }),
+      'NominationPools.set_metadata': setupPallet({ decoder: new SetMetadataCallPalletDecoder() }),
+      'NominationPools.update_roles': setupPallet({ decoder: new UpdateRolesCallPalletDecoder() }),
+      'NominationPools.nominate': setupPallet({ decoder: new NominateCallPalletDecoder() }),
     },
   },
 });

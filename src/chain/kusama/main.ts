@@ -41,6 +41,16 @@ import { ReserveTransferAssetsCallDecoder } from '@/chain/kusama/decoders/calls/
 import { TransferAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/transferAssets';
 import { LimitedTeleportAssetsCallDecoder } from '@/chain/kusama/decoders/calls/xcm/limitedTeleportAssets';
 import { TransferAssetsUsingTypeAndThenCallDecoder } from '@/chain/kusama/decoders/calls/xcm/transferAssetsUsingTypeAndThen';
+import { NominationPoolsBondedEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/bonded';
+import { NominationPoolsDestroyedEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/destroyed';
+import { NominationPoolsPaidOutEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/paidOut';
+import { NominationPoolsStateChangedEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/stateChanged';
+import { NominationPoolsUnbondedEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/unbonded';
+import { NominationPoolsWithdrawnEventPalletDecoder } from '@/chain/kusama/decoders/events/nomination-pools/withdrawn';
+import { CreatePoolCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/create';
+import { NominateCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/nominate';
+import { SetMetadataCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/setMetadata';
+import { UpdateRolesCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/updateRoles';
 
 export const indexer = new Indexer({
   config: {
@@ -84,6 +94,12 @@ export const indexer = new Indexer({
       'Registrar.Reserved': setupPallet({ decoder: new ReservedEventPalletDecoder() }),
       'Registrar.Registered': setupPallet({ decoder: new RegisteredEventPalletDecoder() }),
       'Registrar.Deregistered': setupPallet({ decoder: new DeregisteredEventPalletDecoder() }),
+      'NominationPools.Bonded': setupPallet({ decoder: new NominationPoolsBondedEventPalletDecoder() }),
+      'NominationPools.Destroyed': setupPallet({ decoder: new NominationPoolsDestroyedEventPalletDecoder() }),
+      'NominationPools.Unbonded': setupPallet({ decoder: new NominationPoolsUnbondedEventPalletDecoder() }),
+      'NominationPools.StateChanged': setupPallet({ decoder: new NominationPoolsStateChangedEventPalletDecoder() }),
+      'NominationPools.PaidOut': setupPallet({ decoder: new NominationPoolsPaidOutEventPalletDecoder() }),
+      'NominationPools.Withdrawn': setupPallet({ decoder: new NominationPoolsWithdrawnEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
@@ -114,6 +130,10 @@ export const indexer = new Indexer({
       'XcmPallet.transfer_assets': setupPallet({ decoder: new TransferAssetsCallDecoder() }),
       'XcmPallet.limited_teleport_assets': setupPallet({ decoder: new LimitedTeleportAssetsCallDecoder() }),
       'XcmPallet.transfer_assets_using_type_and_then': setupPallet({ decoder: new TransferAssetsUsingTypeAndThenCallDecoder() }),
+      'NominationPools.create': setupPallet({ decoder: new CreatePoolCallPalletDecoder() }),
+      'NominationPools.set_metadata': setupPallet({ decoder: new SetMetadataCallPalletDecoder() }),
+      'NominationPools.update_roles': setupPallet({ decoder: new UpdateRolesCallPalletDecoder() }),
+      'NominationPools.nominate': setupPallet({ decoder: new NominateCallPalletDecoder() }),
     },
   },
 });

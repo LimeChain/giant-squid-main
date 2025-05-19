@@ -31,6 +31,10 @@
         "limited_teleport_assets",
         "transfer_assets_using_type_and_then"
       ]
+    },
+    "NominationPools": {
+      "events": ["Bonded", "Destroyed", "Unbonded", "PaidOut", "StateChanged", "Withdrawn"],
+      "calls": ["create", "nominate", "set_metadata", "update_roles"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],

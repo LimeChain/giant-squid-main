@@ -7,6 +7,8 @@ import {StakingUnlockChunk} from "./stakingUnlockChunk.model"
 import {StakingReward} from "./stakingReward.model"
 import {StakingSlash} from "./stakingSlash.model"
 import {StakingBond} from "./stakingBond.model"
+import {Pool} from "./pool.model"
+import {StakingEraReward} from "./stakingEraReward.model"
 
 @Entity_()
 export class Staker {
@@ -65,4 +67,11 @@ export class Staker {
 
     @OneToMany_(() => StakingBond, e => e.staker)
     bonds!: StakingBond[]
+
+    @Index_()
+    @ManyToOne_(() => Pool, {nullable: true})
+    pool!: Pool | undefined | null
+
+    @OneToMany_(() => StakingEraReward, e => e.staker)
+    eraRewards!: StakingEraReward[]
 }

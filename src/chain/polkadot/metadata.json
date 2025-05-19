@@ -31,6 +31,10 @@
     },
     "ConvictionVoting": {
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
+    },
+    "NominationPools": {
+      "events": ["Bonded", "Destroyed", "Unbonded", "PaidOut", "StateChanged", "Withdrawn"],
+      "calls": ["create", "nominate", "set_metadata", "update_roles"]
     }
   },
   "storage": ["Staking.CurrentEra", "Staking.Ledger"],
