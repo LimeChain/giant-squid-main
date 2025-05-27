@@ -1,5 +1,5 @@
-module.exports = class Data1747039356954 {
-    name = 'Data1747039356954'
+module.exports = class Data1748022760468 {
+    name = 'Data1748022760468'
 
     async up(db) {
         await db.query(`CREATE TABLE "query_logs" ("id" character varying NOT NULL, "query" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "location" text, "chain_name" text NOT NULL, CONSTRAINT "PK_1f27bea0ec566aca1cbfc53e84b" PRIMARY KEY ("id"))`)
@@ -118,6 +118,14 @@ module.exports = class Data1747039356954 {
         await db.query(`CREATE INDEX "IDX_934b46b0a26f998007587b51a2" ON "nomination_pools_withdrawn" ("extrinsic_hash") `)
         await db.query(`CREATE INDEX "IDX_1b9e709958b90e797de3ab8714" ON "nomination_pools_withdrawn" ("pool_id") `)
         await db.query(`CREATE INDEX "IDX_d848ade77746fc314d83217584" ON "nomination_pools_withdrawn" ("member_id") `)
+        await db.query(`CREATE TABLE "nft_token" ("id" character varying NOT NULL, "metadata_ipfs" text, "collection_id" character varying, "owner_id" character varying, CONSTRAINT "PK_7e215df412b248db3731737290e" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_a8d0423b59eba1fa1a39e6c123" ON "nft_token" ("collection_id") `)
+        await db.query(`CREATE INDEX "IDX_8dd8203be3cd1816ba715afd21" ON "nft_token" ("owner_id") `)
+        await db.query(`CREATE TABLE "nft_collection" ("id" character varying NOT NULL, "metadata_ipfs" text, "owner_id" character varying, CONSTRAINT "PK_ffe58aa05707db77c2f20ecdbc3" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_a44ae247ba071997b3849ec571" ON "nft_collection" ("owner_id") `)
+        await db.query(`CREATE TABLE "nft_holder" ("id" character varying NOT NULL, "balance" integer NOT NULL, "account_id" character varying, "collection_id" character varying, CONSTRAINT "PK_615f76feb8e0d93e85840b738c3" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE INDEX "IDX_1e8580c8be93232e0542d94725" ON "nft_holder" ("account_id") `)
+        await db.query(`CREATE INDEX "IDX_bb28884598f9c34a157465eac3" ON "nft_holder" ("collection_id") `)
         await db.query(`ALTER TABLE "staking_payee" ADD CONSTRAINT "FK_68a5389e6a39fc3bc7e29933336" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_payee" ADD CONSTRAINT "FK_f22703d3cdc1f9f9d898e1bee85" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "staking_controller" ADD CONSTRAINT "FK_1d205a09102d69c4c4d655652bc" FOREIGN KEY ("staker_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -167,6 +175,11 @@ module.exports = class Data1747039356954 {
         await db.query(`ALTER TABLE "identity" ADD CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "nomination_pools_withdrawn" ADD CONSTRAINT "FK_1b9e709958b90e797de3ab87143" FOREIGN KEY ("pool_id") REFERENCES "pool"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
         await db.query(`ALTER TABLE "nomination_pools_withdrawn" ADD CONSTRAINT "FK_d848ade77746fc314d832175845" FOREIGN KEY ("member_id") REFERENCES "staker"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "nft_token" ADD CONSTRAINT "FK_a8d0423b59eba1fa1a39e6c1232" FOREIGN KEY ("collection_id") REFERENCES "nft_collection"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "nft_token" ADD CONSTRAINT "FK_8dd8203be3cd1816ba715afd21e" FOREIGN KEY ("owner_id") REFERENCES "nft_holder"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "nft_collection" ADD CONSTRAINT "FK_a44ae247ba071997b3849ec5717" FOREIGN KEY ("owner_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "nft_holder" ADD CONSTRAINT "FK_1e8580c8be93232e0542d947250" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
+        await db.query(`ALTER TABLE "nft_holder" ADD CONSTRAINT "FK_bb28884598f9c34a157465eac31" FOREIGN KEY ("collection_id") REFERENCES "nft_collection"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     }
 
     async down(db) {
@@ -286,6 +299,14 @@ module.exports = class Data1747039356954 {
         await db.query(`DROP INDEX "public"."IDX_934b46b0a26f998007587b51a2"`)
         await db.query(`DROP INDEX "public"."IDX_1b9e709958b90e797de3ab8714"`)
         await db.query(`DROP INDEX "public"."IDX_d848ade77746fc314d83217584"`)
+        await db.query(`DROP TABLE "nft_token"`)
+        await db.query(`DROP INDEX "public"."IDX_a8d0423b59eba1fa1a39e6c123"`)
+        await db.query(`DROP INDEX "public"."IDX_8dd8203be3cd1816ba715afd21"`)
+        await db.query(`DROP TABLE "nft_collection"`)
+        await db.query(`DROP INDEX "public"."IDX_a44ae247ba071997b3849ec571"`)
+        await db.query(`DROP TABLE "nft_holder"`)
+        await db.query(`DROP INDEX "public"."IDX_1e8580c8be93232e0542d94725"`)
+        await db.query(`DROP INDEX "public"."IDX_bb28884598f9c34a157465eac3"`)
         await db.query(`ALTER TABLE "staking_payee" DROP CONSTRAINT "FK_68a5389e6a39fc3bc7e29933336"`)
         await db.query(`ALTER TABLE "staking_payee" DROP CONSTRAINT "FK_f22703d3cdc1f9f9d898e1bee85"`)
         await db.query(`ALTER TABLE "staking_controller" DROP CONSTRAINT "FK_1d205a09102d69c4c4d655652bc"`)
@@ -335,5 +356,10 @@ module.exports = class Data1747039356954 {
         await db.query(`ALTER TABLE "identity" DROP CONSTRAINT "FK_bafa9e6c71c3f69cef6602a8095"`)
         await db.query(`ALTER TABLE "nomination_pools_withdrawn" DROP CONSTRAINT "FK_1b9e709958b90e797de3ab87143"`)
         await db.query(`ALTER TABLE "nomination_pools_withdrawn" DROP CONSTRAINT "FK_d848ade77746fc314d832175845"`)
+        await db.query(`ALTER TABLE "nft_token" DROP CONSTRAINT "FK_a8d0423b59eba1fa1a39e6c1232"`)
+        await db.query(`ALTER TABLE "nft_token" DROP CONSTRAINT "FK_8dd8203be3cd1816ba715afd21e"`)
+        await db.query(`ALTER TABLE "nft_collection" DROP CONSTRAINT "FK_a44ae247ba071997b3849ec5717"`)
+        await db.query(`ALTER TABLE "nft_holder" DROP CONSTRAINT "FK_1e8580c8be93232e0542d947250"`)
+        await db.query(`ALTER TABLE "nft_holder" DROP CONSTRAINT "FK_bb28884598f9c34a157465eac31"`)
     }
 }

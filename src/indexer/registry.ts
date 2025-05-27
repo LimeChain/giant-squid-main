@@ -53,6 +53,13 @@ import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets
 import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
 import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
+import { CreatedEventPalletHandler } from '@/indexer/pallets/nfts/events/created';
+import { CollectionMetadataSetEventPalletHandler } from '@/indexer/pallets/nfts/events/collectionMetadataSet';
+import { CollectionOwnerChangeEventPalletHandler } from '@/indexer/pallets/nfts/events/collectionOwnerChange';
+import { TokenIssuedEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenIssued';
+import { TokenMetadataSetEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenMetadataSet';
+import { TokenBurnedEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenBurned';
+import { TokenTransferredEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenTransferred';
 
 export const registry = {
   events: {
@@ -90,6 +97,13 @@ export const registry = {
     'NominationPools.StateChanged': NominationPoolsStateChangedEventPalletHandler,
     'NominationPools.PaidOut': NominationPoolsPaidOutEventPalletHandler,
     'NominationPools.Withdrawn': NominationPoolsWithdrawnEventPalletHandler,
+    'Nfts.Created': CreatedEventPalletHandler,
+    'Nfts.CollectionMetadataSet': CollectionMetadataSetEventPalletHandler,
+    'Nfts.OwnerChanged': CollectionOwnerChangeEventPalletHandler,
+    'Nfts.Issued': TokenIssuedEventPalletHandler,
+    'Nfts.ItemMetadataSet': TokenMetadataSetEventPalletHandler,
+    'Nfts.Burned': TokenBurnedEventPalletHandler,
+    'Nfts.Transferred': TokenTransferredEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,

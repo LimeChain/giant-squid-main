@@ -124,6 +124,13 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       appendedSchemaParts.add('nominationpools');
     }
+
+    // Nomination pool pallet
+    if (lowerCaseKey === 'nfts.created' && !appendedSchemaParts.has('nfts')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'nfts.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('nfts');
+    }
   }
 
   accountSchema.push(`\n}\n`);

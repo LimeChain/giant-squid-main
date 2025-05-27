@@ -58,5 +58,12 @@ export { INominationPoolsStateChangedEventPalletDecoder } from '@/indexer/pallet
 export { INominationPoolsPaidOutEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/paidOut';
 export { INominationPoolsWithdrawnEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 export { INominationPoolsNominateCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/nominate';
+export { ICreatedEventPalletDecoder } from '@/indexer/pallets/nfts/events/created';
+export { ICollectionMetadataSetEventPalletDecoder } from '@/indexer/pallets/nfts/events/collectionMetadataSet';
+export { ICollectionOwnerChangeEventPalletDecoder } from '@/indexer/pallets/nfts/events/collectionOwnerChange';
+export { ITokenIssuedEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenIssued';
+export { ITokenMetadataSetEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenMetadataSet';
+export { ITokenBurnedEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenBurned';
+export { ITokenTransferredEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenTransferred';
 
 export { Indexer, setupPallet } from '@/indexer/main';

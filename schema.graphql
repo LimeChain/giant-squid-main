@@ -402,3 +402,23 @@ type Account @entity {
   staker: Staker @derivedFrom(field: "stash")
   rewards: [StakingReward!] @derivedFrom(field: "account")
 }
+
+type NftHolder @entity {
+  account: Account! @index
+  balance: Int!
+  collection: NftCollection!
+}
+
+type NftCollection @entity {
+  id: ID!
+  owner: Account! @index
+  tokens: [NftToken!]! @derivedFrom(field: "collection")
+  metadataIpfs: String
+}
+
+type NftToken @entity {
+  id: ID!
+  collection: NftCollection! @index
+  owner: NftHolder! @index
+  metadataIpfs: String
+}
