@@ -31,6 +31,11 @@ import { PartiallyRefundedEventPalletDecoder } from '@/chain/polkadot/decoders/e
 import { AllRefundedEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/allRefunded';
 import { WithdrewEventPalletDecoder } from '@/chain/polkadot/decoders/events/crowdloan/withdrew';
 import { RemoveKeysLimitConstantGetter } from './constants/removeKeysLimit';
+import { ReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/reserveTransferAssets';
+import { LimitedReserveTransferAssetsCallDecoder } from './decoders/calls/xcm/limitedReserveTransferAssets';
+import { TransferAssetsCallDecoder } from './decoders/calls/xcm/transferAssets';
+import { LimitedTeleportAssetsCallDecoder } from './decoders/calls/xcm/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenCallDecoder } from './decoders/calls/xcm/transferAssetsUsingTypeAndThen';
 import { DelegateCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/delegate';
 import { UnlockCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/unlock';
 import { VoteCallPalletDecoder } from '@/chain/polkadot/decoders/calls/conviction-voting/vote';
@@ -116,6 +121,11 @@ export const indexer = new Indexer({
       'Identity.add_sub': setupPallet({ decoder: new AddSubCallPalletDecoder() }),
       'Identity.rename_sub': setupPallet({ decoder: new RenameIdentityCallPalletDecoder() }),
       'Crowdloan.create': setupPallet({ decoder: new CreateCallPalletDecoder() }),
+      'XcmPallet.reserve_transfer_assets': setupPallet({ decoder: new ReserveTransferAssetsCallDecoder() }),
+      'XcmPallet.limited_reserve_transfer_assets': setupPallet({ decoder: new LimitedReserveTransferAssetsCallDecoder() }),
+      'XcmPallet.transfer_assets': setupPallet({ decoder: new TransferAssetsCallDecoder() }),
+      'XcmPallet.limited_teleport_assets': setupPallet({ decoder: new LimitedTeleportAssetsCallDecoder() }),
+      'XcmPallet.transfer_assets_using_type_and_then': setupPallet({ decoder: new TransferAssetsUsingTypeAndThenCallDecoder() }),
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
       'ConvictionVoting.delegate': setupPallet({ decoder: new DelegateCallPalletDecoder() }),
       'ConvictionVoting.undelegate': setupPallet({ decoder: new UndelegateCallPalletDecoder() }),

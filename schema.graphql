@@ -2,38 +2,6 @@
 # This file will be auto-populated based on the pallets used in src/chain/{chainName}/main.ts
 # See generateSchema.ts for more information on how this file is generated.
 
-type QueryLogs @entity {
-  id: ID!
-  query: String!
-  timestamp: DateTime!
-  location: String
-  chainName: String!
-}
-
-enum TransferDirection {
-  From
-  To
-}
-
-# entity for linking account and transfer
-type Transfer @entity {
-  id: ID!
-  transfer: NativeTransfer
-  account: Account!
-  direction: TransferDirection
-}
-
-type NativeTransfer @entity {
-  id: ID!
-  blockNumber: Int! @index
-  timestamp: DateTime! @index
-  extrinsicHash: String @index
-  from: Account!
-  to: Account!
-  amount: BigInt! @index
-  success: Boolean!
-}
-
 type ConvictionDelegate @entity {
   id: ID!
   extrinsicHash: String @index
@@ -97,6 +65,114 @@ type Parachain @entity {
   status: ParachainStatus!
 
   crowdloans: [Crowdloan!] @derivedFrom(field: "parachain")
+}
+
+type ParachainStakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCompound @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegation @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+  delegatorPosition: String
+  autoCompundPercent: Int!
+}
+
+type ParachainStakingDelegationRevoked @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationIncreased @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationDecreased @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingDelegationKicked @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  delegator: Account!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesWithdrawed @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesBonded @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
+}
+
+type ParachainStakingCandidatesUnbonded @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  staker: Staker!
+  amount: BigInt!
 }
 
 type CrowdloanContributor @entity {
@@ -166,6 +242,18 @@ type Crowdloan @entity {
 type IdentityAdditionalField {
   name: String
   value: String
+}
+
+type StakingReward @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String @index
+  account: Account!
+  amount: BigInt!
+  staker: Staker!
+  era: Int
+  validatorId: ID
 }
 
 enum Judgement {
@@ -314,18 +402,6 @@ type StakingEraReward @entity {
   returnPercentage: String!
 }
 
-type StakingReward @entity {
-  id: ID!
-  timestamp: DateTime!
-  blockNumber: Int! @index
-  extrinsicHash: String @index
-  account: Account!
-  amount: BigInt!
-  staker: Staker!
-  era: Int
-  validatorId: ID
-}
-
 enum BondingType {
   Bond
   BondExtra
@@ -393,6 +469,79 @@ type StakingController @entity {
   extrinsicHash: String @index
 }
 
+type PolkadotXcmTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account!
+  to: String
+  toChain: String @index
+  amount: BigInt
+  weightLimit: BigInt
+  call: String! @index
+  contractCalled: String @index
+  contractInput: String
+}
+
+type QueryLogs @entity {
+  id: ID!
+  query: String!
+  timestamp: DateTime!
+  location: String
+  chainName: String!
+}
+
+enum TransferDirection {
+  From
+  To
+}
+
+# entity for linking account and transfer
+type Transfer @entity {
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
+}
+
+type NativeTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
+}
+
+type XcmTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account!
+  to: String!
+  toChain: Parachain
+  amount: BigInt!
+  weightLimit: BigInt
+  call: String! @index
+}
+
+type XTokensTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account!
+  to: String
+  toChain: String
+  assets: [[String]]
+  amount: [String]
+  call: String! @index
+}
+
 type Account @entity {
   id: ID!
   publicKey: ID! @index
@@ -401,4 +550,7 @@ type Account @entity {
   identity: Identity @derivedFrom(field: "account")
   staker: Staker @derivedFrom(field: "stash")
   rewards: [StakingReward!] @derivedFrom(field: "account")
+  xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")
+  polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")
+  xTokenTransfers: [XTokensTransfer!] @derivedFrom(field: "account")
 }

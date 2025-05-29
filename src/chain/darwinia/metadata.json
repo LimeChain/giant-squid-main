@@ -7,6 +7,9 @@
     },
     "ConvictionVoting": {
       "calls": ["unlock", "vote", "remove_vote"]
+    },
+    "PolkadotXcm": {
+      "events": ["Sent"]
     }
   },
   "storage": []

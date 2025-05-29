@@ -4,6 +4,9 @@ import {IdentitySub} from "./identitySub.model"
 import {Identity} from "./identity.model"
 import {Staker} from "./staker.model"
 import {StakingReward} from "./stakingReward.model"
+import {XcmTransfer} from "./xcmTransfer.model"
+import {PolkadotXcmTransfer} from "./polkadotXcmTransfer.model"
+import {XTokensTransfer} from "./xTokensTransfer.model"
 
 @Entity_()
 export class Account {
@@ -26,4 +29,13 @@ export class Account {
 
     @OneToMany_(() => StakingReward, e => e.account)
     rewards!: StakingReward[]
+
+    @OneToMany_(() => XcmTransfer, e => e.account)
+    xcmTransfers!: XcmTransfer[]
+
+    @OneToMany_(() => PolkadotXcmTransfer, e => e.account)
+    polkadotXcmTransfers!: PolkadotXcmTransfer[]
+
+    @OneToMany_(() => XTokensTransfer, e => e.account)
+    xTokenTransfers!: XTokensTransfer[]
 }
