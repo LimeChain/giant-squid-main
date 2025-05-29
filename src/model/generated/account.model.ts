@@ -4,6 +4,7 @@ import {IdentitySub} from "./identitySub.model"
 import {Identity} from "./identity.model"
 import {Staker} from "./staker.model"
 import {StakingReward} from "./stakingReward.model"
+import {NFTToken} from "./nftToken.model"
 
 @Entity_()
 export class Account {
@@ -26,4 +27,7 @@ export class Account {
 
     @OneToMany_(() => StakingReward, e => e.account)
     rewards!: StakingReward[]
+
+    @OneToMany_(() => NFTToken, e => e.owner)
+    nftTokens!: NFTToken[]
 }

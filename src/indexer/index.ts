@@ -58,5 +58,6 @@ export { INominationPoolsStateChangedEventPalletDecoder } from '@/indexer/pallet
 export { INominationPoolsPaidOutEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/paidOut';
 export { INominationPoolsWithdrawnEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 export { INominationPoolsNominateCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/nominate';
+export { IEvmLogEventPalletDecoder } from '@/indexer/pallets/evm/events/log';
 
 export { Indexer, setupPallet } from '@/indexer/main';

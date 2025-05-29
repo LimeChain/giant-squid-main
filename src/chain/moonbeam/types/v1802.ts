@@ -10,6 +10,8 @@ export const Log: sts.Type<Log> = sts.struct(() => {
 
 export const H256 = sts.bytes()
 
+export const H160 = sts.bytes()
+
 export interface Log {
     address: H160
     topics: H256[]
@@ -19,5 +21,3 @@ export interface Log {
 export type H256 = Bytes
 
 export type H160 = Bytes
-
-export const H160 = sts.bytes()
