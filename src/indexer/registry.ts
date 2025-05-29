@@ -53,6 +53,7 @@ import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets
 import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
 import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
+import { EvmLogEventPalletHandler } from '@/indexer/pallets/evm/events/log';
 
 export const registry = {
   events: {
@@ -90,6 +91,7 @@ export const registry = {
     'NominationPools.StateChanged': NominationPoolsStateChangedEventPalletHandler,
     'NominationPools.PaidOut': NominationPoolsPaidOutEventPalletHandler,
     'NominationPools.Withdrawn': NominationPoolsWithdrawnEventPalletHandler,
+    'EVM.Log': EvmLogEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,

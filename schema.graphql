@@ -401,4 +401,51 @@ type Account @entity {
   identity: Identity @derivedFrom(field: "account")
   staker: Staker @derivedFrom(field: "stash")
   rewards: [StakingReward!] @derivedFrom(field: "account")
+  nftTokens: [NFTToken!] @derivedFrom(field: "owner")
+}
+
+enum NFTTokenStandard {
+  ERC721
+  ERC1155
+}
+
+type NFTHolder @entity {
+  id: ID!
+  account: Account! @index
+  nftCount: Int!
+  collection: NFTCollection! @index
+}
+
+type NFTCollection @entity {
+  id: ID!
+  holders: [NFTHolder!] @derivedFrom(field: "collection")
+  tokens: [NFTToken!] @derivedFrom(field: "collection")
+  transfers: [NFTTransfer!] @derivedFrom(field: "collection")
+}
+
+type NFTTransfer @entity {
+  id: ID!
+  timestamp: DateTime!
+  blockNumber: Int! @index
+  extrinsicHash: String! @index
+  from: Account! @index
+  to: Account! @index
+  tokens: [NFTTokenTransfer!]! @derivedFrom(field: "transfer")
+  collection: NFTCollection! @index
+}
+
+type NFTToken @entity {
+  id: ID!
+  tokenId: String! @index
+  collection: NFTCollection! @index
+  owner: Account! @index
+  metadataIpfs: String
+  standard: NFTTokenStandard!
+  transfers: [NFTTokenTransfer!]! @derivedFrom(field: "token")
+}
+
+type NFTTokenTransfer @entity {
+  id: ID!
+  token: NFTToken! @index
+  transfer: NFTTransfer! @index
 }
