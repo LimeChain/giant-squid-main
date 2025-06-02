@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, ConvictionUndelegate } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { NominationPoolsNominate, NominationPoolsUnbound, Pool, Staker, StakingBond } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

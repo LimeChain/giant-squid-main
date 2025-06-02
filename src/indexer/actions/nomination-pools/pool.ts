@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Pool, PoolStatus, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

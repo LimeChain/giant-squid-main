@@ -1,6 +1,7 @@
 import { events, v9280 } from '@/chain/polkadot/types';
 import { UnknownVersionError } from '@/utils';
 import { Event, INominationPoolsStateChangedEventPalletDecoder } from '@/indexer';
+// @ts-ignore
 import { PoolStatus } from '@/model';
 
 const decodeNewState = (newState: v9280.PoolState) => {

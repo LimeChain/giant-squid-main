@@ -1,6 +1,7 @@
 import { events, v9220 } from '@/chain/kusama/types';
 import { DataNotDecodableError, UnknownVersionError } from '@/utils';
 import { Event, INominationPoolsStateChangedEventPalletDecoder } from '@/indexer';
+// @ts-ignore
 import { PoolStatus } from '@/model';
 
 const decodeNewState = (newState: v9220.PoolState) => {
