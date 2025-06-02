@@ -142,9 +142,16 @@ function getAssetIds(assets: V1MultiAssetV2040[]) {
           case 'Here':
             return [asset.id.value.interior.__kind, DEFAULT_ASSET_ID];
           case 'X1':
-            return asset.id.value.interior.value.__kind === 'Parachain'
-              ? [asset.id.value.interior.value.value.toString(), DEFAULT_ASSET_ID]
-              : [undefined, undefined];
+            switch (asset.id.value.interior.value.__kind) {
+              case 'Parachain':
+                return [asset.id.value.interior.value.value.toString(), DEFAULT_ASSET_ID];
+              case 'GeneralKey':
+                return ['Here', asset.id.value.interior.value.value];
+              case 'GeneralIndex':
+                return ['Here', asset.id.value.interior.value.value.toString()];
+              default:
+                return [undefined, undefined];
+            }
           case 'X2': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
@@ -189,9 +196,17 @@ function getAssetIdsV3(assets: V3MultiAssetV2240[]) {
           case 'Here':
             return [asset.id.value.interior.__kind, DEFAULT_ASSET_ID];
           case 'X1':
-            return asset.id.value.interior.value.__kind === 'Parachain'
-              ? [asset.id.value.interior.value.value.toString(), DEFAULT_ASSET_ID]
-              : [undefined, undefined];
+            switch (asset.id.value.interior.value.__kind) {
+              case 'Parachain':
+                return [asset.id.value.interior.value.value.toString(), DEFAULT_ASSET_ID];
+              case 'GeneralKey':
+                return ['Here', asset.id.value.interior.value.data];
+              case 'GeneralIndex':
+                return ['Here', asset.id.value.interior.value.value.toString()];
+              default:
+                return [undefined, undefined];
+            }
+
           case 'X2': {
             const assetChainId = asset.id.value.interior.value[0].__kind === 'Parachain' ? asset.id.value.interior.value[0].value.toString() : undefined;
             let assetId = DEFAULT_ASSET_ID;
