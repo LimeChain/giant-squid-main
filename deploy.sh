@@ -14,27 +14,40 @@ while getopts "m:c:" opt; do
   esac
 done
 
-# If chain name is not provided, use the name of the manifest file as that
-if [ -z "$chain_name" ]; then
-  chain_name=$(basename "$manifest_file" .yaml)
-fi
-
+# Export the environment variables and make sure they persist
 export CHAIN=$chain_name
 export CHAIN_RPC_ENDPOINT="$chain_name"
 
-# Wait a few seconds when you get the "Are you sure?" prompt it will automatically confirm
-sqd prepare:prod && {
-  expect <<EOF
-  spawn sqd deploy -o limechain -r -m "$manifest_file"
-  expect "Are you sure? (Y/n)"
-  send "\r"
-  expect eof
-EOF
-}
+echo "Building schema for chain: $CHAIN"
+
+# Clean up files not related to the specific chain
+echo "Removing files not required for $chain_name..."
+
+# Keep only the specific chain files in src/chain and lib/chain
+find src/chain -mindepth 1 -maxdepth 1 -type d -not -name "$chain_name" -exec rm -rf {} \;
+find lib/chain -mindepth 1 -maxdepth 1 -type d -not -name "$chain_name" -exec rm -rf {} \; 2>/dev/null || true
+
+echo "Cleanup complete. Only $chain_name chain files remain."
+
+# Run the prepare:prod script with the environment variables
+CHAIN=$chain_name CHAIN_RPC_ENDPOINT="$chain_name" sqd prepare:prod
+
+# Deploy with expect for automatic confirmation
+# expect <<EOF
+# spawn sqd deploy -o limechain -m "$manifest_file"
+# expect "Are you sure? (Y/n)"
+# send "\r"
+# expect eof
+# EOF
 
 echo "Deployment finished"
 
-sleep 10
+echo "Cleaning up"
+# # Clean up
+# git checkout -- .
+# git clean -fd
+
+sleep 5
 
 unset CHAIN
 unset CHAIN_RPC_ENDPOINT
@@ -46,7 +59,3 @@ fi
 if [ -z "$CHAIN_RPC_ENDPOINT" ]; then
   echo "CHAIN_RPC_ENDPOINT is unset"
 fi
-
-# Remove unstaged changes caused by prepare:prod
-git checkout -- .
-git clean -fd
