@@ -1,4 +1,4 @@
-export * from './transfer';
+export * from './balances/transfer';
 export * from './staking/reward';
 export * from './account';
 export * from './staking/slash';

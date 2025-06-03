@@ -1,6 +1,7 @@
 import {sts, Block, Bytes, Option, Result, EventType, RuntimeCtx} from '../support'
 import * as v70 from '../v70'
 import * as v91 from '../v91'
+import * as v1501 from '../v1501'
 
 export const transferredMultiAssets =  {
     name: 'XTokens.TransferredMultiAssets',
@@ -30,6 +31,18 @@ export const transferredAssets =  {
             assets: sts.array(() => v91.V4Asset),
             fee: v91.V4Asset,
             dest: v91.V4Location,
+        })
+    ),
+    /**
+     * Transferred `Asset` with fee.
+     */
+    v1501: new EventType(
+        'XTokens.TransferredAssets',
+        sts.struct({
+            sender: v1501.AccountId32,
+            assets: sts.array(() => v1501.V5Asset),
+            fee: v1501.V5Asset,
+            dest: v1501.V5Location,
         })
     ),
 }

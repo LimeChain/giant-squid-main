@@ -76,7 +76,16 @@ function getAssetIds(assets: V4Asset[]) {
       case 'Here':
         return [asset.id.interior.__kind, DEFAULT_ASSET_ID];
       case 'X1':
-        return asset.id.interior.value[0].__kind === 'Parachain' ? [asset.id.interior.value[0].value.toString(), DEFAULT_ASSET_ID] : [undefined, undefined];
+        switch (asset.id.interior.value[0].__kind) {
+          case 'Parachain':
+            return [asset.id.interior.value[0].value.toString(), DEFAULT_ASSET_ID];
+          case 'GeneralKey':
+            return ['Here', asset.id.interior.value[0].data];
+          case 'GeneralIndex':
+            return ['Here', asset.id.interior.value[0].value.toString()];
+          default:
+            return [undefined, undefined];
+        }
       case 'X2': {
         const assetChainId = asset.id.interior.value[0].__kind === 'Parachain' ? asset.id.interior.value[0].value.toString() : undefined;
         let assetId = DEFAULT_ASSET_ID;

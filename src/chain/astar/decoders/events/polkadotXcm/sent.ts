@@ -11,6 +11,7 @@ import {
 } from '@/chain/astar/types/v52';
 import { V3Instruction, V3Instruction_BuyExecution, V3MultiLocation } from '@/chain/astar/types/v61';
 import { V4Instruction, V4Location, V4Instruction_BuyExecution } from '@/chain/astar/types/v91';
+import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/astar/types/v1501';
 
 export class SentEventPalletDecoder implements ISentEventPalletDecoder {
   decode(event: Event) {
@@ -102,6 +103,23 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
+    } else if (sent.v1501.is(event)) {
+      const { origin, destination, message, messageId } = sent.v1501.decode(event);
+      if (message.length <= 1) return;
+
+      const from = getOriginCallerV4(origin);
+      if (!from) return;
+
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V5Instruction_BuyExecution;
+      return {
+        to: getTargetV4(message.at(-1)!, from),
+        toChain: getDestinationV4(destination),
+        amount: getAmount(message[0]),
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+        from,
+        contractCalled: event?.call?.args?.transaction?.value?.action?.value,
+        contractInput: event?.call?.args?.transaction?.value?.input,
+      };
     }
 
     throw new UnknownVersionError(sent);
@@ -174,7 +192,7 @@ function getDestinationV4(destination: V4Location) {
   return;
 }
 
-function getAmount(message: V2Instruction | V2InstructionV52 | V3Instruction | V4Instruction) {
+function getAmount(message: V2Instruction | V2InstructionV52 | V3Instruction | V4Instruction | V5Instruction) {
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
@@ -209,7 +227,7 @@ function getTarget(message: V2Instruction | V2InstructionV52 | V3Instruction, fr
   return;
 }
 
-function getTargetV4(message: V4Instruction, from?: string) {
+function getTargetV4(message: V4Instruction | V5Instruction, from?: string) {
   // Call are to other parachains
   if (message.__kind === 'DepositAsset') {
     if (message.beneficiary.interior.__kind === 'X1') {
