@@ -1,4 +1,5 @@
-import { Account, ConvictionRemoveVote, ConvictionVoteField } from '@/model';
+// @ts-ignore
+import { Account, ConvictionRemoveVote } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface RemoveVoteConvictionVotingData {

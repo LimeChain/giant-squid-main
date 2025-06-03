@@ -1,3 +1,4 @@
+//@ts-ignore
 import { NominationPoolsBond, Pool, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
@@ -35,6 +36,7 @@ export class NominationPoolsBondAction extends Action<BondData> {
       pool.members.push(staker.id);
     }
 
+    // @ts-ignore: Property assignment
     staker.pool = pool;
 
     await ctx.store.upsert(bond);

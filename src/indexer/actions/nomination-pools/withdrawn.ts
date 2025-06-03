@@ -1,4 +1,5 @@
-import { NominationPoolsUnbound, NominationPoolsWithdrawn, Pool, Staker, StakingBond } from '@/model';
+//@ts-ignore
+import { NominationPoolsWithdrawn, Pool, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface WithdrawnPoolData {
