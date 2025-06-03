@@ -1,4 +1,5 @@
-import { NominationPoolsUnbound, Pool, Staker, StakingBond } from '@/model';
+//@ts-ignore
+import { NominationPoolsUnbound, Pool, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface UnbondPoolData {
@@ -31,7 +32,7 @@ export class UnbondPoolAction extends Action<UnbondPoolData> {
       staker.totalUnbonded += this.data.balance; // Ensure "Unbonded" is correct as per your domain model
       pool.totalBonded -= this.data.balance;
     }
-    pool.members = pool.members.filter((member) => member !== staker.id);
+    pool.members = pool.members.filter((member: string) => member !== staker.id);
 
     await ctx.store.insert(unbonded);
     await ctx.store.upsert(staker);
