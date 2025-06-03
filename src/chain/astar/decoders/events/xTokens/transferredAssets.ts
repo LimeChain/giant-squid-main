@@ -10,7 +10,18 @@ export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEv
     const transferredAssets = events.xTokens.transferredAssets;
 
     if (transferredAssets.v91.is(event)) {
-      const { assets, dest, fee, sender } = transferredAssets.v91.decode(event);
+      const { assets, dest, sender } = transferredAssets.v91.decode(event);
+
+      return {
+        from: sender,
+        toChain: getDestinationV4(dest),
+        amount: getAssetAmounts(assets),
+        assets: getAssetIds(assets),
+        to: getTo(dest),
+      };
+    }
+    if (transferredAssets.v1501.is(event)) {
+      const { assets, dest, sender } = transferredAssets.v1501.decode(event);
 
       return {
         from: sender,

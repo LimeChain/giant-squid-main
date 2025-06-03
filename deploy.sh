@@ -29,7 +29,7 @@ done
 CHAIN=$chain_name CHAIN_RPC_ENDPOINT="$chain_name" sqd prepare:prod
 
 # Deploy the squid
-sqd deploy -o limechain -m "$manifest_file" $HARD_RESET_FLAG
+sqd deploy --no-interactive --no-stream-logs -o limechain -m "$manifest_file" $HARD_RESET_FLAG
 echo "Deployment finished"
 
 # Clean up
