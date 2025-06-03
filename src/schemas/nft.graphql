@@ -1,3 +1,15 @@
+enum NFTTokenStandard {
+  ERC721
+  ERC1155
+}
+
+type NFTHolder @entity {
+  id: ID!
+  account: Account! @index
+  nftCount: Int!
+  collection: NFTCollection! @index
+}
+
 type NFTCollection @entity {
   id: ID!
   holders: [NFTHolder!] @derivedFrom(field: "collection")
