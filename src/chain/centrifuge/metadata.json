@@ -4,6 +4,12 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "XTokens": {
+      "events": ["TransferredMultiAssets"]
+    },
+    "OrmlXTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Account, Pool, Staker } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
