@@ -32,7 +32,7 @@ export class UnbondPoolAction extends Action<UnbondPoolData> {
       staker.totalUnbonded += this.data.balance; // Ensure "Unbonded" is correct as per your domain model
       pool.totalBonded -= this.data.balance;
     }
-    pool.members = pool.members.filter((member: Pool) => member !== staker.id);
+    pool.members = pool.members.filter((member: Pool['members'][number]) => member !== staker.id);
 
     await ctx.store.insert(unbonded);
     await ctx.store.upsert(staker);

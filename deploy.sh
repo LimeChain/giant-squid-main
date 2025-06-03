@@ -1,13 +1,24 @@
 #!/bin/bash
 
-# Example of how script is ran:
-# ./deploy.sh -m manifests/shiden.yaml -c shiden
+# Usage:
+# Required parameters:
+#   -m <manifest_file>    : Path to manifest file (e.g., manifests/shiden.yaml)
+#   -c <chain_name>       : Name of the chain (e.g., shiden)
+# Optional parameters:
+#   -h                    : Perform a hard reset during deployment
+#
+# Example:
+# ./deploy.sh -m manifests/shiden.yaml -c shiden -h
 
-while getopts "m:c:" opt; do
+HARD_RESET_FLAG=""
+
+while getopts "m:c:h" opt; do
   case $opt in
     m) manifest_file="$OPTARG"
     ;;
     c) chain_name="$OPTARG"
+    ;;
+    h) HARD_RESET_FLAG="--hard-reset"
     ;;
     *) echo "Invalid option"; exit 1
     ;;
@@ -17,23 +28,16 @@ done
 # Run the prepare:prod script with the environment variables
 CHAIN=$chain_name CHAIN_RPC_ENDPOINT="$chain_name" sqd prepare:prod
 
-# Deploy with expect for automatic confirmation
-expect <<EOF
-spawn sqd deploy -o limechain -m "$manifest_file"
-expect "Are you sure? (Y/n)"
-send "\r"
-expect eof
-EOF
-
+# Deploy the squid
+sqd deploy -o limechain -m "$manifest_file" $HARD_RESET_FLAG
 echo "Deployment finished"
 
-echo "Cleaning up"
 # Clean up
+echo "Cleaning up..."
 git checkout -- .
 git clean -fd
 
-sleep 10
-
+# Unset the environment variables
 unset CHAIN
 unset CHAIN_RPC_ENDPOINT
 
