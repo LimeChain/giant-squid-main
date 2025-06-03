@@ -28,8 +28,8 @@ done
 # Run the prepare:prod script with the environment variables
 CHAIN=$chain_name CHAIN_RPC_ENDPOINT="$chain_name" sqd prepare:prod
 
-# Deploy the squid
-sqd deploy --no-interactive --no-stream-logs -o limechain -m "$manifest_file" $HARD_RESET_FLAG
+# Deploy the squid without confirmations
+sqd deploy --no-interactive --no-stream-logs --allow-update -o limechain -m "$manifest_file" $HARD_RESET_FLAG
 echo "Deployment finished"
 
 # Clean up
