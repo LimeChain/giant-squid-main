@@ -1,7 +1,7 @@
+//@ts-ignore
+import { Pool } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-// @ts-ignore
-import { Pool } from '@/model';
 import { UpdatePoolAction } from '@/indexer/actions';
 
 export interface INominationPoolsSetMetadataCallPalletDecoder

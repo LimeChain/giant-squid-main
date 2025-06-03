@@ -1,5 +1,5 @@
-// @ts-ignore
-import { NominationPoolsNominate, NominationPoolsUnbound, Pool, Staker, StakingBond } from '@/model';
+//@ts-ignore
+import { NominationPoolsNominate, Pool } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NominatePoolData {

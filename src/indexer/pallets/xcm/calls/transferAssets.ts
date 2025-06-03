@@ -1,7 +1,7 @@
+//@ts-ignore
+import { Account, Parachain } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-// @ts-ignore
-import { Account, Parachain } from '@/model';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 import assert from 'assert';
 import { getOriginAccountId } from '@/utils';

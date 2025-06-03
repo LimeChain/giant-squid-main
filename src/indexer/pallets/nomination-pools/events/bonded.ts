@@ -1,4 +1,4 @@
-// @ts-ignore
+//@ts-ignore
 import { Account, Pool, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';

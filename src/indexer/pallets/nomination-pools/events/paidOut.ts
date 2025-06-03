@@ -1,5 +1,5 @@
-// @ts-ignore
-import { Account, Pool, PoolStatus, Staker } from '@/model';
+//@ts-ignore
+import { Account, Pool, Staker } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { EnsureAccount, EnsureStaker, NominationPoolsBondAction, NominationPoolsPaidOutAction } from '@/indexer/actions';

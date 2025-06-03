@@ -36,6 +36,7 @@ export class NominationPoolsBondAction extends Action<BondData> {
       pool.members.push(staker.id);
     }
 
+    // @ts-ignore: Property assignment
     staker.pool = pool;
 
     await ctx.store.upsert(bond);
