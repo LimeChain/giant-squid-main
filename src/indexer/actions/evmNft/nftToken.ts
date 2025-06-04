@@ -1,7 +1,5 @@
 // @ts-ignore
-import { NFTCollection, NFTHolder, NFTToken, NFTTokenStandard, NFTTransfer } from '@/model';
-// @ts-ignore
-import { NFTTokenTransfer } from '@/model/generated/nftTokenTransfer.model';
+import { NFTCollection, NFTHolder, NFTToken, NFTTokenStandard, NFTTransfer, NFTTokenTransfer } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 import { ethers } from 'ethers';
 import * as erc721 from '@/abi/erc721';
@@ -42,10 +40,13 @@ export class NftTokensAction extends Action<NftTokensData> {
       ctx.store.findOneOrFail(NFTTransfer, { where: { id: this.data.transferId } }),
       ctx.store.findOneOrFail(NFTHolder, {
         where: { id: this.composeId(this.data.oldOwnerId, this.data.nftCollectionId) },
+        // @ts-ignore
+
         relations: { account: true },
       }),
       ctx.store.findOneOrFail(NFTHolder, {
         where: { id: this.composeId(this.data.newOwnerId, this.data.nftCollectionId) },
+        // @ts-ignore
         relations: { account: true },
       }),
     ]);
@@ -61,10 +62,13 @@ export class NftTokensAction extends Action<NftTokensData> {
       // if token has already been indexed
       if (token) {
         // change nft's owner after transfer
+        // @ts-ignore
         token.owner = newOwner.account;
 
         // update owner counts
+        // @ts-ignore
         if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
+        // @ts-ignore
         if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
 
         // push to db save array
@@ -89,13 +93,17 @@ export class NftTokensAction extends Action<NftTokensData> {
           id: this.composeId(tokenId, this.data.nftCollectionId),
           tokenId,
           collection: nftCollection,
+          // @ts-ignore
           owner: newOwner.account,
           metadataIpfs: metadata.uri,
           standard: this.data.standard,
         });
 
         // update owner counts
+        // @ts-ignore
         if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
+        // @ts-ignore
+
         if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
 
         // push to db save array

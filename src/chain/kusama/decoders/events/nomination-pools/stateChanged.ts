@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import { PoolStatus } from '@/model';
 import { events, v9220 } from '@/chain/kusama/types';
 import { UnknownVersionError } from '@/utils';

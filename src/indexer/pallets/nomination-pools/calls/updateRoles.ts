@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import { Account, Pool, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
