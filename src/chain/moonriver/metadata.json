@@ -30,6 +30,9 @@
     },
     "OrmlXTokens": {
       "events": ["TransferredAssets", "TransferredMultiAssets"]
+    },
+    "EVM": {
+      "events": ["Log"]
     }
   },
   "storage": []
