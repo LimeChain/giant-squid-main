@@ -1,4 +1,4 @@
-export * as balances from './balances/events';
-export * as parachainStaking from './parachain-staking/events';
-export * as evm from './evm/events';
-export * as polkadotXcm from './polkadot-xcm/events';
+export * as balances from './balances/events'
+export * as parachainStaking from './parachain-staking/events'
+export * as evm from './evm/events'
+export * as polkadotXcm from './polkadot-xcm/events'

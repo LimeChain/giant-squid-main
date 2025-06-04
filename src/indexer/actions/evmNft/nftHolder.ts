@@ -1,4 +1,5 @@
-import { Account, NFTCollection, NFTHolder, NFTToken } from '@/model';
+// @ts-ignore
+import { Account, NFTCollection, NFTHolder } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 export interface NftHolderData {

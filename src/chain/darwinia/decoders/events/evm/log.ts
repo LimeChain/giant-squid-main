@@ -1,6 +1,6 @@
 // @ts-ignore
 import { NFTTokenStandard } from '@/model';
-import { events } from '@/chain/moonbeam/types';
+import { events } from '@/chain/darwinia/types';
 import { getEvmLog } from '@subsquid/frontier';
 import { UnknownVersionError } from '@/utils';
 import { IEvmLogEventPalletDecoder, Event } from '@/indexer';
@@ -10,17 +10,12 @@ import * as erc1155 from '@/abi/erc1155';
 export class EvmLogEventPalletDecoder implements IEvmLogEventPalletDecoder {
   decode(event: Event) {
     const { log } = events.evm;
-    if (log.v900.is(event)) {
-      const { address, topics } = log.v900.decode(event);
-
-      return decodeNfts({ address, topics, event });
-    } else if (log.v1802.is(event)) {
-      const { log: _log } = log.v1802.decode(event);
+    if (log.v6100.is(event)) {
+      const { log: _log } = log.v6100.decode(event);
       const { address, topics } = _log;
 
       return decodeNfts({ address, topics, event });
     }
-
     throw new UnknownVersionError(log);
   }
 }

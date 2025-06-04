@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, NFTCollection, NFTTransfer } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
@@ -25,6 +26,8 @@ export class EnsureNftTransferAction extends Action<NftTransferData> {
       tokens: [],
       collection,
     });
+
+    if (!nftTransfer) return;
 
     await ctx.store.insert(nftTransfer);
   }

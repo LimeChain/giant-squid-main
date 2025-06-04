@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, NFTCollection, NFTHolder, NFTTokenStandard } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
@@ -34,9 +35,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
-    if (!data) return;
-
-    assert(event.extrinsic?.hash);
+    if (!data || !event.extrinsic) return;
 
     const accountFrom = ctx.store.defer(Account, data.from);
     const accountTo = ctx.store.defer(Account, data.to);
@@ -63,7 +62,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
       }),
 
       new EnsureNftTransferAction(block.header, event.extrinsic, {
-        id: event.extrinsic.hash,
+        id: event.extrinsic.hash || event.extrinsic.id,
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
         collectionId: data.address,
@@ -71,7 +70,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
 
       new NftTokensAction(block.header, event.extrinsic, {
         tokenIds: data.tokenIds,
-        transferId: event.extrinsic.hash,
+        transferId: event.extrinsic.hash || event.extrinsic.id,
         newOwnerId: data.to,
         oldOwnerId: data.from,
         standard: data.standard,

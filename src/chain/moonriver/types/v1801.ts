@@ -1,6 +1,6 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
-export const EvmLog: sts.Type<EvmLog> = sts.struct(() => {
+export const Log: sts.Type<Log> = sts.struct(() => {
     return  {
         address: H160,
         topics: sts.array(() => H256),
@@ -12,7 +12,7 @@ export const H256 = sts.bytes()
 
 export const H160 = sts.bytes()
 
-export interface EvmLog {
+export interface Log {
     address: H160
     topics: H256[]
     data: Bytes
@@ -21,9 +21,3 @@ export interface EvmLog {
 export type H256 = Bytes
 
 export type H160 = Bytes
-
-export const BalanceOf = sts.bigint()
-
-export const Balance = sts.bigint()
-
-export const AccountId = sts.bytes()

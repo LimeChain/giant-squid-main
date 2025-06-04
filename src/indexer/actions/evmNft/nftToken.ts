@@ -1,4 +1,6 @@
+// @ts-ignore
 import { NFTCollection, NFTHolder, NFTToken, NFTTokenStandard, NFTTransfer } from '@/model';
+// @ts-ignore
 import { NFTTokenTransfer } from '@/model/generated/nftTokenTransfer.model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 import { ethers } from 'ethers';

@@ -3,7 +3,7 @@ type PolkadotXcmTransfer @entity {
   blockNumber: Int! @index
   timestamp: DateTime! @index
   extrinsicHash: String @index
-  feeAssetItem: Int! @index
+  feeAssetItem: Int @index
   account: Account!
   to: String
   toChain: String @index
