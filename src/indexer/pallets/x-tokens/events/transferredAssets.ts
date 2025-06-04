@@ -10,7 +10,10 @@ export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecode
 // extends IEventPalletDecoder<
 //   | {
 //       from?: string;
-//       to?: string;
+//        to?: {
+//          type: string;
+//          value: string;
+//        };
 //       toChain?: string;
 //       assets?: {
 //         parents?: number | null;
@@ -20,7 +23,7 @@ export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecode
 //         fullPath?: string[];
 //         error?: string;
 //       }[];
-//       amount?: (string | undefined)[];
+//        amount?: { type: string; value: string }[];
 //     }
 //   | undefined
 // > {}

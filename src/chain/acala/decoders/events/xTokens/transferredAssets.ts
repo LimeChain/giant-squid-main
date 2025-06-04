@@ -15,7 +15,7 @@ export class TransferredAssetsEventPalletDecoder implements ITransferredAssetsEv
       return {
         from: sender,
         to,
-        toChain: getDestinationV4(dest),
+        toChain: getDestinationV4(dest, to.value),
         amount: getAssetAmountsV4(assets),
         assets: getRawAssetLocationsV4(assets),
       };

@@ -1,5 +1,5 @@
-module.exports = class Data1749023893509 {
-    name = 'Data1749023893509'
+module.exports = class Data1749032200355 {
+    name = 'Data1749032200355'
 
     async up(db) {
         await db.query(`CREATE TABLE "native_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "amount" numeric NOT NULL, "success" boolean NOT NULL, "from_id" character varying, "to_id" character varying, CONSTRAINT "PK_2c3c43fc41181e002fd0f3bcf0f" PRIMARY KEY ("id"))`)
@@ -106,7 +106,7 @@ module.exports = class Data1749023893509 {
         await db.query(`CREATE INDEX "IDX_d19d8b024e95954b94d2d4755e" ON "polkadot_xcm_transfer" ("to_chain") `)
         await db.query(`CREATE INDEX "IDX_d7fd8bd99c3b7d5390da44eac0" ON "polkadot_xcm_transfer" ("call") `)
         await db.query(`CREATE INDEX "IDX_bc0d4fe56e2d0727bb5f9b72be" ON "polkadot_xcm_transfer" ("contract_called") `)
-        await db.query(`CREATE TABLE "x_tokens_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "to" text, "to_chain" text, "assets" jsonb, "amounts" jsonb, "call" text NOT NULL, "account_id" character varying, CONSTRAINT "PK_f4b6308d0e13fcf0434f48d7832" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "x_tokens_transfer" ("id" character varying NOT NULL, "block_number" integer NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "extrinsic_hash" text, "to" jsonb, "to_chain" text, "assets" jsonb, "amounts" jsonb, "call" text NOT NULL, "account_id" character varying, CONSTRAINT "PK_f4b6308d0e13fcf0434f48d7832" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_a8eafb6d6c14ae0900cb39f58e" ON "x_tokens_transfer" ("block_number") `)
         await db.query(`CREATE INDEX "IDX_a80e193ae6490391fecf9fd508" ON "x_tokens_transfer" ("timestamp") `)
         await db.query(`CREATE INDEX "IDX_354a1fcc98ad8e120e3424241b" ON "x_tokens_transfer" ("extrinsic_hash") `)

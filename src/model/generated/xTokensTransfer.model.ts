@@ -1,6 +1,7 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
+import {XTokensTransferTo} from "./_xTokensTransferTo"
 import {XTokensTransferAsset} from "./_xTokensTransferAsset"
 import {XTokensTransferAssetAmount} from "./_xTokensTransferAssetAmount"
 
@@ -29,8 +30,8 @@ export class XTokensTransfer {
     @ManyToOne_(() => Account, {nullable: true})
     account!: Account
 
-    @Column_("text", {nullable: true})
-    to!: string | undefined | null
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new XTokensTransferTo(undefined, obj)}, nullable: true})
+    to!: XTokensTransferTo | undefined | null
 
     @Column_("text", {nullable: true})
     toChain!: string | undefined | null

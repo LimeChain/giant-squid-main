@@ -1,12 +1,15 @@
 // @ts-ignore
-import { Account, XTokensTransfer, XTokensTransferAsset, XTokensTransferAssetAmount } from '@/model';
+import { Account, XTokensTransfer, XTokensTransferAsset, XTokensTransferAssetAmount, XTokensTransferTo } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XTokensTransferActionData {
   id: string;
   account: () => Promise<Account>;
   call: string;
-  to?: string;
+  to?: {
+    type: string;
+    value: string;
+  };
   toChain?: string;
   assets?: {
     parents: number;
@@ -26,9 +29,9 @@ export class XTokensTransferAction extends Action<XTokensTransferActionData> {
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       account: await this.data.account(),
-      to: this.data.to,
+      to: new XTokensTransferTo({ type: this.data.to?.type, value: this.data.to?.value }),
       toChain: this.data.toChain,
-      amounts: this.data.amount?.map((amount) => new XTokensTransferAssetAmount({ type: amount.type, value: amount.value })),
+      amounts: this.data.amount?.map((amount) => new XTokensTransferAssetAmount({ type: amount.type, value: amount.value })) || [],
       assets:
         this.data.assets?.map(
           (asset) =>

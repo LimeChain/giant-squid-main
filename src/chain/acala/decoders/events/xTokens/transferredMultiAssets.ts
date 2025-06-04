@@ -20,7 +20,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
       return {
         from: sender,
         to,
-        toChain: getDestination(dest),
+        toChain: getDestination(dest, to.value),
         amount: getAssetAmounts(assets),
         assets: getRawAssetLocations(assets),
       };
@@ -31,7 +31,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
       return {
         from: sender,
         to,
-        toChain: getDestination(dest),
+        toChain: getDestination(dest, to.value),
         amount: getAssetAmounts(assets),
         assets: getRawAssetLocations(assets),
       };
@@ -42,7 +42,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
       return {
         from: sender,
         to,
-        toChain: getDestination(dest),
+        toChain: getDestination(dest, to.value),
         amount: getAssetAmounts(assets),
         assets: getRawAssetLocations(assets),
       };
@@ -53,7 +53,7 @@ export class TransferredMultiAssetsEventPalletDecoder implements ITransferredAss
       return {
         from: sender,
         to,
-        toChain: getDestination(dest),
+        toChain: getDestination(dest, to.value),
         amount: getAssetAmounts(assets),
         assets: getRawAssetLocations(assets),
       };

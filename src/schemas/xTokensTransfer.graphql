@@ -4,7 +4,7 @@ type XTokensTransfer @entity {
   timestamp: DateTime! @index
   extrinsicHash: String @index
   account: Account!
-  to: String
+  to: XTokensTransferTo
   toChain: String
   assets: [XTokensTransferAsset]
   amounts: [XTokensTransferAssetAmount]
@@ -20,6 +20,11 @@ type XTokensTransferAsset {
 }
 
 type XTokensTransferAssetAmount {
+  type: String!
+  value: String
+}
+
+type XTokensTransferTo {
   type: String!
   value: String
 }
