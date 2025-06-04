@@ -1,5 +1,4 @@
-//@ts-ignore
-import { Account, XTokensTransfer } from '@/model';
+import { Account, XTokensTransfer, XTokensTransferAsset, XTokensTransferAssetAmount } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XTokensTransferActionData {
@@ -8,8 +7,14 @@ interface XTokensTransferActionData {
   call: string;
   to?: string;
   toChain?: string;
-  assets?: (string | undefined)[][];
-  amount?: (string | undefined)[];
+  assets?: {
+    parents: number;
+    pallet: string | null;
+    assetId: string | null;
+    parachain?: string | null;
+    fullPath?: string[];
+  }[];
+  amount?: { type: string; value: string }[];
 }
 
 export class XTokensTransferAction extends Action<XTokensTransferActionData> {
@@ -22,8 +27,18 @@ export class XTokensTransferAction extends Action<XTokensTransferActionData> {
       account: await this.data.account(),
       to: this.data.to,
       toChain: this.data.toChain,
-      amount: this.data.amount,
-      assets: this.data.assets,
+      amounts: this.data.amount?.map((amount) => new XTokensTransferAssetAmount({ type: amount.type, value: amount.value })),
+      assets:
+        this.data.assets?.map(
+          (asset) =>
+            new XTokensTransferAsset({
+              parents: asset.parents,
+              pallet: asset.pallet,
+              assetId: asset.assetId,
+              parachain: asset.parachain,
+              fullPath: asset.fullPath,
+            })
+        ) || [],
       call: this.data.call,
     });
 

@@ -6,17 +6,24 @@ import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
 
-export interface ITransferredAssetsEventPalletDecoder
-  extends IEventPalletDecoder<
-    | {
-        from?: string;
-        to?: string;
-        toChain?: string;
-        assets?: (string | undefined)[][];
-        amount?: (string | undefined)[];
-      }
-    | undefined
-  > {}
+export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecoder<any> {}
+// extends IEventPalletDecoder<
+//   | {
+//       from?: string;
+//       to?: string;
+//       toChain?: string;
+//       assets?: {
+//         parents?: number | null;
+//         pallet?: string | null;
+//         assetId?: string | null;
+//         parachain?: string | null;
+//         fullPath?: string[];
+//         error?: string;
+//       }[];
+//       amount?: (string | undefined)[];
+//     }
+//   | undefined
+// > {}
 
 interface ITransferredAssetsEventPalletSetup extends IBasePalletSetup {
   decoder: ITransferredAssetsEventPalletDecoder;
@@ -34,6 +41,14 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
     const data = this.decoder.decode(event);
     // Return on unsupported event types
     if (!data) return;
+
+    data.assets?.forEach((asset: any) => {
+      if (asset.error) {
+        console.error(`hash: ${event.extrinsic?.hash} error: ${asset.error}`);
+        // Don't process the event if there is an error
+        return;
+      }
+    });
 
     const { amount, to, toChain, from, assets } = data;
     assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);

@@ -6,7 +6,20 @@ type XTokensTransfer @entity {
   account: Account!
   to: String
   toChain: String
-  assets: [[String]]
-  amount: [String]
+  assets: [XTokensTransferAsset]
+  amounts: [XTokensTransferAssetAmount]
   call: String! @index
+}
+
+type XTokensTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type XTokensTransferAssetAmount {
+  type: String!
+  value: String
 }
