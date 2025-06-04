@@ -1,17 +1,28 @@
 //@ts-ignore
-import { Account, PolkadotXcmTransfer } from '@/model';
+import { Account, PolkadotXcmTransfer, PolkadotXcmTransferAsset, PolkadotXcmTransferAssetAmount, PolkadotXcmTransferTo } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface PolkadotXcmTransferActionData {
   id: string;
   account: () => Promise<Account>;
   toChain?: string | null;
-  to?: string | null;
-  amount?: bigint | null;
+  to?: {
+    type: string;
+    value: string;
+  };
+  amount?: { type: string; value: string | null };
   call: string;
   weightLimit?: bigint | null;
   contractCalled?: string | null;
   contractInput?: string | null;
+  asset?: {
+    parents: number;
+    pallet: string | null;
+    assetId: string | null;
+    parachain?: string | null;
+    fullPath?: string[];
+    error?: string;
+  };
 }
 
 export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionData> {
@@ -22,13 +33,20 @@ export class PolkadotXcmTransferAction extends Action<PolkadotXcmTransferActionD
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       account: await this.data.account(),
-      to: this.data.to,
+      to: new PolkadotXcmTransferTo({ type: this.data.to?.type, value: this.data.to?.value }),
       toChain: this.data.toChain,
-      amount: this.data.amount,
+      amount: new PolkadotXcmTransferAssetAmount({ type: this.data.amount?.type, value: this.data.amount?.value }),
       call: this.data.call,
       weightLimit: this.data.weightLimit,
       contractCalled: this.data.contractCalled,
       contractInput: this.data.contractInput,
+      asset: new PolkadotXcmTransferAsset({
+        parents: this.data.asset?.parents,
+        pallet: this.data.asset?.pallet,
+        assetId: this.data.asset?.assetId,
+        parachain: this.data.asset?.parachain,
+        fullPath: this.data.asset?.fullPath,
+      }),
     });
 
     await ctx.store.insert(xcmTransfer);

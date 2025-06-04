@@ -6,14 +6,17 @@ import { getOriginAccountId } from '@/utils';
 import { EnsureAccount } from '@/indexer/actions';
 import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 
-export interface ILimitedTeleportAssetsPalletDecoder
-  extends ICallPalletDecoder<{
-    to: string;
-    toChain: string;
-    amount: bigint;
-    feeAssetItem: number;
-    weightLimit: bigint | null;
-  }> {}
+export interface ILimitedTeleportAssetsPalletDecoder extends ICallPalletDecoder<any> {}
+// TODO: add type
+// extends ICallPalletDecoder<{
+//   to?: {
+//     type: string;
+//     value: string;
+//   };
+//   toChain: string;
+//   amount?: { type: string; value: string | null };
+//   weightLimit?: bigint | null;
+// }> {}
 
 interface ILimitedTeleportAssetsPalletSetup extends IBasePalletSetup {
   decoder: ILimitedTeleportAssetsPalletDecoder;
@@ -30,7 +33,7 @@ export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimit
 
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (!call.success) return;
-    const { to, feeAssetItem, amount, toChain, weightLimit } = this.decoder.decode(call);
+    const { to, amount, toChain, weightLimit } = this.decoder.decode(call);
 
     // a supported call has been successfully decoded
     if (toChain) {

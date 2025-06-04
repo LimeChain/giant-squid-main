@@ -47,7 +47,7 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
 
     data.assets?.forEach((asset: any) => {
       if (asset.error) {
-        console.error(`hash: ${event.extrinsic?.hash} error: ${asset.error}`);
+        console.error(`HASH: ${event.extrinsic?.hash} ASSET ERROR: ${asset.error}`);
         // Don't process the event if there is an error
         return;
       }
