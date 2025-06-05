@@ -5,6 +5,7 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
+import { jsonStringify } from '@/utils';
 
 export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecoder<any> {}
 // extends IEventPalletDecoder<
@@ -48,10 +49,24 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
     // Return on unsupported event types
     if (!data) return;
 
+    // Skip on origin caller error
+    if (!data.from) {
+      console.error(`
+          TRANSFERRED ASSETS ERROR:
+          HASH: ${event.extrinsic?.hash}
+          ORIGIN CALLER ERROR: ${jsonStringify(data)}
+        `);
+      return;
+    }
+
+    // Skip on asset error
     data.assets?.forEach((asset: any) => {
       if (asset.error) {
-        console.error(`HASH: ${event.extrinsic?.hash} ASSET ERROR: ${asset.error}`);
-        // Don't process the event if there is an error
+        console.error(`
+            TRANSFERRED ASSETS ERROR:
+            HASH: ${event.extrinsic?.hash}
+            ASSET ERROR: ${jsonStringify(data)}
+          `);
         return;
       }
     });
@@ -59,7 +74,7 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
     const { amount, to, toChain, from, assets } = data;
     assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
 
-    const fromPubKey = this.encodeAddress(from.value);
+    const fromPubKey = this.encodeAddress(from);
     const account = ctx.store.defer(Account, fromPubKey);
 
     queue.push(

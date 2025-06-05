@@ -23,6 +23,7 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
+import { jsonStringify } from '@/utils';
 
 export interface ISentEventPalletDecoder extends IEventPalletDecoder<any> {}
 // TODO: add type
@@ -70,13 +71,28 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     // Return on unsupported event types
     if (!data) return;
 
+    // Skip on asset error
     if (data.asset?.error) {
-      console.error(`HASH: ${event.extrinsic?.hash} ASSET ERROR: ${data.asset.error}`);
+      console.error(`
+        POLKADOT XCM SENT ERROR:
+        HASH: ${event.extrinsic?.hash}
+        ASSET ERROR: ${jsonStringify(data)}
+      `);
       return;
     }
 
-    // Using try/catch block to skip Multisig(As_multi) call which emits this event,
-    // as current decoding logic doesn't support it
+    // Skip on origin caller error
+    if (!data.from?.value) {
+      console.error(`
+          POLKADOT XCM SENT ERROR:
+          HASH: ${event.extrinsic?.hash}
+          ORIGIN CALLER ERROR: ${jsonStringify(data)}
+        `);
+      return;
+    }
+
+    // Using try/catch block to skip Multisig(As_multi) call, which emits the [PolkadotXcm.Sent] event,
+    // as current [fromPubKey] encoding logic doesn't support it
     // call example: https://astar.subscan.io/extrinsic/0x21761dc1371aad86c453de4a143595bf3c40c3c8d75c06f011108062ad278d6f
     try {
       const { amount, weightLimit, to, toChain, from, contractCalled, contractInput, asset } = data;
@@ -122,7 +138,7 @@ export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV52 | V
   switch (interior.__kind) {
     case 'Here':
       // Origin is the chain itself (system account)
-      return { type: 'Here', value: '0' };
+      return { type: 'Here', value: null };
 
     case 'X1':
       return extractCallerFromJunction(interior.value);
@@ -151,7 +167,7 @@ export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV52 | V
       }
 
       // Fallback to system origin
-      return { type: 'Here', value: '0' };
+      return { type: 'Here', value: null };
 
     default:
       return { type: 'Unknown', value: null };
@@ -164,7 +180,7 @@ export function getOriginCallerV4(origin: V4Location) {
   switch (interior.__kind) {
     case 'Here':
       // Origin is the chain itself (system account)
-      return { type: 'Here', value: '0' };
+      return { type: 'Here', value: null };
 
     case 'X1':
       return extractCallerFromJunctionV4(interior.value[0]);
@@ -192,7 +208,7 @@ export function getOriginCallerV4(origin: V4Location) {
       }
 
       // Fallback to system origin
-      return { type: 'Here', value: '0' };
+      return { type: 'Here', value: null };
 
     default:
       return { type: 'Unknown', value: null };
@@ -385,7 +401,7 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
 
     switch (interior.__kind) {
       case 'Here':
-        return { type: 'Here', value: '0' };
+        return { type: 'Here', value: null };
 
       case 'X1':
         return extractTargetFromJunction(interior.value);
@@ -421,7 +437,7 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
         }
 
         // No specific account target found
-        return { type: 'Here', value: '0' };
+        return { type: 'Here', value: null };
 
       default:
         return { type: 'Unknown', value: null };
@@ -429,7 +445,7 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
   }
 
   // Calls are to assetHub or same chain
-  return { type: 'AccountId32', value: from || null };
+  return { type: 'Unknown', value: from || null };
 }
 
 export function getTransferTargetV4(message: V4Instruction | V5Instruction, from?: string) {
@@ -439,7 +455,7 @@ export function getTransferTargetV4(message: V4Instruction | V5Instruction, from
 
     switch (interior.__kind) {
       case 'Here':
-        return { type: 'Here', value: '0' };
+        return { type: 'Here', value: null };
 
       case 'X1':
         return extractTargetFromJunctionV4(interior.value[0]);
@@ -473,7 +489,7 @@ export function getTransferTargetV4(message: V4Instruction | V5Instruction, from
         }
 
         // No specific account target found
-        return { type: 'Here', value: '0' };
+        return { type: 'Here', value: null };
 
       default:
         return { type: 'Unknown', value: null };
@@ -481,7 +497,7 @@ export function getTransferTargetV4(message: V4Instruction | V5Instruction, from
   }
 
   // Calls are to assetHub or same chain
-  return { type: 'AccountId32', value: from || null };
+  return { type: 'Unknown', value: from || null };
 }
 
 function extractTargetFromJunction(junction: any) {
