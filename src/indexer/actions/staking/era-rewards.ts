@@ -40,6 +40,8 @@ export class EraRewardAction extends Action<EraRewardData> {
       });
     }
 
+    if (!eraData) return;
+
     await ctx.store.upsert(eraData);
   }
 }

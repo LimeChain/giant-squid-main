@@ -16,6 +16,8 @@
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "@graphile/pg-aggregates": "^0.1.1",
     "@subsquid/archive-registry": "3.1.0",
+    "@subsquid/evm-abi": "^0.2.4",
+    "@subsquid/frontier": "^4.0.4",
     "@subsquid/graphql-server": "4.2.0",
     "@subsquid/ss58": "^2.0.2",
     "@subsquid/substrate-processor": "^8.3.1",
@@ -29,7 +31,8 @@
     "postgraphile": "^4.13.0",
     "postgraphile-plugin-connection-filter": "^2.3.0",
     "typeorm": "0.3.20",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "ethers": "^6.10.0"
   },
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "2.2.0",

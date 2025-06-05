@@ -38,11 +38,21 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
+import { LimitedReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedReserveTransferAssets';
+import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
+import { TransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssets';
+import { LimitedTeleportAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedTeleportAssets';
+import { TransferAssetsUsingTypeAndThenPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
+import { ReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
+import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/reserveTransferAssets';
+import { SentEventPalletHandler } from '@/indexer/pallets/polkadot-xcm/events/sent';
+import { TransferredAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
 import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
 import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+import { TransferredMultiAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredMultiAssets';
 import { NominationPoolsBondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/bonded';
 import { NominationPoolsCreatePoolCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/create';
 import { NominationPoolsSetMetadataCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
@@ -60,6 +70,7 @@ import { TokenIssuedEventPalletHandler } from '@/indexer/pallets/nfts/events/tok
 import { TokenMetadataSetEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenMetadataSet';
 import { TokenBurnedEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenBurned';
 import { TokenTransferredEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenTransferred';
+import { EvmLogEventPalletHandler } from '@/indexer/pallets/evm/events/log';
 
 export const registry = {
   events: {
@@ -91,6 +102,12 @@ export const registry = {
     'Registrar.Reserved': ReservedParachainEventPalletHandler,
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
+    'PolkadotXcm.Sent': SentEventPalletHandler,
+    'XcmPallet.Sent': SentEventPalletHandler,
+    'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
     'NominationPools.Bonded': NominationPoolsBondedEventPalletHandler,
     'NominationPools.Destroyed': NominationPoolsDestroyedEventPalletHandler,
     'NominationPools.Unbonded': NominationPoolsUnbondedEventPalletHandler,
@@ -104,6 +121,7 @@ export const registry = {
     'Nfts.ItemMetadataSet': TokenMetadataSetEventPalletHandler,
     'Nfts.Burned': TokenBurnedEventPalletHandler,
     'Nfts.Transferred': TokenTransferredEventPalletHandler,
+    'EVM.Log': EvmLogEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,
@@ -120,6 +138,13 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
+    'XcmPallet.reserve_transfer_assets': ReserveTransferAssetsPalletHandler,
+    'XcmPallet.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandler,
+    'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
+    'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
+    'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
+    'PolkadotXcm.reserve_transfer_assets': ReserveTransferAssetsPalletHandlerPolkadotXcm,
+    'PolkadotXcm.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandlerPolkadotXcm,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
     'ConvictionVoting.delegate': DelegateCallPalletHandler,
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,

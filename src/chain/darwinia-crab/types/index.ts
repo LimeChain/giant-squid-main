@@ -1,2 +1,5 @@
 export * as v6000 from './v6000'
+export * as v6020 from './v6020'
+export * as v6501 from './v6501'
+export * as v6640 from './v6640'
 export * as events from './events'

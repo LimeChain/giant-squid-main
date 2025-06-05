@@ -1,10 +1,10 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
 import {Account} from "./account.model"
-import {NftCollection} from "./nftCollection.model"
+import {NFTCollection} from "./nftCollection.model"
 
 @Entity_()
-export class NftHolder {
-    constructor(props?: Partial<NftHolder>) {
+export class NFTHolder {
+    constructor(props?: Partial<NFTHolder>) {
         Object.assign(this, props)
     }
 
@@ -16,9 +16,9 @@ export class NftHolder {
     account!: Account
 
     @Column_("int4", {nullable: false})
-    balance!: number
+    nftCount!: number
 
     @Index_()
-    @ManyToOne_(() => NftCollection, {nullable: true})
-    collection!: NftCollection
+    @ManyToOne_(() => NFTCollection, {nullable: true})
+    collection!: NFTCollection
 }

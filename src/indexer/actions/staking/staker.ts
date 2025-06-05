@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Account, RewardDestination, Staker, StakingPayee } from '@/model';
+import { Account, RewardDestination, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface StakerData {
@@ -27,7 +27,6 @@ export class EnsureStaker extends Action<StakerData> {
       totalWithdrawn: 0n,
       totalSlashed: 0n,
       totalRewarded: 0n,
-      eraRewards: [],
     });
 
     await ctx.store.insert(staker);

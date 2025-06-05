@@ -1,8 +1,8 @@
+// @ts-ignore
+import { Account, Pool, Staker } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { UpdatePoolAction } from '@/indexer/actions/nomination-pools/pool';
-import { getOriginAccountId } from '@/utils';
-import { Account, Pool, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
 
 export interface INominationPoolsUpdateRolesCallPalletDecoder

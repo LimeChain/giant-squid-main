@@ -105,6 +105,37 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       appendedSchemaParts.add('staking.reward');
     }
 
+    // XcmPallet for relay chains
+    if (
+      (lowerCaseKey === 'xcmpallet.limited_reserve_transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.limited_teleport_assets' ||
+        lowerCaseKey === 'xcmpallet.reserve_transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.transfer_assets' ||
+        lowerCaseKey === 'xcmpallet.transfer_assets_using_type_and_then.transfer_assets') &&
+      !appendedSchemaParts.has('xcmpallet')
+    ) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")\n`);
+      appendedSchemaParts.add('xcmpallet');
+    }
+
+    // PolkadotXcm for parachains
+    if (lowerCaseKey === 'polkadotxcm.sent' && !appendedSchemaParts.has('polkadotxcm')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'polkadotXcmTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`polkadotXcmTransfers: [PolkadotXcmTransfer!] @derivedFrom(field: "account")\n`);
+      appendedSchemaParts.add('polkadotxcm');
+    }
+
+    // XTokens for parachains
+    if ((lowerCaseKey === 'xtokens.transferredassets' || lowerCaseKey === 'xtokens.transferredmultiassets') && !appendedSchemaParts.has('xtokens')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'XTokensTransfer.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`xTokenTransfers: [XTokensTransfer!] @derivedFrom(field: "account")\n`);
+      appendedSchemaParts.add('xtokens');
+    }
+
     // Conviction Voting pallet
     if (
       (lowerCaseKey === 'convictionvoting.delegate' ||
@@ -130,6 +161,14 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'nfts.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       appendedSchemaParts.add('nfts');
+      // EVM Log pallet
+    }
+
+    if (lowerCaseKey === 'evm.log' && !appendedSchemaParts.has('evm.log')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'nft.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`nftTokens: [NFTToken!] @derivedFrom(field: "owner")\n`);
+      appendedSchemaParts.add('evm.log');
     }
   }
 
