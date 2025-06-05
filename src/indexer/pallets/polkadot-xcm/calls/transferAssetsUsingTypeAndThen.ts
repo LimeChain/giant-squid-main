@@ -20,15 +20,11 @@ export interface ITransferAssetsUsingTypeAndThenPalletDecoder extends ICallPalle
 
 interface ITransferAssetsUsingTypeAndThenPalletSetup extends IBasePalletSetup {
   decoder: ITransferAssetsUsingTypeAndThenPalletDecoder;
-  isEvmCompatable?: boolean;
 }
 
 export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandler<ITransferAssetsUsingTypeAndThenPalletSetup> {
-  isEvmCompatable: boolean;
-
   constructor(setup: ITransferAssetsUsingTypeAndThenPalletSetup, options: IHandlerOptions) {
     super(setup, options);
-    this.isEvmCompatable = setup.isEvmCompatable || false;
   }
 
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
@@ -40,7 +36,7 @@ export class TransferAssetsUsingTypeAndThenPalletHandler extends CallPalletHandl
       const origin = getOriginAccountId(call.origin);
       assert(origin, 'Caller Pubkey is undefined');
 
-      const fromPubKey = this.encodeAddress(this.isEvmCompatable ? call.origin.value.value : origin);
+      const fromPubKey = this.encodeAddress(origin);
 
       const account = ctx.store.defer(Account, fromPubKey);
 

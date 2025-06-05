@@ -20,15 +20,11 @@ export interface ILimitedTeleportAssetsPalletDecoder extends ICallPalletDecoder<
 
 interface ILimitedTeleportAssetsPalletSetup extends IBasePalletSetup {
   decoder: ILimitedTeleportAssetsPalletDecoder;
-  isEvmCompatable?: boolean;
 }
 
 export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimitedTeleportAssetsPalletSetup> {
-  isEvmCompatable: boolean;
-
   constructor(setup: ILimitedTeleportAssetsPalletSetup, options: IHandlerOptions) {
     super(setup, options);
-    this.isEvmCompatable = setup.isEvmCompatable || false;
   }
 
   async handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
@@ -40,7 +36,7 @@ export class LimitedTeleportAssetsPalletHandler extends CallPalletHandler<ILimit
       const origin = getOriginAccountId(call.origin);
       assert(origin, 'Caller Pubkey is undefined');
 
-      const fromPubKey = this.encodeAddress(this.isEvmCompatable ? call.origin.value.value : origin);
+      const fromPubKey = this.encodeAddress(origin);
 
       const account = ctx.store.defer(Account, fromPubKey);
 
