@@ -18,6 +18,7 @@ import { DelegateCallPalletDecoder } from '@/chain/moonbeam/decoders/calls/convi
 import { RemoveVoteCallPalletDecoder } from '@/chain/moonbeam/decoders/calls/conviction-voting/removeVote';
 import { UndelegateCallPalletDecoder } from '@/chain/moonbeam/decoders/calls/conviction-voting/undelegate';
 import { VoteCallPalletDecoder } from '@/chain/moonbeam/decoders/calls/conviction-voting/vote';
+import { EvmLogEventPalletDecoder } from '@/chain/moonbeam/decoders/events/evm/log';
 
 export const indexer = new Indexer({
   config: {
@@ -38,6 +39,7 @@ export const indexer = new Indexer({
       'ParachainStaking.CandidateLeft': setupPallet({ decoder: new ParachainStakingCandidateLeftEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedMore': setupPallet({ decoder: new ParachainStakingCandidateBondedMoreEventPalletDecoder() }),
       'ParachainStaking.CandidateBondedLess': setupPallet({ decoder: new ParachainStakingCandidateBondedLessEventPalletDecoder() }),
+      'EVM.Log': setupPallet({ decoder: new EvmLogEventPalletDecoder() }),
       'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
     },
     calls: {

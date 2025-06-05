@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import { Pool, PoolStatus } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';

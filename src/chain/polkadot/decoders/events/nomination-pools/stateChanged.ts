@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import { PoolStatus } from '@/model';
 import { events, v9280 } from '@/chain/polkadot/types';
 import { UnknownVersionError } from '@/utils';

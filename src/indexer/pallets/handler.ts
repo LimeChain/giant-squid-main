@@ -40,6 +40,10 @@ abstract class BasePalletHandler<ISetup extends IBasePalletSetup> {
   }
 
   abstract handle(params: IEventHandlerParams | ICallHandlerParams): void;
+
+  protected composeId(...params: string[]) {
+    return params.join('_');
+  }
 }
 
 export abstract class EventPalletHandler<Setup extends IBasePalletSetup> extends BasePalletHandler<Setup> {

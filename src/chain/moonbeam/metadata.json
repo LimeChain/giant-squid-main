@@ -31,6 +31,9 @@
     },
     "ConvictionVoting": {
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
+    },
+    "EVM": {
+      "events": ["Log"]
     }
   },
   "storage": []
