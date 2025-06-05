@@ -28,12 +28,15 @@ export interface ISentEventPalletDecoder extends IEventPalletDecoder<any> {}
 // TODO: add type
 // extends IEventPalletDecoder<
 //   | {
-//       from?: string;
+//       from?: {
+//         type: string;
+//         value: string;
+//       };
 //       to?: {
 //         type: string;
 //         value: string;
 //       };
-//       toChain?: string;
+//       toChain?: string | null;
 //       asset?: {
 //         parents: number;
 //         pallet: string | null;
@@ -79,7 +82,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
       const { amount, weightLimit, to, toChain, from, contractCalled, contractInput, asset } = data;
       assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
 
-      const fromPubKey = this.encodeAddress(from);
+      const fromPubKey = this.encodeAddress(from.value);
       const account = ctx.store.defer(Account, fromPubKey);
 
       queue.push(

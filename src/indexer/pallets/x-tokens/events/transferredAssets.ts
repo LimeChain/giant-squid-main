@@ -9,12 +9,15 @@ import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
 export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecoder<any> {}
 // extends IEventPalletDecoder<
 //   | {
-//       from?: string;
+//       from?:{
+//          type: string;
+//          value: string;
+//        };
 //        to?: {
 //          type: string;
 //          value: string;
 //        };
-//       toChain?: string;
+//       toChain?: string | null;
 //       assets?: {
 //         parents?: number | null;
 //         pallet?: string | null;
@@ -56,7 +59,7 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
     const { amount, to, toChain, from, assets } = data;
     assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
 
-    const fromPubKey = this.encodeAddress(from);
+    const fromPubKey = this.encodeAddress(from.value);
     const account = ctx.store.defer(Account, fromPubKey);
 
     queue.push(
