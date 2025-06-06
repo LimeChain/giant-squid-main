@@ -1,73 +1,39 @@
 import {sts, Result, Option, Bytes, BitSequence} from './support'
 
-export type AccountId32 = Bytes
-
-export interface StakingLedger {
-    stash: AccountId32
-    total: bigint
-    active: bigint
-    unlocking: UnlockChunk[]
-    legacyClaimedRewards: number[]
-}
-
-export interface UnlockChunk {
-    value: bigint
-    era: number
-}
-
-export const StakingLedger: sts.Type<StakingLedger> = sts.struct(() => {
+export const V3Instruction: sts.Type<V3Instruction> = sts.closedEnum(() => {
     return  {
-        stash: AccountId32,
-        total: sts.bigint(),
-        active: sts.bigint(),
-        unlocking: sts.array(() => UnlockChunk),
-        legacyClaimedRewards: sts.array(() => sts.number()),
-    }
-})
-
-export const UnlockChunk: sts.Type<UnlockChunk> = sts.struct(() => {
-    return  {
-        value: sts.bigint(),
-        era: sts.number(),
-    }
-})
-
-export const AccountId32 = sts.bytes()
-
-export const V4Instruction: sts.Type<V4Instruction> = sts.closedEnum(() => {
-    return  {
-        AliasOrigin: V4Location,
-        BurnAsset: sts.array(() => V4Asset),
+        AliasOrigin: V3MultiLocation,
+        BurnAsset: sts.array(() => V3MultiAsset),
         BuyExecution: sts.enumStruct({
-            fees: V4Asset,
+            fees: V3MultiAsset,
             weightLimit: V3WeightLimit,
         }),
         ClaimAsset: sts.enumStruct({
-            assets: sts.array(() => V4Asset),
-            ticket: V4Location,
+            assets: sts.array(() => V3MultiAsset),
+            ticket: V3MultiLocation,
         }),
         ClearError: sts.unit(),
         ClearOrigin: sts.unit(),
         ClearTopic: sts.unit(),
         ClearTransactStatus: sts.unit(),
         DepositAsset: sts.enumStruct({
-            assets: V4AssetFilter,
-            beneficiary: V4Location,
+            assets: V3MultiAssetFilter,
+            beneficiary: V3MultiLocation,
         }),
         DepositReserveAsset: sts.enumStruct({
-            assets: V4AssetFilter,
-            dest: V4Location,
-            xcm: sts.array(() => V4Instruction),
+            assets: V3MultiAssetFilter,
+            dest: V3MultiLocation,
+            xcm: sts.array(() => V3Instruction),
         }),
-        DescendOrigin: V4Junctions,
+        DescendOrigin: V3Junctions,
         ExchangeAsset: sts.enumStruct({
-            give: V4AssetFilter,
-            want: sts.array(() => V4Asset),
+            give: V3MultiAssetFilter,
+            want: sts.array(() => V3MultiAsset),
             maximal: sts.boolean(),
         }),
-        ExpectAsset: sts.array(() => V4Asset),
+        ExpectAsset: sts.array(() => V3MultiAsset),
         ExpectError: sts.option(() => sts.tuple(() => [sts.number(), V3Error])),
-        ExpectOrigin: sts.option(() => V4Location),
+        ExpectOrigin: sts.option(() => V3MultiLocation),
         ExpectPallet: sts.enumStruct({
             index: sts.number(),
             name: sts.bytes(),
@@ -77,9 +43,9 @@ export const V4Instruction: sts.Type<V4Instruction> = sts.closedEnum(() => {
         }),
         ExpectTransactStatus: V3MaybeErrorCode,
         ExportMessage: sts.enumStruct({
-            network: V4NetworkId,
-            destination: V4Junctions,
-            xcm: sts.array(() => V4Instruction),
+            network: V3NetworkId,
+            destination: V3Junctions,
+            xcm: sts.array(() => V3Instruction),
         }),
         HrmpChannelAccepted: sts.enumStruct({
             recipient: sts.number(),
@@ -95,48 +61,48 @@ export const V4Instruction: sts.Type<V4Instruction> = sts.closedEnum(() => {
             maxCapacity: sts.number(),
         }),
         InitiateReserveWithdraw: sts.enumStruct({
-            assets: V4AssetFilter,
-            reserve: V4Location,
-            xcm: sts.array(() => V4Instruction),
+            assets: V3MultiAssetFilter,
+            reserve: V3MultiLocation,
+            xcm: sts.array(() => V3Instruction),
         }),
         InitiateTeleport: sts.enumStruct({
-            assets: V4AssetFilter,
-            dest: V4Location,
-            xcm: sts.array(() => V4Instruction),
+            assets: V3MultiAssetFilter,
+            dest: V3MultiLocation,
+            xcm: sts.array(() => V3Instruction),
         }),
         LockAsset: sts.enumStruct({
-            asset: V4Asset,
-            unlocker: V4Location,
+            asset: V3MultiAsset,
+            unlocker: V3MultiLocation,
         }),
         NoteUnlockable: sts.enumStruct({
-            asset: V4Asset,
-            owner: V4Location,
+            asset: V3MultiAsset,
+            owner: V3MultiLocation,
         }),
         QueryPallet: sts.enumStruct({
             moduleName: sts.bytes(),
-            responseInfo: V4QueryResponseInfo,
+            responseInfo: V3QueryResponseInfo,
         }),
         QueryResponse: sts.enumStruct({
             queryId: sts.bigint(),
-            response: V4Response,
+            response: V3Response,
             maxWeight: Weight,
-            querier: sts.option(() => V4Location),
+            querier: sts.option(() => V3MultiLocation),
         }),
-        ReceiveTeleportedAsset: sts.array(() => V4Asset),
+        ReceiveTeleportedAsset: sts.array(() => V3MultiAsset),
         RefundSurplus: sts.unit(),
-        ReportError: V4QueryResponseInfo,
+        ReportError: V3QueryResponseInfo,
         ReportHolding: sts.enumStruct({
-            responseInfo: V4QueryResponseInfo,
-            assets: V4AssetFilter,
+            responseInfo: V3QueryResponseInfo,
+            assets: V3MultiAssetFilter,
         }),
-        ReportTransactStatus: V4QueryResponseInfo,
+        ReportTransactStatus: V3QueryResponseInfo,
         RequestUnlock: sts.enumStruct({
-            asset: V4Asset,
-            locker: V4Location,
+            asset: V3MultiAsset,
+            locker: V3MultiLocation,
         }),
-        ReserveAssetDeposited: sts.array(() => V4Asset),
-        SetAppendix: sts.array(() => V4Instruction),
-        SetErrorHandler: sts.array(() => V4Instruction),
+        ReserveAssetDeposited: sts.array(() => V3MultiAsset),
+        SetAppendix: sts.array(() => V3Instruction),
+        SetErrorHandler: sts.array(() => V3Instruction),
         SetFeesMode: sts.enumStruct({
             jitWithdraw: sts.boolean(),
         }),
@@ -151,41 +117,41 @@ export const V4Instruction: sts.Type<V4Instruction> = sts.closedEnum(() => {
             call: DoubleEncoded,
         }),
         TransferAsset: sts.enumStruct({
-            assets: sts.array(() => V4Asset),
-            beneficiary: V4Location,
+            assets: sts.array(() => V3MultiAsset),
+            beneficiary: V3MultiLocation,
         }),
         TransferReserveAsset: sts.enumStruct({
-            assets: sts.array(() => V4Asset),
-            dest: V4Location,
-            xcm: sts.array(() => V4Instruction),
+            assets: sts.array(() => V3MultiAsset),
+            dest: V3MultiLocation,
+            xcm: sts.array(() => V3Instruction),
         }),
         Trap: sts.bigint(),
-        UniversalOrigin: V4Junction,
+        UniversalOrigin: V3Junction,
         UnlockAsset: sts.enumStruct({
-            asset: V4Asset,
-            target: V4Location,
+            asset: V3MultiAsset,
+            target: V3MultiLocation,
         }),
         UnpaidExecution: sts.enumStruct({
             weightLimit: V3WeightLimit,
-            checkOrigin: sts.option(() => V4Location),
+            checkOrigin: sts.option(() => V3MultiLocation),
         }),
         UnsubscribeVersion: sts.unit(),
-        WithdrawAsset: sts.array(() => V4Asset),
+        WithdrawAsset: sts.array(() => V3MultiAsset),
     }
 })
 
-export const V4Junction: sts.Type<V4Junction> = sts.closedEnum(() => {
+export const V3Junction: sts.Type<V3Junction> = sts.closedEnum(() => {
     return  {
         AccountId32: sts.enumStruct({
-            network: sts.option(() => V4NetworkId),
+            network: sts.option(() => V3NetworkId),
             id: sts.bytes(),
         }),
         AccountIndex64: sts.enumStruct({
-            network: sts.option(() => V4NetworkId),
+            network: sts.option(() => V3NetworkId),
             index: sts.bigint(),
         }),
         AccountKey20: sts.enumStruct({
-            network: sts.option(() => V4NetworkId),
+            network: sts.option(() => V3NetworkId),
             key: sts.bytes(),
         }),
         GeneralIndex: sts.bigint(),
@@ -193,7 +159,7 @@ export const V4Junction: sts.Type<V4Junction> = sts.closedEnum(() => {
             length: sts.number(),
             data: sts.bytes(),
         }),
-        GlobalConsensus: V4NetworkId,
+        GlobalConsensus: V3NetworkId,
         OnlyChild: sts.unit(),
         PalletInstance: sts.number(),
         Parachain: sts.number(),
@@ -313,109 +279,105 @@ export interface V3BodyId_Unit {
     __kind: 'Unit'
 }
 
-export type V4Junction = V4Junction_AccountId32 | V4Junction_AccountIndex64 | V4Junction_AccountKey20 | V4Junction_GeneralIndex | V4Junction_GeneralKey | V4Junction_GlobalConsensus | V4Junction_OnlyChild | V4Junction_PalletInstance | V4Junction_Parachain | V4Junction_Plurality
+export type V3Junction = V3Junction_AccountId32 | V3Junction_AccountIndex64 | V3Junction_AccountKey20 | V3Junction_GeneralIndex | V3Junction_GeneralKey | V3Junction_GlobalConsensus | V3Junction_OnlyChild | V3Junction_PalletInstance | V3Junction_Parachain | V3Junction_Plurality
 
-export interface V4Junction_AccountId32 {
+export interface V3Junction_AccountId32 {
     __kind: 'AccountId32'
-    network?: (V4NetworkId | undefined)
+    network?: (V3NetworkId | undefined)
     id: Bytes
 }
 
-export interface V4Junction_AccountIndex64 {
+export interface V3Junction_AccountIndex64 {
     __kind: 'AccountIndex64'
-    network?: (V4NetworkId | undefined)
+    network?: (V3NetworkId | undefined)
     index: bigint
 }
 
-export interface V4Junction_AccountKey20 {
+export interface V3Junction_AccountKey20 {
     __kind: 'AccountKey20'
-    network?: (V4NetworkId | undefined)
+    network?: (V3NetworkId | undefined)
     key: Bytes
 }
 
-export interface V4Junction_GeneralIndex {
+export interface V3Junction_GeneralIndex {
     __kind: 'GeneralIndex'
     value: bigint
 }
 
-export interface V4Junction_GeneralKey {
+export interface V3Junction_GeneralKey {
     __kind: 'GeneralKey'
     length: number
     data: Bytes
 }
 
-export interface V4Junction_GlobalConsensus {
+export interface V3Junction_GlobalConsensus {
     __kind: 'GlobalConsensus'
-    value: V4NetworkId
+    value: V3NetworkId
 }
 
-export interface V4Junction_OnlyChild {
+export interface V3Junction_OnlyChild {
     __kind: 'OnlyChild'
 }
 
-export interface V4Junction_PalletInstance {
+export interface V3Junction_PalletInstance {
     __kind: 'PalletInstance'
     value: number
 }
 
-export interface V4Junction_Parachain {
+export interface V3Junction_Parachain {
     __kind: 'Parachain'
     value: number
 }
 
-export interface V4Junction_Plurality {
+export interface V3Junction_Plurality {
     __kind: 'Plurality'
     id: V3BodyId
     part: V3BodyPart
 }
 
-export type V4NetworkId = V4NetworkId_BitcoinCash | V4NetworkId_BitcoinCore | V4NetworkId_ByFork | V4NetworkId_ByGenesis | V4NetworkId_Ethereum | V4NetworkId_Kusama | V4NetworkId_Polkadot | V4NetworkId_PolkadotBulletin | V4NetworkId_Rococo | V4NetworkId_Westend | V4NetworkId_Wococo
+export type V3NetworkId = V3NetworkId_BitcoinCash | V3NetworkId_BitcoinCore | V3NetworkId_ByFork | V3NetworkId_ByGenesis | V3NetworkId_Ethereum | V3NetworkId_Kusama | V3NetworkId_Polkadot | V3NetworkId_Rococo | V3NetworkId_Westend | V3NetworkId_Wococo
 
-export interface V4NetworkId_BitcoinCash {
+export interface V3NetworkId_BitcoinCash {
     __kind: 'BitcoinCash'
 }
 
-export interface V4NetworkId_BitcoinCore {
+export interface V3NetworkId_BitcoinCore {
     __kind: 'BitcoinCore'
 }
 
-export interface V4NetworkId_ByFork {
+export interface V3NetworkId_ByFork {
     __kind: 'ByFork'
     blockNumber: bigint
     blockHash: Bytes
 }
 
-export interface V4NetworkId_ByGenesis {
+export interface V3NetworkId_ByGenesis {
     __kind: 'ByGenesis'
     value: Bytes
 }
 
-export interface V4NetworkId_Ethereum {
+export interface V3NetworkId_Ethereum {
     __kind: 'Ethereum'
     chainId: bigint
 }
 
-export interface V4NetworkId_Kusama {
+export interface V3NetworkId_Kusama {
     __kind: 'Kusama'
 }
 
-export interface V4NetworkId_Polkadot {
+export interface V3NetworkId_Polkadot {
     __kind: 'Polkadot'
 }
 
-export interface V4NetworkId_PolkadotBulletin {
-    __kind: 'PolkadotBulletin'
-}
-
-export interface V4NetworkId_Rococo {
+export interface V3NetworkId_Rococo {
     __kind: 'Rococo'
 }
 
-export interface V4NetworkId_Westend {
+export interface V3NetworkId_Westend {
     __kind: 'Westend'
 }
 
-export interface V4NetworkId_Wococo {
+export interface V3NetworkId_Wococo {
     __kind: 'Wococo'
 }
 
@@ -468,64 +430,68 @@ export interface Weight {
     proofSize: bigint
 }
 
-export const V4Response: sts.Type<V4Response> = sts.closedEnum(() => {
+export const V3Response: sts.Type<V3Response> = sts.closedEnum(() => {
     return  {
-        Assets: sts.array(() => V4Asset),
+        Assets: sts.array(() => V3MultiAsset),
         DispatchResult: V3MaybeErrorCode,
         ExecutionResult: sts.option(() => sts.tuple(() => [sts.number(), V3Error])),
         Null: sts.unit(),
-        PalletsInfo: sts.array(() => V4PalletInfo),
+        PalletsInfo: sts.array(() => V3PalletInfo),
         Version: sts.number(),
     }
 })
 
-export const V4PalletInfo: sts.Type<V4PalletInfo> = sts.struct(() => {
+export const V3PalletInfo: sts.Type<V3PalletInfo> = sts.struct(() => {
     return  {
         index: sts.number(),
-        name: sts.bytes(),
-        moduleName: sts.bytes(),
+        name: BoundedVec,
+        moduleName: BoundedVec,
         major: sts.number(),
         minor: sts.number(),
         patch: sts.number(),
     }
 })
 
-export interface V4PalletInfo {
+export const BoundedVec = sts.bytes()
+
+export interface V3PalletInfo {
     index: number
-    name: Bytes
-    moduleName: Bytes
+    name: BoundedVec
+    moduleName: BoundedVec
     major: number
     minor: number
     patch: number
 }
 
-export type V4Response = V4Response_Assets | V4Response_DispatchResult | V4Response_ExecutionResult | V4Response_Null | V4Response_PalletsInfo | V4Response_Version
+export type BoundedVec = Bytes
 
-export interface V4Response_Assets {
+export type V3Response = V3Response_Assets | V3Response_DispatchResult | V3Response_ExecutionResult | V3Response_Null | V3Response_PalletsInfo | V3Response_Version
+
+export interface V3Response_Assets {
     __kind: 'Assets'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4Response_DispatchResult {
+export interface V3Response_DispatchResult {
     __kind: 'DispatchResult'
     value: V3MaybeErrorCode
 }
 
-export interface V4Response_ExecutionResult {
+export interface V3Response_ExecutionResult {
     __kind: 'ExecutionResult'
     value?: ([number, V3Error] | undefined)
 }
 
-export interface V4Response_Null {
+export interface V3Response_Null {
     __kind: 'Null'
 }
 
-export interface V4Response_PalletsInfo {
+export interface V3Response_PalletsInfo {
     __kind: 'PalletsInfo'
-    value: V4PalletInfo[]
+    value: V3PalletInfo[]
 }
 
-export interface V4Response_Version {
+export interface V3Response_Version {
     __kind: 'Version'
     value: number
 }
@@ -710,125 +676,132 @@ export interface V3MaybeErrorCode_TruncatedError {
     value: Bytes
 }
 
-export interface V4Asset {
-    id: V4AssetId
-    fun: V4Fungibility
+export interface V3MultiAsset {
+    id: V3AssetId
+    fun: V3Fungibility
 }
 
-export type V4Fungibility = V4Fungibility_Fungible | V4Fungibility_NonFungible
+export type V3Fungibility = V3Fungibility_Fungible | V3Fungibility_NonFungible
 
-export interface V4Fungibility_Fungible {
+export interface V3Fungibility_Fungible {
     __kind: 'Fungible'
     value: bigint
 }
 
-export interface V4Fungibility_NonFungible {
+export interface V3Fungibility_NonFungible {
     __kind: 'NonFungible'
-    value: V4AssetInstance
+    value: V3AssetInstance
 }
 
-export type V4AssetInstance = V4AssetInstance_Array16 | V4AssetInstance_Array32 | V4AssetInstance_Array4 | V4AssetInstance_Array8 | V4AssetInstance_Index | V4AssetInstance_Undefined
+export type V3AssetInstance = V3AssetInstance_Array16 | V3AssetInstance_Array32 | V3AssetInstance_Array4 | V3AssetInstance_Array8 | V3AssetInstance_Index | V3AssetInstance_Undefined
 
-export interface V4AssetInstance_Array16 {
+export interface V3AssetInstance_Array16 {
     __kind: 'Array16'
     value: Bytes
 }
 
-export interface V4AssetInstance_Array32 {
+export interface V3AssetInstance_Array32 {
     __kind: 'Array32'
     value: Bytes
 }
 
-export interface V4AssetInstance_Array4 {
+export interface V3AssetInstance_Array4 {
     __kind: 'Array4'
     value: Bytes
 }
 
-export interface V4AssetInstance_Array8 {
+export interface V3AssetInstance_Array8 {
     __kind: 'Array8'
     value: Bytes
 }
 
-export interface V4AssetInstance_Index {
+export interface V3AssetInstance_Index {
     __kind: 'Index'
     value: bigint
 }
 
-export interface V4AssetInstance_Undefined {
+export interface V3AssetInstance_Undefined {
     __kind: 'Undefined'
 }
 
-export interface V4AssetId {
-    parents: number
-    interior: V4Junctions
+export type V3AssetId = V3AssetId_Abstract | V3AssetId_Concrete
+
+export interface V3AssetId_Abstract {
+    __kind: 'Abstract'
+    value: Bytes
 }
 
-export type V4Junctions = V4Junctions_Here | V4Junctions_X1 | V4Junctions_X2 | V4Junctions_X3 | V4Junctions_X4 | V4Junctions_X5 | V4Junctions_X6 | V4Junctions_X7 | V4Junctions_X8
+export interface V3AssetId_Concrete {
+    __kind: 'Concrete'
+    value: V3MultiLocation
+}
 
-export interface V4Junctions_Here {
+export interface V3MultiLocation {
+    parents: number
+    interior: V3Junctions
+}
+
+export type V3Junctions = V3Junctions_Here | V3Junctions_X1 | V3Junctions_X2 | V3Junctions_X3 | V3Junctions_X4 | V3Junctions_X5 | V3Junctions_X6 | V3Junctions_X7 | V3Junctions_X8
+
+export interface V3Junctions_Here {
     __kind: 'Here'
 }
 
-export interface V4Junctions_X1 {
+export interface V3Junctions_X1 {
     __kind: 'X1'
-    value: V4Junction[]
+    value: V3Junction
 }
 
-export interface V4Junctions_X2 {
+export interface V3Junctions_X2 {
     __kind: 'X2'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X3 {
+export interface V3Junctions_X3 {
     __kind: 'X3'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X4 {
+export interface V3Junctions_X4 {
     __kind: 'X4'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X5 {
+export interface V3Junctions_X5 {
     __kind: 'X5'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X6 {
+export interface V3Junctions_X6 {
     __kind: 'X6'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X7 {
+export interface V3Junctions_X7 {
     __kind: 'X7'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]
 }
 
-export interface V4Junctions_X8 {
+export interface V3Junctions_X8 {
     __kind: 'X8'
-    value: V4Junction[]
+    value: [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]
 }
 
-export const V4QueryResponseInfo: sts.Type<V4QueryResponseInfo> = sts.struct(() => {
+export const V3QueryResponseInfo: sts.Type<V3QueryResponseInfo> = sts.struct(() => {
     return  {
-        destination: V4Location,
+        destination: V3MultiLocation,
         queryId: sts.bigint(),
         maxWeight: Weight,
     }
 })
 
-export interface V4QueryResponseInfo {
-    destination: V4Location
+export interface V3QueryResponseInfo {
+    destination: V3MultiLocation
     queryId: bigint
     maxWeight: Weight
 }
 
-export interface V4Location {
-    parents: number
-    interior: V4Junctions
-}
-
-export const V4NetworkId: sts.Type<V4NetworkId> = sts.closedEnum(() => {
+export const V3NetworkId: sts.Type<V3NetworkId> = sts.closedEnum(() => {
     return  {
         BitcoinCash: sts.unit(),
         BitcoinCore: sts.unit(),
@@ -842,7 +815,6 @@ export const V4NetworkId: sts.Type<V4NetworkId> = sts.closedEnum(() => {
         }),
         Kusama: sts.unit(),
         Polkadot: sts.unit(),
-        PolkadotBulletin: sts.unit(),
         Rococo: sts.unit(),
         Westend: sts.unit(),
         Wococo: sts.unit(),
@@ -902,101 +874,101 @@ export const V3Error: sts.Type<V3Error> = sts.closedEnum(() => {
     }
 })
 
-export const V4Junctions: sts.Type<V4Junctions> = sts.closedEnum(() => {
+export const V3Junctions: sts.Type<V3Junctions> = sts.closedEnum(() => {
     return  {
         Here: sts.unit(),
-        X1: sts.array(() => V4Junction),
-        X2: sts.array(() => V4Junction),
-        X3: sts.array(() => V4Junction),
-        X4: sts.array(() => V4Junction),
-        X5: sts.array(() => V4Junction),
-        X6: sts.array(() => V4Junction),
-        X7: sts.array(() => V4Junction),
-        X8: sts.array(() => V4Junction),
+        X1: V3Junction,
+        X2: sts.tuple(() => [V3Junction, V3Junction]),
+        X3: sts.tuple(() => [V3Junction, V3Junction, V3Junction]),
+        X4: sts.tuple(() => [V3Junction, V3Junction, V3Junction, V3Junction]),
+        X5: sts.tuple(() => [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]),
+        X6: sts.tuple(() => [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]),
+        X7: sts.tuple(() => [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]),
+        X8: sts.tuple(() => [V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction, V3Junction]),
     }
 })
 
-export const V4AssetFilter: sts.Type<V4AssetFilter> = sts.closedEnum(() => {
+export const V3MultiAssetFilter: sts.Type<V3MultiAssetFilter> = sts.closedEnum(() => {
     return  {
-        Definite: sts.array(() => V4Asset),
-        Wild: V4WildAsset,
+        Definite: sts.array(() => V3MultiAsset),
+        Wild: V3WildMultiAsset,
     }
 })
 
-export const V4WildAsset: sts.Type<V4WildAsset> = sts.closedEnum(() => {
+export const V3WildMultiAsset: sts.Type<V3WildMultiAsset> = sts.closedEnum(() => {
     return  {
         All: sts.unit(),
         AllCounted: sts.number(),
         AllOf: sts.enumStruct({
-            id: V4AssetId,
-            fun: V4WildFungibility,
+            id: V3AssetId,
+            fun: V3WildFungibility,
         }),
         AllOfCounted: sts.enumStruct({
-            id: V4AssetId,
-            fun: V4WildFungibility,
+            id: V3AssetId,
+            fun: V3WildFungibility,
             count: sts.number(),
         }),
     }
 })
 
-export const V4WildFungibility: sts.Type<V4WildFungibility> = sts.closedEnum(() => {
+export const V3WildFungibility: sts.Type<V3WildFungibility> = sts.closedEnum(() => {
     return  {
         Fungible: sts.unit(),
         NonFungible: sts.unit(),
     }
 })
 
-export type V4WildFungibility = V4WildFungibility_Fungible | V4WildFungibility_NonFungible
+export type V3WildFungibility = V3WildFungibility_Fungible | V3WildFungibility_NonFungible
 
-export interface V4WildFungibility_Fungible {
+export interface V3WildFungibility_Fungible {
     __kind: 'Fungible'
 }
 
-export interface V4WildFungibility_NonFungible {
+export interface V3WildFungibility_NonFungible {
     __kind: 'NonFungible'
 }
 
-export const V4AssetId: sts.Type<V4AssetId> = sts.struct(() => {
+export const V3AssetId: sts.Type<V3AssetId> = sts.closedEnum(() => {
     return  {
-        parents: sts.number(),
-        interior: V4Junctions,
+        Abstract: sts.bytes(),
+        Concrete: V3MultiLocation,
     }
 })
 
-export type V4WildAsset = V4WildAsset_All | V4WildAsset_AllCounted | V4WildAsset_AllOf | V4WildAsset_AllOfCounted
+export type V3WildMultiAsset = V3WildMultiAsset_All | V3WildMultiAsset_AllCounted | V3WildMultiAsset_AllOf | V3WildMultiAsset_AllOfCounted
 
-export interface V4WildAsset_All {
+export interface V3WildMultiAsset_All {
     __kind: 'All'
 }
 
-export interface V4WildAsset_AllCounted {
+export interface V3WildMultiAsset_AllCounted {
     __kind: 'AllCounted'
     value: number
 }
 
-export interface V4WildAsset_AllOf {
+export interface V3WildMultiAsset_AllOf {
     __kind: 'AllOf'
-    id: V4AssetId
-    fun: V4WildFungibility
+    id: V3AssetId
+    fun: V3WildFungibility
 }
 
-export interface V4WildAsset_AllOfCounted {
+export interface V3WildMultiAsset_AllOfCounted {
     __kind: 'AllOfCounted'
-    id: V4AssetId
-    fun: V4WildFungibility
+    id: V3AssetId
+    fun: V3WildFungibility
     count: number
 }
 
-export type V4AssetFilter = V4AssetFilter_Definite | V4AssetFilter_Wild
+export type V3MultiAssetFilter = V3MultiAssetFilter_Definite | V3MultiAssetFilter_Wild
 
-export interface V4AssetFilter_Definite {
+export interface V3MultiAssetFilter_Definite {
     __kind: 'Definite'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4AssetFilter_Wild {
+export interface V3MultiAssetFilter_Wild {
     __kind: 'Wild'
-    value: V4WildAsset
+    value: V3WildMultiAsset
 }
 
 export const V3WeightLimit: sts.Type<V3WeightLimit> = sts.closedEnum(() => {
@@ -1017,21 +989,21 @@ export interface V3WeightLimit_Unlimited {
     __kind: 'Unlimited'
 }
 
-export const V4Asset: sts.Type<V4Asset> = sts.struct(() => {
+export const V3MultiAsset: sts.Type<V3MultiAsset> = sts.struct(() => {
     return  {
-        id: V4AssetId,
-        fun: V4Fungibility,
+        id: V3AssetId,
+        fun: V3Fungibility,
     }
 })
 
-export const V4Fungibility: sts.Type<V4Fungibility> = sts.closedEnum(() => {
+export const V3Fungibility: sts.Type<V3Fungibility> = sts.closedEnum(() => {
     return  {
         Fungible: sts.bigint(),
-        NonFungible: V4AssetInstance,
+        NonFungible: V3AssetInstance,
     }
 })
 
-export const V4AssetInstance: sts.Type<V4AssetInstance> = sts.closedEnum(() => {
+export const V3AssetInstance: sts.Type<V3AssetInstance> = sts.closedEnum(() => {
     return  {
         Array16: sts.bytes(),
         Array32: sts.bytes(),
@@ -1042,87 +1014,87 @@ export const V4AssetInstance: sts.Type<V4AssetInstance> = sts.closedEnum(() => {
     }
 })
 
-export type V4Instruction = V4Instruction_AliasOrigin | V4Instruction_BurnAsset | V4Instruction_BuyExecution | V4Instruction_ClaimAsset | V4Instruction_ClearError | V4Instruction_ClearOrigin | V4Instruction_ClearTopic | V4Instruction_ClearTransactStatus | V4Instruction_DepositAsset | V4Instruction_DepositReserveAsset | V4Instruction_DescendOrigin | V4Instruction_ExchangeAsset | V4Instruction_ExpectAsset | V4Instruction_ExpectError | V4Instruction_ExpectOrigin | V4Instruction_ExpectPallet | V4Instruction_ExpectTransactStatus | V4Instruction_ExportMessage | V4Instruction_HrmpChannelAccepted | V4Instruction_HrmpChannelClosing | V4Instruction_HrmpNewChannelOpenRequest | V4Instruction_InitiateReserveWithdraw | V4Instruction_InitiateTeleport | V4Instruction_LockAsset | V4Instruction_NoteUnlockable | V4Instruction_QueryPallet | V4Instruction_QueryResponse | V4Instruction_ReceiveTeleportedAsset | V4Instruction_RefundSurplus | V4Instruction_ReportError | V4Instruction_ReportHolding | V4Instruction_ReportTransactStatus | V4Instruction_RequestUnlock | V4Instruction_ReserveAssetDeposited | V4Instruction_SetAppendix | V4Instruction_SetErrorHandler | V4Instruction_SetFeesMode | V4Instruction_SetTopic | V4Instruction_SubscribeVersion | V4Instruction_Transact | V4Instruction_TransferAsset | V4Instruction_TransferReserveAsset | V4Instruction_Trap | V4Instruction_UniversalOrigin | V4Instruction_UnlockAsset | V4Instruction_UnpaidExecution | V4Instruction_UnsubscribeVersion | V4Instruction_WithdrawAsset
+export type V3Instruction = V3Instruction_AliasOrigin | V3Instruction_BurnAsset | V3Instruction_BuyExecution | V3Instruction_ClaimAsset | V3Instruction_ClearError | V3Instruction_ClearOrigin | V3Instruction_ClearTopic | V3Instruction_ClearTransactStatus | V3Instruction_DepositAsset | V3Instruction_DepositReserveAsset | V3Instruction_DescendOrigin | V3Instruction_ExchangeAsset | V3Instruction_ExpectAsset | V3Instruction_ExpectError | V3Instruction_ExpectOrigin | V3Instruction_ExpectPallet | V3Instruction_ExpectTransactStatus | V3Instruction_ExportMessage | V3Instruction_HrmpChannelAccepted | V3Instruction_HrmpChannelClosing | V3Instruction_HrmpNewChannelOpenRequest | V3Instruction_InitiateReserveWithdraw | V3Instruction_InitiateTeleport | V3Instruction_LockAsset | V3Instruction_NoteUnlockable | V3Instruction_QueryPallet | V3Instruction_QueryResponse | V3Instruction_ReceiveTeleportedAsset | V3Instruction_RefundSurplus | V3Instruction_ReportError | V3Instruction_ReportHolding | V3Instruction_ReportTransactStatus | V3Instruction_RequestUnlock | V3Instruction_ReserveAssetDeposited | V3Instruction_SetAppendix | V3Instruction_SetErrorHandler | V3Instruction_SetFeesMode | V3Instruction_SetTopic | V3Instruction_SubscribeVersion | V3Instruction_Transact | V3Instruction_TransferAsset | V3Instruction_TransferReserveAsset | V3Instruction_Trap | V3Instruction_UniversalOrigin | V3Instruction_UnlockAsset | V3Instruction_UnpaidExecution | V3Instruction_UnsubscribeVersion | V3Instruction_WithdrawAsset
 
-export interface V4Instruction_AliasOrigin {
+export interface V3Instruction_AliasOrigin {
     __kind: 'AliasOrigin'
-    value: V4Location
+    value: V3MultiLocation
 }
 
-export interface V4Instruction_BurnAsset {
+export interface V3Instruction_BurnAsset {
     __kind: 'BurnAsset'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4Instruction_BuyExecution {
+export interface V3Instruction_BuyExecution {
     __kind: 'BuyExecution'
-    fees: V4Asset
+    fees: V3MultiAsset
     weightLimit: V3WeightLimit
 }
 
-export interface V4Instruction_ClaimAsset {
+export interface V3Instruction_ClaimAsset {
     __kind: 'ClaimAsset'
-    assets: V4Asset[]
-    ticket: V4Location
+    assets: V3MultiAsset[]
+    ticket: V3MultiLocation
 }
 
-export interface V4Instruction_ClearError {
+export interface V3Instruction_ClearError {
     __kind: 'ClearError'
 }
 
-export interface V4Instruction_ClearOrigin {
+export interface V3Instruction_ClearOrigin {
     __kind: 'ClearOrigin'
 }
 
-export interface V4Instruction_ClearTopic {
+export interface V3Instruction_ClearTopic {
     __kind: 'ClearTopic'
 }
 
-export interface V4Instruction_ClearTransactStatus {
+export interface V3Instruction_ClearTransactStatus {
     __kind: 'ClearTransactStatus'
 }
 
-export interface V4Instruction_DepositAsset {
+export interface V3Instruction_DepositAsset {
     __kind: 'DepositAsset'
-    assets: V4AssetFilter
-    beneficiary: V4Location
+    assets: V3MultiAssetFilter
+    beneficiary: V3MultiLocation
 }
 
-export interface V4Instruction_DepositReserveAsset {
+export interface V3Instruction_DepositReserveAsset {
     __kind: 'DepositReserveAsset'
-    assets: V4AssetFilter
-    dest: V4Location
-    xcm: V4Instruction[]
+    assets: V3MultiAssetFilter
+    dest: V3MultiLocation
+    xcm: V3Instruction[]
 }
 
-export interface V4Instruction_DescendOrigin {
+export interface V3Instruction_DescendOrigin {
     __kind: 'DescendOrigin'
-    value: V4Junctions
+    value: V3Junctions
 }
 
-export interface V4Instruction_ExchangeAsset {
+export interface V3Instruction_ExchangeAsset {
     __kind: 'ExchangeAsset'
-    give: V4AssetFilter
-    want: V4Asset[]
+    give: V3MultiAssetFilter
+    want: V3MultiAsset[]
     maximal: boolean
 }
 
-export interface V4Instruction_ExpectAsset {
+export interface V3Instruction_ExpectAsset {
     __kind: 'ExpectAsset'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4Instruction_ExpectError {
+export interface V3Instruction_ExpectError {
     __kind: 'ExpectError'
     value?: ([number, V3Error] | undefined)
 }
 
-export interface V4Instruction_ExpectOrigin {
+export interface V3Instruction_ExpectOrigin {
     __kind: 'ExpectOrigin'
-    value?: (V4Location | undefined)
+    value?: (V3MultiLocation | undefined)
 }
 
-export interface V4Instruction_ExpectPallet {
+export interface V3Instruction_ExpectPallet {
     __kind: 'ExpectPallet'
     index: number
     name: Bytes
@@ -1131,193 +1103,193 @@ export interface V4Instruction_ExpectPallet {
     minCrateMinor: number
 }
 
-export interface V4Instruction_ExpectTransactStatus {
+export interface V3Instruction_ExpectTransactStatus {
     __kind: 'ExpectTransactStatus'
     value: V3MaybeErrorCode
 }
 
-export interface V4Instruction_ExportMessage {
+export interface V3Instruction_ExportMessage {
     __kind: 'ExportMessage'
-    network: V4NetworkId
-    destination: V4Junctions
-    xcm: V4Instruction[]
+    network: V3NetworkId
+    destination: V3Junctions
+    xcm: V3Instruction[]
 }
 
-export interface V4Instruction_HrmpChannelAccepted {
+export interface V3Instruction_HrmpChannelAccepted {
     __kind: 'HrmpChannelAccepted'
     recipient: number
 }
 
-export interface V4Instruction_HrmpChannelClosing {
+export interface V3Instruction_HrmpChannelClosing {
     __kind: 'HrmpChannelClosing'
     initiator: number
     sender: number
     recipient: number
 }
 
-export interface V4Instruction_HrmpNewChannelOpenRequest {
+export interface V3Instruction_HrmpNewChannelOpenRequest {
     __kind: 'HrmpNewChannelOpenRequest'
     sender: number
     maxMessageSize: number
     maxCapacity: number
 }
 
-export interface V4Instruction_InitiateReserveWithdraw {
+export interface V3Instruction_InitiateReserveWithdraw {
     __kind: 'InitiateReserveWithdraw'
-    assets: V4AssetFilter
-    reserve: V4Location
-    xcm: V4Instruction[]
+    assets: V3MultiAssetFilter
+    reserve: V3MultiLocation
+    xcm: V3Instruction[]
 }
 
-export interface V4Instruction_InitiateTeleport {
+export interface V3Instruction_InitiateTeleport {
     __kind: 'InitiateTeleport'
-    assets: V4AssetFilter
-    dest: V4Location
-    xcm: V4Instruction[]
+    assets: V3MultiAssetFilter
+    dest: V3MultiLocation
+    xcm: V3Instruction[]
 }
 
-export interface V4Instruction_LockAsset {
+export interface V3Instruction_LockAsset {
     __kind: 'LockAsset'
-    asset: V4Asset
-    unlocker: V4Location
+    asset: V3MultiAsset
+    unlocker: V3MultiLocation
 }
 
-export interface V4Instruction_NoteUnlockable {
+export interface V3Instruction_NoteUnlockable {
     __kind: 'NoteUnlockable'
-    asset: V4Asset
-    owner: V4Location
+    asset: V3MultiAsset
+    owner: V3MultiLocation
 }
 
-export interface V4Instruction_QueryPallet {
+export interface V3Instruction_QueryPallet {
     __kind: 'QueryPallet'
     moduleName: Bytes
-    responseInfo: V4QueryResponseInfo
+    responseInfo: V3QueryResponseInfo
 }
 
-export interface V4Instruction_QueryResponse {
+export interface V3Instruction_QueryResponse {
     __kind: 'QueryResponse'
     queryId: bigint
-    response: V4Response
+    response: V3Response
     maxWeight: Weight
-    querier?: (V4Location | undefined)
+    querier?: (V3MultiLocation | undefined)
 }
 
-export interface V4Instruction_ReceiveTeleportedAsset {
+export interface V3Instruction_ReceiveTeleportedAsset {
     __kind: 'ReceiveTeleportedAsset'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4Instruction_RefundSurplus {
+export interface V3Instruction_RefundSurplus {
     __kind: 'RefundSurplus'
 }
 
-export interface V4Instruction_ReportError {
+export interface V3Instruction_ReportError {
     __kind: 'ReportError'
-    value: V4QueryResponseInfo
+    value: V3QueryResponseInfo
 }
 
-export interface V4Instruction_ReportHolding {
+export interface V3Instruction_ReportHolding {
     __kind: 'ReportHolding'
-    responseInfo: V4QueryResponseInfo
-    assets: V4AssetFilter
+    responseInfo: V3QueryResponseInfo
+    assets: V3MultiAssetFilter
 }
 
-export interface V4Instruction_ReportTransactStatus {
+export interface V3Instruction_ReportTransactStatus {
     __kind: 'ReportTransactStatus'
-    value: V4QueryResponseInfo
+    value: V3QueryResponseInfo
 }
 
-export interface V4Instruction_RequestUnlock {
+export interface V3Instruction_RequestUnlock {
     __kind: 'RequestUnlock'
-    asset: V4Asset
-    locker: V4Location
+    asset: V3MultiAsset
+    locker: V3MultiLocation
 }
 
-export interface V4Instruction_ReserveAssetDeposited {
+export interface V3Instruction_ReserveAssetDeposited {
     __kind: 'ReserveAssetDeposited'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export interface V4Instruction_SetAppendix {
+export interface V3Instruction_SetAppendix {
     __kind: 'SetAppendix'
-    value: V4Instruction[]
+    value: V3Instruction[]
 }
 
-export interface V4Instruction_SetErrorHandler {
+export interface V3Instruction_SetErrorHandler {
     __kind: 'SetErrorHandler'
-    value: V4Instruction[]
+    value: V3Instruction[]
 }
 
-export interface V4Instruction_SetFeesMode {
+export interface V3Instruction_SetFeesMode {
     __kind: 'SetFeesMode'
     jitWithdraw: boolean
 }
 
-export interface V4Instruction_SetTopic {
+export interface V3Instruction_SetTopic {
     __kind: 'SetTopic'
     value: Bytes
 }
 
-export interface V4Instruction_SubscribeVersion {
+export interface V3Instruction_SubscribeVersion {
     __kind: 'SubscribeVersion'
     queryId: bigint
     maxResponseWeight: Weight
 }
 
-export interface V4Instruction_Transact {
+export interface V3Instruction_Transact {
     __kind: 'Transact'
     originKind: V2OriginKind
     requireWeightAtMost: Weight
     call: DoubleEncoded
 }
 
-export interface V4Instruction_TransferAsset {
+export interface V3Instruction_TransferAsset {
     __kind: 'TransferAsset'
-    assets: V4Asset[]
-    beneficiary: V4Location
+    assets: V3MultiAsset[]
+    beneficiary: V3MultiLocation
 }
 
-export interface V4Instruction_TransferReserveAsset {
+export interface V3Instruction_TransferReserveAsset {
     __kind: 'TransferReserveAsset'
-    assets: V4Asset[]
-    dest: V4Location
-    xcm: V4Instruction[]
+    assets: V3MultiAsset[]
+    dest: V3MultiLocation
+    xcm: V3Instruction[]
 }
 
-export interface V4Instruction_Trap {
+export interface V3Instruction_Trap {
     __kind: 'Trap'
     value: bigint
 }
 
-export interface V4Instruction_UniversalOrigin {
+export interface V3Instruction_UniversalOrigin {
     __kind: 'UniversalOrigin'
-    value: V4Junction
+    value: V3Junction
 }
 
-export interface V4Instruction_UnlockAsset {
+export interface V3Instruction_UnlockAsset {
     __kind: 'UnlockAsset'
-    asset: V4Asset
-    target: V4Location
+    asset: V3MultiAsset
+    target: V3MultiLocation
 }
 
-export interface V4Instruction_UnpaidExecution {
+export interface V3Instruction_UnpaidExecution {
     __kind: 'UnpaidExecution'
     weightLimit: V3WeightLimit
-    checkOrigin?: (V4Location | undefined)
+    checkOrigin?: (V3MultiLocation | undefined)
 }
 
-export interface V4Instruction_UnsubscribeVersion {
+export interface V3Instruction_UnsubscribeVersion {
     __kind: 'UnsubscribeVersion'
 }
 
-export interface V4Instruction_WithdrawAsset {
+export interface V3Instruction_WithdrawAsset {
     __kind: 'WithdrawAsset'
-    value: V4Asset[]
+    value: V3MultiAsset[]
 }
 
-export const V4Location: sts.Type<V4Location> = sts.struct(() => {
+export const V3MultiLocation: sts.Type<V3MultiLocation> = sts.struct(() => {
     return  {
         parents: sts.number(),
-        interior: V4Junctions,
+        interior: V3Junctions,
     }
 })

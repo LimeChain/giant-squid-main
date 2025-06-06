@@ -24,13 +24,6 @@
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     },
     "XcmPallet": {
-      "calls": [
-        "reserve_transfer_assets",
-        "limited_reserve_transfer_assets",
-        "transfer_assets",
-        "limited_teleport_assets",
-        "transfer_assets_using_type_and_then"
-      ],
       "events": ["Sent"]
     },
     "NominationPools": {

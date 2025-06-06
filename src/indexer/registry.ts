@@ -38,12 +38,7 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { LimitedReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedReserveTransferAssets';
 import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
-import { TransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssets';
-import { LimitedTeleportAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/limitedTeleportAssets';
-import { TransferAssetsUsingTypeAndThenPalletHandler } from '@/indexer/pallets/xcm/calls/transferAssetsUsingTypeAndThen';
-import { ReserveTransferAssetsPalletHandler } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
 import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/reserveTransferAssets';
 import { SentEventPalletHandler } from '@/indexer/pallets/polkadot-xcm/events/sent';
 import { TransferredAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredAssets';
@@ -123,11 +118,6 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
-    'XcmPallet.reserve_transfer_assets': ReserveTransferAssetsPalletHandler,
-    'XcmPallet.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandler,
-    'XcmPallet.transfer_assets': TransferAssetsPalletHandler,
-    'XcmPallet.limited_teleport_assets': LimitedTeleportAssetsPalletHandler,
-    'XcmPallet.transfer_assets_using_type_and_then': TransferAssetsUsingTypeAndThenPalletHandler,
     'PolkadotXcm.reserve_transfer_assets': ReserveTransferAssetsPalletHandlerPolkadotXcm,
     'PolkadotXcm.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandlerPolkadotXcm,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
