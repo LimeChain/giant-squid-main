@@ -17,6 +17,7 @@ import { V3Instruction, V3Instruction_BuyExecution, V3Junction, V3Junction_Gener
 import { V4Instruction, V4Location, V4Instruction_BuyExecution, V4Junction, V4Junction_GeneralKey, V4Junction_Parachain } from '@/chain/astar/types/v91';
 import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/astar/types/v1501';
 import { V3MultiLocation as V3MultiLocationV10000, V3Instruction as V3InstructionV10000 } from '@/chain/bifrost-polkadot/types/v10000';
+import { V2Instruction as V2InstructionV9000 } from '@/chain/litentry/types/v9000';
 
 import { Account } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
@@ -374,7 +375,7 @@ export function getDestinationV4(destination: V4Location, currentChain?: string 
 }
 
 export const SUPPORTED_ASSET_MESSAGE_TYPES = ['WithdrawAsset', 'ReserveAssetDeposited', 'ReceiveTeleportedAsset', 'TransferReserveAsset'];
-export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Instruction | V3InstructionV10000 | undefined) {
+export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V2InstructionV9000 | V3Instruction | V3InstructionV10000 | undefined) {
   if (!message) return { type: 'Unknown', value: null };
 
   switch (message.__kind) {
@@ -426,7 +427,7 @@ export function getAssetAmountV4(message: V4Instruction | V5Instruction | undefi
   return { type: 'Unknown', value: null };
 }
 
-export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3Instruction | undefined, from?: string) {
+export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V2InstructionV9000 | V3Instruction | undefined, from?: string) {
   if (!message) return { type: 'Unknown', value: null };
 
   // Calls are to other parachains
@@ -587,7 +588,7 @@ export function getWeightLimitV3V4(message: V3Instruction_BuyExecution | V4Instr
   else return;
 }
 
-export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV52 | V3Instruction | V3InstructionV10000 | undefined) {
+export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV52 | V2InstructionV9000 | V3Instruction | V3InstructionV10000 | undefined) {
   if (!message)
     return {
       parents: null,

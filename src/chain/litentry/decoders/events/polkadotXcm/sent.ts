@@ -20,9 +20,8 @@ import {
   getOriginCallerV4,
   getAssetAmountV4,
   getRawAssetFromInstructionV4,
-  IXcmSentEventPalletDecoder,
   SUPPORTED_ASSET_MESSAGE_TYPES,
-} from '@/indexer/pallets/xcm/events/sent';
+} from '@/indexer/pallets/polkadot-xcm/events/sent';
 
 export class SentEventPalletDecoder implements ISentEventPalletDecoder {
   decode(event: Event) {
