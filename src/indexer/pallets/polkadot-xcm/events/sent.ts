@@ -16,6 +16,7 @@ import {
 import { V3Instruction, V3Instruction_BuyExecution, V3Junction, V3Junction_GeneralKey, V3MultiLocation } from '@/chain/astar/types/v61';
 import { V4Instruction, V4Location, V4Instruction_BuyExecution, V4Junction, V4Junction_GeneralKey, V4Junction_Parachain } from '@/chain/astar/types/v91';
 import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/astar/types/v1501';
+import { V3MultiLocation as V3MultiLocationV10000, V3Instruction as V3InstructionV10000 } from '@/chain/bifrost-polkadot/types/v10000';
 
 import { Account } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
@@ -132,7 +133,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
   }
 }
 
-export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation) {
+export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation | V3MultiLocationV10000) {
   const { interior } = origin;
 
   switch (interior.__kind) {
@@ -241,7 +242,7 @@ function extractCallerFromJunctionV4(junction: any) {
   }
 }
 
-export function getDestination(destination: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation, currentChain?: string | null) {
+export function getDestination(destination: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation | V3MultiLocationV10000, currentChain?: string | null) {
   const { parents, interior } = destination;
 
   // Same chain destination
@@ -372,10 +373,14 @@ export function getDestinationV4(destination: V4Location, currentChain?: string 
   return;
 }
 
-export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Instruction) {
+export const SUPPORTED_ASSET_MESSAGE_TYPES = ['WithdrawAsset', 'ReserveAssetDeposited', 'ReceiveTeleportedAsset', 'TransferReserveAsset'];
+export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Instruction | V3InstructionV10000 | undefined) {
+  if (!message) return { type: 'Unknown', value: null };
+
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       if (message.value && message.value[0]) {
         return message.value[0].fun.__kind === 'Fungible'
           ? { type: 'Fungible', value: message.value[0].fun.value.toString() }
@@ -395,10 +400,13 @@ export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Ins
   return { type: 'Unknown', value: null };
 }
 
-export function getAssetAmountV4(message: V4Instruction | V5Instruction) {
+export function getAssetAmountV4(message: V4Instruction | V5Instruction | undefined) {
+  if (!message) return { type: 'Unknown', value: null };
+
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       if (message.value && message.value[0]) {
         return message.value[0].fun.__kind === 'Fungible'
           ? { type: 'Fungible', value: message.value[0].fun.value.toString() }
@@ -418,7 +426,9 @@ export function getAssetAmountV4(message: V4Instruction | V5Instruction) {
   return { type: 'Unknown', value: null };
 }
 
-export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3Instruction, from?: string) {
+export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3Instruction | undefined, from?: string) {
+  if (!message) return { type: 'Unknown', value: null };
+
   // Calls are to other parachains
   if (message.__kind === 'DepositAsset') {
     const { interior } = message.beneficiary;
@@ -472,7 +482,9 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
   return { type: 'Unknown', value: from || null };
 }
 
-export function getTransferTargetV4(message: V4Instruction | V5Instruction, from?: string) {
+export function getTransferTargetV4(message: V4Instruction | V5Instruction | undefined, from?: string) {
+  if (!message) return { type: 'Unknown', value: null };
+
   // Calls are to other parachains
   if (message.__kind === 'DepositAsset') {
     const { interior } = message.beneficiary;
@@ -575,7 +587,15 @@ export function getWeightLimitV3V4(message: V3Instruction_BuyExecution | V4Instr
   else return;
 }
 
-export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV52 | V3Instruction) {
+export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV52 | V3Instruction | V3InstructionV10000 | undefined) {
+  if (!message)
+    return {
+      parents: null,
+      pallet: null,
+      assetId: null,
+      error: 'No assets in instruction',
+    };
+
   let assets: any[] = [];
 
   // Extract assets from different instruction types
@@ -766,7 +786,15 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
   }
 }
 
-export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruction) {
+export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruction | undefined) {
+  if (!message)
+    return {
+      parents: null,
+      pallet: null,
+      assetId: null,
+      error: 'No assets in instruction',
+    };
+
   let assets: any[] = [];
 
   // Extract assets from different instruction types
