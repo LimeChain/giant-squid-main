@@ -41,7 +41,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       const rawAssets = getRawAssetFromInstruction(message[0]);
 
       return {
-        from: from.value,
+        from,
         to: transferTarget,
         toChain: getDestination(destination, transferTarget.value),
         amount: assetAmount,
@@ -68,7 +68,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         amount: assetAmount,
         asset: rawAssets,
         weightLimit: getWeightLimit(weightLimitMsg),
-        from: from.value,
+        from,
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
@@ -90,7 +90,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         amount: assetAmount,
         asset: rawAssets,
         weightLimit: getWeightLimitV3V4(weightLimitMsg),
-        from: from.value,
+        from,
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
@@ -112,7 +112,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         amount: assetAmount,
         asset: rawAssets,
         weightLimit: getWeightLimitV3V4(weightLimitMsg),
-        from: from.value,
+        from,
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
@@ -134,7 +134,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         amount: assetAmount,
         asset: rawAssets,
         weightLimit: getWeightLimitV3V4(weightLimitMsg),
-        from: from.value,
+        from,
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
@@ -156,7 +156,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
         amount: assetAmount,
         asset: rawAssets,
         weightLimit: getWeightLimitV3V4(weightLimitMsg),
-        from: from.value,
+        from,
         contractCalled: event?.call?.args?.transaction?.value?.action?.value,
         contractInput: event?.call?.args?.transaction?.value?.input,
       };
