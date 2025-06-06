@@ -43,7 +43,19 @@ export function getDestination(destination: V1MultiLocation | V1MultiLocationV20
 
   // Same chain destination
   if (parents === 0) {
-    return currentChain; // Same chain destination
+    switch (interior.__kind) {
+      case 'Here':
+        return '0'; // Relay chain (Kusama/Polkadot)
+      case 'X1':
+        switch (interior.value.__kind) {
+          case 'Parachain':
+            return interior.value.value.toString();
+          default:
+            return currentChain; // Same chain destination
+        }
+      default:
+        return currentChain; // Same chain destination
+    }
   }
 
   // Parent chain or cross-chain destination
@@ -365,7 +377,19 @@ export function getDestinationV4(destination: V4Location, currentChain?: string 
 
   // Same chain destination
   if (parents === 0) {
-    return currentChain; // Same chain destination
+    switch (interior.__kind) {
+      case 'Here':
+        return '0'; // Relay chain (Kusama/Polkadot)
+      case 'X1':
+        switch (interior.value[0].__kind) {
+          case 'Parachain':
+            return interior.value[0].value.toString();
+          default:
+            return currentChain; // Same chain destination
+        }
+      default:
+        return currentChain; // Same chain destination
+    }
   }
 
   // Parent chain or cross-chain destination

@@ -534,18 +534,38 @@ type NativeTransfer @entity {
   amount: BigInt! @index
   success: Boolean!
 }
-
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
   timestamp: DateTime! @index
   extrinsicHash: String @index
   account: Account!
-  to: String!
-  toChain: Parachain
-  amount: BigInt!
+  to: XcmTransferTo
+  toChain: String
+  amount: XcmTransferAssetAmount
+  asset: XcmTransferAsset
   weightLimit: BigInt
   call: String! @index
+  contractCalled: String @index
+  contractInput: String
+}
+
+type XcmTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type XcmTransferTo {
+  type: String!
+  value: String
+}
+
+type XcmTransferAssetAmount {
+  type: String!
+  value: String
 }
 
 type XTokensTransfer @entity {

@@ -63,6 +63,7 @@ import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets
 import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
 import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
+import { XcmSentEventPalletHandler } from '@/indexer/pallets/xcm/events/sent';
 
 export const registry = {
   events: {
@@ -95,7 +96,7 @@ export const registry = {
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
     'PolkadotXcm.Sent': SentEventPalletHandler,
-    'XcmPallet.Sent': SentEventPalletHandler,
+    'XcmPallet.Sent': XcmSentEventPalletHandler,
     'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
     'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
     'OrmlXTokens.TransferredAssets': TransferredAssetsEventPalletHandler,

@@ -4,28 +4,34 @@ import {
   V1Junction_AccountKey20,
   V1Junction_GeneralKey,
   V1Junction_Parachain,
+  V1MultiAsset,
   V1MultiLocation,
   V2Instruction,
   V2Instruction_BuyExecution,
-} from '@/chain/astar/types/v15';
+} from '@/chain/kusama/types/v9160';
 import {
-  V1MultiLocation as V1MultiLocationV52,
-  V2Instruction as V2InstructionV52,
-  V2Instruction_BuyExecution as V2Instruction_BuyExecutionV52,
-} from '@/chain/astar/types/v52';
-import { V3Instruction, V3Instruction_BuyExecution, V3Junction, V3Junction_GeneralKey, V3MultiLocation } from '@/chain/astar/types/v61';
-import { V4Instruction, V4Location, V4Instruction_BuyExecution, V4Junction, V4Junction_GeneralKey, V4Junction_Parachain } from '@/chain/astar/types/v91';
-import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/astar/types/v1501';
+  V1MultiLocation as V1MultiLocationV9111,
+  V2Instruction as V2InstructionV9111,
+  V2Instruction_BuyExecution as V2Instruction_BuyExecutionV9111,
+} from '@/chain/kusama/types/v9111';
+import {
+  V1MultiLocation as V1MultiLocationV9370,
+  V2Instruction as V2InstructionV9370,
+  V2Instruction_BuyExecution as V2Instruction_BuyExecutionV9370,
+} from '@/chain/kusama/types/v9370';
+import { V3Instruction, V3Instruction_BuyExecution, V3Junction, V3Junction_GeneralKey, V3MultiAsset, V3MultiLocation } from '@/chain/kusama/types/v9381';
+import { V4Instruction, V4Location, V4Instruction_BuyExecution, V4Junction, V4Junction_GeneralKey, V4Junction_Parachain } from '@/chain/kusama/types/v1002000';
+import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/kusama/types/v1005000';
 
 import { Account } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 import { jsonStringify } from '@/utils';
+import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 
-export interface ISentEventPalletDecoder extends IEventPalletDecoder<any> {}
+export interface IXcmSentEventPalletDecoder extends IEventPalletDecoder<any> {}
 // TODO: add type
 // extends IEventPalletDecoder<
 //   | {
@@ -54,12 +60,12 @@ export interface ISentEventPalletDecoder extends IEventPalletDecoder<any> {}
 //   | undefined
 // > {}
 
-interface ISentEventPalletSetup extends IBasePalletSetup {
-  decoder: ISentEventPalletDecoder;
+interface IXcmSentEventPalletSetup extends IBasePalletSetup {
+  decoder: IXcmSentEventPalletDecoder;
 }
 
-export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletSetup> {
-  constructor(setup: ISentEventPalletSetup, options: IHandlerOptions) {
+export class XcmSentEventPalletHandler extends EventPalletHandler<IXcmSentEventPalletSetup> {
+  constructor(setup: IXcmSentEventPalletSetup, options: IHandlerOptions) {
     super(setup, options);
   }
 
@@ -74,7 +80,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     // Skip on asset error
     if (data.asset?.error) {
       console.error(`
-        POLKADOT XCM SENT ERROR:
+        XCM SENT ERROR:
         HASH: ${event.extrinsic?.hash}
         ASSET ERROR: ${jsonStringify(data)}
       `);
@@ -84,16 +90,15 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
     // Skip on origin caller error
     if (!data.from?.value) {
       console.error(`
-          POLKADOT XCM SENT ERROR:
+          XCM SENT ERROR:
           HASH: ${event.extrinsic?.hash}
           ORIGIN CALLER ERROR: ${jsonStringify(data)}
         `);
       return;
     }
 
-    // Using try/catch block to skip Multisig(As_multi) call, which emits the [PolkadotXcm.Sent] event,
+    // Using try/catch block to skip Multisig(As_multi) call, which emits the [Xcm.Sent] event,
     // as current [fromPubKey] encoding logic doesn't support it
-    // call example: https://astar.subscan.io/extrinsic/0x21761dc1371aad86c453de4a143595bf3c40c3c8d75c06f011108062ad278d6f
     try {
       const { amount, weightLimit, to, toChain, from, contractCalled, contractInput, asset } = data;
       assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
@@ -107,7 +112,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
           id: fromPubKey,
           pk: this.decodeAddress(fromPubKey),
         }),
-        new PolkadotXcmTransferAction(block.header, event.extrinsic, {
+        new XcmTransferAction(block.header, event.extrinsic, {
           id: event.id,
           account: () => account.getOrFail(),
           amount,
@@ -126,13 +131,13 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
         data,
         extrinsic: event.extrinsic?.hash,
         fullPath: data.asset?.fullPath,
-        message: 'Error decoding PolkadotXcm.Sent event',
+        message: 'Error decoding Xcm.Sent event',
       });
     }
   }
 }
 
-export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation) {
+export function getOriginCaller(origin: V1MultiLocation | V1MultiLocationV9111 | V1MultiLocationV9370 | V3MultiLocation) {
   const { interior } = origin;
 
   switch (interior.__kind) {
@@ -241,7 +246,7 @@ function extractCallerFromJunctionV4(junction: any) {
   }
 }
 
-export function getDestination(destination: V1MultiLocation | V1MultiLocationV52 | V3MultiLocation, currentChain?: string | null) {
+export function getDestination(destination: V1MultiLocation | V1MultiLocationV9111 | V1MultiLocationV9370 | V3MultiLocation, currentChain?: string | null) {
   const { parents, interior } = destination;
 
   // Same chain destination
@@ -372,10 +377,15 @@ export function getDestinationV4(destination: V4Location, currentChain?: string 
   return;
 }
 
-export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Instruction) {
+export const SUPPORTED_ASSET_MESSAGE_TYPES = ['WithdrawAsset', 'ReserveAssetDeposited', 'ReceiveTeleportedAsset', 'TransferReserveAsset'];
+
+export function getAssetAmount(message: V2Instruction | V2InstructionV9111 | V2InstructionV9370 | V3Instruction | undefined) {
+  if (!message) return { type: 'Unknown', value: null };
+
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       if (message.value && message.value[0]) {
         return message.value[0].fun.__kind === 'Fungible'
           ? { type: 'Fungible', value: message.value[0].fun.value.toString() }
@@ -395,10 +405,13 @@ export function getAssetAmount(message: V2Instruction | V2InstructionV52 | V3Ins
   return { type: 'Unknown', value: null };
 }
 
-export function getAssetAmountV4(message: V4Instruction | V5Instruction) {
+export function getAssetAmountV4(message: V4Instruction | V5Instruction | undefined) {
+  if (!message) return { type: 'Unknown', value: null };
+
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       if (message.value && message.value[0]) {
         return message.value[0].fun.__kind === 'Fungible'
           ? { type: 'Fungible', value: message.value[0].fun.value.toString() }
@@ -418,7 +431,9 @@ export function getAssetAmountV4(message: V4Instruction | V5Instruction) {
   return { type: 'Unknown', value: null };
 }
 
-export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3Instruction, from?: string) {
+export function getTransferTarget(message: V2Instruction | V2InstructionV9111 | V2InstructionV9370 | V3Instruction, from?: string) {
+  if (!message) return { type: 'Unknown', value: null };
+
   // Calls are to other parachains
   if (message.__kind === 'DepositAsset') {
     const { interior } = message.beneficiary;
@@ -441,19 +456,19 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
         const junctions = interior.value;
 
         // First try to find AccountId32 (most common)
-        const accountId32 = junctions.find((j) => j.__kind === 'AccountId32');
+        const accountId32 = junctions.find((j: any) => j.__kind === 'AccountId32');
         if (accountId32 && accountId32.__kind === 'AccountId32') {
           return { type: 'AccountId32', value: accountId32.id };
         }
 
         // Then try AccountKey20 (EVM addresses)
-        const accountKey20 = junctions.find((j) => j.__kind === 'AccountKey20');
+        const accountKey20 = junctions.find((j: any) => j.__kind === 'AccountKey20');
         if (accountKey20 && accountKey20.__kind === 'AccountKey20') {
           return { type: 'AccountKey20', value: accountKey20.key };
         }
 
         // Finally try GeneralKey (custom identifiers)
-        const generalKey = junctions.find((j) => j.__kind === 'GeneralKey') as V1Junction_GeneralKey | V3Junction_GeneralKey;
+        const generalKey = junctions.find((j: any) => j.__kind === 'GeneralKey') as V1Junction_GeneralKey | V3Junction_GeneralKey;
         if (generalKey) {
           // Handle both V1/V2 (value) and V3+ (data) formats
           const keyValue = 'data' in generalKey ? generalKey.data : generalKey.value;
@@ -473,6 +488,8 @@ export function getTransferTarget(message: V2Instruction | V2InstructionV52 | V3
 }
 
 export function getTransferTargetV4(message: V4Instruction | V5Instruction, from?: string) {
+  if (!message) return { type: 'Unknown', value: null };
+
   // Calls are to other parachains
   if (message.__kind === 'DepositAsset') {
     const { interior } = message.beneficiary;
@@ -565,7 +582,7 @@ function extractTargetFromJunctionV4(junction: any) {
   }
 }
 
-export function getWeightLimit(message: V2Instruction_BuyExecution | V2Instruction_BuyExecutionV52 | undefined) {
+export function getWeightLimit(message: V2Instruction_BuyExecution | V2Instruction_BuyExecutionV9111 | undefined) {
   if (message?.weightLimit?.__kind === 'Limited') return message.weightLimit.value;
   else return;
 }
@@ -575,13 +592,22 @@ export function getWeightLimitV3V4(message: V3Instruction_BuyExecution | V4Instr
   else return;
 }
 
-export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV52 | V3Instruction) {
+export function getRawAssetFromInstruction(message: V2Instruction | V2InstructionV9111 | V2InstructionV9370 | V3Instruction | undefined) {
+  if (!message)
+    return {
+      parents: null,
+      pallet: null,
+      assetId: null,
+      error: 'No assets in instruction',
+    };
+
   let assets: any[] = [];
 
   // Extract assets from different instruction types
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       assets = message.value || [];
       break;
     case 'TransferReserveAsset':
@@ -766,13 +792,16 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
   }
 }
 
-export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruction) {
+export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruction | undefined) {
+  if (!message) return { type: 'Unknown', value: null };
+
   let assets: any[] = [];
 
   // Extract assets from different instruction types
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       assets = message.value || [];
       break;
     case 'TransferReserveAsset':

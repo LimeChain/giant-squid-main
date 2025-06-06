@@ -30,7 +30,8 @@
         "transfer_assets",
         "limited_teleport_assets",
         "transfer_assets_using_type_and_then"
-      ]
+      ],
+      "events": ["Sent"]
     },
     "NominationPools": {
       "events": ["Bonded", "Destroyed", "Unbonded", "PaidOut", "StateChanged", "Withdrawn"],

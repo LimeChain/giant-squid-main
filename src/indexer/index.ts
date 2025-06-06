@@ -45,6 +45,7 @@ export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/par
 export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
 export { IReserveTransferAssetsPalletDecoder } from '@/indexer/pallets/xcm/calls/reserveTransferAssets';
 export { ISentEventPalletDecoder } from '@/indexer/pallets/polkadot-xcm/events/sent';
+export { IXcmSentEventPalletDecoder } from '@/indexer/pallets/xcm/events/sent';
 export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
 export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/vote';
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
