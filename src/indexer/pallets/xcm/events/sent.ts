@@ -709,7 +709,7 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
               assetId = 'data' in second ? second.data : second.value;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
       }
 
       return {
@@ -896,7 +896,7 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
               assetId = second.data;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
       }
 
       return {

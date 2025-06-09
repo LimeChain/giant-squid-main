@@ -705,7 +705,7 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
               assetId = 'data' in second ? second.data : second.value;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
 
         case 'GlobalConsensus':
           // EVM Cross-chain: parents=2, X2(GlobalConsensus(1), ...)
@@ -727,7 +727,7 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
               assetId = second.id;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
       }
 
       return {
@@ -920,7 +920,7 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
               assetId = second.data;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
 
         case 'GlobalConsensus':
           // EVM Cross-chain: parents=2, X2(GlobalConsensus(1), ...)
@@ -942,7 +942,7 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
               assetId = second.id;
               break;
           }
-          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId})`] };
+          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
       }
 
       return {
