@@ -5,18 +5,32 @@ import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/inde
 import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
+import { jsonStringify } from '@/utils';
 
-export interface ITransferredAssetsEventPalletDecoder
-  extends IEventPalletDecoder<
-    | {
-        from?: string;
-        to?: string;
-        toChain?: string;
-        assets?: (string | undefined)[][];
-        amount?: (string | undefined)[];
-      }
-    | undefined
-  > {}
+export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecoder<any> {}
+// extends IEventPalletDecoder<
+//   | {
+//       from?:{
+//          type: string;
+//          value: string;
+//        };
+//        to?: {
+//          type: string;
+//          value: string;
+//        };
+//       toChain?: string | null;
+//       assets?: {
+//         parents?: number | null;
+//         pallet?: string | null;
+//         assetId?: string | null;
+//         parachain?: string | null;
+//         fullPath?: string[];
+//         error?: string;
+//       }[];
+//        amount?: { type: string; value: string }[];
+//     }
+//   | undefined
+// > {}
 
 interface ITransferredAssetsEventPalletSetup extends IBasePalletSetup {
   decoder: ITransferredAssetsEventPalletDecoder;
@@ -29,11 +43,33 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
 
   handle({ ctx, block, queue, item: event }: IEventHandlerParams) {
     // Return on failed calls
-    if (!event?.call?.success) return;
+    if (!event?.extrinsic?.call?.success) return;
 
     const data = this.decoder.decode(event);
     // Return on unsupported event types
     if (!data) return;
+
+    // Skip on origin caller error
+    if (!data.from) {
+      console.error(`
+          TRANSFERRED ASSETS ERROR:
+          HASH: ${event.extrinsic?.hash}
+          ORIGIN CALLER ERROR: ${jsonStringify(data)}
+        `);
+      return;
+    }
+
+    // Skip on asset error
+    data.assets?.forEach((asset: any) => {
+      if (asset.error) {
+        console.error(`
+            TRANSFERRED ASSETS ERROR:
+            HASH: ${event.extrinsic?.hash}
+            ASSET ERROR: ${jsonStringify(data)}
+          `);
+        return;
+      }
+    });
 
     const { amount, to, toChain, from, assets } = data;
     assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
@@ -53,7 +89,7 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
         amount,
         to,
         toChain,
-        call: event.call.name,
+        call: event.extrinsic.call.name,
         assets,
       })
     );

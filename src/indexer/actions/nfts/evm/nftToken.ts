@@ -55,68 +55,68 @@ export class NftTokensAction extends Action<NftTokensData> {
     const tokensToSave: NFTToken[] = [];
     const nftTokenTransfers: NFTTokenTransfer[] = [];
 
-    for (let i = 0; i < this.data.tokenIds.length; i++) {
-      const tokenId = this.data.tokenIds[i];
-      const token = await ctx.store.findOne(NFTToken, { where: { id: this.composeId(tokenId, this.data.nftCollectionId) } });
+    // for (let i = 0; i < this.data.tokenIds.length; i++) {
+    //   const tokenId = this.data.tokenIds[i];
+    //   const token = await ctx.store.findOne(NFTToken, { where: { id: this.composeId(tokenId, this.data.nftCollectionId) } });
 
-      // if token has already been indexed
-      if (token) {
-        // change nft's owner after transfer
-        // @ts-ignore
-        token.owner = newOwner.account;
+    //   // if token has already been indexed
+    //   if (token) {
+    //     // change nft's owner after transfer
+    //     // @ts-ignore
+    //     token.owner = newOwner.account;
 
-        // update owner counts
-        // @ts-ignore
-        if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
-        // @ts-ignore
-        if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
+    //     // update owner counts
+    //     // @ts-ignore
+    //     if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
+    //     // @ts-ignore
+    //     if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
 
-        // push to db save array
-        tokensToSave.push(token);
-        nftTokenTransfers.push(
-          new NFTTokenTransfer({
-            id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
-            token,
-            transfer,
-          })
-        );
-      }
-      // first time indexing a token
-      else {
-        // fetch token's metadata
-        const metadata =
-          this.data.standard === NFTTokenStandard.ERC721
-            ? await fetchErc721Metadata(this.data.nftCollectionId, tokenId)
-            : await fetchErc1155Metadata(this.data.nftCollectionId, tokenId);
+    //     // push to db save array
+    //     tokensToSave.push(token);
+    //     nftTokenTransfers.push(
+    //       new NFTTokenTransfer({
+    //         id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
+    //         token,
+    //         transfer,
+    //       })
+    //     );
+    //   }
+    //   // first time indexing a token
+    //   else {
+    //     // fetch token's metadata
+    //     const metadata =
+    //       this.data.standard === NFTTokenStandard.ERC721
+    //         ? await fetchErc721Metadata(this.data.nftCollectionId, tokenId)
+    //         : await fetchErc1155Metadata(this.data.nftCollectionId, tokenId);
 
-        const newToken = new NFTToken({
-          id: this.composeId(tokenId, this.data.nftCollectionId),
-          tokenId,
-          collection: nftCollection,
-          // @ts-ignore
-          owner: newOwner.account,
-          metadataUri: metadata.uri,
-          standard: this.data.standard,
-        });
+    //     const newToken = new NFTToken({
+    //       id: this.composeId(tokenId, this.data.nftCollectionId),
+    //       tokenId,
+    //       collection: nftCollection,
+    //       // @ts-ignore
+    //       owner: newOwner.account,
+    //       metadataUri: metadata.uri,
+    //       standard: this.data.standard,
+    //     });
 
-        // update owner counts
-        // @ts-ignore
-        if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
-        // @ts-ignore
+    //     // update owner counts
+    //     // @ts-ignore
+    //     if (this.data.newOwnerId !== MINT_ACCOUNT) newOwner.nftCount += 1;
+    //     // @ts-ignore
 
-        if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
+    //     if (this.data.oldOwnerId !== MINT_ACCOUNT) oldOwner.nftCount -= 1;
 
-        // push to db save array
-        newTokens.push(newToken);
-        nftTokenTransfers.push(
-          new NFTTokenTransfer({
-            id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
-            token: newToken,
-            transfer,
-          })
-        );
-      }
-    }
+    //     // push to db save array
+    //     newTokens.push(newToken);
+    //     nftTokenTransfers.push(
+    //       new NFTTokenTransfer({
+    //         id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
+    //         token: newToken,
+    //         transfer,
+    //       })
+    //     );
+    //   }
+    // }
 
     // batch db requests
     await Promise.all([ctx.store.insert([...newTokens, ...nftTokenTransfers]), ctx.store.save([newOwner, oldOwner, ...tokensToSave])]);

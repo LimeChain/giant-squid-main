@@ -26,10 +26,10 @@ export class NFTToken {
     owner!: Account
 
     @Column_("text", {nullable: true})
-    metadataIpfs!: string | undefined | null
+    metadataUri!: string | undefined | null
 
-    @Column_("varchar", {length: 7, nullable: false})
-    standard!: NFTTokenStandard
+    @Column_("varchar", {length: 7, nullable: true})
+    standard!: NFTTokenStandard | undefined | null
 
     @OneToMany_(() => NFTTokenTransfer, e => e.token)
     transfers!: NFTTokenTransfer[]

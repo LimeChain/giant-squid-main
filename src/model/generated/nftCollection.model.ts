@@ -12,6 +12,9 @@ export class NFTCollection {
     @PrimaryColumn_()
     id!: string
 
+    @Column_("text", {nullable: true})
+    metadataUri!: string | undefined | null
+
     @OneToMany_(() => NFTHolder, e => e.collection)
     holders!: NFTHolder[]
 

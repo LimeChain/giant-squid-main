@@ -1,15 +1,24 @@
 // @ts-ignore
-import { Account, XTokensTransfer } from '@/model';
+import { Account, XTokensTransfer, XTokensTransferAsset, XTokensTransferAssetAmount, XTokensTransferTo } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface XTokensTransferActionData {
   id: string;
   account: () => Promise<Account>;
   call: string;
-  to?: string;
+  to?: {
+    type: string;
+    value: string;
+  };
   toChain?: string;
-  assets?: (string | undefined)[][];
-  amount?: (string | undefined)[];
+  assets?: {
+    parents: number;
+    pallet: string | null;
+    assetId: string | null;
+    parachain?: string | null;
+    fullPath?: string[];
+  }[];
+  amount?: { type: string; value: string }[];
 }
 
 export class XTokensTransferAction extends Action<XTokensTransferActionData> {
@@ -20,10 +29,20 @@ export class XTokensTransferAction extends Action<XTokensTransferActionData> {
       timestamp: new Date(this.block.timestamp ?? 0),
       extrinsicHash: this.extrinsic?.hash,
       account: await this.data.account(),
-      to: this.data.to,
+      to: new XTokensTransferTo({ type: this.data.to?.type, value: this.data.to?.value }),
       toChain: this.data.toChain,
-      amount: this.data.amount,
-      assets: this.data.assets,
+      amounts: this.data.amount?.map((amount) => new XTokensTransferAssetAmount({ type: amount.type, value: amount.value })) || [],
+      assets:
+        this.data.assets?.map(
+          (asset) =>
+            new XTokensTransferAsset({
+              parents: asset.parents,
+              pallet: asset.pallet,
+              assetId: asset.assetId,
+              parachain: asset.parachain,
+              fullPath: asset.fullPath,
+            })
+        ) || [],
       call: this.data.call,
     });
 
