@@ -317,6 +317,8 @@ export function getRawAssetLocations(assets: (V1MultiAsset | V3MultiAsset | V3Mu
               return `GeneralKey(${keyData})`;
             case 'AccountId32':
               return `AccountId32(${junction.id})`;
+            case 'AccountKey20':
+              return `AccountKey20(${junction.key})`;
             case 'Plurality':
               return `Plurality(${junction.id.__kind})`;
             default:

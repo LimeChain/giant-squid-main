@@ -742,6 +742,8 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
             return `GeneralKey(${keyData})`;
           case 'AccountId32':
             return `AccountId32(${junction.id})`;
+          case 'AccountKey20':
+            return `AccountKey20(${junction.key})`;
           case 'Plurality':
             return `Plurality(${junction.id.__kind})`;
           default:
@@ -927,6 +929,8 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
             return `GeneralKey(${keyData})`;
           case 'AccountId32':
             return `AccountId32(${junction.id})`;
+          case 'AccountKey20':
+            return `AccountKey20(${junction.key})`;
           case 'Plurality':
             return `Plurality(${junction.id.__kind})`;
           default:

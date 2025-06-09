@@ -603,6 +603,7 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       assets = message.value || [];
       break;
     case 'TransferReserveAsset':
@@ -705,6 +706,28 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
               break;
           }
           return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+
+        case 'GlobalConsensus':
+          // EVM Cross-chain: parents=2, X2(GlobalConsensus(1), ...)
+          parachain = first.value.chainId.toString();
+          switch (second.__kind) {
+            case 'PalletInstance':
+              pallet = second.value.toString();
+              break;
+            case 'GeneralIndex':
+              assetId = second.value.toString();
+              break;
+            case 'GeneralKey':
+              assetId = 'data' in second ? second.data : second.value;
+              break;
+            case 'AccountKey20':
+              assetId = second.key;
+              break;
+            case 'AccountId32':
+              assetId = second.id;
+              break;
+          }
+          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId})`] };
       }
 
       return {
@@ -737,6 +760,8 @@ export function getRawAssetFromInstruction(message: V2Instruction | V2Instructio
             return `GeneralKey(${keyData})`;
           case 'AccountId32':
             return `AccountId32(${junction.id})`;
+          case 'AccountKey20':
+            return `AccountKey20(${junction.key})`;
           case 'Plurality':
             return `Plurality(${junction.id.__kind})`;
           default:
@@ -802,6 +827,7 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
   switch (message.__kind) {
     case 'WithdrawAsset':
     case 'ReserveAssetDeposited':
+    case 'ReceiveTeleportedAsset':
       assets = message.value || [];
       break;
     case 'TransferReserveAsset':
@@ -895,6 +921,28 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
               break;
           }
           return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+
+        case 'GlobalConsensus':
+          // EVM Cross-chain: parents=2, X2(GlobalConsensus(1), ...)
+          parachain = first.value.chainId.toString();
+          switch (second.__kind) {
+            case 'PalletInstance':
+              pallet = second.value.toString();
+              break;
+            case 'GeneralIndex':
+              assetId = second.value.toString();
+              break;
+            case 'GeneralKey':
+              assetId = 'data' in second ? second.data : second.value;
+              break;
+            case 'AccountKey20':
+              assetId = second.key;
+              break;
+            case 'AccountId32':
+              assetId = second.id;
+              break;
+          }
+          return { parents, pallet, assetId, parachain, fullPath: [`GlobalConsensus(${parachain})`, `${second.__kind}(${assetId})`] };
       }
 
       return {
@@ -927,6 +975,8 @@ export function getRawAssetFromInstructionV4(message: V4Instruction | V5Instruct
             return `GeneralKey(${keyData})`;
           case 'AccountId32':
             return `AccountId32(${junction.id})`;
+          case 'AccountKey20':
+            return `AccountKey20(${junction.key})`;
           case 'Plurality':
             return `Plurality(${junction.id.__kind})`;
           default:
