@@ -12,6 +12,9 @@ export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
+    blockRange: {
+      from: 4232387,
+    },
   },
   pallets: {
     events: {
@@ -19,7 +22,7 @@ export const indexer = new Indexer({
       'Nfts.CollectionMetadataSet': setupPallet({ decoder: new CollectionMetadataSetEventPalletDecoder() }),
       'Nfts.OwnerChanged': setupPallet({ decoder: new CollectionOwnerChangeEventPalletDecoder() }),
       'Nfts.Issued': setupPallet({ decoder: new TokenIssuedEventPalletDecoder() }),
-      'Nfts.ItemMetadataSet': setupPallet({ decoder: new TokenMetadataSetEventPalletDecoder() }),
+      // 'Nfts.ItemMetadataSet': setupPallet({ decoder: new TokenMetadataSetEventPalletDecoder() }),
       'Nfts.Burned': setupPallet({ decoder: new TokenBurnedEventPalletDecoder() }),
       'Nfts.Transferred': setupPallet({ decoder: new TokenTransferredEventPalletDecoder() }),
     },

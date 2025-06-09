@@ -1,9 +1,10 @@
+// @ts-ignore
 import { NftCollection } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NftMetadataData {
   nftCollection: () => Promise<NftCollection>;
-  metadata: string;
+  metadataUri: string;
 }
 
 export class SetCollectionMetadataAction extends Action<NftMetadataData> {
@@ -12,7 +13,7 @@ export class SetCollectionMetadataAction extends Action<NftMetadataData> {
 
     if (!collection) return;
 
-    collection.metadataIpfs = this.data.metadata;
+    collection.metadataUri = this.data.metadataUri;
 
     await ctx.store.upsert(collection);
   }

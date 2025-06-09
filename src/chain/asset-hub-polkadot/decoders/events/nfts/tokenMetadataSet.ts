@@ -1,6 +1,6 @@
 import { events } from '@/chain/asset-hub-polkadot/types';
 import { decodeHexToUTF8, UnknownVersionError } from '@/utils';
-import { Event, ICreatedEventPalletDecoder, ITokenMetadataSetEventPalletDecoder } from '@/indexer';
+import { Event, ICollectionCreatedEventPalletDecoder, ITokenMetadataSetEventPalletDecoder } from '@/indexer';
 
 export class TokenMetadataSetEventPalletDecoder implements ITokenMetadataSetEventPalletDecoder {
   decode(event: Event) {

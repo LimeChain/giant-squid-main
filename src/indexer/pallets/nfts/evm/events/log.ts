@@ -4,10 +4,10 @@ import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { EvmLogEventPalletDecoder } from '@/chain/moonbeam/decoders/events/evm/log';
 import { EnsureAccount } from '@/indexer/actions';
-import { EnsureNFTCollection } from '@/indexer/actions/evmNft/nftCollection';
-import { NftTokensAction } from '@/indexer/actions/evmNft/nftToken';
-import { EnsureNFTHolder } from '@/indexer/actions/evmNft/nftHolder';
-import { EnsureNftTransferAction } from '@/indexer/actions/evmNft/nftTransfer';
+import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
+import { NftTokensAction } from '@/indexer/actions/nfts/evm/nftToken';
+import { EnsureNFTHolder } from '@/indexer/actions/nfts/evm/nftHolder';
+import { EnsureNftTransferAction } from '@/indexer/actions/nfts/evm/nftTransfer';
 import assert from 'assert';
 
 export interface IEvmLogEventPalletDecoder
@@ -60,14 +60,12 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
         account: () => accountTo.getOrFail(),
         nftCollection: () => nftCollection.getOrFail(),
       }),
-
       new EnsureNftTransferAction(block.header, event.extrinsic, {
         id: event.extrinsic.hash,
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
         collectionId: data.address,
       }),
-
       new NftTokensAction(block.header, event.extrinsic, {
         tokenIds: data.tokenIds,
         transferId: event.extrinsic.hash,

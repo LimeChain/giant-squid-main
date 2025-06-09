@@ -1,4 +1,5 @@
-import { NftCollection, NftToken } from '@/model';
+// @ts-ignore
+import { NftToken } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NftMetadataData {

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, NftCollection } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

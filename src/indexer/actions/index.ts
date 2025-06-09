@@ -27,7 +27,7 @@ export * from './nomination-pools/unbonded';
 export * from './nomination-pools/pool';
 export * from './nomination-pools/paidOut';
 export * from './nomination-pools/withdrawn';
-export * from './nfts/created';
+// export * from './nfts/created';
 export * from './nfts/setCollectionMetadata';
 export * from './nfts/collectionOwnerChange';
 export * from './nfts/tokenIssued';

@@ -1,5 +1,6 @@
+// @ts-ignore
 import { Account, NftCollection, NftToken } from '@/model';
-import { CreateNftAction, EnsureAccount } from '@/indexer/actions';
+
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IssueNftToken } from '@/indexer/actions/nfts/tokenIssued';

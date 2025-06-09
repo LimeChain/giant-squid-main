@@ -11,7 +11,7 @@ export class CollectionMetadataSetEventPalletDecoder implements ICollectionMetad
 
       return {
         collectionId: collectionMetadata.collection.toString(),
-        metadata: decodeHexToUTF8(collectionMetadata.data),
+        metadataUri: decodeHexToUTF8(collectionMetadata.data),
       };
     } else {
       throw new UnknownVersionError(metadata);

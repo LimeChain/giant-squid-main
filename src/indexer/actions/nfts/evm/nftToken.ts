@@ -18,7 +18,7 @@ export interface NftTokenData {
   nftCollectionId: string;
   oldOwnerId: string;
   newOwnerId: string;
-  standard: NFTTokenStandard;
+  standard?: NFTTokenStandard;
   transferId: string;
 }
 
@@ -27,7 +27,7 @@ export interface NftTokensData {
   nftCollectionId: string;
   oldOwnerId: string;
   newOwnerId: string;
-  standard: NFTTokenStandard;
+  standard?: NFTTokenStandard;
   transferId: string;
 }
 
@@ -95,7 +95,7 @@ export class NftTokensAction extends Action<NftTokensData> {
           collection: nftCollection,
           // @ts-ignore
           owner: newOwner.account,
-          metadataIpfs: metadata.uri,
+          metadataUri: metadata.uri,
           standard: this.data.standard,
         });
 

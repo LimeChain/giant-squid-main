@@ -11,7 +11,7 @@ export class TokenBurnedEventPalletDecoder implements ITokenBurnedEventPalletDec
 
       return {
         collectionId: data.collection.toString(),
-        item: data.item,
+        item: data.item.toString(),
         owner: data.owner,
       };
     } else {

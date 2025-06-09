@@ -1,7 +1,12 @@
-import { Account, NftCollection, NftToken } from '@/model';
-import { CreateNftAction, EnsureAccount, NftTokenTransfer, TokenBurnedAction } from '@/indexer/actions';
+// @ts-ignore
+import { Account, NFTCollection, NftCollection, NFTHolder, NftToken } from '@/model';
+import { EnsureAccount, NftTokenTransfer, TokenBurnedAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
+import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
+import { EnsureNftTransferAction } from '@/indexer/actions/nfts/evm/nftTransfer';
+import { NftTokensAction } from '@/indexer/actions/nfts/evm/nftToken';
+import { EnsureNFTHolder } from '@/indexer/actions/nfts/evm/nftHolder';
 
 export interface ITokenTransferredEventPalletDecoder extends IEventPalletDecoder<{ collectionId: string; item: number; from: string; to: string }> {}
 
@@ -16,23 +21,36 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
-    const nftCollection = ctx.store.defer(NftCollection, data.collectionId);
 
-    const fromId = this.encodeAddress(data.from);
-    const toId = this.encodeAddress(data.to);
-    const from = ctx.store.defer(Account, fromId);
-    const to = ctx.store.defer(Account, toId);
+    if (!data || !event.extrinsic) return;
+    const accountFrom = ctx.store.defer(Account, data.from);
+    const accountTo = ctx.store.defer(Account, data.to);
+    const nftHolderFrom = ctx.store.defer(NFTHolder, this.composeId(data.from, data.collectionId));
+    const nftHolderTo = ctx.store.defer(NFTHolder, this.composeId(data.to, data.collectionId));
+    const nftCollection = ctx.store.defer(NFTCollection, data.collectionId);
 
     queue.push(
-      new EnsureAccount(block.header, event.extrinsic, { account: () => from.get(), id: fromId, pk: this.decodeAddress(fromId) }),
-      new EnsureAccount(block.header, event.extrinsic, { account: () => to.get(), id: toId, pk: this.decodeAddress(toId) }),
-      new NftTokenTransfer(block.header, event.extrinsic, {
-        id: event.id,
+      new EnsureAccount(block.header, event.extrinsic, { id: data.from, account: () => accountFrom.get(), pk: this.decodeAddress(data.from) }),
+      new EnsureAccount(block.header, event.extrinsic, { account: () => accountTo.get(), id: data.to, pk: this.decodeAddress(data.to) }),
+
+      new EnsureNFTCollection(block.header, event.extrinsic, { id: data.collectionId, nftCollection: () => nftCollection.get() }),
+      new EnsureNFTHolder(block.header, event.extrinsic, {
+        id: data.from,
+        nftHolder: () => nftHolderFrom.get(),
+        account: () => accountFrom.getOrFail(),
+        nftCollection: () => nftCollection.getOrFail(),
+      }),
+      new EnsureNFTHolder(block.header, event.extrinsic, {
+        id: data.to,
+        nftHolder: () => nftHolderTo.get(),
+        account: () => accountTo.getOrFail(),
+        nftCollection: () => nftCollection.getOrFail(),
+      }),
+      new EnsureNftTransferAction(block.header, event.extrinsic, {
+        id: event.extrinsic.hash,
+        from: () => accountFrom.getOrFail(),
+        to: () => accountTo.getOrFail(),
         collectionId: data.collectionId,
-        token: data.item,
-        from: () => from.getOrFail(),
-        to: () => to.getOrFail(),
-        collection: () => nftCollection.getOrFail(),
       })
     );
   }
