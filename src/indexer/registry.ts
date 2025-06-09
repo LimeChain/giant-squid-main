@@ -38,8 +38,6 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
-import { LimitedReserveTransferAssetsPalletHandler as LimitedReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/limitedReserveTransferAssets';
-import { ReserveTransferAssetsPalletHandler as ReserveTransferAssetsPalletHandlerPolkadotXcm } from '@/indexer/pallets/polkadot-xcm/calls/reserveTransferAssets';
 import { SentEventPalletHandler } from '@/indexer/pallets/polkadot-xcm/events/sent';
 import { TransferredAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
@@ -118,8 +116,6 @@ export const registry = {
     'Staking.set_payee': SetPayeeCallPalletHandler,
     'Staking.set_controller': SetControllerCallPalletHandler,
     'Crowdloan.create': CreateCallPalletHandler,
-    'PolkadotXcm.reserve_transfer_assets': ReserveTransferAssetsPalletHandlerPolkadotXcm,
-    'PolkadotXcm.limited_reserve_transfer_assets': LimitedReserveTransferAssetsPalletHandlerPolkadotXcm,
     'ConvictionVoting.unlock': UnlockCallPalletHandler,
     'ConvictionVoting.delegate': DelegateCallPalletHandler,
     'ConvictionVoting.undelegate': UndelegateCallPalletHandler,
