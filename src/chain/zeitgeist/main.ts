@@ -11,8 +11,8 @@ import { ParachainStakingDelegationIncreasedEventPalletDecoder } from '@/chain/z
 import { ParachainStakingDelegationKickedEventPalletDecoder } from '@/chain/zeitgeist/decoders/events/parachain-staking/delegationKicked';
 import { ParachainStakingDelegationRevokedEventPalletDecoder } from '@/chain/zeitgeist/decoders/events/parachain-staking/delegationRevoked';
 import { ParachainStakingRewardEventPalletDecoder } from '@/chain/zeitgeist/decoders/events/parachain-staking/rewarded';
-import { SentEventPalletDecoder } from './decoders/events/polkadotXcm/sent';
-import { TransferredMultiAssetsEventPalletDecoder } from './decoders/events/xTokens/transferredMultiAssets';
+import { SentEventPalletDecoder } from '@/chain/zeitgeist/decoders/events/polkadotXcm/sent';
+import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/zeitgeist/decoders/events/xTokens/transferredMultiAssets';
 
 export const indexer = new Indexer({
   config: {

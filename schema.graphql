@@ -475,13 +475,32 @@ type PolkadotXcmTransfer @entity {
   timestamp: DateTime! @index
   extrinsicHash: String @index
   account: Account!
-  to: String
-  toChain: String @index
-  amount: BigInt
+  to: PolkadotXcmTransferTo
+  toChain: String
+  amount: PolkadotXcmTransferAssetAmount
+  asset: PolkadotXcmTransferAsset
   weightLimit: BigInt
   call: String! @index
   contractCalled: String @index
   contractInput: String
+}
+
+type PolkadotXcmTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type PolkadotXcmTransferTo {
+  type: String!
+  value: String
+}
+
+type PolkadotXcmTransferAssetAmount {
+  type: String!
+  value: String
 }
 
 type QueryLogs @entity {
@@ -515,18 +534,38 @@ type NativeTransfer @entity {
   amount: BigInt! @index
   success: Boolean!
 }
-
 type XcmTransfer @entity {
   id: ID!
   blockNumber: Int! @index
   timestamp: DateTime! @index
   extrinsicHash: String @index
   account: Account!
-  to: String!
-  toChain: Parachain
-  amount: BigInt!
+  to: XcmTransferTo
+  toChain: String
+  amount: XcmTransferAssetAmount
+  asset: XcmTransferAsset
   weightLimit: BigInt
   call: String! @index
+  contractCalled: String @index
+  contractInput: String
+}
+
+type XcmTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type XcmTransferTo {
+  type: String!
+  value: String
+}
+
+type XcmTransferAssetAmount {
+  type: String!
+  value: String
 }
 
 type XTokensTransfer @entity {
@@ -535,11 +574,29 @@ type XTokensTransfer @entity {
   timestamp: DateTime! @index
   extrinsicHash: String @index
   account: Account!
-  to: String
+  to: XTokensTransferTo
   toChain: String
-  assets: [[String]]
-  amount: [String]
+  assets: [XTokensTransferAsset]
+  amounts: [XTokensTransferAssetAmount]
   call: String! @index
+}
+
+type XTokensTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type XTokensTransferAssetAmount {
+  type: String!
+  value: String
+}
+
+type XTokensTransferTo {
+  type: String!
+  value: String
 }
 
 type Account @entity {

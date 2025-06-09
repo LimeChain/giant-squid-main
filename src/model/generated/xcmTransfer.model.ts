@@ -1,7 +1,9 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
 import {Account} from "./account.model"
-import {Parachain} from "./parachain.model"
+import {XcmTransferTo} from "./_xcmTransferTo"
+import {XcmTransferAssetAmount} from "./_xcmTransferAssetAmount"
+import {XcmTransferAsset} from "./_xcmTransferAsset"
 
 @Entity_()
 export class XcmTransfer {
@@ -28,15 +30,17 @@ export class XcmTransfer {
     @ManyToOne_(() => Account, {nullable: true})
     account!: Account
 
-    @Column_("text", {nullable: false})
-    to!: string
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new XcmTransferTo(undefined, obj)}, nullable: true})
+    to!: XcmTransferTo | undefined | null
 
-    @Index_()
-    @ManyToOne_(() => Parachain, {nullable: true})
-    toChain!: Parachain | undefined | null
+    @Column_("text", {nullable: true})
+    toChain!: string | undefined | null
 
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    amount!: bigint
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new XcmTransferAssetAmount(undefined, obj)}, nullable: true})
+    amount!: XcmTransferAssetAmount | undefined | null
+
+    @Column_("jsonb", {transformer: {to: obj => obj == null ? undefined : obj.toJSON(), from: obj => obj == null ? undefined : new XcmTransferAsset(undefined, obj)}, nullable: true})
+    asset!: XcmTransferAsset | undefined | null
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     weightLimit!: bigint | undefined | null
@@ -44,4 +48,11 @@ export class XcmTransfer {
     @Index_()
     @Column_("text", {nullable: false})
     call!: string
+
+    @Index_()
+    @Column_("text", {nullable: true})
+    contractCalled!: string | undefined | null
+
+    @Column_("text", {nullable: true})
+    contractInput!: string | undefined | null
 }

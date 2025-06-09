@@ -9,7 +9,6 @@
       "calls": ["unlock", "vote", "remove_vote"]
     },
     "XTokens": {
-      "calls": ["transfer"],
       "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
