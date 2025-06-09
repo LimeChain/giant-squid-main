@@ -284,7 +284,7 @@ export function getRawAssetLocations(assets: (V1MultiAsset | V3MultiAsset | V3Mu
                 assetId = 'data' in second ? second.data : second.value;
                 break;
             }
-            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
         }
 
         return {
@@ -614,7 +614,7 @@ export function getRawAssetLocationsV4(assets: V4Asset[]) {
                 assetId = second.data;
                 break;
             }
-            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId})`] };
+            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
         }
 
         return {
