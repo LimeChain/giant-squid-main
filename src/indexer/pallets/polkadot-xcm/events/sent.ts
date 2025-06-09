@@ -67,7 +67,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
 
   handle({ ctx, block, queue, item: event }: IEventHandlerParams) {
     // Return on failed calls
-    if (!event?.call?.success) return;
+    if (!event?.extrinsic?.call?.success) return;
 
     const data = this.decoder.decode(event);
     // Return on unsupported event types
@@ -115,7 +115,7 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
           amount,
           to,
           toChain,
-          call: event.call.name,
+          call: event.extrinsic.call.name,
           weightLimit,
           contractCalled,
           contractInput,
