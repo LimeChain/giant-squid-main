@@ -3,8 +3,23 @@ import { UnknownVersionError } from '@/utils';
 import { Event, ISentEventPalletDecoder } from '@/indexer';
 
 import assert from 'assert';
-import { V1MultiLocation, V2Instruction, V2Instruction_BuyExecution } from '@/chain/robonomics/types/v20';
-import { V3MultiLocation, V3Instruction, V3Instruction_BuyExecution } from '@/chain/robonomics/types/v32';
+import { V1MultiLocation, V2Instruction, V2Instruction_BuyExecution, V2Instruction_DepositAsset } from '@/chain/robonomics/types/v20';
+import { V3MultiLocation, V3Instruction, V3Instruction_BuyExecution, V3Instruction_DepositAsset } from '@/chain/robonomics/types/v32';
+import {
+  getAssetAmount,
+  getRawAssetFromInstruction,
+  getTransferTarget,
+  getTransferTargetV4,
+  getOriginCaller,
+  getDestination,
+  getWeightLimit,
+  getWeightLimitV3V4,
+  getDestinationV4,
+  getOriginCallerV4,
+  getAssetAmountV4,
+  getRawAssetFromInstructionV4,
+  SUPPORTED_ASSET_MESSAGE_TYPES,
+} from '@/indexer/pallets/polkadot-xcm/events/sent';
 
 export class SentEventPalletDecoder implements ISentEventPalletDecoder {
   decode(event: Event) {
@@ -19,12 +34,22 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       if (!from) return;
 
       const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V2Instruction_BuyExecution;
+      const assetMsg = message.find((msg) => SUPPORTED_ASSET_MESSAGE_TYPES.includes(msg.__kind));
+      const transferTargetMsg = message.find((msg) => msg.__kind === 'DepositAsset') as V2Instruction_DepositAsset;
+
+      const transferTarget = getTransferTarget(transferTargetMsg, from.value);
+      const assetAmount = getAssetAmount(assetMsg);
+      const rawAssets = getRawAssetFromInstruction(assetMsg);
+
       return {
         from,
-        toChain: getDestination(destination),
-        amount: getAmount(message[0]),
-        to: getTarget(message.at(-1)!, from),
+        to: transferTarget,
+        toChain: getDestination(destination, transferTarget.value),
+        amount: assetAmount,
+        asset: rawAssets,
         weightLimit: getWeightLimit(weightLimitMsg),
+        contractCalled: event?.call?.args?.transaction?.value?.action?.value,
+        contractInput: event?.call?.args?.transaction?.value?.input,
       };
     } else if (sent.v32.is(event)) {
       const { origin, destination, message, messageId } = sent.v32.decode(event);
@@ -34,94 +59,25 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       if (!from) return;
 
       const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V3Instruction_BuyExecution;
+      const assetMsg = message.find((msg) => SUPPORTED_ASSET_MESSAGE_TYPES.includes(msg.__kind));
+      const transferTargetMsg = message.find((msg) => msg.__kind === 'DepositAsset') as V3Instruction_DepositAsset;
+
+      const transferTarget = getTransferTarget(transferTargetMsg, from.value);
+      const assetAmount = getAssetAmount(assetMsg);
+      const rawAssets = getRawAssetFromInstruction(assetMsg);
+
       return {
         from,
-        toChain: getDestination(destination),
-        amount: getAmount(message[0]),
-        to: getTarget(message.at(-1)!, from),
+        to: transferTarget,
+        toChain: getDestination(destination, transferTarget.value),
+        amount: assetAmount,
+        asset: rawAssets,
         weightLimit: getWeightLimitV3V4(weightLimitMsg),
+        contractCalled: event?.call?.args?.transaction?.value?.action?.value,
+        contractInput: event?.call?.args?.transaction?.value?.input,
       };
     }
 
     throw new UnknownVersionError(sent);
   }
-}
-
-function getOriginCaller(origin: V1MultiLocation | V3MultiLocation) {
-  if (origin.interior.__kind === 'X1') {
-    switch (origin.interior.value.__kind) {
-      case 'AccountId32':
-        return origin.interior.value.id;
-      case 'AccountKey20':
-        return origin.interior.value.key;
-    }
-  }
-
-  return;
-}
-
-function getDestination(destination: V1MultiLocation | V3MultiLocation) {
-  if (destination.interior.__kind === 'X1') {
-    switch (destination.interior.value.__kind) {
-      case 'Parachain':
-        return destination.interior.value.value.toString();
-      case 'AccountId32':
-        return destination.interior.value.id;
-      case 'AccountKey20':
-        return destination.interior.value.key;
-    }
-
-    return;
-  }
-  // Destination is the relay chain
-  else if (destination.interior.__kind === 'Here') {
-    return destination.interior.__kind;
-  }
-
-  return;
-}
-
-function getAmount(message: V2Instruction | V3Instruction) {
-  switch (message.__kind) {
-    case 'WithdrawAsset':
-    case 'ReserveAssetDeposited':
-      return message.value[0].fun.__kind === 'Fungible' ? message.value[0].fun.value : undefined;
-    case 'TransferReserveAsset':
-      return message.assets[0].fun.__kind === 'Fungible' ? message.assets[0].fun.value : undefined;
-    default:
-      return;
-  }
-}
-
-function getTarget(message: V2Instruction | V3Instruction, from?: string) {
-  // Call are to other parachains
-  if (message.__kind === 'DepositAsset') {
-    if (message.beneficiary.interior.__kind === 'X1') {
-      switch (message.beneficiary.interior.value.__kind) {
-        case 'AccountId32':
-          return message.beneficiary.interior.value.id;
-        case 'AccountKey20':
-          return message.beneficiary.interior.value.key;
-        default:
-          return;
-      }
-    }
-  }
-
-  // Calls are to assetHub
-  if (message?.__kind !== 'DepositAsset') {
-    return from;
-  }
-
-  return;
-}
-
-function getWeightLimit(message: V2Instruction_BuyExecution | undefined) {
-  if (message?.weightLimit?.__kind === 'Limited') return message.weightLimit.value;
-  else return;
-}
-
-function getWeightLimitV3V4(message: V3Instruction_BuyExecution | undefined) {
-  if (message?.weightLimit?.__kind === 'Limited') return message.weightLimit.value.proofSize;
-  else return;
 }
