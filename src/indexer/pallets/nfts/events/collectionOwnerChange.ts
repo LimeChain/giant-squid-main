@@ -1,10 +1,8 @@
 // @ts-ignore
 import { Account, NFTCollection } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { EnsureAccount } from '@/indexer/actions';
+import { CollectionOwnerChangeAction, EnsureAccount, EnsureNFTCollection } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { CollectionOwnerChangeAction } from '@/indexer/actions/nfts/collectionOwnerChange';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
 
 export interface ICollectionOwnerChangeEventPalletDecoder extends IEventPalletDecoder<{ collectionId: string; newOwner: string }> {}
 

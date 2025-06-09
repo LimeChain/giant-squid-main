@@ -65,6 +65,7 @@ import { TokenBurnedEventPalletHandler } from '@/indexer/pallets/nfts/events/tok
 import { TokenTransferredEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenTransferred';
 import { EvmLogEventPalletHandler } from '@/indexer/pallets/nfts/evm/events/log';
 import { XcmSentEventPalletHandler } from '@/indexer/pallets/xcm/events/sent';
+import { AttributeSetEventPalletHandler } from '@/indexer/pallets/nfts/events/attributeSet';
 
 export const registry = {
   events: {
@@ -115,6 +116,7 @@ export const registry = {
     'Nfts.ItemMetadataSet': TokenMetadataSetEventPalletHandler,
     'Nfts.Burned': TokenBurnedEventPalletHandler,
     'Nfts.Transferred': TokenTransferredEventPalletHandler,
+    'Nfts.AttributeSet': AttributeSetEventPalletHandler,
     'EVM.Log': EvmLogEventPalletHandler,
   },
   calls: {

@@ -1,9 +1,8 @@
 // @ts-ignore
 import { Account, NFTCollection } from '@/model';
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, EnsureNFTCollection } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
 
 export interface ICollectionCreatedEventPalletDecoder extends IEventPalletDecoder<{ collection: string; creator: string; owner: string }> {}
 

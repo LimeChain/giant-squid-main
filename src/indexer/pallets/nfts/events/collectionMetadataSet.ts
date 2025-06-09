@@ -1,9 +1,8 @@
 // @ts-ignore
 import { NFTCollection } from '@/model';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
-import { SetCollectionMetadataAction } from '@/indexer/actions';
+import { EnsureNFTCollection, SetCollectionMetadataAction } from '@/indexer/actions';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
 
 export interface ICollectionMetadataSetEventPalletDecoder extends IEventPalletDecoder<{ collectionId: string; metadataUri: string }> {}
 

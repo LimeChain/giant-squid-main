@@ -104,3 +104,20 @@ export const itemMetadataSet =  {
         })
     ),
 }
+
+export const attributeSet =  {
+    name: 'Nfts.AttributeSet',
+    /**
+     * New attribute metadata has been set for a `collection` or `item`.
+     */
+    v9430: new EventType(
+        'Nfts.AttributeSet',
+        sts.struct({
+            collection: sts.number(),
+            maybeItem: sts.option(() => sts.number()),
+            key: sts.bytes(),
+            value: sts.bytes(),
+            namespace: v9430.AttributeNamespace,
+        })
+    ),
+}

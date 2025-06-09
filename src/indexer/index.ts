@@ -69,5 +69,6 @@ export { ITokenMetadataSetEventPalletDecoder } from '@/indexer/pallets/nfts/even
 export { ITokenBurnedEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenBurned';
 export { ITokenTransferredEventPalletDecoder } from '@/indexer/pallets/nfts/events/tokenTransferred';
 export { IEvmLogEventPalletDecoder } from '@/indexer/pallets/nfts/evm/events/log';
+export { IAttributeSetEventPalletDecoder } from '@/indexer/pallets/nfts/events/attributeSet';
 
 export { Indexer, setupPallet } from '@/indexer/main';

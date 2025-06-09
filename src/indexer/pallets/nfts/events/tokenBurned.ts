@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Account, NftCollection, NftToken } from '@/model';
+import { Account } from '@/model';
 import { EnsureAccount, TokenBurnedAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
@@ -21,7 +21,6 @@ export class TokenBurnedEventPalletHandler extends EventPalletHandler<ITokenBurn
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => owner.get(), id: data.owner, pk: this.decodeAddress(data.owner) }),
-
       new TokenBurnedAction(block.header, event.extrinsic, {
         tokenId: data.item,
         collectionId: data.collectionId,

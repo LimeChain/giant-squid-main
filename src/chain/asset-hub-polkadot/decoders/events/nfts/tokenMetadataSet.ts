@@ -11,7 +11,7 @@ export class TokenMetadataSetEventPalletDecoder implements ITokenMetadataSetEven
 
       return {
         collectionId: data.collection.toString(),
-        item: data.item,
+        item: data.item.toString(),
         data: decodeHexToUTF8(data.data),
       };
     } else {

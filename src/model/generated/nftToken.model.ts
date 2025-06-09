@@ -3,6 +3,7 @@ import {NFTCollection} from "./nftCollection.model"
 import {Account} from "./account.model"
 import {NFTTokenStandard} from "./_nftTokenStandard"
 import {NFTTokenTransfer} from "./nftTokenTransfer.model"
+import {NFTAttribute} from "./nftAttribute.model"
 
 @Entity_()
 export class NFTToken {
@@ -33,4 +34,7 @@ export class NFTToken {
 
     @OneToMany_(() => NFTTokenTransfer, e => e.token)
     transfers!: NFTTokenTransfer[]
+
+    @OneToMany_(() => NFTAttribute, e => e.token)
+    attributes!: NFTAttribute[]
 }

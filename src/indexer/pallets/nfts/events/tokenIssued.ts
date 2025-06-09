@@ -1,12 +1,8 @@
 // @ts-ignore
-import { Account, NFTCollection, NftCollection, NFTHolder, NFTTokenStandard } from '@/model';
-import { EnsureAccount } from '@/indexer/actions';
+import { Account, NFTCollection, NFTHolder } from '@/model';
+import { EnsureAccount, EnsureNFTCollection, EnsureNFTHolder, IssueNftToken } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { IssueNftToken } from '@/indexer/actions/nfts/tokenIssued';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
-import { EnsureNFTHolder } from '@/indexer/actions/nfts/evm/nftHolder';
-import { NftTokensAction } from '@/indexer/actions/nfts/evm/nftToken';
 
 export interface ITokenIssuedEventPalletDecoder extends IEventPalletDecoder<{ collectionId: string; item: number; owner: string }> {}
 

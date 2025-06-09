@@ -1,12 +1,8 @@
 // @ts-ignore
-import { Account, NFTCollection, NftCollection, NFTHolder, NftToken } from '@/model';
-import { EnsureAccount, NftTokenTransfer, TokenBurnedAction } from '@/indexer/actions';
+import { Account, NFTCollection, NFTHolder } from '@/model';
+import { EnsureAccount, EnsureNFTHolder, EnsureNftTransferAction, NftTokenTransfer, EnsureNFTCollection } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
-import { EnsureNftTransferAction } from '@/indexer/actions/nfts/evm/nftTransfer';
-import { NftTokensAction } from '@/indexer/actions/nfts/evm/nftToken';
-import { EnsureNFTHolder } from '@/indexer/actions/nfts/evm/nftHolder';
 
 export interface ITokenTransferredEventPalletDecoder extends IEventPalletDecoder<{ collectionId: string; item: number; from: string; to: string }> {}
 
@@ -32,7 +28,6 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { id: data.from, account: () => accountFrom.get(), pk: this.decodeAddress(data.from) }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountTo.get(), id: data.to, pk: this.decodeAddress(data.to) }),
-
       new EnsureNFTCollection(block.header, event.extrinsic, { id: data.collectionId, nftCollection: () => nftCollection.get() }),
       new EnsureNFTHolder(block.header, event.extrinsic, {
         id: data.from,
@@ -51,6 +46,12 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
         collectionId: data.collectionId,
+      }),
+      new NftTokenTransfer(block.header, event.extrinsic, {
+        collectionId: data.collectionId,
+        token: data.item,
+        from: () => accountFrom.getOrFail(),
+        to: () => accountTo.getOrFail(),
       })
     );
   }

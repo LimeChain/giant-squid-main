@@ -37,6 +37,14 @@ type NFTToken @entity {
   metadataUri: String
   standard: NFTTokenStandard
   transfers: [NFTTokenTransfer!]! @derivedFrom(field: "token")
+  attributes: [NFTAttribute] @derivedFrom(field: "token")
+}
+
+type NFTAttribute @entity {
+  id: ID!
+  key: String!
+  value: String!
+  token: NFTToken! @index
 }
 
 # Helper entity to allow for transfers derivation if NFTToken entity

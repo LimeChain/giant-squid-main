@@ -7,14 +7,12 @@ import { TokenIssuedEventPalletDecoder } from '@/chain/asset-hub-polkadot/decode
 import { TokenMetadataSetEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/tokenMetadataSet';
 import { TokenBurnedEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/burned';
 import { TokenTransferredEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/transferred';
+import { AttributeSetEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/tokenAttributeSet';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
-    blockRange: {
-      from: 4232387,
-    },
   },
   pallets: {
     events: {
@@ -22,9 +20,10 @@ export const indexer = new Indexer({
       'Nfts.CollectionMetadataSet': setupPallet({ decoder: new CollectionMetadataSetEventPalletDecoder() }),
       'Nfts.OwnerChanged': setupPallet({ decoder: new CollectionOwnerChangeEventPalletDecoder() }),
       'Nfts.Issued': setupPallet({ decoder: new TokenIssuedEventPalletDecoder() }),
-      // 'Nfts.ItemMetadataSet': setupPallet({ decoder: new TokenMetadataSetEventPalletDecoder() }),
+      'Nfts.ItemMetadataSet': setupPallet({ decoder: new TokenMetadataSetEventPalletDecoder() }),
       'Nfts.Burned': setupPallet({ decoder: new TokenBurnedEventPalletDecoder() }),
       'Nfts.Transferred': setupPallet({ decoder: new TokenTransferredEventPalletDecoder() }),
+      'Nfts.AttributeSet': setupPallet({ decoder: new AttributeSetEventPalletDecoder() }),
     },
   },
 });

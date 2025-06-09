@@ -3,12 +3,7 @@ import { Account, NFTCollection, NFTHolder, NFTTokenStandard } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { EvmLogEventPalletDecoder } from '@/chain/moonbeam/decoders/events/evm/log';
-import { EnsureAccount } from '@/indexer/actions';
-import { EnsureNFTCollection } from '@/indexer/actions/nfts/nftCollection';
-import { NftTokensAction } from '@/indexer/actions/nfts/evm/nftToken';
-import { EnsureNFTHolder } from '@/indexer/actions/nfts/evm/nftHolder';
-import { EnsureNftTransferAction } from '@/indexer/actions/nfts/evm/nftTransfer';
-import assert from 'assert';
+import { EnsureAccount, EnsureNFTCollection, EnsureNFTHolder, EnsureNftTransferAction, NftTokensAction } from '@/indexer/actions';
 
 export interface IEvmLogEventPalletDecoder
   extends IEventPalletDecoder<

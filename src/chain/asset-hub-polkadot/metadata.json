@@ -3,7 +3,7 @@
   "specVersions": "https://v2.archive.subsquid.io/metadata/asset-hub-polkadot",
   "pallets": {
     "Nfts": {
-      "events": ["Created", "CollectionMetadataSet", "OwnerChanged", "Issued", "ItemMetadataSet", "Burned", "Transferred"]
+      "events": ["Created", "CollectionMetadataSet", "OwnerChanged", "Issued", "ItemMetadataSet", "Burned", "Transferred", "AttributeSet"]
     }
   },
   "storage": []
