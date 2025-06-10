@@ -12,6 +12,7 @@ import { TransferEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/
 
 export const indexer = new Indexer({
   config: {
+    prefix: 2,
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },

@@ -1,6 +1,6 @@
 // @ts-ignore
-import { Account, Parachain, ParachainStatus } from '@/model';
-import { EnsureAccount } from '@/indexer/actions';
+import { Account, HistoryElementType, Parachain, ParachainStatus } from '@/model';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { ChangeParachainStatusAction, CreateParachainAction } from '@/indexer/actions/crowdloan/parachain';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
@@ -46,6 +46,12 @@ export class ReservedParachainEventPalletHandler extends EventPalletHandler<IRes
       new ChangeParachainStatusAction(block.header, event.extrinsic, {
         parachain: () => parachain.getOrFail(),
         status: ParachainStatus.Reserved,
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        account: () => originAccount.getOrFail(),
       })
     );
   }

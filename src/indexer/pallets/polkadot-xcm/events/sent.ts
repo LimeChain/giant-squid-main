@@ -19,11 +19,11 @@ import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/astar/types/v
 import { V3MultiLocation as V3MultiLocationV10000, V3Instruction as V3InstructionV10000 } from '@/chain/bifrost-polkadot/types/v10000';
 import { V2Instruction as V2InstructionV9000 } from '@/chain/litentry/types/v9000';
 
-import { Account } from '@/model';
+import { Account, HistoryElementType } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { PolkadotXcmTransferAction } from '@/indexer/actions/polkadot-xcm/transfer';
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import assert from 'assert';
 import { jsonStringify } from '@/utils';
 
@@ -119,6 +119,12 @@ export class SentEventPalletHandler extends EventPalletHandler<ISentEventPalletS
           contractCalled,
           contractInput,
           asset,
+        }),
+        new HistoryElementAction(block.header, event.extrinsic, {
+          id: event.id,
+          name: event.name,
+          type: HistoryElementType.Event,
+          account: () => account.getOrFail(),
         })
       );
     } catch (error) {

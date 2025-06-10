@@ -1,4 +1,4 @@
-import { Account, HistoryElement, HistoryElementType, Staker } from '@/model';
+import { Account, HistoryElement, HistoryElementType } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface HistoryElementData {
@@ -13,7 +13,7 @@ export class HistoryElementAction extends Action<HistoryElementData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const account = await this.data.account();
 
-    const bond = new HistoryElement({
+    const historyElement = new HistoryElement({
       id: this.composeId(this.data.id, this.block.height),
       name: this.data.name,
       entityType: this.data.type,
@@ -24,6 +24,6 @@ export class HistoryElementAction extends Action<HistoryElementData> {
       amount: this.data.amount,
     });
 
-    await ctx.store.upsert(bond);
+    await ctx.store.upsert(historyElement);
   }
 }

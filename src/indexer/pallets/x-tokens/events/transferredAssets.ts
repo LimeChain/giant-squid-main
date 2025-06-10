@@ -1,8 +1,8 @@
 // @ts-ignore
-import { Account } from '@/model';
+import { Account, HistoryElementType } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import assert from 'assert';
 import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
 import { jsonStringify } from '@/utils';
@@ -90,5 +90,17 @@ export class TransferredAssetsEventPalletHandler extends EventPalletHandler<ITra
         assets,
       })
     );
+
+    if (amount) {
+      queue.push(
+        new HistoryElementAction(block.header, event.extrinsic, {
+          id: event.id,
+          amount: amount.reduce((acc, cur) => acc + BigInt(cur.value || 0), BigInt(0)),
+          name: event.name,
+          type: HistoryElementType.Event,
+          account: () => account.getOrFail(),
+        })
+      );
+    }
   }
 }
