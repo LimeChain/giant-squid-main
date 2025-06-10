@@ -208,169 +208,175 @@ export function getAssetAmounts(assets: (V1MultiAsset | V1MultiAssetV2040 | V3Mu
 }
 
 export function getRawAssetLocations(assets: (V1MultiAsset | V3MultiAsset | V3MultiAssetV2240 | V1MultiAssetV2040)[]) {
-  return assets.map((asset) => {
-    // We only support concrete assets for now (have not found any examples of abstract assets yet)
-    if (asset.id.__kind !== 'Concrete') {
-      return {
-        parents: null,
-        pallet: null,
-        assetId: null,
-        error: 'Non-concrete asset',
-      };
-    }
-
-    const location = asset.id.value;
-    const parents = location.parents;
-    let pallet: string | null = null;
-    let assetId: string | null = null;
-    let parachain: string | null = null;
-
-    switch (location.interior.__kind) {
-      case 'Here':
-        // Relay chain native: parents=1, Here
-        return { parents, pallet: null, assetId: null, fullPath: ['Here'] };
-
-      case 'X1':
-        switch (location.interior.value.__kind) {
-          case 'PalletInstance':
-            // Same chain native: parents=0, X1(PalletInstance(10))
-            pallet = location.interior.value.value.toString();
-            return { parents, pallet, assetId: null, fullPath: [`PalletInstance(${pallet})`] };
-          case 'Parachain':
-            // Cross-chain reference: parents=1, X1(Parachain(2000))
-            parachain = location.interior.value.value.toString();
-            return { parents, pallet: null, assetId: null, parachain, fullPath: [`Parachain(${parachain})`] };
-          case 'GeneralIndex':
-            // Asset by index: parents=0, X1(GeneralIndex(5))
-            assetId = location.interior.value.value.toString();
-            return { parents, pallet: null, assetId, fullPath: [`GeneralIndex(${assetId})`] };
-          case 'GeneralKey':
-            // Asset by key: parents=0, X1(GeneralKey(...))
-            const keyData = 'data' in location.interior.value ? location.interior.value.data : location.interior.value.value;
-            assetId = keyData;
-            return { parents, pallet: null, assetId, fullPath: [`GeneralKey(${keyData})`] };
-          default:
-            return { parents, pallet: null, assetId: null, error: 'Unknown X1 junction type' };
-        }
-
-      case 'X2': {
-        const [first, second] = location.interior.value;
-
-        switch (first.__kind) {
-          case 'PalletInstance':
-            // Same chain asset: parents=0, X2(PalletInstance(53), GeneralIndex(2))
-            pallet = first.value.toString();
-            switch (second.__kind) {
-              case 'GeneralIndex':
-                assetId = second.value.toString();
-                break;
-              case 'GeneralKey':
-                assetId = 'data' in second ? second.data : second.value;
-                break;
-            }
-            return { parents, pallet, assetId, fullPath: [`PalletInstance(${pallet})`, `${second.__kind}(${assetId})`] };
-
-          case 'Parachain':
-            // Cross-chain: parents=1, X2(Parachain(2000), ...)
-            parachain = first.value.toString();
-            switch (second.__kind) {
-              case 'PalletInstance':
-                pallet = second.value.toString();
-                break;
-              case 'GeneralIndex':
-                assetId = second.value.toString();
-                break;
-              case 'GeneralKey':
-                assetId = 'data' in second ? second.data : second.value;
-                break;
-            }
-            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
-        }
-
+  return assets.map(
+    (
+      asset
+    ): { parents?: number | null; pallet?: string | null; assetId?: string | null; parachain?: string | null; fullPath?: string[]; error?: string | null } => {
+      // We only support concrete assets for now (have not found any examples of abstract assets yet)
+      if (asset.id.__kind !== 'Concrete') {
         return {
-          parents,
+          parents: null,
           pallet: null,
           assetId: null,
-          error: 'Unknown X2 pattern',
+          fullPath: [] as string[],
+          error: 'Non-concrete asset',
         };
       }
 
-      case 'X3':
-      case 'X4':
-      case 'X5':
-      case 'X6':
-      case 'X7':
-      case 'X8': {
-        const junctions = location.interior.value;
+      const location = asset.id.value;
+      const parents = location.parents;
+      let pallet: string | null = null;
+      let assetId: string | null = null;
+      let parachain: string | null = null;
 
-        // Preserve full path for complex routing
-        const fullPath = junctions.map((junction) => {
-          switch (junction.__kind) {
-            case 'Parachain':
-              return `Parachain(${junction.value})`;
+      switch (location.interior.__kind) {
+        case 'Here':
+          // Relay chain native: parents=1, Here
+          return { parents, pallet: null, assetId: null, fullPath: ['Here'] };
+
+        case 'X1':
+          switch (location.interior.value.__kind) {
             case 'PalletInstance':
-              return `PalletInstance(${junction.value})`;
+              // Same chain native: parents=0, X1(PalletInstance(10))
+              pallet = location.interior.value.value.toString();
+              return { parents, pallet, assetId: null, fullPath: [`PalletInstance(${pallet})`] };
+            case 'Parachain':
+              // Cross-chain reference: parents=1, X1(Parachain(2000))
+              parachain = location.interior.value.value.toString();
+              return { parents, pallet: null, assetId: null, parachain, fullPath: [`Parachain(${parachain})`] };
             case 'GeneralIndex':
-              return `GeneralIndex(${junction.value})`;
+              // Asset by index: parents=0, X1(GeneralIndex(5))
+              assetId = location.interior.value.value.toString();
+              return { parents, pallet: null, assetId, fullPath: [`GeneralIndex(${assetId})`] };
             case 'GeneralKey':
-              const keyData = 'data' in junction ? junction.data : junction.value;
-              return `GeneralKey(${keyData})`;
-            case 'AccountId32':
-              return `AccountId32(${junction.id})`;
-            case 'AccountKey20':
-              return `AccountKey20(${junction.key})`;
-            case 'Plurality':
-              return `Plurality(${junction.id.__kind})`;
+              // Asset by key: parents=0, X1(GeneralKey(...))
+              const keyData = 'data' in location.interior.value ? location.interior.value.data : location.interior.value.value;
+              assetId = keyData;
+              return { parents, pallet: null, assetId, fullPath: [`GeneralKey(${keyData})`] };
             default:
-              return `${junction.__kind}(unknown)`;
+              return { parents, pallet: null, assetId: null, fullPath: [] as string[], error: 'Unknown X1 junction type' };
           }
-        });
 
-        // Extract key components for backwards compatibility
-        const parachains = (junctions.filter((j) => j.__kind === 'Parachain') as (V1Junction_Parachain | V3Junction_Parachain)[]).map((j) => j.value);
-        const palletJunction = junctions.find((j) => j.__kind === 'PalletInstance') as V1Junction_PalletInstance | V3Junction_PalletInstance;
-        const assetJunctions = junctions.filter((j) => j.__kind === 'GeneralIndex' || j.__kind === 'GeneralKey') as (
-          | V1Junction_GeneralIndex
-          | V3Junction_GeneralIndex
-        )[];
+        case 'X2': {
+          const [first, second] = location.interior.value;
 
-        // Determine primary target
-        let targetParachain = null;
-        let pallet = null;
-        let assetId = null;
+          switch (first.__kind) {
+            case 'PalletInstance':
+              // Same chain asset: parents=0, X2(PalletInstance(53), GeneralIndex(2))
+              pallet = first.value.toString();
+              switch (second.__kind) {
+                case 'GeneralIndex':
+                  assetId = second.value.toString();
+                  break;
+                case 'GeneralKey':
+                  assetId = 'data' in second ? second.data : second.value;
+                  break;
+              }
+              return { parents, pallet, assetId, fullPath: [`PalletInstance(${pallet})`, `${second.__kind}(${assetId})`] };
 
-        // For multi-hop, use the last parachain as the target
-        if (parachains.length > 0) {
-          targetParachain = parachains[parachains.length - 1].toString();
-        }
-
-        if (palletJunction) {
-          pallet = palletJunction.value.toString();
-        }
-
-        // Use the last asset junction as the primary asset ID
-        if (assetJunctions.length > 0) {
-          const lastAsset = assetJunctions[assetJunctions.length - 1];
-          if (lastAsset.__kind === 'GeneralIndex') {
-            assetId = lastAsset.value.toString();
-          } else if (lastAsset.__kind === 'GeneralKey') {
-            assetId = 'data' in lastAsset ? lastAsset.data : lastAsset.value;
+            case 'Parachain':
+              // Cross-chain: parents=1, X2(Parachain(2000), ...)
+              parachain = first.value.toString();
+              switch (second.__kind) {
+                case 'PalletInstance':
+                  pallet = second.value.toString();
+                  break;
+                case 'GeneralIndex':
+                  assetId = second.value.toString();
+                  break;
+                case 'GeneralKey':
+                  assetId = 'data' in second ? second.data : second.value;
+                  break;
+              }
+              return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
           }
+
+          return {
+            parents,
+            pallet: null,
+            assetId: null,
+            fullPath: [] as string[],
+            error: 'Unknown X2 pattern',
+          };
         }
 
-        return {
-          parents,
-          pallet,
-          assetId,
-          parachain: targetParachain,
-          fullPath, // Full junction path preserved
-        };
+        case 'X3':
+        case 'X4':
+        case 'X5':
+        case 'X6':
+        case 'X7':
+        case 'X8': {
+          const junctions = location.interior.value;
+
+          // Preserve full path for complex routing
+          const fullPath = junctions.map((junction) => {
+            switch (junction.__kind) {
+              case 'Parachain':
+                return `Parachain(${junction.value})`;
+              case 'PalletInstance':
+                return `PalletInstance(${junction.value})`;
+              case 'GeneralIndex':
+                return `GeneralIndex(${junction.value})`;
+              case 'GeneralKey':
+                const keyData = 'data' in junction ? junction.data : junction.value;
+                return `GeneralKey(${keyData})`;
+              case 'AccountId32':
+                return `AccountId32(${junction.id})`;
+              case 'AccountKey20':
+                return `AccountKey20(${junction.key})`;
+              case 'Plurality':
+                return `Plurality(${junction.id.__kind})`;
+              default:
+                return `${junction.__kind}(unknown)`;
+            }
+          });
+
+          // Extract key components for backwards compatibility
+          const parachains = (junctions.filter((j) => j.__kind === 'Parachain') as (V1Junction_Parachain | V3Junction_Parachain)[]).map((j) => j.value);
+          const palletJunction = junctions.find((j) => j.__kind === 'PalletInstance') as V1Junction_PalletInstance | V3Junction_PalletInstance;
+          const assetJunctions = junctions.filter((j) => j.__kind === 'GeneralIndex' || j.__kind === 'GeneralKey') as (
+            | V1Junction_GeneralIndex
+            | V3Junction_GeneralIndex
+          )[];
+
+          // Determine primary target
+          let targetParachain = null;
+          let pallet = null;
+          let assetId = null;
+
+          // For multi-hop, use the last parachain as the target
+          if (parachains.length > 0) {
+            targetParachain = parachains[parachains.length - 1].toString();
+          }
+
+          if (palletJunction) {
+            pallet = palletJunction.value.toString();
+          }
+
+          // Use the last asset junction as the primary asset ID
+          if (assetJunctions.length > 0) {
+            const lastAsset = assetJunctions[assetJunctions.length - 1];
+            if (lastAsset.__kind === 'GeneralIndex') {
+              assetId = lastAsset.value.toString();
+            } else if (lastAsset.__kind === 'GeneralKey') {
+              assetId = 'data' in lastAsset ? (lastAsset.data as string) : (lastAsset.value.toString() as string);
+            }
+          }
+
+          return {
+            parents,
+            pallet,
+            assetId,
+            parachain: targetParachain,
+            fullPath, // Full junction path preserved
+          };
+        }
+
+        default:
+          return { parents, pallet: null, assetId: null, fullPath: [] as string[], error: 'Unknown interior kind' };
       }
-
-      default:
-        return { parents, pallet: null, assetId: null, error: 'Unknown interior kind' };
     }
-  });
+  );
 }
 
 // V4 XCM Functions
@@ -548,156 +554,161 @@ export function getAssetAmountsV4(assets: V4Asset[]) {
 }
 
 export function getRawAssetLocationsV4(assets: V4Asset[]) {
-  return assets.map((asset) => {
-    const location = asset.id; // V4AssetId is essentially a V4Location
-    const parents = location.parents;
-    let pallet: string | null = null;
-    let assetId: string | null = null;
-    let parachain: string | null = null;
+  return assets.map(
+    (
+      asset
+    ): { parents?: number | null; pallet?: string | null; assetId?: string | null; parachain?: string | null; fullPath?: string[]; error?: string | null } => {
+      const location = asset.id; // V4AssetId is essentially a V4Location
+      const parents = location.parents;
+      let pallet: string | null = null;
+      let assetId: string | null = null;
+      let parachain: string | null = null;
 
-    switch (location.interior.__kind) {
-      case 'Here':
-        // Relay chain native: parents=1, Here
-        return { parents, pallet: null, assetId: null, fullPath: ['Here'] };
+      switch (location.interior.__kind) {
+        case 'Here':
+          // Relay chain native: parents=1, Here
+          return { parents, pallet: null, assetId: null, fullPath: ['Here'] };
 
-      case 'X1':
-        const junction = location.interior.value[0];
-        switch (junction.__kind) {
-          case 'PalletInstance':
-            // Same chain native: parents=0, X1(PalletInstance(10))
-            pallet = junction.value.toString();
-            return { parents, pallet, assetId: null, fullPath: [`PalletInstance(${pallet})`] };
-          case 'Parachain':
-            // Cross-chain reference: parents=1, X1(Parachain(2000))
-            parachain = junction.value.toString();
-            return { parents, pallet: null, assetId: null, parachain, fullPath: [`Parachain(${parachain})`] };
-          case 'GeneralIndex':
-            // Asset by index: parents=0, X1(GeneralIndex(5))
-            assetId = junction.value.toString();
-            return { parents, pallet: null, assetId, fullPath: [`GeneralIndex(${assetId})`] };
-          case 'GeneralKey':
-            // Asset by key: parents=0, X1(GeneralKey(...))
-            assetId = junction.data;
-            return { parents, pallet: null, assetId, fullPath: [`GeneralKey(${junction.data})`] };
-          default:
-            return { parents, pallet: null, assetId: null, error: 'Unknown X1 junction type' };
-        }
-
-      case 'X2': {
-        const [first, second] = location.interior.value;
-
-        switch (first.__kind) {
-          case 'PalletInstance':
-            // Same chain asset: parents=0, X2(PalletInstance(53), GeneralIndex(2))
-            pallet = first.value.toString();
-            switch (second.__kind) {
-              case 'GeneralIndex':
-                assetId = second.value.toString();
-                break;
-              case 'GeneralKey':
-                assetId = second.data;
-                break;
-            }
-            return { parents, pallet, assetId, fullPath: [`PalletInstance(${pallet})`, `${second.__kind}(${assetId})`] };
-
-          case 'Parachain':
-            // Cross-chain: parents=1, X2(Parachain(2000), ...)
-            parachain = first.value.toString();
-            switch (second.__kind) {
-              case 'PalletInstance':
-                pallet = second.value.toString();
-                break;
-              case 'GeneralIndex':
-                assetId = second.value.toString();
-                break;
-              case 'GeneralKey':
-                assetId = second.data;
-                break;
-            }
-            return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
-        }
-
-        return {
-          parents,
-          pallet: null,
-          assetId: null,
-          error: 'Unknown X2 pattern',
-        };
-      }
-
-      case 'X3':
-      case 'X4':
-      case 'X5':
-      case 'X6':
-      case 'X7':
-      case 'X8': {
-        const junctions = location.interior.value;
-
-        // Preserve full path for complex routing
-        const fullPath = junctions.map((junction) => {
+        case 'X1':
+          const junction = location.interior.value[0];
           switch (junction.__kind) {
-            case 'Parachain':
-              return `Parachain(${junction.value})`;
             case 'PalletInstance':
-              return `PalletInstance(${junction.value})`;
+              // Same chain native: parents=0, X1(PalletInstance(10))
+              pallet = junction.value.toString();
+              return { parents, pallet, assetId: null, fullPath: [`PalletInstance(${pallet})`] };
+            case 'Parachain':
+              // Cross-chain reference: parents=1, X1(Parachain(2000))
+              parachain = junction.value.toString();
+              return { parents, pallet: null, assetId: null, parachain, fullPath: [`Parachain(${parachain})`] };
             case 'GeneralIndex':
-              return `GeneralIndex(${junction.value})`;
+              // Asset by index: parents=0, X1(GeneralIndex(5))
+              assetId = junction.value.toString();
+              return { parents, pallet: null, assetId, fullPath: [`GeneralIndex(${assetId})`] };
             case 'GeneralKey':
-              return `GeneralKey(${junction.data})`;
-            case 'AccountId32':
-              return `AccountId32(${junction.id})`;
-            case 'AccountKey20':
-              return `AccountKey20(${junction.key})`;
-            case 'Plurality':
-              return `Plurality(${junction.id.__kind})`;
+              // Asset by key: parents=0, X1(GeneralKey(...))
+              assetId = junction.data;
+              return { parents, pallet: null, assetId, fullPath: [`GeneralKey(${junction.data})`] };
             default:
-              return `${junction.__kind}(unknown)`;
+              return { parents, pallet: null, assetId: null, fullPath: [] as string[], error: 'Unknown X1 junction type' };
           }
-        });
 
-        // Extract key components for backwards compatibility
-        const parachains = (junctions.filter((j) => j.__kind === 'Parachain') as V4Junction_Parachain[]).map((j) => j.value);
-        const palletJunction = junctions.find((j) => j.__kind === 'PalletInstance') as V4Junction_PalletInstance;
-        const assetJunctions = junctions.filter((j) => j.__kind === 'GeneralIndex' || j.__kind === 'GeneralKey') as (
-          | V4Junction_GeneralIndex
-          | V4Junction_GeneralKey
-        )[];
+        case 'X2': {
+          const [first, second] = location.interior.value;
 
-        // Determine primary target
-        let targetParachain = null;
-        let pallet = null;
-        let assetId = null;
+          switch (first.__kind) {
+            case 'PalletInstance':
+              // Same chain asset: parents=0, X2(PalletInstance(53), GeneralIndex(2))
+              pallet = first.value.toString();
+              switch (second.__kind) {
+                case 'GeneralIndex':
+                  assetId = second.value.toString();
+                  break;
+                case 'GeneralKey':
+                  assetId = second.data;
+                  break;
+              }
+              return { parents, pallet, assetId, fullPath: [`PalletInstance(${pallet})`, `${second.__kind}(${assetId})`] };
 
-        // For multi-hop, use the last parachain as the target
-        if (parachains.length > 0) {
-          targetParachain = parachains[parachains.length - 1].toString();
-        }
-
-        if (palletJunction) {
-          pallet = palletJunction.value.toString();
-        }
-
-        // Use the last asset junction as the primary asset ID
-        if (assetJunctions.length > 0) {
-          const lastAsset = assetJunctions[assetJunctions.length - 1];
-          if (lastAsset.__kind === 'GeneralIndex') {
-            assetId = lastAsset.value.toString();
-          } else if (lastAsset.__kind === 'GeneralKey') {
-            assetId = lastAsset.data;
+            case 'Parachain':
+              // Cross-chain: parents=1, X2(Parachain(2000), ...)
+              parachain = first.value.toString();
+              switch (second.__kind) {
+                case 'PalletInstance':
+                  pallet = second.value.toString();
+                  break;
+                case 'GeneralIndex':
+                  assetId = second.value.toString();
+                  break;
+                case 'GeneralKey':
+                  assetId = second.data;
+                  break;
+              }
+              return { parents, pallet, assetId, parachain, fullPath: [`Parachain(${parachain})`, `${second.__kind}(${assetId ?? pallet})`] };
           }
+
+          return {
+            parents,
+            pallet: null,
+            assetId: null,
+            fullPath: [] as string[],
+            error: 'Unknown X2 pattern',
+          };
         }
 
-        return {
-          parents,
-          pallet,
-          assetId,
-          parachain: targetParachain,
-          fullPath, // Full junction path preserved
-        };
+        case 'X3':
+        case 'X4':
+        case 'X5':
+        case 'X6':
+        case 'X7':
+        case 'X8': {
+          const junctions = location.interior.value;
+
+          // Preserve full path for complex routing
+          const fullPath = junctions.map((junction) => {
+            switch (junction.__kind) {
+              case 'Parachain':
+                return `Parachain(${junction.value})`;
+              case 'PalletInstance':
+                return `PalletInstance(${junction.value})`;
+              case 'GeneralIndex':
+                return `GeneralIndex(${junction.value})`;
+              case 'GeneralKey':
+                return `GeneralKey(${junction.data})`;
+              case 'AccountId32':
+                return `AccountId32(${junction.id})`;
+              case 'AccountKey20':
+                return `AccountKey20(${junction.key})`;
+              case 'Plurality':
+                return `Plurality(${junction.id.__kind})`;
+              default:
+                return `${junction.__kind}(unknown)`;
+            }
+          });
+
+          // Extract key components for backwards compatibility
+          const parachains = (junctions.filter((j) => j.__kind === 'Parachain') as V4Junction_Parachain[]).map((j) => j.value);
+          const palletJunction = junctions.find((j) => j.__kind === 'PalletInstance') as V4Junction_PalletInstance;
+          const assetJunctions = junctions.filter((j) => j.__kind === 'GeneralIndex' || j.__kind === 'GeneralKey') as (
+            | V4Junction_GeneralIndex
+            | V4Junction_GeneralKey
+          )[];
+
+          // Determine primary target
+          let targetParachain = null;
+          let pallet = null;
+          let assetId = null;
+
+          // For multi-hop, use the last parachain as the target
+          if (parachains.length > 0) {
+            targetParachain = parachains[parachains.length - 1].toString();
+          }
+
+          if (palletJunction) {
+            pallet = palletJunction.value.toString();
+          }
+
+          // Use the last asset junction as the primary asset ID
+          if (assetJunctions.length > 0) {
+            const lastAsset = assetJunctions[assetJunctions.length - 1];
+            if (lastAsset.__kind === 'GeneralIndex') {
+              assetId = lastAsset.value.toString();
+            } else if (lastAsset.__kind === 'GeneralKey') {
+              assetId = lastAsset.data;
+            }
+          }
+
+          return {
+            parents,
+            pallet,
+            assetId,
+            parachain: targetParachain,
+            fullPath, // Full junction path preserved
+          };
+        }
+
+        default:
+          return { parents, pallet: null, assetId: null, fullPath: [] as string[], error: 'Unknown interior kind' };
       }
-
-      default:
-        return { parents, pallet: null, assetId: null, error: 'Unknown interior kind' };
     }
-  });
+  );
 }
