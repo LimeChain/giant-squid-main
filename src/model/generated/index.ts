@@ -1,4 +1,7 @@
 export * from "./queryLogs.model"
+export * from "./transfer.model"
+export * from "./_transferDirection"
+export * from "./nativeTransfer.model"
 export * from "./nftHolder.model"
 export * from "./nftCollection.model"
 export * from "./nftTransfer.model"

@@ -1,4 +1,5 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
+import {Transfer} from "./transfer.model"
 import {NFTToken} from "./nftToken.model"
 
 @Entity_()
@@ -13,6 +14,9 @@ export class Account {
     @Index_()
     @Column_("text", {nullable: false})
     publicKey!: string
+
+    @OneToMany_(() => Transfer, e => e.account)
+    transfers!: Transfer[]
 
     @OneToMany_(() => NFTToken, e => e.owner)
     nftTokens!: NFTToken[]

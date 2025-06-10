@@ -10,6 +10,30 @@ type QueryLogs @entity {
   chainName: String!
 }
 
+enum TransferDirection {
+  From
+  To
+}
+
+# entity for linking account and transfer
+type Transfer @entity {
+  id: ID!
+  transfer: NativeTransfer
+  account: Account!
+  direction: TransferDirection
+}
+
+type NativeTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  from: Account!
+  to: Account!
+  amount: BigInt! @index
+  success: Boolean!
+}
+
 enum NFTTokenStandard {
   ERC721
   ERC1155
@@ -70,5 +94,6 @@ type NFTTokenTransfer @entity {
 type Account @entity {
   id: ID!
   publicKey: ID! @index
+  transfers: [Transfer!] @derivedFrom(field: "account")
   nftTokens: [NFTToken!] @derivedFrom(field: "owner")
 }

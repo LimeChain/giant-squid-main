@@ -8,6 +8,7 @@ import { TokenMetadataSetEventPalletDecoder } from '@/chain/asset-hub-polkadot/d
 import { TokenBurnedEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/burned';
 import { TokenTransferredEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/transferred';
 import { AttributeSetEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/nfts/tokenAttributeSet';
+import { TransferEventPalletDecoder } from '@/chain/asset-hub-polkadot/decoders/events/balances/transfer';
 
 export const indexer = new Indexer({
   config: {
@@ -16,6 +17,7 @@ export const indexer = new Indexer({
   },
   pallets: {
     events: {
+      'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
       'Nfts.Created': setupPallet({ decoder: new CreatedEventPalletDecoder() }),
       'Nfts.CollectionMetadataSet': setupPallet({ decoder: new CollectionMetadataSetEventPalletDecoder() }),
       'Nfts.OwnerChanged': setupPallet({ decoder: new CollectionOwnerChangeEventPalletDecoder() }),
