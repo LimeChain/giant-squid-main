@@ -135,3 +135,16 @@ export function calculateEraReturn(reward: bigint, bondedAmount: bigint): string
 
   return `${eraReturn.toFixed(2)}%`;
 }
+
+export function jsonStringify(obj: any) {
+  return JSON.stringify(
+    obj,
+    (key, value) => {
+      if (typeof value === 'bigint') {
+        return value.toString();
+      }
+      return value;
+    },
+    2
+  );
+}

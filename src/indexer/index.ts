@@ -43,11 +43,14 @@ export { IParachainDelegationDecreasedEventDecoder } from '@/indexer/pallets/par
 export { IParachainCandidateLeftEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 export { IParachainCandidateBondedMoreEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 export { IParachainCandidateBondedLessEventDecoder } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
+export { ISentEventPalletDecoder } from '@/indexer/pallets/polkadot-xcm/events/sent';
+export { IXcmSentEventPalletDecoder } from '@/indexer/pallets/xcm/events/sent';
 export { IUnlockCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/unlock';
 export { IVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/vote';
 export { IDelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/delegate';
 export { IUndelegateCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 export { IRemoveVoteCallPalletDecoder } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+export { ITransferredAssetsEventPalletDecoder } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 export { INominationPoolsBondedEventPalletDecoder } from '@/indexer/pallets/nomination-pools/events/bonded';
 export { INominationPoolsCreatePollCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/create';
 export { INominationPoolsSetMetadataCallPalletDecoder } from '@/indexer/pallets/nomination-pools/calls/setMetadata';

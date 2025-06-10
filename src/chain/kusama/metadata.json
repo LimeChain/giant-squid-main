@@ -23,6 +23,9 @@
     "ConvictionVoting": {
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     },
+    "XcmPallet": {
+      "events": ["Sent"]
+    },
     "NominationPools": {
       "events": ["Bonded", "Destroyed", "Unbonded", "PaidOut", "StateChanged", "Withdrawn"],
       "calls": ["create", "nominate", "set_metadata", "update_roles"]

@@ -1,6 +1,7 @@
+//@ts-ignore
+import { Pool, Account, HistoryElementType } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { Account, HistoryElementType, Pool } from '@/model';
 import { EnsureAccount, HistoryElementAction, UpdatePoolAction } from '@/indexer/actions';
 import { getOriginAccountId } from '@/utils';
 

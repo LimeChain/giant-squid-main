@@ -4,6 +4,12 @@
   "pallets": {
     "Balances": {
       "events": ["Transfer"]
+    },
+    "PolkadotXcm": {
+      "events": ["Sent"]
+    },
+    "XTokens": {
+      "events": ["TransferredAssets", "TransferredMultiAssets"]
     }
   },
   "storage": []

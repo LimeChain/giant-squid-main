@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Account, HistoryElementType, Pool, Staker } from '@/model';
 import { EnsureAccount, EnsureStaker, HistoryElementAction, NominationPoolsBondAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';

@@ -1,0 +1,30 @@
+type XTokensTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account!
+  to: XTokensTransferTo
+  toChain: String
+  assets: [XTokensTransferAsset]
+  amounts: [XTokensTransferAssetAmount]
+  call: String! @index
+}
+
+type XTokensTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type XTokensTransferAssetAmount {
+  type: String!
+  value: String
+}
+
+type XTokensTransferTo {
+  type: String!
+  value: String
+}

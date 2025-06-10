@@ -46,13 +46,13 @@ import { UpdateRolesCallPalletDecoder } from './decoders/calls/nomination-pools/
 import { NominationPoolsPaidOutEventPalletDecoder } from './decoders/events/nomination-pools/paidOut';
 import { NominationPoolsWithdrawnEventPalletDecoder } from './decoders/events/nomination-pools/withdrawn';
 import { NominateCallPalletDecoder } from './decoders/calls/nomination-pools/nominate';
+import { XcmSentEventPalletDecoder } from '@/chain/polkadot/decoders/events/xcm/sent';
 
 export const indexer = new Indexer({
   config: {
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },
-
   pallets: {
     events: {
       'Balances.Transfer': setupPallet({ decoder: new TransferEventPalletDecoder() }),
@@ -96,6 +96,7 @@ export const indexer = new Indexer({
       'NominationPools.StateChanged': setupPallet({ decoder: new NominationPoolsStateChangedEventPalletDecoder() }),
       'NominationPools.PaidOut': setupPallet({ decoder: new NominationPoolsPaidOutEventPalletDecoder() }),
       'NominationPools.Withdrawn': setupPallet({ decoder: new NominationPoolsWithdrawnEventPalletDecoder() }),
+      'XcmPallet.Sent': setupPallet({ decoder: new XcmSentEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),

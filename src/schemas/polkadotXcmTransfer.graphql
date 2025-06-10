@@ -1,0 +1,33 @@
+type PolkadotXcmTransfer @entity {
+  id: ID!
+  blockNumber: Int! @index
+  timestamp: DateTime! @index
+  extrinsicHash: String @index
+  account: Account!
+  to: PolkadotXcmTransferTo
+  toChain: String
+  amount: PolkadotXcmTransferAssetAmount
+  asset: PolkadotXcmTransferAsset
+  weightLimit: BigInt
+  call: String! @index
+  contractCalled: String @index
+  contractInput: String
+}
+
+type PolkadotXcmTransferAsset {
+  parents: Int
+  pallet: String
+  assetId: String
+  parachain: String
+  fullPath: [String]
+}
+
+type PolkadotXcmTransferTo {
+  type: String!
+  value: String
+}
+
+type PolkadotXcmTransferAssetAmount {
+  type: String!
+  value: String
+}

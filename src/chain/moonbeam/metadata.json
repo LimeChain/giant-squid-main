@@ -19,6 +19,9 @@
         "CandidateBondedLess"
       ]
     },
+    "PolkadotXcm": {
+      "events": ["Sent"]
+    },
     "ConvictionVoting": {
       "calls": ["delegate", "unlock", "vote", "undelegate", "remove_vote"]
     }

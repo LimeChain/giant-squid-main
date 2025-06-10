@@ -1,3 +1,4 @@
+// @ts-ignore
 import { ConvictionUnlock } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

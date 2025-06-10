@@ -38,11 +38,14 @@ import { ParachainDelegationDecreasedEventPalletHandler } from '@/indexer/pallet
 import { ParachainCandidateLeftEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateLeft';
 import { ParachainCandidateBondedMoreEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedMore';
 import { ParachainCandidateBondedLessEventPalletHandler } from '@/indexer/pallets/parachain-staking/events/candidateBondedLess';
+import { SentEventPalletHandler } from '@/indexer/pallets/polkadot-xcm/events/sent';
+import { TransferredAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredAssets';
 import { UnlockCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/unlock';
 import { VoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/vote';
 import { DelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/delegate';
 import { UndelegateCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/undelegate';
 import { RemoveVoteCallPalletHandler } from '@/indexer/pallets/conviction-voting/calls/removeVote';
+import { TransferredMultiAssetsEventPalletHandler } from '@/indexer/pallets/x-tokens/events/transferredMultiAssets';
 import { NominationPoolsBondedEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/bonded';
 import { NominationPoolsCreatePoolCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/create';
 import { NominationPoolsSetMetadataCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/setMetadata';
@@ -53,6 +56,7 @@ import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets
 import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
 import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
+import { XcmSentEventPalletHandler } from '@/indexer/pallets/xcm/events/sent';
 
 export const registry = {
   events: {
@@ -84,6 +88,12 @@ export const registry = {
     'Registrar.Reserved': ReservedParachainEventPalletHandler,
     'Registrar.Registered': RegisteredParachainEventPalletHandler,
     'Registrar.Deregistered': DeregisteredParachainEventPalletHandler,
+    'PolkadotXcm.Sent': SentEventPalletHandler,
+    'XcmPallet.Sent': XcmSentEventPalletHandler,
+    'XTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'XTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredAssets': TransferredAssetsEventPalletHandler,
+    'OrmlXTokens.TransferredMultiAssets': TransferredMultiAssetsEventPalletHandler,
     'NominationPools.Bonded': NominationPoolsBondedEventPalletHandler,
     'NominationPools.Destroyed': NominationPoolsDestroyedEventPalletHandler,
     'NominationPools.Unbonded': NominationPoolsUnbondedEventPalletHandler,

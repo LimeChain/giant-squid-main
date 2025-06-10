@@ -17,7 +17,7 @@ export class EraRewardAction extends Action<EraRewardData> {
       return;
     }
     const staker = await this.data.staker();
-    let eraData = await ctx.store.findOneBy(StakingEraReward, {
+    let eraData: StakingEraReward | undefined = await ctx.store.findOneBy(StakingEraReward, {
       staker: staker,
       era: this.data.era,
     });
@@ -39,6 +39,8 @@ export class EraRewardAction extends Action<EraRewardData> {
         returnPercentage,
       });
     }
+
+    if (!eraData) return;
 
     await ctx.store.upsert(eraData);
   }

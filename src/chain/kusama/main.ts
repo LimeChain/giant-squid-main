@@ -46,6 +46,7 @@ import { CreatePoolCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomin
 import { NominateCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/nominate';
 import { SetMetadataCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/setMetadata';
 import { UpdateRolesCallPalletDecoder } from '@/chain/kusama/decoders/calls/nomination-pools/updateRoles';
+import { XcmSentEventPalletDecoder } from '@/chain/kusama/decoders/events/xcm/sent';
 
 export const indexer = new Indexer({
   config: {
@@ -95,6 +96,7 @@ export const indexer = new Indexer({
       'NominationPools.StateChanged': setupPallet({ decoder: new NominationPoolsStateChangedEventPalletDecoder() }),
       'NominationPools.PaidOut': setupPallet({ decoder: new NominationPoolsPaidOutEventPalletDecoder() }),
       'NominationPools.Withdrawn': setupPallet({ decoder: new NominationPoolsWithdrawnEventPalletDecoder() }),
+      'XcmPallet.Sent': setupPallet({ decoder: new XcmSentEventPalletDecoder() }),
     },
     calls: {
       'Staking.bond': setupPallet({ decoder: new BondCallPalletDecoder() }),
