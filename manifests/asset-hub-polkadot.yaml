@@ -1,0 +1,32 @@
+manifestVersion: subsquid.io/v0.1
+name: gs-main-asset-hub-polkadot
+version: 1
+description: |-
+  Giant Squid Main for AssetHub Polkadot
+build:
+deploy:
+  addons:
+    postgres:
+  processor:
+    env:
+      CHAIN: asset-hub-polkadot
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_ASSET_HUB_POLKADOT_HTTP }}
+    cmd:
+      - sqd
+      - process:prod
+  api:
+    env:
+      CHAIN: asset-hub-polkadot
+    cmd:
+      - sqd
+      - api:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 80G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium

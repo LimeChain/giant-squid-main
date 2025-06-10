@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import { NominationPoolsPaidOut, Pool, Staker } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

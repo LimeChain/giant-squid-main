@@ -56,7 +56,16 @@ import { NominationPoolsStateChangedEventPalletHandler } from '@/indexer/pallets
 import { NominationPoolsPaidOutEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/paidOut';
 import { NominationPoolsWithdrawnEventPalletHandler } from '@/indexer/pallets/nomination-pools/events/withdrawn';
 import { NominationPoolsNominateCallPalletHandler } from '@/indexer/pallets/nomination-pools/calls/nominate';
+import { CollectionCreatedEventPalletHandler } from '@/indexer/pallets/nfts/events/collectionCreated';
+import { CollectionMetadataSetEventPalletHandler } from '@/indexer/pallets/nfts/events/collectionMetadataSet';
+import { CollectionOwnerChangeEventPalletHandler } from '@/indexer/pallets/nfts/events/collectionOwnerChange';
+import { TokenIssuedEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenIssued';
+import { TokenMetadataSetEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenMetadataSet';
+import { TokenBurnedEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenBurned';
+import { TokenTransferredEventPalletHandler } from '@/indexer/pallets/nfts/events/tokenTransferred';
+import { EvmLogEventPalletHandler } from '@/indexer/pallets/nfts/evm/events/log';
 import { XcmSentEventPalletHandler } from '@/indexer/pallets/xcm/events/sent';
+import { AttributeSetEventPalletHandler } from '@/indexer/pallets/nfts/events/attributeSet';
 
 export const registry = {
   events: {
@@ -100,6 +109,15 @@ export const registry = {
     'NominationPools.StateChanged': NominationPoolsStateChangedEventPalletHandler,
     'NominationPools.PaidOut': NominationPoolsPaidOutEventPalletHandler,
     'NominationPools.Withdrawn': NominationPoolsWithdrawnEventPalletHandler,
+    'Nfts.Created': CollectionCreatedEventPalletHandler,
+    'Nfts.CollectionMetadataSet': CollectionMetadataSetEventPalletHandler,
+    'Nfts.OwnerChanged': CollectionOwnerChangeEventPalletHandler,
+    'Nfts.Issued': TokenIssuedEventPalletHandler,
+    'Nfts.ItemMetadataSet': TokenMetadataSetEventPalletHandler,
+    'Nfts.Burned': TokenBurnedEventPalletHandler,
+    'Nfts.Transferred': TokenTransferredEventPalletHandler,
+    'Nfts.AttributeSet': AttributeSetEventPalletHandler,
+    'EVM.Log': EvmLogEventPalletHandler,
   },
   calls: {
     'Identity.set_identity': SetIdentityCallPalletHandler,

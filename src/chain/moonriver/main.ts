@@ -20,6 +20,7 @@ import { VoteCallPalletDecoder } from '@/chain/moonriver/decoders/calls/convicti
 import { SentEventPalletDecoder } from '@/chain/moonriver/decoders/events/polkadotXcm/sent';
 import { TransferredAssetsEventPalletDecoder } from '@/chain/moonriver/decoders/events/xTokens/transferredAssets';
 import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/moonriver/decoders/events/xTokens/transferredMultiAssets';
+import { EvmLogEventPalletDecoder } from '@/chain/moonriver/decoders/events/evm/log';
 
 export const indexer = new Indexer({
   config: {
@@ -43,6 +44,7 @@ export const indexer = new Indexer({
       'PolkadotXcm.Sent': setupPallet({ decoder: new SentEventPalletDecoder() }),
       'XTokens.TransferredAssets': setupPallet({ decoder: new TransferredAssetsEventPalletDecoder() }),
       'XTokens.TransferredMultiAssets': setupPallet({ decoder: new TransferredMultiAssetsEventPalletDecoder() }),
+      'EVM.Log': setupPallet({ decoder: new EvmLogEventPalletDecoder() }),
     },
     calls: {
       'ConvictionVoting.unlock': setupPallet({ decoder: new UnlockCallPalletDecoder() }),
