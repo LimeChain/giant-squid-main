@@ -22,6 +22,6 @@ export class NftTokenTransfer extends Action<NftTokenTransferData> {
 
     token.owner = to;
 
-    await ctx.store.upsert(token);
+    await ctx.store.save(token);
   }
 }

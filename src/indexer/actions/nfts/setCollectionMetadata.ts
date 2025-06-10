@@ -1,9 +1,9 @@
 // @ts-ignore
-import { NftCollection } from '@/model';
+import { NFTCollection } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NftMetadataData {
-  nftCollection: () => Promise<NftCollection>;
+  nftCollection: () => Promise<NFTCollection>;
   metadataUri: string;
 }
 

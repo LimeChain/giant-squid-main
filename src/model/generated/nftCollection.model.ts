@@ -1,4 +1,5 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
+import {Account} from "./account.model"
 import {NFTHolder} from "./nftHolder.model"
 import {NFTToken} from "./nftToken.model"
 import {NFTTransfer} from "./nftTransfer.model"
@@ -14,6 +15,10 @@ export class NFTCollection {
 
     @Column_("text", {nullable: true})
     metadataUri!: string | undefined | null
+
+    @Index_()
+    @ManyToOne_(() => Account, {nullable: true})
+    owner!: Account | undefined | null
 
     @OneToMany_(() => NFTHolder, e => e.collection)
     holders!: NFTHolder[]

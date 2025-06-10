@@ -41,7 +41,6 @@ export class NftTokensAction extends Action<NftTokensData> {
       ctx.store.findOneOrFail(NFTHolder, {
         where: { id: this.composeId(this.data.oldOwnerId, this.data.nftCollectionId) },
         // @ts-ignore
-
         relations: { account: true },
       }),
       ctx.store.findOneOrFail(NFTHolder, {

@@ -12,7 +12,6 @@ interface NFTTokenAttributeData {
 export class TokenAttributeSetAction extends Action<NFTTokenAttributeData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const token = await ctx.store.findOne(NFTToken, { where: { id: this.composeId(this.data.tokenId, this.data.collectionId) } });
-
     if (!token) return;
 
     const attribute = new NFTAttribute({
@@ -22,12 +21,6 @@ export class TokenAttributeSetAction extends Action<NFTTokenAttributeData> {
       token: token,
     });
 
-    if (!token.attributes) {
-      token.attributes = [];
-    }
-
-    token.attributes.push(attribute);
-
-    await ctx.store.upsert(token);
+    await ctx.store.insert(attribute);
   }
 }

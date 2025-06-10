@@ -1,9 +1,9 @@
 // @ts-ignore
-import { Account, NftCollection } from '@/model';
+import { Account, NFTCollection } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NftMetadataData {
-  nftCollection: () => Promise<NftCollection>;
+  nftCollection: () => Promise<NFTCollection>;
   newOwner: () => Promise<Account>;
 }
 
@@ -16,6 +16,6 @@ export class CollectionOwnerChangeAction extends Action<NftMetadataData> {
 
     collection.owner = newOwner;
 
-    await ctx.store.upsert(collection);
+    await ctx.store.save(collection);
   }
 }

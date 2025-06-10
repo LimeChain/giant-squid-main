@@ -1,6 +1,6 @@
 // @ts-ignore
 import { Account, NFTCollection } from '@/model';
-import { EnsureAccount, EnsureNFTCollection } from '@/indexer/actions';
+import { CollectionOwnerChangeAction, EnsureAccount, EnsureNFTCollection } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 
@@ -28,7 +28,11 @@ export class CollectionCreatedEventPalletHandler extends EventPalletHandler<ICol
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => owner.get(), id: ownerId, pk: this.decodeAddress(ownerId) }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => creator.get(), id: creatorId, pk: this.decodeAddress(creatorId) }),
-      new EnsureNFTCollection(block.header, event.extrinsic, { id: data.collection, nftCollection: () => nftCollection.get() })
+      new EnsureNFTCollection(block.header, event.extrinsic, { id: data.collection, nftCollection: () => nftCollection.get() }),
+      new CollectionOwnerChangeAction(block.header, event.extrinsic, {
+        nftCollection: () => nftCollection.getOrFail(),
+        newOwner: () => owner.getOrFail(),
+      })
     );
   }
 }

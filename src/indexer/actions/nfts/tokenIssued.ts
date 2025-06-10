@@ -1,10 +1,10 @@
 // @ts-ignore
-import { Account, NftCollection, NFTToken } from '@/model';
+import { Account, NFTCollection, NFTToken } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 
 interface NftTokenData {
   id: string;
-  collection: () => Promise<NftCollection | undefined>;
+  collection: () => Promise<NFTCollection | undefined>;
   owner: () => Promise<Account | undefined>;
 }
 

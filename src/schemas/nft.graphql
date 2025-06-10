@@ -13,6 +13,7 @@ type NFTHolder @entity {
 type NFTCollection @entity {
   id: ID!
   metadataUri: String
+  owner: Account @index
   holders: [NFTHolder!] @derivedFrom(field: "collection")
   tokens: [NFTToken!] @derivedFrom(field: "collection")
   transfers: [NFTTransfer!] @derivedFrom(field: "collection")

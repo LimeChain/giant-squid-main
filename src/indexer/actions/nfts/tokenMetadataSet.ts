@@ -19,6 +19,6 @@ export class SetTokenMetadataAction extends Action<NftMetadataData> {
 
     token.metadataUri = this.data.metadata;
 
-    await ctx.store.upsert(token);
+    await ctx.store.save(token);
   }
 }

@@ -24,7 +24,6 @@ export class TokenBurnedEventPalletHandler extends EventPalletHandler<ITokenBurn
       new TokenBurnedAction(block.header, event.extrinsic, {
         tokenId: data.item,
         collectionId: data.collectionId,
-        owner: () => owner.getOrFail(),
       })
     );
   }
