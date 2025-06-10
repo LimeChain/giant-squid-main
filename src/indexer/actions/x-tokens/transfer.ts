@@ -8,17 +8,18 @@ interface XTokensTransferActionData {
   call: string;
   to?: {
     type: string;
-    value: string;
+    value: string | null;
   };
-  toChain?: string;
+  toChain?: string | null;
   assets?: {
-    parents: number;
-    pallet: string | null;
-    assetId: string | null;
+    parents?: number | null;
+    pallet?: string | null;
+    assetId?: string | null;
     parachain?: string | null;
     fullPath?: string[];
+    error?: string | null;
   }[];
-  amount?: { type: string; value: string }[];
+  amount?: { type: string; value: string | null }[];
 }
 
 export class XTokensTransferAction extends Action<XTokensTransferActionData> {
