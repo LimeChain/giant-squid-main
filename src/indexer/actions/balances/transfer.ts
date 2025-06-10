@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Account, NativeTransfer, Transfer, TransferDirection } from '@/model';
 import { Action, ActionContext } from '@/indexer/actions/base';
 

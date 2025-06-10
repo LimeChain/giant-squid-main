@@ -7,6 +7,7 @@ import {StakingReward} from "./stakingReward.model"
 import {XcmTransfer} from "./xcmTransfer.model"
 import {PolkadotXcmTransfer} from "./polkadotXcmTransfer.model"
 import {XTokensTransfer} from "./xTokensTransfer.model"
+import {NFTToken} from "./nftToken.model"
 
 @Entity_()
 export class Account {
@@ -38,4 +39,7 @@ export class Account {
 
     @OneToMany_(() => XTokensTransfer, e => e.account)
     xTokenTransfers!: XTokensTransfer[]
+
+    @OneToMany_(() => NFTToken, e => e.owner)
+    nftTokens!: NFTToken[]
 }

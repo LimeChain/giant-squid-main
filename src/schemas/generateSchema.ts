@@ -155,6 +155,22 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       appendedSchemaParts.add('nominationpools');
     }
+
+    // NFTs pallet
+    if (lowerCaseKey === 'nfts.created' && !appendedSchemaParts.has('nft')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'nft.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`nftTokens: [NFTToken!] @derivedFrom(field: "owner")\n`);
+      appendedSchemaParts.add('nfts');
+    }
+
+    // EVM Log pallet
+    if (lowerCaseKey === 'evm.log' && !appendedSchemaParts.has('evm.log')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'nft.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      accountSchema.push(`nftTokens: [NFTToken!] @derivedFrom(field: "owner")\n`);
+      appendedSchemaParts.add('evm.log');
+    }
   }
 
   accountSchema.push(`\n}\n`);

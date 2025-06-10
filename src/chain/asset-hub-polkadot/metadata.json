@@ -1,0 +1,13 @@
+{
+  "outDir": "./types",
+  "specVersions": "https://v2.archive.subsquid.io/metadata/asset-hub-polkadot",
+  "pallets": {
+    "Balances": {
+      "events": ["Transfer"]
+    },
+    "Nfts": {
+      "events": ["Created", "CollectionMetadataSet", "OwnerChanged", "Issued", "ItemMetadataSet", "Burned", "Transferred", "AttributeSet"]
+    }
+  },
+  "storage": []
+}

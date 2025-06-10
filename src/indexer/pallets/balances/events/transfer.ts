@@ -21,7 +21,6 @@ export class TransferEventPalletHandler extends EventPalletHandler<ITransferEven
 
     const fromAccount = ctx.store.defer(Account, fromId);
     const toAccount = ctx.store.defer(Account, toId);
-
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => fromAccount.get(),
