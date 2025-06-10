@@ -7,30 +7,27 @@ import assert from 'assert';
 import { XTokensTransferAction } from '@/indexer/actions/x-tokens/transfer';
 import { jsonStringify } from '@/utils';
 
-export interface ITransferredAssetsEventPalletDecoder extends IEventPalletDecoder<any> {}
-// extends IEventPalletDecoder<
-//   | {
-//       from?:{
-//          type: string;
-//          value: string;
-//        };
-//        to?: {
-//          type: string;
-//          value: string;
-//        };
-//       toChain?: string | null;
-//       assets?: {
-//         parents?: number | null;
-//         pallet?: string | null;
-//         assetId?: string | null;
-//         parachain?: string | null;
-//         fullPath?: string[];
-//         error?: string;
-//       }[];
-//        amount?: { type: string; value: string }[];
-//     }
-//   | undefined
-// > {}
+export interface ITransferredAssetsEventPalletDecoder
+  extends IEventPalletDecoder<
+    | {
+        from?: string;
+        to?: {
+          type: string;
+          value: string | null;
+        };
+        toChain?: string | null;
+        assets?: {
+          parents?: number | null;
+          pallet?: string | null;
+          assetId?: string | null;
+          parachain?: string | null;
+          fullPath?: string[];
+          error?: string | null;
+        }[];
+        amount?: { type: string; value: string | null }[];
+      }
+    | undefined
+  > {}
 
 interface ITransferredAssetsEventPalletSetup extends IBasePalletSetup {
   decoder: ITransferredAssetsEventPalletDecoder;

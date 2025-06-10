@@ -8,7 +8,7 @@ interface XcmTransferActionData {
   toChain?: string | null;
   to?: {
     type: string;
-    value: string;
+    value: string | null;
   };
   amount?: { type: string; value: string | null };
   call: string;
@@ -16,12 +16,12 @@ interface XcmTransferActionData {
   contractCalled?: string | null;
   contractInput?: string | null;
   asset?: {
-    parents: number;
-    pallet: string | null;
-    assetId: string | null;
+    parents?: number | null;
+    pallet?: string | null;
+    assetId?: string | null;
     parachain?: string | null;
     fullPath?: string[];
-    error?: string;
+    error?: string | null;
   };
 }
 

@@ -31,34 +31,33 @@ import assert from 'assert';
 import { jsonStringify } from '@/utils';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
 
-export interface IXcmSentEventPalletDecoder extends IEventPalletDecoder<any> {}
-// TODO: add type
-// extends IEventPalletDecoder<
-//   | {
-//       from?: {
-//         type: string;
-//         value: string;
-//       };
-//       to?: {
-//         type: string;
-//         value: string;
-//       };
-//       toChain?: string | null;
-//       asset?: {
-//         parents: number;
-//         pallet: string | null;
-//         assetId: string | null;
-//         parachain?: string | null;
-//         fullPath?: string[];
-//         error?: string;
-//       };
-//       amount?: { type: string; value: string | null };
-//       weightLimit?: bigint | null;
-//       contractCalled?: string;
-//       contractInput?: string;
-//     }
-//   | undefined
-// > {}
+export interface IXcmSentEventPalletDecoder
+  extends IEventPalletDecoder<
+    | {
+        from?: {
+          type: string;
+          value: string | null;
+        };
+        to?: {
+          type: string;
+          value: string | null;
+        };
+        toChain?: string | null;
+        asset?: {
+          parents?: number | null;
+          pallet?: string | null;
+          assetId?: string | null;
+          parachain?: string | null;
+          fullPath?: string[];
+          error?: string | null;
+        };
+        amount?: { type: string; value: string | null };
+        weightLimit?: bigint | null;
+        contractCalled?: string;
+        contractInput?: string;
+      }
+    | undefined
+  > {}
 
 interface IXcmSentEventPalletSetup extends IBasePalletSetup {
   decoder: IXcmSentEventPalletDecoder;
@@ -101,7 +100,7 @@ export class XcmSentEventPalletHandler extends EventPalletHandler<IXcmSentEventP
     // as current [fromPubKey] encoding logic doesn't support it
     try {
       const { amount, weightLimit, to, toChain, from, contractCalled, contractInput, asset } = data;
-      assert(from, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
+      assert(from.value, `Caller Pubkey is undefined at ${event.extrinsic?.hash}`);
 
       const fromPubKey = this.encodeAddress(from.value);
       const account = ctx.store.defer(Account, fromPubKey);

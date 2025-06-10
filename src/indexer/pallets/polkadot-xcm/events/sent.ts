@@ -27,34 +27,33 @@ import { EnsureAccount } from '@/indexer/actions';
 import assert from 'assert';
 import { jsonStringify } from '@/utils';
 
-export interface ISentEventPalletDecoder extends IEventPalletDecoder<any> {}
-// TODO: add type
-// extends IEventPalletDecoder<
-//   | {
-//       from?: {
-//         type: string;
-//         value: string;
-//       };
-//       to?: {
-//         type: string;
-//         value: string;
-//       };
-//       toChain?: string | null;
-//       asset?: {
-//         parents: number;
-//         pallet: string | null;
-//         assetId: string | null;
-//         parachain?: string | null;
-//         fullPath?: string[];
-//         error?: string;
-//       };
-//       amount?: { type: string; value: string | null };
-//       weightLimit?: bigint | null;
-//       contractCalled?: string;
-//       contractInput?: string;
-//     }
-//   | undefined
-// > {}
+export interface ISentEventPalletDecoder
+  extends IEventPalletDecoder<
+    | {
+        from?: {
+          type: string;
+          value: string;
+        };
+        to?: {
+          type: string;
+          value: string;
+        };
+        toChain?: string | null;
+        asset?: {
+          parents?: number | null;
+          pallet?: string | null;
+          assetId?: string | null;
+          parachain?: string | null;
+          fullPath?: string[];
+          error?: string | null;
+        };
+        amount?: { type: string; value: string | null };
+        weightLimit?: bigint | null;
+        contractCalled?: string;
+        contractInput?: string;
+      }
+    | undefined
+  > {}
 
 interface ISentEventPalletSetup extends IBasePalletSetup {
   decoder: ISentEventPalletDecoder;
