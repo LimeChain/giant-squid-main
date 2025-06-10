@@ -156,7 +156,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       appendedSchemaParts.add('nominationpools');
     }
 
-    // Nomination pool pallet
+    // NFTs pallet
     if (lowerCaseKey === 'nfts.created' && !appendedSchemaParts.has('nft')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'nft.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
