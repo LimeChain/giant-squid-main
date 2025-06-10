@@ -1,0 +1,32 @@
+manifestVersion: subsquid.io/v0.1
+name: gs-main-asset-hub-kusama
+version: 1
+description: |-
+  Giant Squid Main for AssetHub-Kusama
+build:
+deploy:
+  addons:
+    postgres:
+  processor:
+    env:
+      CHAIN: asset-hub-kusama
+      CHAIN_RPC_ENDPOINT: ${{ secrets.RPC_ASSET_HUB_KUSAMA_HTTP }}
+    cmd:
+      - sqd
+      - process:prod
+  api:
+    env:
+      CHAIN: asset-hub-kusama
+    cmd:
+      - sqd
+      - api:prod
+scale:
+  dedicated: true
+  addons:
+    postgres:
+      storage: 80G
+      profile: medium
+  api:
+    profile: medium
+  processor:
+    profile: medium
