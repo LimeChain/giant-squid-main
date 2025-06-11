@@ -15,11 +15,13 @@ export class NftTokenTransfer extends Action<NftTokenTransferData> {
 
     const token = await ctx.store.findOne(NFTToken, {
       where: { id: this.composeId(this.data.token, this.data.collectionId) },
+      // @ts-ignore
       relations: { owner: true },
     });
 
     if (!token) return;
 
+    // @ts-ignore
     token.owner = to;
 
     await ctx.store.save(token);
