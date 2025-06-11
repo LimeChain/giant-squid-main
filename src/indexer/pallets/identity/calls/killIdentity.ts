@@ -1,10 +1,11 @@
 import { getOriginAccountId } from '@/utils';
 // @ts-ignore
-import { Identity, Judgement } from '@/model';
+import { Account, HistoryElementType, Identity, Judgement } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
 import { ClearIdentityAction, GiveJudgementAction, RemoveIdentitySubAction, KillIdentityAction } from '@/indexer/actions/identity';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 
 export interface IKillIdentityCallPalletDecoder extends ICallPalletDecoder<{ target: string | WrappedData }> {}
 interface IKillIdentityCallPalletSetup extends IBasePalletSetup {
@@ -24,8 +25,14 @@ export class KillIdentityCallPalletHandler extends CallPalletHandler<IKillIdenti
     if (!origin) return;
 
     const identityId = this.encodeAddress(origin);
+    const identityAccount = ctx.store.defer(Account, identityId);
     const identity = ctx.store.defer(Identity, { id: identityId, relations: { subs: true } });
     queue.push(
+      new EnsureAccount(block.header, call.extrinsic, {
+        account: () => identityAccount.get(),
+        id: identityId,
+        pk: identityId,
+      }),
       new ClearIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.getOrFail(),
       }),
@@ -48,6 +55,12 @@ export class KillIdentityCallPalletHandler extends CallPalletHandler<IKillIdenti
       }),
       new KillIdentityAction(block.header, call.extrinsic, {
         identity: () => identity.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => identityAccount.getOrFail(),
       })
     );
   }

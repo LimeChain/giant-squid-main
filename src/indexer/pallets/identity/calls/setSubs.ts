@@ -1,6 +1,6 @@
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Identity, Account, IdentitySub } from '@/model';
+import { Identity, Account, IdentitySub, HistoryElementType } from '@/model';
 import { getOriginAccountId, unwrapData } from '@/utils';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { IBasePalletSetup, ICallPalletDecoder, WrappedData } from '@/indexer/types';
@@ -64,5 +64,13 @@ export class SetSubsCallPalletHandler extends CallPalletHandler<ISetSubsCallPall
         })
       );
     }
+    queue.push(
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => identityAccount.getOrFail(),
+      })
+    );
   }
 }

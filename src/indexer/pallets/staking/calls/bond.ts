@@ -1,9 +1,9 @@
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { getOriginAccountId } from '@/utils';
-import { BondAction, EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { BondAction, EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, BondingType, Staker } from '@/model';
+import { Account, BondingType, HistoryElementType, Staker } from '@/model';
 import { BasePayeeCallPallet } from '@/indexer/pallets/staking/calls/setPayee.base';
 import { ISetPayeeCallPalletData } from '@/indexer/pallets/staking/calls/setPayee';
 import { AddControllerAction } from '@/indexer/actions/staking/controller';
@@ -50,6 +50,13 @@ export class BondCallPalletHandler extends BasePayeeCallPallet<IBondCallPalletSe
         amount: data.amount,
         account: () => stash.getOrFail(),
         staker: () => staker.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        amount: data.amount,
+        type: HistoryElementType.Extrinsic,
+        account: () => stash.getOrFail(),
       })
     );
 

@@ -1,10 +1,10 @@
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, Staker, HistoryElementType } from '@/model';
 import { ICallPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { CallPalletHandler, ICallHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { CreatePoolAction } from '@/indexer/actions/nomination-pools/pool';
 import { getOriginAccountId } from '@/utils';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 
 export interface INominationPoolsCreatePollCallPalletDecoder
   extends ICallPalletDecoder<{
@@ -25,8 +25,11 @@ export class NominationPoolsCreatePoolCallPalletHandler extends CallPalletHandle
 
   handle({ ctx, block, queue, item: call }: ICallHandlerParams) {
     if (call.success === false) return;
+
     const origin = getOriginAccountId(call.origin);
+
     if (!origin) return;
+
     const data = this.decoder.decode(call);
 
     const creatorId = this.encodeAddress(origin);
@@ -68,6 +71,12 @@ export class NominationPoolsCreatePoolCallPalletHandler extends CallPalletHandle
         nominator: () => nominatorStaker.getOrFail(),
         toggler: () => togglerStaker.getOrFail(),
         totalBonded: data.amount,
+      }),
+      new HistoryElementAction(block.header, call.extrinsic, {
+        id: call.id,
+        name: call.name,
+        type: HistoryElementType.Extrinsic,
+        account: () => creatorAccount.getOrFail(),
       })
     );
   }

@@ -23,10 +23,10 @@ import { V3Instruction, V3Instruction_BuyExecution, V3Junction, V3Junction_Gener
 import { V4Instruction, V4Location, V4Instruction_BuyExecution, V4Junction, V4Junction_GeneralKey, V4Junction_Parachain } from '@/chain/kusama/types/v1002000';
 import { V5Instruction, V5Instruction_BuyExecution } from '@/chain/kusama/types/v1005000';
 
-import { Account } from '@/model';
+import { Account, HistoryElementType } from '@/model';
 import { IBasePalletSetup, IEventPalletDecoder } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
-import { EnsureAccount } from '@/indexer/actions';
+import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
 import assert from 'assert';
 import { jsonStringify } from '@/utils';
 import { XcmTransferAction } from '@/indexer/actions/xcm/transfer';
@@ -124,6 +124,18 @@ export class XcmSentEventPalletHandler extends EventPalletHandler<IXcmSentEventP
           asset,
         })
       );
+
+      if (amount) {
+        queue.push(
+          new HistoryElementAction(block.header, event.extrinsic, {
+            id: event.id,
+            amount: amount.value ? BigInt(amount.value) : BigInt(0),
+            name: event.name,
+            type: HistoryElementType.Event,
+            account: () => account.getOrFail(),
+          })
+        );
+      }
     } catch (error) {
       console.error({
         error,

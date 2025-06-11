@@ -2,9 +2,9 @@ import { IBasePalletSetup, ICallPalletDecoder, PayeeType } from '@/indexer/types
 import { IHandlerOptions, ICallHandlerParams } from '@/indexer/pallets/handler';
 import { ILedgerStorageLoader } from '@/indexer';
 import { getOriginAccountId } from '@/utils';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+import { EnsureAccount, EnsureStaker, HistoryElementAction } from '@/indexer/actions';
 // @ts-ignore
-import { Account, Staker } from '@/model';
+import { Account, HistoryElementType, Staker } from '@/model';
 import { Action, LazyAction } from '@/indexer/actions/base';
 import { toHex } from '@subsquid/substrate-processor';
 import { BasePayeeCallPallet } from '@/indexer/pallets/staking/calls/setPayee.base';
@@ -54,7 +54,13 @@ export class SetPayeeCallPalletHandler extends BasePayeeCallPallet<ISetPayeeCall
 
         queue.push(
           new EnsureAccount(block.header, call.extrinsic, { account: () => stash.get(), id: stashId, pk: this.decodeAddress(stashId) }),
-          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() })
+          new EnsureStaker(block.header, call.extrinsic, { id: stashId, account: () => stash.getOrFail(), staker: () => staker.get() }),
+          new HistoryElementAction(block.header, call.extrinsic, {
+            id: call.id,
+            name: call.name,
+            type: HistoryElementType.Extrinsic,
+            account: () => stash.getOrFail(),
+          })
         );
 
         this.addPayee({ ctx, block, item: call, queue, data, staker, stash: ledger.stash });

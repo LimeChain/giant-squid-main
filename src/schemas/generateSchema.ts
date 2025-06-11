@@ -156,6 +156,13 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
       appendedSchemaParts.add('nominationpools');
     }
 
+    // History elements pallet
+    if (!appendedSchemaParts.has('historyelements')) {
+      const schemaPart = fs.readFileSync(path.join(__dirname, 'historyElements.graphql'), 'utf8');
+      fs.appendFileSync(schemaPath, schemaPart + '\n');
+      appendedSchemaParts.add('historyelements');
+    }
+
     // NFTs pallet
     if (lowerCaseKey === 'nfts.created' && !appendedSchemaParts.has('nft')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'nft.graphql'), 'utf8');

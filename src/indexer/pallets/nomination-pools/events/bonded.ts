@@ -1,10 +1,10 @@
-// @ts-ignore
-import { Account, Pool, Staker } from '@/model';
-import { EnsureAccount, EnsureStaker } from '@/indexer/actions';
+//@ts-ignore
+import { Account, HistoryElementType, Pool, Staker } from '@/model';
+import { EnsureAccount, EnsureStaker, HistoryElementAction, NominationPoolsBondAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
 import { Call } from '@/indexer/processor';
-import { NominationPoolsBondAction } from '@/indexer/actions/nomination-pools/bonded';
+import { getOriginAccountId } from '@/utils';
 
 export interface INominationPoolsBondedEventPalletDecoder extends IEventPalletDecoder<{ member: string; poolId: string; bonded: bigint; joined: boolean }> {}
 
@@ -48,15 +48,20 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
     }
 
     const data = this.decoder.decode(event);
+    const origin = getOriginAccountId(event.call?.origin);
+    if (!origin) return;
 
     const poolId = data.poolId;
     const accountId = this.encodeAddress(data.member);
+    const originId = this.encodeAddress(origin);
 
+    const originAccount = ctx.store.defer(Account, originId);
     const account = ctx.store.defer(Account, accountId);
     const staker = ctx.store.defer(Staker, accountId);
     const pool = ctx.store.defer(Pool, poolId);
 
     queue.push(
+      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: originId, pk: this.decodeAddress(originId) }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureStaker(block.header, event.extrinsic, { id: accountId, account: () => account.getOrFail(), staker: () => staker.get() }),
       new NominationPoolsBondAction(block.header, event.extrinsic, {
@@ -65,6 +70,13 @@ export class NominationPoolsBondedEventPalletHandler extends EventPalletHandler<
         amount: data.bonded,
         staker: () => staker.getOrFail(),
         pool: () => pool.getOrFail(),
+      }),
+      new HistoryElementAction(block.header, event.extrinsic, {
+        id: event.id,
+        name: event.name,
+        type: HistoryElementType.Event,
+        amount: data.bonded,
+        account: () => originAccount.getOrFail(),
       })
     );
   }
