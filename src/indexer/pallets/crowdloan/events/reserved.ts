@@ -48,7 +48,7 @@ export class ReservedParachainEventPalletHandler extends EventPalletHandler<IRes
         status: ParachainStatus.Reserved,
       }),
       new HistoryElementAction(block.header, event.extrinsic, {
-        id: event.id,
+        id: data.paraId.toString(),
         name: event.name,
         type: HistoryElementType.Event,
         account: () => originAccount.getOrFail(),

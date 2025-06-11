@@ -66,7 +66,7 @@ export class WithdrewEventPalletHandler extends EventPalletHandler<IWithdrewEven
             crowdloan: () => Promise.resolve(crowdloan),
           }),
           new HistoryElementAction(block.header, event.extrinsic, {
-            id: event.id,
+            id: contributor.id,
             name: event.name,
             type: HistoryElementType.Event,
             account: () => originAccount.getOrFail(),

@@ -75,7 +75,7 @@ export class PartiallyRefundedEventPalletHandler extends EventPalletHandler<IPar
               crowdloan: () => Promise.resolve(crowdloan),
             }),
             new HistoryElementAction(block.header, event.extrinsic, {
-              id: event.id,
+              id: contributor.id,
               name: event.name,
               amount: contributor.totalContributed,
               type: HistoryElementType.Event,

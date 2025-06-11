@@ -59,13 +59,13 @@ export class ContributedEventPalletHandler extends EventPalletHandler<IContribut
             contributor: () => contributorDef.get(),
           }),
           new ContributeCrowdloanAction(block.header, event.extrinsic, {
-            id: event.id,
+            id: contributorId,
             amount: contributed.amount,
             contributor: () => contributorDef.getOrFail(),
             crowdloan: () => Promise.resolve(crowdloan),
           }),
           new HistoryElementAction(block.header, event.extrinsic, {
-            id: event.id,
+            id: contributorId,
             name: event.name,
             amount: contributed.amount,
             type: HistoryElementType.Event,
