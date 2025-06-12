@@ -17,6 +17,11 @@ export function encodeAddress(address: string | Uint8Array, networkOrPrefix: str
     return address;
   }
 
+  // Handle 20-byte addresses (Moonbeam/Darwinia/Ethereum)
+  if (address instanceof Uint8Array && address.length === 20) {
+    return encode20ByteAddress(address);
+  }
+
   return ss58.codec(networkOrPrefix).encode(address);
 }
 
@@ -146,5 +151,15 @@ export function jsonStringify(obj: any) {
       return value;
     },
     2
+  );
+}
+
+export function encode20ByteAddress(addressBuffer: Uint8Array | Buffer): string {
+  // Convert 20-byte buffer to hex string (Ethereum format)
+  return (
+    '0x' +
+    Array.from(addressBuffer)
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
   );
 }

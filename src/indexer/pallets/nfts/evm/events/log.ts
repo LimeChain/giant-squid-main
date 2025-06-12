@@ -31,12 +31,8 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
-    const origin = getOriginAccountId(event.call?.origin);
 
-    if (!data || !event.extrinsic || !origin) return;
-
-    const accountId = this.encodeAddress(origin);
-    const account = ctx.store.defer(Account, accountId);
+    if (!data || !event.extrinsic) return;
     const accountFrom = ctx.store.defer(Account, data.from);
     const accountTo = ctx.store.defer(Account, data.to);
     const nftHolderFrom = ctx.store.defer(NFTHolder, this.composeId(data.from, data.address));
@@ -46,7 +42,6 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { id: data.from, account: () => accountFrom.get(), pk: this.decodeAddress(data.from) }),
       new EnsureAccount(block.header, event.extrinsic, { account: () => accountTo.get(), id: data.to, pk: this.decodeAddress(data.to) }),
-      new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureNFTCollection(block.header, event.extrinsic, { id: data.address, nftCollection: () => nftCollection.get() }),
       new EnsureNFTHolder(block.header, event.extrinsic, {
         id: data.from,
@@ -78,7 +73,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
         id: event.id,
         name: event.name,
         type: HistoryElementType.Event,
-        account: () => account.getOrFail(),
+        account: () => accountFrom.getOrFail(),
       })
     );
   }
