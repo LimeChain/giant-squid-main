@@ -10,6 +10,7 @@ import { TransferredMultiAssetsEventPalletDecoder } from '@/chain/bifrost-polkad
 
 export const indexer = new Indexer({
   config: {
+    prefix: 6,
     chain: ensureEnvVariable('CHAIN'),
     endpoint: ensureEnvVariable('CHAIN_RPC_ENDPOINT'),
   },
