@@ -19,21 +19,16 @@ export class ParachainDelegationKickedEventPalletHandler extends EventPalletHand
 
   handle({ ctx, queue, block, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
-    const origin = getOriginAccountId(event.call?.origin);
+    if (!data) return;
 
-    if (!origin || !data) return;
-
-    const accountId = this.encodeAddress(origin);
     const stakerId = this.encodeAddress(data.stash);
     const delegatorId = this.encodeAddress(data.delegator);
 
-    const originAccount = ctx.store.defer(Account, accountId);
     const accountDef = ctx.store.defer(Account, stakerId);
     const delegatorDef = ctx.store.defer(Account, delegatorId);
     const stakerDef = ctx.store.defer(Staker, stakerId);
 
     queue.push(
-      new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: accountId, pk: this.decodeAddress(accountId) }),
       new EnsureAccount(block.header, event.extrinsic, {
         account: () => accountDef.get(),
         id: stakerId,
@@ -62,7 +57,7 @@ export class ParachainDelegationKickedEventPalletHandler extends EventPalletHand
         name: event.name,
         type: HistoryElementType.Event,
         amount: data.amount,
-        account: () => originAccount.getOrFail(),
+        account: () => accountDef.getOrFail(),
       })
     );
   }

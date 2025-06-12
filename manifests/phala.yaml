@@ -24,7 +24,7 @@ scale:
   dedicated: true
   addons:
     postgres:
-      storage: 90G
+      storage: 180G
       profile: medium
   api:
     profile: medium
