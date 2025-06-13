@@ -47,7 +47,7 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
         nftCollection: () => nftCollection.getOrFail(),
       }),
       new EnsureNftTransferAction(block.header, event.extrinsic, {
-        id: event.extrinsic.hash,
+        id: event.id,
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
         collectionId: data.collectionId,

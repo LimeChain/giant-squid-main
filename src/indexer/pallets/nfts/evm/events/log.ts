@@ -56,7 +56,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
         nftCollection: () => nftCollection.getOrFail(),
       }),
       new EnsureNftTransferAction(block.header, event.extrinsic, {
-        id: event.extrinsic.hash,
+        id: event.id,
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
         collectionId: data.address,
