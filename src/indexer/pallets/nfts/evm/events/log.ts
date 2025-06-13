@@ -63,7 +63,7 @@ export class EvmLogEventPalletHandler extends EventPalletHandler<IEvmLogEventPal
       }),
       new NftTokensAction(block.header, event.extrinsic, {
         tokenIds: data.tokenIds,
-        transferId: event.extrinsic.hash,
+        transferId: event.id,
         newOwnerId: data.to,
         oldOwnerId: data.from,
         standard: data.standard,
