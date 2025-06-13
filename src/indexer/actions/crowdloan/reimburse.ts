@@ -29,7 +29,7 @@ export class ReimburseCrowdloanAction extends Action<ReimburseCrowdloanData> {
     contributor.reimbursed = true;
     crowdloan.reimbursed += this.data.amount;
 
-    await ctx.store.insert(contribution);
+    await ctx.store.upsert(contribution);
     await ctx.store.upsert(contributor);
     await ctx.store.upsert(crowdloan);
   }
