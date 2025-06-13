@@ -20,10 +20,10 @@ export class DeregisteredParachainEventPalletHandler extends EventPalletHandler<
   handle({ ctx, block, queue, item: event }: IEventHandlerParams) {
     const data = this.decoder.decode(event);
     const origin = getOriginAccountId(event.call?.origin);
-
     if (!origin) return;
 
     const accountId = this.encodeAddress(origin);
+
     const account = ctx.store.defer(Account, accountId);
     const parachain = ctx.store.defer(Parachain, data.paraId.toString());
 

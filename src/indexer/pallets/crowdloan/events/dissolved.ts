@@ -30,11 +30,9 @@ export class DissolvedEventPalletHandler extends EventPalletHandler<IDissolvedEv
 
         const parachain = await parachainDef.getOrFail();
         const crowdloan = getActiveCrowdloan(parachain.crowdloans);
-
         if (!crowdloan) return [];
 
         const origin = getOriginAccountId(event.call?.origin);
-
         if (!origin) return [];
 
         const accountId = this.encodeAddress(origin);

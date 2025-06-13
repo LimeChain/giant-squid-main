@@ -6,8 +6,7 @@ import { Action, LazyAction } from '@/indexer/actions/base';
 import { ReimburseCrowdloanAction } from '@/indexer/actions/crowdloan/reimburse';
 import { MarkCrowdloanContributorAsReimbursedAction } from '@/indexer/actions/crowdloan/contributor';
 import { buildContributorId, getActiveCrowdloan } from '../utils';
-import { EnsureAccount, HistoryElementAction } from '@/indexer/actions';
-import { getOriginAccountId } from '@/utils';
+import { HistoryElementAction } from '@/indexer/actions';
 
 export interface IWithdrewEventPalletDecoder extends IEventPalletDecoder<{ paraId: number; account: string }> {}
 
@@ -46,30 +45,22 @@ export class WithdrewEventPalletHandler extends EventPalletHandler<IWithdrewEven
         // There is a case where an account has been refunded and at the same time he has a withdraw extrinsic executed
         if (contributor.reimbursed) return [];
 
-        const origin = getOriginAccountId(event.call?.origin);
-
-        if (!origin) return [];
-
-        const originId = this.encodeAddress(origin);
-        const originAccount = ctx.store.defer(Account, accountId);
-
         queue.push(
-          new EnsureAccount(block.header, event.extrinsic, { account: () => originAccount.get(), id: originId, pk: this.decodeAddress(originId) }),
           new MarkCrowdloanContributorAsReimbursedAction(block.header, event.extrinsic, {
             contributor: () => Promise.resolve(contributor),
           }),
           new ReimburseCrowdloanAction(block.header, event.extrinsic, {
-            id: contributor.id,
+            id: event.id,
             amount: contributor.totalContributed,
             type: CrowdloanReimbursementType.Withdraw,
             contributor: () => Promise.resolve(contributor),
             crowdloan: () => Promise.resolve(crowdloan),
           }),
           new HistoryElementAction(block.header, event.extrinsic, {
-            id: contributor.id,
+            id: event.id,
             name: event.name,
             type: HistoryElementType.Event,
-            account: () => originAccount.getOrFail(),
+            account: () => Promise.resolve(contributor.account),
           })
         );
 

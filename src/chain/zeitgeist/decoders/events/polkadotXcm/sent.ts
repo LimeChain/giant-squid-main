@@ -28,22 +28,7 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
     const sent = events.polkadotXcm.sent;
 
     if (sent.v26.is(event)) {
-      const [origin, destination, message] = sent.v26.decode(event);
-      console.dir('V26', { message, origin, destination });
       return;
-      // if (message.length <= 1) return;
-
-      // const from = getOriginCaller(origin);
-      // if (!from) return;
-
-      // const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as InstructionV2_BuyExecution;
-      // return {
-      //   from,
-      //   toChain: getDestination(destination),
-      //   amount: getAmountV1(message[0]),
-      //   to: getTarget(message.at(-1)!, from),
-      //   weightLimit: getWeightLimit(weightLimitMsg),
-      // };
     } else if (sent.v32.is(event)) {
       const [origin, destination, message] = sent.v32.decode(event);
       if (message.length <= 1) return;
