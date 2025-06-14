@@ -118,7 +118,7 @@ export class NftTokensAction extends Action<NftTokensData> {
     }
 
     // batch db requests
-    await Promise.all([ctx.store.insert([...newTokens, ...nftTokenTransfers]), ctx.store.save([newOwner, oldOwner, ...tokensToSave])]);
+    await Promise.all([ctx.store.upsert([...newTokens, ...nftTokenTransfers]), ctx.store.save([newOwner, oldOwner, ...tokensToSave])]);
   }
 }
 
