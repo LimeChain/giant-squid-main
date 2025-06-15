@@ -106,14 +106,7 @@ const buildSchema = (chainPalletKeys: string[], schemaPath: string) => {
     }
 
     // XcmPallet for relay chains
-    if (
-      (lowerCaseKey === 'xcmpallet.limited_reserve_transfer_assets' ||
-        lowerCaseKey === 'xcmpallet.limited_teleport_assets' ||
-        lowerCaseKey === 'xcmpallet.reserve_transfer_assets' ||
-        lowerCaseKey === 'xcmpallet.transfer_assets' ||
-        lowerCaseKey === 'xcmpallet.transfer_assets_using_type_and_then.transfer_assets') &&
-      !appendedSchemaParts.has('xcmpallet')
-    ) {
+    if (lowerCaseKey === 'xcmpallet.sent' && !appendedSchemaParts.has('xcmpallet')) {
       const schemaPart = fs.readFileSync(path.join(__dirname, 'xcmTransfer.graphql'), 'utf8');
       fs.appendFileSync(schemaPath, schemaPart + '\n');
       accountSchema.push(`xcmTransfers: [XcmTransfer!] @derivedFrom(field: "account")\n`);
