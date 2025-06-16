@@ -133,9 +133,12 @@ async function fetchErc721Metadata(address: string, tokenId: string) {
   try {
     const contract = new ethers.Contract(address, erc721.abi, provider);
     const uri: string = await contract.tokenURI(tokenId);
-    erc721UriCache[cacheKey] = uri;
 
-    return { uri };
+    // remove null bytes padding (commonly added by ethereum contracts)
+    const cleanUrl = uri.replace(/\x00+/g, '');
+    erc721UriCache[cacheKey] = cleanUrl;
+
+    return { uri: cleanUrl };
   } catch (e: any) {
     return { error: e.message };
   }
@@ -155,7 +158,11 @@ async function fetchErc1155Metadata(address: string, id: string) {
 
     if (uri.includes('{id}')) {
       const hexId = BigInt(id).toString(16).padStart(64, '0');
+      // insert tokenId in to uri template
       uri = uri.replace('{id}', hexId);
+
+      // remove null bytes padding (commonly added by ethereum contracts)
+      uri = uri.replace(/\x00+/g, '');
     }
 
     erc1155UriCache[cacheKey] = uri;
