@@ -24,6 +24,9 @@ import {
 import { V2Instruction_DepositAsset } from '@/chain/moonriver/types/v1300';
 import { V3Instruction_DepositAsset } from '@/chain/moonriver/types/v2302';
 import { V4Instruction_DepositAsset } from '@/chain/moonriver/types/v2901';
+import { V5Instruction_BuyExecution } from '@/chain/moonriver/types/v3701';
+import { V5Instruction_DepositAsset } from '@/chain/kusama/types/v1005000';
+
 export class SentEventPalletDecoder implements ISentEventPalletDecoder {
   decode(event: Event) {
     assert(event.call);
@@ -164,6 +167,31 @@ export class SentEventPalletDecoder implements ISentEventPalletDecoder {
       const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V4Instruction_BuyExecution;
       const assetMsg = message.find((msg) => SUPPORTED_ASSET_MESSAGE_TYPES.includes(msg.__kind));
       const transferTargetMsg = message.find((msg) => msg.__kind === 'DepositAsset') as V4Instruction_DepositAsset;
+
+      const transferTarget = getTransferTargetV4(transferTargetMsg, from.value);
+      const assetAmount = getAssetAmountV4(assetMsg);
+      const rawAssets = getRawAssetFromInstructionV4(assetMsg);
+
+      return {
+        from,
+        to: transferTarget,
+        toChain: getDestinationV4(destination, transferTarget.value),
+        amount: assetAmount,
+        asset: rawAssets,
+        weightLimit: getWeightLimitV3V4(weightLimitMsg),
+        contractCalled: event?.call?.args?.transaction?.value?.action?.value,
+        contractInput: event?.call?.args?.transaction?.value?.input,
+      };
+    } else if (sent.v3701.is(event)) {
+      const { origin, destination, message, messageId } = sent.v3701.decode(event);
+      if (message.length <= 1) return;
+
+      const from = getOriginCallerV4(origin);
+      if (!from) return;
+
+      const weightLimitMsg = message.find((msg) => msg.__kind === 'BuyExecution') as V5Instruction_BuyExecution;
+      const assetMsg = message.find((msg) => SUPPORTED_ASSET_MESSAGE_TYPES.includes(msg.__kind));
+      const transferTargetMsg = message.find((msg) => msg.__kind === 'DepositAsset') as V5Instruction_DepositAsset;
 
       const transferTarget = getTransferTargetV4(transferTargetMsg, from.value);
       const assetAmount = getAssetAmountV4(assetMsg);
