@@ -39,7 +39,7 @@ export class VoteCallPalletDecoder implements IVoteCallPalletDecoder {
         vote: fundVote,
       };
     } else if (vote.v9320.is(call)) {
-      const fund = vote.v9340.decode(call);
+      const fund = vote.v9320.decode(call);
 
       switch (fund.vote.__kind) {
         case 'Split':
@@ -52,13 +52,6 @@ export class VoteCallPalletDecoder implements IVoteCallPalletDecoder {
           fundVote = {
             vote: fund.vote.vote,
             balance: fund.vote.balance,
-          };
-          break;
-        case 'SplitAbstain':
-          fundVote = {
-            aye: fund.vote.aye,
-            nay: fund.vote.nay,
-            abstain: fund.vote.abstain,
           };
           break;
         default:
