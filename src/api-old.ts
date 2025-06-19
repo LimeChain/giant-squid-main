@@ -1,3 +1,7 @@
+// This is the old API that is no longer used.
+// It is kept here for reference.
+// (can be used if small non schema changes are needed for the old indexers (all indexersexcept asset-hubs + basilisk))
+
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { Pool, type Client } from 'pg';
@@ -97,18 +101,12 @@ const logQuery = async (query: string, req: Request) => {
 // Middleware to parse JSON request bodies (required for the query logging below)
 app.use(express.json());
 
-// Redirect to the graphiql playground
-app.get('/graphql', (req, res, next) => {
-  res.redirect(process.env.BASE_PATH + '/api/graphiql');
-});
-
 // Express middleware for query logging
 app.use('/graphql', (req: Request, res, next) => {
   // Log the query asynchronously (don't block the request)
   if (req.body && req.body.query) {
     logQuery(req.body.query, req).catch(console.error);
   }
-
   next();
 });
 
@@ -126,7 +124,8 @@ app.use(
     externalUrlBase: process.env.BASE_PATH,
     disableQueryLog: true,
     enableQueryBatching: true,
-    externalGraphqlRoute: process.env.BASE_PATH == null ? undefined : process.env.BASE_PATH + '/api/graphql',
+    graphiqlRoute: '/graphql', // This is needed for the explorer to work as the cloud URL is hardcoded.
+    graphqlRoute: '/graphql/', // This is needed for the explorer to work as the cloud URL is hardcoded.
   })
 );
 
