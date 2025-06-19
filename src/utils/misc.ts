@@ -112,13 +112,27 @@ export function decodeHexToUTF8(hexString: ss58.Bytes) {
     hexString = hexString.slice(2);
   }
 
-  // Convert hex to bytes and then to UTF-8 string
+  // Convert hex to bytes
   const bytes = [];
   for (let i = 0; i < hexString.length; i += 2) {
     bytes.push(parseInt(hexString.substring(i, i + 2), 16));
   }
 
-  return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+  try {
+    // Try to decode as UTF-8
+    const decoder = new TextDecoder('utf-8', { fatal: true });
+    const decoded = decoder.decode(new Uint8Array(bytes));
+
+    // Remove null bytes and other control characters that PostgreSQL can't handle
+    return decoded.replace(/\u0000/g, '').replace(/[\x00-\x1F\x7F]/g, '');
+  } catch (error) {
+    // If UTF-8 decoding fails, fall back to safe string representation
+    console.warn('Failed to decode hex as UTF-8, using fallback:', hexString);
+
+    // Filter out null bytes and non-printable characters from the raw bytes
+    const safeBytes = bytes.filter((b) => b !== 0 && b >= 32 && b <= 126);
+    return String.fromCharCode(...safeBytes);
+  }
 }
 
 /**
