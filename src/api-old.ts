@@ -1,6 +1,6 @@
 // This is the old API that is no longer used.
 // It is kept here for reference.
-// (can be used if small non schema changes are needed for the old indexers (all indexersexcept asset-hubs + basilisk))
+// (can be used if small non-schema changes are needed for the old indexers (all indexers except asset-hubs + basilisk))
 
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
