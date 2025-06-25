@@ -1,3 +1,6 @@
+// This is the new API that is used for the indexers with new config (asset-hubs + basilisk).
+// use api-old.ts for other indexers.
+
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { Pool, type Client } from 'pg';
@@ -108,7 +111,6 @@ app.use('/graphql', (req: Request, res, next) => {
   if (req.body && req.body.query) {
     logQuery(req.body.query, req).catch(console.error);
   }
-
   next();
 });
 

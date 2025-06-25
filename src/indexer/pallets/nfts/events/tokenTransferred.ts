@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Account, HistoryElementType, NFTCollection, NFTHolder } from '@/model';
+import { Account, HistoryElementType, NFTCollection, NFTHolder, NFTTransfer } from '@/model';
 import { EnsureAccount, EnsureNFTHolder, EnsureNftTransferAction, NftTokenTransfer, EnsureNFTCollection, HistoryElementAction } from '@/indexer/actions';
 import { IEventPalletDecoder, IBasePalletSetup } from '@/indexer/types';
 import { EventPalletHandler, IEventHandlerParams, IHandlerOptions } from '@/indexer/pallets/handler';
@@ -28,6 +28,7 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
     const nftHolderFrom = ctx.store.defer(NFTHolder, this.composeId(data.from, data.collectionId));
     const nftHolderTo = ctx.store.defer(NFTHolder, this.composeId(data.to, data.collectionId));
     const nftCollection = ctx.store.defer(NFTCollection, data.collectionId);
+    const nftTransfer = ctx.store.defer(NFTTransfer, event.id);
 
     queue.push(
       new EnsureAccount(block.header, event.extrinsic, { account: () => account.get(), id: accountId, pk: this.decodeAddress(accountId) }),
@@ -50,7 +51,8 @@ export class TokenTransferredEventPalletHandler extends EventPalletHandler<IToke
         id: event.id,
         from: () => accountFrom.getOrFail(),
         to: () => accountTo.getOrFail(),
-        collectionId: data.collectionId,
+        collection: () => nftCollection.getOrFail(),
+        nftTransfer: () => nftTransfer.get(),
       }),
       new NftTokenTransfer(block.header, event.extrinsic, {
         collectionId: data.collectionId,
