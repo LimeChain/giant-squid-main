@@ -6,15 +6,16 @@ export interface NftTransferData {
   id: string;
   from: () => Promise<Account>;
   to: () => Promise<Account>;
-  collectionId: string;
+  collection: () => Promise<NFTCollection>;
+  nftTransfer: () => Promise<NFTTransfer | undefined>;
 }
 
 export class EnsureNftTransferAction extends Action<NftTransferData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
-    let nftTransfer = await ctx.store.findOne(NFTTransfer, { where: { id: this.data.id } });
+    let nftTransfer = await this.data.nftTransfer();
     if (nftTransfer) return;
 
-    const [from, to, collection] = await Promise.all([this.data.from(), this.data.to(), ctx.store.getOrFail(NFTCollection, this.data.collectionId)]);
+    const [from, to, collection] = await Promise.all([this.data.from(), this.data.to(), this.data.collection()]);
 
     nftTransfer = new NFTTransfer({
       id: this.data.id,

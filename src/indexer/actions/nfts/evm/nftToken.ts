@@ -24,30 +24,21 @@ export interface NftTokenData {
 
 export interface NftTokensData {
   tokenIds: string[];
-  nftCollectionId: string;
-  oldOwnerId: string;
-  newOwnerId: string;
+  nftCollection: () => Promise<NFTCollection>;
+  oldOwner: () => Promise<NFTHolder>;
+  newOwner: () => Promise<NFTHolder>;
   standard?: NFTTokenStandard;
-  transferId: string;
+  transfer: () => Promise<NFTTransfer>;
 }
 
 const MINT_ACCOUNT = '0x0000000000000000000000000000000000000000';
-
 export class NftTokensAction extends Action<NftTokensData> {
   protected async _perform(ctx: ActionContext): Promise<void> {
     const [nftCollection, transfer, oldOwner, newOwner] = await Promise.all([
-      ctx.store.getOrFail(NFTCollection, this.data.nftCollectionId),
-      ctx.store.findOneOrFail(NFTTransfer, { where: { id: this.data.transferId } }),
-      ctx.store.findOneOrFail(NFTHolder, {
-        where: { id: this.composeId(this.data.oldOwnerId, this.data.nftCollectionId) },
-        // @ts-ignore
-        relations: { account: true },
-      }),
-      ctx.store.findOneOrFail(NFTHolder, {
-        where: { id: this.composeId(this.data.newOwnerId, this.data.nftCollectionId) },
-        // @ts-ignore
-        relations: { account: true },
-      }),
+      this.data.nftCollection(),
+      this.data.transfer(),
+      this.data.oldOwner(),
+      this.data.newOwner(),
     ]);
 
     const newTokens: NFTToken[] = [];
@@ -56,7 +47,7 @@ export class NftTokensAction extends Action<NftTokensData> {
 
     for (let i = 0; i < this.data.tokenIds.length; i++) {
       const tokenId = this.data.tokenIds[i];
-      const token = await ctx.store.findOne(NFTToken, { where: { id: this.composeId(tokenId, this.data.nftCollectionId) } });
+      const token = await ctx.store.get(NFTToken, this.composeId(tokenId, this.data.nftCollection));
 
       // if token has already been indexed
       if (token) {
@@ -74,7 +65,7 @@ export class NftTokensAction extends Action<NftTokensData> {
         tokensToSave.push(token);
         nftTokenTransfers.push(
           new NFTTokenTransfer({
-            id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
+            id: this.composeId(this.data.transfer, tokenId, this.data.oldOwner, this.data.newOwner, i),
             token,
             transfer,
           })
@@ -85,11 +76,11 @@ export class NftTokensAction extends Action<NftTokensData> {
         // fetch token's metadata
         const metadata =
           this.data.standard === NFTTokenStandard.ERC721
-            ? await fetchErc721Metadata(this.data.nftCollectionId, tokenId)
-            : await fetchErc1155Metadata(this.data.nftCollectionId, tokenId);
+            ? await fetchErc721Metadata(nftCollection.id, tokenId)
+            : await fetchErc1155Metadata(nftCollection.id, tokenId);
 
         const newToken = new NFTToken({
-          id: this.composeId(tokenId, this.data.nftCollectionId),
+          id: this.composeId(tokenId, nftCollection.id),
           tokenId,
           collection: nftCollection,
           // @ts-ignore
@@ -109,7 +100,7 @@ export class NftTokensAction extends Action<NftTokensData> {
         newTokens.push(newToken);
         nftTokenTransfers.push(
           new NFTTokenTransfer({
-            id: this.composeId(this.data.transferId, tokenId, this.data.oldOwnerId, this.data.newOwnerId, i),
+            id: this.composeId(this.data.transfer, tokenId, this.data.oldOwner, this.data.newOwner, i),
             token: newToken,
             transfer,
           })
