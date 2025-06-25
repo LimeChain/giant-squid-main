@@ -28,8 +28,6 @@ export class EnsureNftTransferAction extends Action<NftTransferData> {
       collection,
     });
 
-    if (!nftTransfer) return;
-
     await ctx.store.insert(nftTransfer);
   }
 }
