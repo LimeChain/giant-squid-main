@@ -145,13 +145,13 @@ async function fetchErc1155Metadata(address: string, id: string) {
     const contract = new ethers.Contract(address, erc1155.abi, provider);
     let uri: string = await contract.uri(id);
 
+    // remove null bytes padding (commonly added by ethereum contracts)
+    uri = uri.replace(/\x00+/g, '');
+
     if (uri.includes('{id}')) {
       const hexId = BigInt(id).toString(16).padStart(64, '0');
       // insert tokenId in to uri template
       uri = uri.replace('{id}', hexId);
-
-      // remove null bytes padding (commonly added by ethereum contracts)
-      uri = uri.replace(/\x00+/g, '');
     }
 
     erc1155UriCache[cacheKey] = uri;
